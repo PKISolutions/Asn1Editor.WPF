@@ -1,0 +1,107 @@
+﻿<Window x:Class="Asn1Editor.Views.Windows.TagDataEditor"
+        Name="editor"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:viewModel="clr-namespace:Asn1Editor.API.ViewModel"
+        xmlns:properties="clr-namespace:Asn1Editor.Properties"
+        WindowStartupLocation="CenterOwner"
+        ShowInTaskbar="False"
+        Title="Node Content Editor" Height="350" Width="500">
+    <Window.DataContext>
+        <viewModel:TagDataEditorVM/>
+    </Window.DataContext>
+    <Window.Resources>
+        <ResourceDictionary>
+            <!--<ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="../Themes/TextBox.xaml"/>
+            </ResourceDictionary.MergedDictionaries>-->
+        <Style x:Key="ValueEditorStyle" TargetType="TextBox" BasedOn="{StaticResource {x:Type TextBox}}">
+            <Style.Triggers>
+                <Trigger Property="IsReadOnly" Value="True">
+                    <Setter Property="Background" Value="#FFF1F7FE"/>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+        </ResourceDictionary>
+    </Window.Resources>
+    <DockPanel>
+        <!--<officeTheme:HeaderPanelUC DockPanel.Dock="Top">
+            <officeTheme:HeaderPanelUC.Content>
+                <TextBlock Text="blablabla"></TextBlock>
+            </officeTheme:HeaderPanelUC.Content>
+        </officeTheme:HeaderPanelUC>-->
+        <Border DockPanel.Dock="Top" BorderThickness="1" BorderBrush="#FF6F9CD8" Height="1"/>
+        <Border DockPanel.Dock="Top" BorderThickness="1" BorderBrush="#F1F7FE" Height="1"/>
+        <Border DockPanel.Dock="Top" BorderThickness="0,0,0,1" BorderBrush="#FFACD0FE" Background="#D5E7FE">
+            <TextBlock Text="Tag details:" DockPanel.Dock="Top" Foreground="Navy" Margin="2,2,0,1"/>
+        </Border>
+        <TextBox DockPanel.Dock="Top"
+                 BorderBrush="{StaticResource NormalBorderBrush}"
+                 Background="{StaticResource LightBorderBrush}"
+                 Text="{Binding TagDetails}"
+                 FontFamily="Consolas"
+                 FontSize="{Binding Path=FontSize, Source={x:Static properties:Settings.Default}}"
+                 FontWeight="Bold"
+                 MinLines="5"
+                 VerticalScrollBarVisibility="Auto"
+                 IsReadOnly="True"/>
+        <Border DockPanel.Dock="Top" BorderThickness="1" BorderBrush="#FF6F9CD8" Height="1"/>
+        <Border DockPanel.Dock="Top" BorderThickness="1" BorderBrush="#F1F7FE" Height="1"/>
+        <Border DockPanel.Dock="Top" BorderThickness="0,0,0,1" BorderBrush="#FFACD0FE" Background="#D5E7FE">
+            <TextBlock Text="Explicit value:" DockPanel.Dock="Top" Foreground="Navy" Margin="2,2,0,1"/>
+        </Border>
+        <StatusBar DockPanel.Dock="Bottom" VerticalAlignment="Bottom">
+            <StatusBarItem>
+                <StackPanel Orientation="Horizontal">
+                    <TextBlock Text="Tag:" VerticalAlignment="Center" Margin="2,0,2,0"/>
+                    <TextBox Text="{Binding Tag}"
+                             MaxLength="3"
+                             IsReadOnly="{Binding TagIsReadOnly}"
+                             Foreground="Navy"
+                             Background="White"
+                             Style="{StaticResource ValueEditorStyle}"
+                             FontSize="{Binding Path=FontSize, Source={x:Static properties:Settings.Default}}"
+                             Width="{Binding TagTextBoxWidth}"
+                             VerticalAlignment="Center"/>
+                    <TextBlock Text="Tag (hex):" VerticalAlignment="Center" Margin="5,0,2,0"/>
+                    <TextBox Text="{Binding Tag, StringFormat={}{0:X2}}"
+                             MaxLength="2"
+                             IsReadOnly="{Binding TagIsReadOnly}"
+                             Foreground="Navy"
+                             Background="White"
+                             Style="{StaticResource ValueEditorStyle}"
+                             FontSize="{Binding Path=FontSize, Source={x:Static properties:Settings.Default}}"/>
+                </StackPanel>
+            </StatusBarItem>
+            <Separator/>
+            <StatusBarItem>
+                <StackPanel Orientation="Horizontal" Visibility="{Binding UnusedBitsVisible}">
+                    <TextBlock Text="Unused bits:" VerticalAlignment="Center" Margin="2,0,2,0"/>
+                    <TextBox Text="{Binding UnusedBits}"
+                             Width="{Binding UnusedTextBoxWidth}"
+                             MaxLength="1"
+                             FontFamily="Consolas"
+                             Foreground="Navy"
+                             FontSize="{Binding Path=FontSize, Source={x:Static properties:Settings.Default}}"/>
+                </StackPanel>
+            </StatusBarItem>
+            <StatusBarItem HorizontalAlignment="Right">
+                <StackPanel Orientation="Horizontal">
+                    <Button Content="Ok" Width="60" Command="{Binding OkCommand}" CommandParameter="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type Window}}}" IsDefault="True"/>
+                    <Button Content="Cancel" Width="60" IsCancel="True" Margin="10,0,10,0" Click="CancelClick"/>
+                </StackPanel>
+            </StatusBarItem>
+        </StatusBar>
+        <TextBox Text="{Binding TagValue}"
+                 BorderBrush="{StaticResource NormalBorderBrush}"
+                 IsReadOnly="{Binding IsReadonly}"
+                 IsReadOnlyCaretVisible="True"
+                 MinLines="10"
+                 FontFamily="Consolas"
+                 TextWrapping="Wrap"
+                 FontSize="{Binding Path=FontSize, Source={x:Static properties:Settings.Default}}"
+                 Style="{StaticResource ValueEditorStyle}"
+                 HorizontalScrollBarVisibility="Auto"
+                 VerticalScrollBarVisibility="Auto"/>
+    </DockPanel>
+</Window>

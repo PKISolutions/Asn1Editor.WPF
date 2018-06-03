@@ -1,0 +1,75 @@
+﻿<Window x:Class="Asn1Editor.Views.Windows.SettingsWnd"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:system="clr-namespace:System;assembly=mscorlib"
+        xmlns:properties="clr-namespace:Asn1Editor.Properties"
+        Title="Settings"
+        ResizeMode="NoResize"
+        ShowInTaskbar="False"
+        SizeToContent="Height"
+        WindowStartupLocation="CenterOwner"
+        Background="{StaticResource PanelBackgroundBrush}"
+        Width="300"
+        Height="Auto">
+    <StackPanel>
+        <GroupBox Header="UI settings" DockPanel.Dock="Top" Margin="5" Foreground="Navy">
+            <Grid Margin="0,5,0,0">
+                <Grid.RowDefinitions>
+                    <RowDefinition/>
+                    <RowDefinition/>
+                    <RowDefinition/>
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition/>
+                    <ColumnDefinition/>
+                </Grid.ColumnDefinitions>
+                <CheckBox Content="Decode node payload"
+                          IsChecked="{Binding Path=DecodePayload, Source={x:Static properties:Settings.Default}}"
+                          Grid.ColumnSpan="2"
+                          Margin="2"/>
+                <CheckBox Grid.Row="1"
+                          Grid.Column="0"
+                          Grid.ColumnSpan="2"
+                          Content="Format integers as integer"
+                          IsChecked="{Binding Path=IntAsInt, Source={x:Static properties:Settings.Default}}"
+                          Margin="2"/>
+                <TextBlock Grid.Row="2" Grid.Column="0" Text="Font size:" Margin="2"/>
+                <ComboBox Grid.Row="2" Grid.Column="1"
+                      SelectedValuePath="Content"
+                      SelectedValue="{Binding Path=FontSize, Source={x:Static properties:Settings.Default}}"
+                      IsEditable="False"
+                      HorizontalAlignment="Left"
+                      Width="40"
+                          Margin="2">
+                    <ComboBoxItem>
+                        <system:Int32>8</system:Int32>
+                    </ComboBoxItem>
+                    <ComboBoxItem>
+                        <system:Int32>9</system:Int32>
+                    </ComboBoxItem>
+                    <ComboBoxItem>
+                        <system:Int32>10</system:Int32>
+                    </ComboBoxItem>
+                    <ComboBoxItem>
+                        <system:Int32>11</system:Int32>
+                    </ComboBoxItem>
+                    <ComboBoxItem>
+                        <system:Int32>12</system:Int32>
+                    </ComboBoxItem>
+                    <ComboBoxItem>
+                        <system:Int32>14</system:Int32>
+                    </ComboBoxItem>
+                    <ComboBoxItem>
+                        <system:Int32>16</system:Int32>
+                    </ComboBoxItem>
+                    <ComboBoxItem>
+                        <system:Int32>18</system:Int32>
+                    </ComboBoxItem>
+                </ComboBox>
+            </Grid>
+        </GroupBox>
+        <DockPanel DockPanel.Dock="Bottom" Margin="0,5,0,0" Background="{StaticResource PanelHeaderBackground}">
+            <Button Content="Close" Click="CloseClick" HorizontalAlignment="Right" Width="60" Margin="5"/>
+        </DockPanel>
+    </StackPanel>
+</Window>

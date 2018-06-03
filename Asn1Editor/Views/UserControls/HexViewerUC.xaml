@@ -1,0 +1,127 @@
+﻿<UserControl x:Class="Asn1Editor.Views.UserControls.HexViewerUC"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:controls="clr-namespace:Asn1Editor.Controls"
+             xmlns:viewModel="clr-namespace:Asn1Editor.API.ViewModel"
+             xmlns:properties="clr-namespace:Asn1Editor.Properties"
+             mc:Ignorable="d"
+             Loaded="HexViewerUC_OnLoaded"
+             BorderThickness="1"
+             BorderBrush="#add1ff"
+             d:DataContext="{d:DesignInstance viewModel:MainWindowVM}"
+             d:DesignHeight="300" d:DesignWidth="580">
+    <DockPanel>
+        <ToolBarTray DockPanel.Dock="Top" IsLocked="True">
+                <ToolBar>
+                    <ToggleButton IsChecked="{Binding HexViewerContext.HexAddressChecked}"
+                                  Command="{Binding HexViewerContext.ChangeHexAddressCommand}"
+                                  ToolTip="Show or hide address panel">
+                        <Image Source="../Images/Menu/AddressEnabled_32x32.png"/>
+                    </ToggleButton>
+                    <Separator/>
+                    <ToggleButton IsChecked="{Binding HexViewerContext.AsciiValueChecked}"
+                                  Command="{Binding HexViewerContext.ChangeAsciiValueCommand}"
+                                  ToolTip="Show or hide ASCII panel">
+                        <Image Source="../Images/Menu/AsciiEnabled_32x32.png"/>
+                    </ToggleButton>
+                </ToolBar>
+            </ToolBarTray>
+        <Border DockPanel.Dock="Top" BorderThickness="1" BorderBrush="#FF6F9CD8" Height="1"/>
+        <Border DockPanel.Dock="Top" BorderThickness="1" BorderBrush="#F1F7FE" Height="1"/>
+        <Border DockPanel.Dock="Top" BorderThickness="0,0,0,1" BorderBrush="#FFACD0FE">
+            <DockPanel Background="#D5E7FE">
+                <RichTextBox Width="{Binding HexViewerContext.AddrWidth}"
+                                    Visibility="{Binding HexViewerContext.HexAddressVisible}"
+                                    BorderThickness="0"
+                                    Background="#D5E7FE"
+                                    IsEnabled="False"
+                                    FontFamily="Consolas"
+                                    FontSize="{Binding Path=FontSize, Source={x:Static properties:Settings.Default}}"
+                                    FontWeight="Bold"
+                                    Foreground="Navy"
+                                    ContextMenu="{x:Null}">
+                    <RichTextBox.Document>
+                        <FlowDocument>
+                            <Paragraph>
+                                <Run Text=" Addr" FontWeight="Bold"/>
+                            </Paragraph>
+                        </FlowDocument>
+                    </RichTextBox.Document>
+                </RichTextBox>
+                <RichTextBox Width="{Binding HexViewerContext.HexWidth}"
+                                    Name="rtb"
+                                    BorderThickness="0"
+                                    Background="#D5E7FE"
+                                    IsEnabled="False"
+                                    FontFamily="Consolas"
+                                    FontSize="{Binding Path=FontSize, Source={x:Static properties:Settings.Default}}"
+                                    FontWeight="Bold"
+                                    Foreground="Navy"
+                                    ContextMenu="{x:Null}">
+                    <RichTextBox.Document>
+                        <FlowDocument>
+                            <Paragraph>
+                                <Run Text="00 01 02 03 04 05 06 07  08 09 0A 0B 0C 0D 0E 0F" FontWeight="Bold"/>
+                            </Paragraph>
+                        </FlowDocument>
+                    </RichTextBox.Document>
+                </RichTextBox>
+                <RichTextBox Width="{Binding HexViewerContext.AsciiWidth}"
+                                    Visibility="{Binding HexViewerContext.AsciiValueVisible}"
+                                    BorderThickness="0"
+                                    Background="#D5E7FE"
+                                    IsEnabled="False"
+                                    FontFamily="Consolas"
+                                    FontSize="{Binding Path=FontSize, Source={x:Static properties:Settings.Default}}"
+                                    FontWeight="Bold"
+                                    Foreground="Navy"
+                                    ContextMenu="{x:Null}">
+                    <RichTextBox.Document>
+                        <FlowDocument>
+                            <Paragraph>
+                                <Run Text="    ASCII" FontWeight="Bold"/>
+                            </Paragraph>
+                        </FlowDocument>
+                    </RichTextBox.Document>
+                </RichTextBox>
+            </DockPanel>
+        </Border>
+        <ScrollViewer VerticalScrollBarVisibility="Visible" Name="Scroller">
+            <DockPanel>
+                <controls:BindableRichTextBox FontFamily="Consolas"
+                                              FontSize="{Binding Path=FontSize, Source={x:Static properties:Settings.Default}}"
+                                              Foreground="Blue"
+                                              BorderBrush="{StaticResource NormalBorderBrush}"
+                                              BorderThickness="0,0,1,0"
+                                              Visibility="{Binding HexViewerContext.HexAddressVisible}"
+                                              IsReadOnly="True"
+                                              IsReadOnlyCaretVisible="True"
+                                              Document="{Binding HexViewerContext.AddressDocument}"
+                                              Width="{Binding HexViewerContext.AddrWidth}"/>
+                <controls:BindableRichTextBox x:Name="hexTextBox"
+                                              FontFamily="Consolas"
+                                              FontSize="{Binding Path=FontSize, Source={x:Static properties:Settings.Default}}"
+                                              Foreground="Gray"
+                                              BorderBrush="{StaticResource NormalBorderBrush}"
+                                              BorderThickness="0,0,1,0"
+                                              IsReadOnly="True"
+                                              IsReadOnlyCaretVisible="True"
+                                              ObserveCaret="True"
+                                              Document="{Binding HexViewerContext.HexDocument}"
+                                              Width="{Binding HexViewerContext.HexWidth}"/>
+                <controls:BindableRichTextBox FontFamily="Consolas"
+                                              FontSize="{Binding Path=FontSize, Source={x:Static properties:Settings.Default}}"
+                                              Foreground="Green"
+                                              BorderBrush="{StaticResource NormalBorderBrush}"
+                                              BorderThickness="0,0,1,0"
+                                              Visibility="{Binding HexViewerContext.AsciiValueVisible}"
+                                              IsReadOnly="True"
+                                              IsReadOnlyCaretVisible="True"
+                                              Document="{Binding HexViewerContext.AsciiDocument}"
+                                              Width="{Binding HexViewerContext.AsciiWidth}"/>
+            </DockPanel>
+        </ScrollViewer>
+    </DockPanel>
+</UserControl>
