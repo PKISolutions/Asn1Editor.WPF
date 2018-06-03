@@ -4,14 +4,14 @@ using System.IO;
 using System.Linq;
 using System.Windows;
 using System.Windows.Input;
-using Asn1Editor.API.ModelObjects;
-using Asn1Editor.API.Utils;
-using Asn1Editor.Views.Windows;
 using Microsoft.Win32;
+using SysadminsLV.Asn1Editor.API.ModelObjects;
+using SysadminsLV.Asn1Editor.API.Utils;
+using SysadminsLV.Asn1Editor.Views.Windows;
 using SysadminsLV.Asn1Parser;
 using SysadminsLV.WPF.OfficeTheme.Toolkit.Commands;
 
-namespace Asn1Editor.API.ViewModel {
+namespace SysadminsLV.Asn1Editor.API.ViewModel {
     class TreeViewCommands {
         readonly MainWindowVM _parentVM;
         readonly List<Byte> _excludedTags = new List<Byte>(

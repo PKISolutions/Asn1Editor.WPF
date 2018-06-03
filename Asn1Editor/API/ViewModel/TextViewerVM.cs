@@ -5,13 +5,13 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Windows.Input;
-using Asn1Editor.API.ModelObjects;
-using Asn1Editor.API.Utils;
-using Asn1Editor.Properties;
 using Microsoft.Win32;
+using SysadminsLV.Asn1Editor.API.ModelObjects;
+using SysadminsLV.Asn1Editor.API.Utils;
+using SysadminsLV.Asn1Editor.Properties;
 using SysadminsLV.WPF.OfficeTheme.Toolkit.Commands;
 
-namespace Asn1Editor.API.ViewModel {
+namespace SysadminsLV.Asn1Editor.API.ViewModel {
     class TextViewerVM : INotifyPropertyChanged {
         Asn1TreeNode rootNode;
         const String master = "123";

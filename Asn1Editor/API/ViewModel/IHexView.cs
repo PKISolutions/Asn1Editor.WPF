@@ -1,6 +1,6 @@
-﻿using Asn1Editor.API.ModelObjects;
+﻿using SysadminsLV.Asn1Editor.API.ModelObjects;
 
-namespace Asn1Editor.API.ViewModel {
+namespace SysadminsLV.Asn1Editor.API.ViewModel {
     interface IHexView {
         void SelectHexView(Asn1Lite treeNode);
     }

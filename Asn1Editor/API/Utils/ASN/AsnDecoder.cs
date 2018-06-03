@@ -7,13 +7,13 @@ using System.Numerics;
 using System.Security.Cryptography;
 using System.Security.Cryptography.X509Certificates;
 using System.Text;
-using Asn1Editor.API.ModelObjects;
-using Asn1Editor.API.ViewModel;
-using Asn1Editor.Properties;
+using SysadminsLV.Asn1Editor.API.ModelObjects;
+using SysadminsLV.Asn1Editor.API.ViewModel;
+using SysadminsLV.Asn1Editor.Properties;
 using SysadminsLV.Asn1Parser;
 using SysadminsLV.Asn1Parser.Universal;
 
-namespace Asn1Editor.API.Utils.ASN {
+namespace SysadminsLV.Asn1Editor.API.Utils.ASN {
     static class AsnDecoder {
         static List<Byte> generatePrintableStringTable() {
             List<Byte> allowed = new List<Byte> { 32 };

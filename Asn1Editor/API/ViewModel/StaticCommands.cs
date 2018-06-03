@@ -7,12 +7,12 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Documents;
 using System.Windows.Media;
-using Asn1Editor.API.ModelObjects;
-using Asn1Editor.Properties;
-using Asn1Editor.Views.Windows;
+using SysadminsLV.Asn1Editor.API.ModelObjects;
+using SysadminsLV.Asn1Editor.Properties;
+using SysadminsLV.Asn1Editor.Views.Windows;
 using SysadminsLV.Asn1Parser;
 
-namespace Asn1Editor.API.ViewModel {
+namespace SysadminsLV.Asn1Editor.API.ViewModel {
     static class StaticCommands {
         static Converter converter;
         static Boolean converterClosed = true;

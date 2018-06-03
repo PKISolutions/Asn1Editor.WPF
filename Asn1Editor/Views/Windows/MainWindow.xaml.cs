@@ -1,9 +1,9 @@
 ﻿using System;
 using System.ComponentModel;
 using System.Windows;
-using Asn1Editor.API.ViewModel;
+using SysadminsLV.Asn1Editor.API.ViewModel;
 
-namespace Asn1Editor.Views.Windows {
+namespace SysadminsLV.Asn1Editor.Views.Windows {
     /// <summary>
     /// Interaction logic for MainWindow.xaml
     /// </summary>

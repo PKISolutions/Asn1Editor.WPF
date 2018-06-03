@@ -4,11 +4,11 @@ using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Linq;
 using System.Windows;
-using Asn1Editor.API.Utils;
-using Asn1Editor.API.ViewModel;
+using SysadminsLV.Asn1Editor.API.Utils;
+using SysadminsLV.Asn1Editor.API.ViewModel;
 using SysadminsLV.Asn1Parser;
 
-namespace Asn1Editor.API.ModelObjects {
+namespace SysadminsLV.Asn1Editor.API.ModelObjects {
     public class Asn1TreeNode {
         readonly ObservableCollection<Asn1TreeNode> _children = new ObservableCollection<Asn1TreeNode>();
 

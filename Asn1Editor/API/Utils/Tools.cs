@@ -3,7 +3,7 @@ using System.Globalization;
 using System.Windows;
 using System.Windows.Media;
 
-namespace Asn1Editor.API.Utils {
+namespace SysadminsLV.Asn1Editor.API.Utils {
     static class Tools {
         public static MessageBoxResult MsgBox(String header, String message, MessageBoxImage image = MessageBoxImage.Error, MessageBoxButton button = MessageBoxButton.OK) {
             WindowCollection windows = Application.Current.Windows;

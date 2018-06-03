@@ -1,11 +1,11 @@
 ﻿using System;
 using System.Windows;
 using System.Windows.Documents;
-using Asn1Editor.API.ModelObjects;
-using Asn1Editor.API.Utils;
-using Asn1Editor.API.ViewModel;
+using SysadminsLV.Asn1Editor.API.ModelObjects;
+using SysadminsLV.Asn1Editor.API.Utils;
+using SysadminsLV.Asn1Editor.API.ViewModel;
 
-namespace Asn1Editor.Views.UserControls {
+namespace SysadminsLV.Asn1Editor.Views.UserControls {
     /// <summary>
     /// Interaction logic for HexViewerUC.xaml
     /// </summary>

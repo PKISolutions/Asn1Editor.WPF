@@ -2,10 +2,10 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Asn1Editor.API.ModelObjects;
+using SysadminsLV.Asn1Editor.API.ModelObjects;
 using SysadminsLV.Asn1Parser;
 
-namespace Asn1Editor.API.Utils.ASN {
+namespace SysadminsLV.Asn1Editor.API.Utils.ASN {
     public static class AsnTreeBuilder {
         public static Task<Asn1TreeNode> BuildTree(Byte[] rawData) {
             return Task.Factory.StartNew(() => {

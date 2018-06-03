@@ -1,10 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using Asn1Editor.API.ModelObjects;
+using SysadminsLV.Asn1Editor.API.ModelObjects;
 using SysadminsLV.Asn1Parser;
 
-namespace Asn1Editor.API.Utils {
+namespace SysadminsLV.Asn1Editor.API.Utils {
     static class HexUtility {
         public static String GetHexString(IEnumerable<Byte> rawData, Asn1Lite node) {
             Int32 startOffset = node.Offset + node.TagLength - node.PayloadLength;

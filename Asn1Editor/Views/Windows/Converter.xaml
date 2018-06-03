@@ -1,16 +1,16 @@
-﻿<Window x:Class="Asn1Editor.Views.Windows.Converter"
+﻿<Window x:Class="SysadminsLV.Asn1Editor.Views.Windows.Converter"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        xmlns:viewModel="clr-namespace:Asn1Editor.API.ViewModel"
-        xmlns:controls="clr-namespace:Asn1Editor.Controls"
-        xmlns:properties="clr-namespace:Asn1Editor.Properties"
+        xmlns:vm="clr-namespace:SysadminsLV.Asn1Editor.API.ViewModel"
+        xmlns:controls="clr-namespace:SysadminsLV.Asn1Editor.Controls"
+        xmlns:properties="clr-namespace:SysadminsLV.Asn1Editor.Properties"
         Title="Binary Converter"
         SizeToContent="Width"
         ResizeMode="CanMinimize"
         WindowStartupLocation="CenterOwner"
         Height="500">
     <Window.DataContext>
-        <viewModel:ConverterVM/>
+        <vm:ConverterVM/>
     </Window.DataContext>
     <Window.InputBindings>
         <KeyBinding Modifiers="Ctrl" Key="S" Command="{Binding SaveCommand}"/>

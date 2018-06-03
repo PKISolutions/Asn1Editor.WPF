@@ -1,10 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using Asn1Editor.API.ModelObjects;
-using Asn1Editor.API.Utils.ASN;
+using SysadminsLV.Asn1Editor.API.ModelObjects;
+using SysadminsLV.Asn1Editor.API.Utils.ASN;
 
-namespace Asn1Editor.API.Utils {
+namespace SysadminsLV.Asn1Editor.API.Utils {
     static class ClipboardManager {
         static readonly List<Byte> _rawData = new List<Byte>();
 

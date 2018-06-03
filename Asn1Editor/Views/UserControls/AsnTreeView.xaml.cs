@@ -3,11 +3,11 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
-using Asn1Editor.API.ModelObjects;
-using Asn1Editor.API.ViewModel;
-using Asn1Editor.Views.Windows;
+using SysadminsLV.Asn1Editor.API.ModelObjects;
+using SysadminsLV.Asn1Editor.API.ViewModel;
+using SysadminsLV.Asn1Editor.Views.Windows;
 
-namespace Asn1Editor.Views.UserControls {
+namespace SysadminsLV.Asn1Editor.Views.UserControls {
     /// <summary>
     /// Interaction logic for AsnTreeView.xaml
     /// </summary>

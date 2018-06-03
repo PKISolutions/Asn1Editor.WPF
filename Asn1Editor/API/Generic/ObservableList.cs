@@ -4,7 +4,7 @@ using System.Collections.Specialized;
 using System.ComponentModel;
 using System.Linq;
 
-namespace Asn1Editor.API.Generic {
+namespace SysadminsLV.Asn1Editor.API.Generic {
     public class ObservableList<T> : List<T>, IObservableList<T> {
         public ObservableList() {
             IsNotifying = true;

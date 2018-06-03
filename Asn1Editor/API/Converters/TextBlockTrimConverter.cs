@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Globalization;
 using System.Windows.Data;
-using Asn1Editor.Properties;
+using SysadminsLV.Asn1Editor.Properties;
 
-namespace Asn1Editor.API.Converters {
+namespace SysadminsLV.Asn1Editor.API.Converters {
     class TextBlockTrimConverter : IValueConverter {
         public Object Convert(Object value, Type targetType, Object parameter, CultureInfo culture) {
             if (value == null) { return String.Empty; }

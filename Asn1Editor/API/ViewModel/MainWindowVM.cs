@@ -6,15 +6,15 @@ using System.IO;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
-using Asn1Editor.API.Generic;
-using Asn1Editor.API.ModelObjects;
-using Asn1Editor.API.Utils;
-using Asn1Editor.API.Utils.ASN;
-using Asn1Editor.Properties;
 using Microsoft.Win32;
+using SysadminsLV.Asn1Editor.API.Generic;
+using SysadminsLV.Asn1Editor.API.ModelObjects;
+using SysadminsLV.Asn1Editor.API.Utils;
+using SysadminsLV.Asn1Editor.API.Utils.ASN;
+using SysadminsLV.Asn1Editor.Properties;
 using SysadminsLV.WPF.OfficeTheme.Toolkit.Commands;
 
-namespace Asn1Editor.API.ViewModel {
+namespace SysadminsLV.Asn1Editor.API.ViewModel {
     class MainWindowVM : ViewModelBase {
         String path;
         Asn1TreeNode selectedNode;

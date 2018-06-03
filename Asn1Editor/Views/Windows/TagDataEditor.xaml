@@ -1,9 +1,9 @@
-﻿<Window x:Class="Asn1Editor.Views.Windows.TagDataEditor"
+﻿<Window x:Class="SysadminsLV.Asn1Editor.Views.Windows.TagDataEditor"
         Name="editor"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        xmlns:viewModel="clr-namespace:Asn1Editor.API.ViewModel"
-        xmlns:properties="clr-namespace:Asn1Editor.Properties"
+        xmlns:viewModel="clr-namespace:SysadminsLV.Asn1Editor.API.ViewModel"
+        xmlns:properties="clr-namespace:SysadminsLV.Asn1Editor.Properties"
         WindowStartupLocation="CenterOwner"
         ShowInTaskbar="False"
         Title="Node Content Editor" Height="350" Width="500">

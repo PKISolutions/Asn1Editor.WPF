@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Windows;
 
-namespace Asn1Editor.Views.UserControls {
+namespace SysadminsLV.Asn1Editor.Views.UserControls {
     /// <summary>
     /// Interaction logic for BusyIndicator.xaml
     /// </summary>

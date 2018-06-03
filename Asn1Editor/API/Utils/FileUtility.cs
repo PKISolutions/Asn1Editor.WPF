@@ -6,7 +6,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using SysadminsLV.Asn1Parser;
 
-namespace Asn1Editor.API.Utils {
+namespace SysadminsLV.Asn1Editor.API.Utils {
     static class FileUtility {
         static String GetRawText(String path) {
             using (StreamReader sr = new StreamReader(path)) {

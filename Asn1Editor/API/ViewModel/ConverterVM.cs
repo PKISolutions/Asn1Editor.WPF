@@ -3,14 +3,14 @@ using System.Collections.Generic;
 using System.IO;
 using System.Windows;
 using System.Windows.Input;
-using Asn1Editor.API.Generic;
-using Asn1Editor.API.Utils;
-using Asn1Editor.Properties;
 using Microsoft.Win32;
+using SysadminsLV.Asn1Editor.API.Generic;
+using SysadminsLV.Asn1Editor.API.Utils;
+using SysadminsLV.Asn1Editor.Properties;
 using SysadminsLV.Asn1Parser;
 using SysadminsLV.WPF.OfficeTheme.Toolkit.Commands;
 
-namespace Asn1Editor.API.ViewModel {
+namespace SysadminsLV.Asn1Editor.API.ViewModel {
     class ConverterVM : ViewModelBase {
         const String master = "123456789012345678901234567890123456789012345678901234567890123456789012345678";
         Double width;

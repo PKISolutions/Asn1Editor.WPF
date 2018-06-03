@@ -1,12 +1,12 @@
 ﻿using System;
 using System.Windows;
-using Asn1Editor.API.Utils;
-using Asn1Editor.API.Utils.ASN;
-using Asn1Editor.API.ViewModel;
-using Asn1Editor.Properties;
+using SysadminsLV.Asn1Editor.API.Utils;
+using SysadminsLV.Asn1Editor.API.Utils.ASN;
+using SysadminsLV.Asn1Editor.API.ViewModel;
+using SysadminsLV.Asn1Editor.Properties;
 using SysadminsLV.Asn1Parser;
 
-namespace Asn1Editor.API.ModelObjects {
+namespace SysadminsLV.Asn1Editor.API.ModelObjects {
     public class Asn1Lite : ViewModelBase {
         Byte tag, unusedBits;
         Boolean invalidData;

@@ -3,7 +3,7 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Documents;
 
-namespace Asn1Editor.Controls {
+namespace SysadminsLV.Asn1Editor.Controls {
     public class BindableRichTextBox : RichTextBox {
         public static readonly DependencyProperty DocumentProperty = DependencyProperty.Register(
             nameof(Document),

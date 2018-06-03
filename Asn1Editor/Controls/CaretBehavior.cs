@@ -2,7 +2,7 @@
 using System.Windows;
 using System.Windows.Controls;
 
-namespace Asn1Editor.Controls {
+namespace SysadminsLV.Asn1Editor.Controls {
     public static class CaretBehavior {
         static void OnObserveCaretPropertyChanged(DependencyObject dpo, DependencyPropertyChangedEventArgs e) {
             if (dpo is TextBox textBox) {

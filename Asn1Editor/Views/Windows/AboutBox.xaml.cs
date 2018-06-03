@@ -7,7 +7,7 @@ using System.Windows.Data;
 using System.Windows.Navigation;
 using System.Xml;
 
-namespace Asn1Editor.Views.Windows {
+namespace SysadminsLV.Asn1Editor.Views.Windows {
     /// <summary>
     /// Interaction logic for AboutBox.xaml
     /// </summary>

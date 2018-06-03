@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Windows;
 
-namespace Asn1Editor.Views.Windows {
+namespace SysadminsLV.Asn1Editor.Views.Windows {
     /// <summary>
     /// Interaction logic for TextViewer.xaml
     /// </summary>

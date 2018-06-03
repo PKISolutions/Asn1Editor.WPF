@@ -6,12 +6,12 @@ using System.Text;
 using System.Windows;
 using System.Windows.Documents;
 using System.Windows.Input;
-using Asn1Editor.API.Utils;
-using Asn1Editor.Properties;
+using SysadminsLV.Asn1Editor.API.Utils;
+using SysadminsLV.Asn1Editor.Properties;
 using SysadminsLV.Asn1Parser;
 using SysadminsLV.WPF.OfficeTheme.Toolkit.Commands;
 
-namespace Asn1Editor.API.ViewModel {
+namespace SysadminsLV.Asn1Editor.API.ViewModel {
     class HexViewerVM : INotifyPropertyChanged {
         const String masterAddr = "12345678";
         const String masterHex = "123456789012345678901234567890123456789012345678";

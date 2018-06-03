@@ -4,10 +4,10 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Windows;
-using Asn1Editor.API.ViewModel;
-using Asn1Editor.Views.Windows;
+using SysadminsLV.Asn1Editor.API.ViewModel;
+using SysadminsLV.Asn1Editor.Views.Windows;
 
-namespace Asn1Editor {
+namespace SysadminsLV.Asn1Editor {
     /// <summary>
     /// Interaction logic for App.xaml
     /// </summary>

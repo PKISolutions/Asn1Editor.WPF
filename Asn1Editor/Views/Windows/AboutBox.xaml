@@ -1,4 +1,4 @@
-﻿<Window x:Class="Asn1Editor.Views.Windows.AboutBox"
+﻿<Window x:Class="SysadminsLV.Asn1Editor.Views.Windows.AboutBox"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     Title="{Binding RelativeSource={RelativeSource Self}, Mode=OneTime, Path=ProductTitle}" 

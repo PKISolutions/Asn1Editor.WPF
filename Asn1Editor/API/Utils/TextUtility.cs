@@ -5,10 +5,10 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Documents;
 using System.Windows.Media;
-using Asn1Editor.API.ModelObjects;
-using Asn1Editor.Controls;
+using SysadminsLV.Asn1Editor.API.ModelObjects;
+using SysadminsLV.Asn1Editor.Controls;
 
-namespace Asn1Editor.API.Utils {
+namespace SysadminsLV.Asn1Editor.API.Utils {
     static class TextUtility {
         static Int32 getOffset(Int32 offset) {
             Int32 line = (Int32)Math.Floor((Double)offset / 16);
