@@ -4,17 +4,20 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:viewModel="clr-namespace:SysadminsLV.Asn1Editor.API.ViewModel"
         xmlns:properties="clr-namespace:SysadminsLV.Asn1Editor.Properties"
+        xmlns:cmd="clr-namespace:SysadminsLV.WPF.OfficeTheme.Toolkit.Commands;assembly=Wpf.OfficeTheme"
+        cmd:DialogCloser.DialogResult="{Binding DialogResult}"
         WindowStartupLocation="CenterOwner"
         ShowInTaskbar="False"
-        Title="Node Content Editor" Height="350" Width="500">
+        Title="Node Content Editor"
+        Height="360"
+        Width="500">
     <Window.DataContext>
         <viewModel:TagDataEditorVM/>
     </Window.DataContext>
+    <Window.InputBindings>
+        <KeyBinding Key="Escape" Command="{Binding CloseCommand}"/>
+    </Window.InputBindings>
     <Window.Resources>
-        <ResourceDictionary>
-            <!--<ResourceDictionary.MergedDictionaries>
-                <ResourceDictionary Source="../Themes/TextBox.xaml"/>
-            </ResourceDictionary.MergedDictionaries>-->
         <Style x:Key="ValueEditorStyle" TargetType="TextBox" BasedOn="{StaticResource {x:Type TextBox}}">
             <Style.Triggers>
                 <Trigger Property="IsReadOnly" Value="True">
@@ -22,35 +25,21 @@
                 </Trigger>
             </Style.Triggers>
         </Style>
-        </ResourceDictionary>
     </Window.Resources>
     <DockPanel>
-        <!--<officeTheme:HeaderPanelUC DockPanel.Dock="Top">
-            <officeTheme:HeaderPanelUC.Content>
-                <TextBlock Text="blablabla"></TextBlock>
-            </officeTheme:HeaderPanelUC.Content>
-        </officeTheme:HeaderPanelUC>-->
-        <Border DockPanel.Dock="Top" BorderThickness="1" BorderBrush="#FF6F9CD8" Height="1"/>
-        <Border DockPanel.Dock="Top" BorderThickness="1" BorderBrush="#F1F7FE" Height="1"/>
-        <Border DockPanel.Dock="Top" BorderThickness="0,0,0,1" BorderBrush="#FFACD0FE" Background="#D5E7FE">
-            <TextBlock Text="Tag details:" DockPanel.Dock="Top" Foreground="Navy" Margin="2,2,0,1"/>
-        </Border>
-        <TextBox DockPanel.Dock="Top"
-                 BorderBrush="{StaticResource NormalBorderBrush}"
-                 Background="{StaticResource LightBorderBrush}"
-                 Text="{Binding TagDetails}"
-                 FontFamily="Consolas"
-                 FontSize="{Binding Path=FontSize, Source={x:Static properties:Settings.Default}}"
-                 FontWeight="Bold"
-                 MinLines="5"
-                 VerticalScrollBarVisibility="Auto"
-                 IsReadOnly="True"/>
-        <Border DockPanel.Dock="Top" BorderThickness="1" BorderBrush="#FF6F9CD8" Height="1"/>
-        <Border DockPanel.Dock="Top" BorderThickness="1" BorderBrush="#F1F7FE" Height="1"/>
-        <Border DockPanel.Dock="Top" BorderThickness="0,0,0,1" BorderBrush="#FFACD0FE" Background="#D5E7FE">
-            <TextBlock Text="Explicit value:" DockPanel.Dock="Top" Foreground="Navy" Margin="2,2,0,1"/>
-        </Border>
-        <StatusBar DockPanel.Dock="Bottom" VerticalAlignment="Bottom">
+        <HeaderedContentControl DockPanel.Dock="Top"
+                                Header="Tag details">
+            <TextBox BorderBrush="{StaticResource NormalBorderBrush}"
+                     Background="{StaticResource LightBorderBrush}"
+                     Text="{Binding TagDetails}"
+                     FontFamily="Consolas"
+                     FontSize="{Binding Path=FontSize, Source={x:Static properties:Settings.Default}}"
+                     FontWeight="Bold"
+                     MinLines="5"
+                     VerticalScrollBarVisibility="Auto"
+                     IsReadOnly="True"/>
+        </HeaderedContentControl>
+        <StatusBar DockPanel.Dock="Bottom">
             <StatusBarItem>
                 <StackPanel Orientation="Horizontal">
                     <TextBlock Text="Tag:" VerticalAlignment="Center" Margin="2,0,2,0"/>
@@ -87,21 +76,22 @@
             </StatusBarItem>
             <StatusBarItem HorizontalAlignment="Right">
                 <StackPanel Orientation="Horizontal">
-                    <Button Content="Ok" Width="60" Command="{Binding OkCommand}" CommandParameter="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type Window}}}" IsDefault="True"/>
-                    <Button Content="Cancel" Width="60" IsCancel="True" Margin="10,0,10,0" Click="CancelClick"/>
+                    <Button Content="Ok" Width="60" Command="{Binding OkCommand}" IsDefault="True"/>
+                    <Button Content="Cancel" Width="60" IsCancel="True" Margin="10,0,10,0" Command="{Binding CloseCommand}"/>
                 </StackPanel>
             </StatusBarItem>
         </StatusBar>
-        <TextBox Text="{Binding TagValue}"
-                 BorderBrush="{StaticResource NormalBorderBrush}"
-                 IsReadOnly="{Binding IsReadonly}"
-                 IsReadOnlyCaretVisible="True"
-                 MinLines="10"
-                 FontFamily="Consolas"
-                 TextWrapping="Wrap"
-                 FontSize="{Binding Path=FontSize, Source={x:Static properties:Settings.Default}}"
-                 Style="{StaticResource ValueEditorStyle}"
-                 HorizontalScrollBarVisibility="Auto"
-                 VerticalScrollBarVisibility="Auto"/>
+        <HeaderedContentControl Header="ExplicitValue">
+            <TextBox Text="{Binding TagValue}"
+                     IsReadOnly="{Binding IsReadonly}"
+                     IsReadOnlyCaretVisible="True"
+                     AcceptsReturn="True"
+                     FontFamily="Consolas"
+                     TextWrapping="Wrap"
+                     MinLines="10"
+                     FontSize="{Binding Path=FontSize, Source={x:Static properties:Settings.Default}}"
+                     Style="{StaticResource ValueEditorStyle}"
+                     VerticalScrollBarVisibility="Auto"/>
+        </HeaderedContentControl>
     </DockPanel>
 </Window>

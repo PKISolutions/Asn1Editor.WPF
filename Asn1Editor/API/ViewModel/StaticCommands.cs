@@ -11,6 +11,7 @@ using SysadminsLV.Asn1Editor.API.ModelObjects;
 using SysadminsLV.Asn1Editor.Properties;
 using SysadminsLV.Asn1Editor.Views.Windows;
 using SysadminsLV.Asn1Parser;
+using Unity;
 
 namespace SysadminsLV.Asn1Editor.API.ViewModel {
     static class StaticCommands {
@@ -64,14 +65,6 @@ namespace SysadminsLV.Asn1Editor.API.ViewModel {
             DocumentPaginator paginator = ((IDocumentPaginatorSource)flowDocument).DocumentPaginator;
             printDialog.PrintDocument(paginator, String.Empty);
         }
-        public static void ShowAbout(Object obj) {
-            AboutBox dlg = new AboutBox(Application.Current.MainWindow);
-            dlg.ShowDialog();
-        }
-        public static void ShowSettings(Object obj) {
-            SettingsWnd dlg = new SettingsWnd();
-            dlg.ShowDialog();
-        }
         public static void ShowConverter(Object obj) {
             if (!converterClosed) {
                 converter.Focus();
@@ -92,7 +85,7 @@ namespace SysadminsLV.Asn1Editor.API.ViewModel {
                 return;
             }
             textViewerClosed = false;
-            textViewer = new TextViewer();
+            textViewer = App.Container.Resolve<TextViewer>();
             textViewer.Closed += (Sender, Args) => { textViewerClosed = true; };
             ((TextViewerVM)textViewer.DataContext).SetBinding((Asn1TreeNode)obj);
             textViewer.Show();

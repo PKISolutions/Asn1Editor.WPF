@@ -1,5 +1,4 @@
 ﻿using System;
-using System.ComponentModel;
 using System.Globalization;
 using System.Linq;
 using System.Windows;
@@ -8,48 +7,50 @@ using SysadminsLV.Asn1Editor.API.ModelObjects;
 using SysadminsLV.Asn1Editor.API.Utils;
 using SysadminsLV.Asn1Editor.API.Utils.ASN;
 using SysadminsLV.Asn1Editor.Properties;
-using SysadminsLV.Asn1Editor.Views.Windows;
 using SysadminsLV.Asn1Parser;
 using SysadminsLV.WPF.OfficeTheme.Toolkit.Commands;
 
 namespace SysadminsLV.Asn1Editor.API.ViewModel {
-    class TagDataEditorVM : INotifyPropertyChanged {
+    class TagDataEditorVM : ViewModelBase {
         const String masterTag = "123";
         const String masterUnused = "1";
+        Boolean? dialogResult;
         Asn1Lite asn;
-        String tagDetails, tagValue, tagHex, oldValue;
+        String tagDetails, tagValue, oldValue;
         Boolean isReadonly, tagIsReadOnly = true;
         Visibility unusedBitsVisible = Visibility.Collapsed;
         Byte unusedBits, tag;
         Double tagTextBoxWidth, unusedTextBoxWidth;
 
         public TagDataEditorVM() {
-            OkCommand = new RelayCommand(SubmitValues);
-            Init();
+            OkCommand = new RelayCommand(submitValues);
+            CloseCommand = new RelayCommand(close);
+            init();
         }
 
         public ICommand OkCommand { get; set; }
+        public ICommand CloseCommand { get; set; }
         public Boolean Accepted { get; private set; }
 
         public String TagDetails {
             get => tagDetails;
             set {
                 tagDetails = value;
-                OnPropertyChanged("TagDetails");
+                OnPropertyChanged(nameof(TagDetails));
             }
         }
         public String TagValue {
             get => tagValue;
             set {
                 tagValue = value;
-                OnPropertyChanged("TagValue");
+                OnPropertyChanged(nameof(TagValue));
             }
         }
         public Boolean TagIsReadOnly {
             get => tagIsReadOnly;
             set {
                 tagIsReadOnly = value;
-                OnPropertyChanged("TagIsReadOnly");
+                OnPropertyChanged(nameof(TagIsReadOnly));
             }
         }
         public Byte Tag {
@@ -58,49 +59,56 @@ namespace SysadminsLV.Asn1Editor.API.ViewModel {
                 if (Byte.TryParse(value.ToString(CultureInfo.InvariantCulture), out Byte t)) {
                     tag = t;
                 }
-                OnPropertyChanged("Tag");
+                OnPropertyChanged(nameof(Tag));
             }
         }
         public Byte UnusedBits {
             get => unusedBits;
             set {
                 unusedBits = value;
-                OnPropertyChanged("UnusedBits");
+                OnPropertyChanged(nameof(UnusedBits));
             }
         }
         public Visibility UnusedBitsVisible {
             get => unusedBitsVisible;
             set {
                 unusedBitsVisible = value;
-                OnPropertyChanged("UnusedBitsVisible");
+                OnPropertyChanged(nameof(UnusedBitsVisible));
             }
         }
         public Boolean IsReadonly {
             get => isReadonly;
             set {
                 isReadonly = value;
-                OnPropertyChanged("IsReadonly");
+                OnPropertyChanged(nameof(IsReadonly));
             }
         }
         public Double TagTextBoxWidth {
             get => tagTextBoxWidth;
             set {
                 tagTextBoxWidth = value;
-                OnPropertyChanged("TagTextBoxWidth");
+                OnPropertyChanged(nameof(TagTextBoxWidth));
             }
         }
         public Double UnusedTextBoxWidth {
             get => unusedTextBoxWidth;
             set {
                 unusedTextBoxWidth = value;
-                OnPropertyChanged("UnusedTextBoxWidth");
+                OnPropertyChanged(nameof(UnusedTextBoxWidth));
+            }
+        }
+        public Boolean? DialogResult {
+            get => dialogResult;
+            set {
+                dialogResult = value;
+                OnPropertyChanged(nameof(DialogResult));
             }
         }
 
-        void Init() {
+        void init() {
             calculateLengths();
             Settings.Default.PropertyChanged += (Sender, Args) => {
-                if (Args.PropertyName == "FontSize") {
+                if (Args.PropertyName == nameof(Settings.FontSize)) {
                     calculateLengths();
                 }
             };
@@ -109,7 +117,7 @@ namespace SysadminsLV.Asn1Editor.API.ViewModel {
             TagTextBoxWidth = Tools.MeasureString(masterTag, Settings.Default.FontSize, false);
             UnusedTextBoxWidth = Tools.MeasureString(masterUnused, Settings.Default.FontSize, false);
         }
-        void SubmitValues(Object obj) {
+        void submitValues(Object obj) {
             Accepted = true;
             if (Tag == 0) {
                 Tools.MsgBox("Error", "Invalid tag number");
@@ -117,12 +125,15 @@ namespace SysadminsLV.Asn1Editor.API.ViewModel {
             }
             asn.Tag = Tag;
             if (TagValue == oldValue) {
-                ((TagDataEditor)obj).Close();
+                DialogResult = true;
                 return;
             }
             if (asn.ValidateValue(TagValue, UnusedBits)) {
-                ((TagDataEditor)obj).Close();
+                DialogResult = true;
             }
+        }
+        void close(Object o) {
+            DialogResult = true;
         }
 
         public void SetBinding(Asn1Lite asnNode, Boolean hex) {
@@ -141,13 +152,5 @@ namespace SysadminsLV.Asn1Editor.API.ViewModel {
                 ? Visibility.Visible
                 : Visibility.Hidden;
         }
-
-        void OnPropertyChanged(String PropertyName) {
-            PropertyChangedEventHandler handler = PropertyChanged;
-            if (handler != null) {
-                handler(this, new PropertyChangedEventArgs(PropertyName));
-            }
-        }
-        public event PropertyChangedEventHandler PropertyChanged;
     }
 }

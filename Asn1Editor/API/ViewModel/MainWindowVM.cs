@@ -8,6 +8,7 @@ using System.Windows;
 using System.Windows.Input;
 using Microsoft.Win32;
 using SysadminsLV.Asn1Editor.API.Generic;
+using SysadminsLV.Asn1Editor.API.Interfaces;
 using SysadminsLV.Asn1Editor.API.ModelObjects;
 using SysadminsLV.Asn1Editor.API.Utils;
 using SysadminsLV.Asn1Editor.API.Utils.ASN;
@@ -15,23 +16,21 @@ using SysadminsLV.Asn1Editor.Properties;
 using SysadminsLV.WPF.OfficeTheme.Toolkit.Commands;
 
 namespace SysadminsLV.Asn1Editor.API.ViewModel {
-    class MainWindowVM : ViewModelBase {
+    class MainWindowVM : ViewModelBase, IMainWindowVM {
         String path;
         Asn1TreeNode selectedNode;
         Visibility hexVisible;
         Boolean hexChecked, hasClipboard, isBusy;
 
-        public MainWindowVM() {
-            RawData = new ObservableList<Byte> { IsNotifying = true };
-            Tree = new ObservableCollection<Asn1TreeNode>();
+        public MainWindowVM(IAppCommands appCommands, ITreeCommands treeCommands) {
+            AppCommands = appCommands;
+            TreeCommands = treeCommands;
             HexViewerContext = new HexViewerVM { ParentVM = this };
-            TreeCommands = new TreeViewCommands(this);
-            OpenCommand = new RelayCommand(OpenFile);
-            SaveCommand = new RelayCommand(SaveFile, CanPrintSave);
-            HexViewerChanged = new RelayCommand(ChangeHexViewer);
+            TreeCommands2 = new TreeViewCommands(this);
+            OpenCommand = new RelayCommand(openFile);
+            SaveCommand = new RelayCommand(saveFile, canPrintSave);
+            HexViewerChanged = new RelayCommand(changeHexViewer);
             ShowConverterCommand = new RelayCommand(StaticCommands.ShowConverter);
-            SettingsCommand = new RelayCommand(StaticCommands.ShowSettings);
-            AboutCommand = new RelayCommand(StaticCommands.ShowAbout);
             Settings.Default.PropertyChanged += onSettingChange;
             initialize();
         }
@@ -42,38 +41,40 @@ namespace SysadminsLV.Asn1Editor.API.ViewModel {
         public ICommand HexViewerChanged { get; set; }
         public ICommand ShowConverterCommand { get; set; }
         public ICommand SettingsCommand { get; set; }
-        public ICommand AboutCommand { get; set; }
+
+        public IAppCommands AppCommands { get; }
+        public ITreeCommands TreeCommands { get; }
 
         public HexViewerVM HexViewerContext { get; set; }
-        public TreeViewCommands TreeCommands { get; set; }
+        public TreeViewCommands TreeCommands2 { get; set; }
 
-        public static ObservableList<Byte> RawData { get; set; }
-        public static Dictionary<String, String> OIDs { get; set; }
-        public ObservableCollection<Asn1TreeNode> Tree { get; set; }
+        public static ObservableList<Byte> RawData { get; } = new ObservableList<Byte> { IsNotifying = true };
+        public static Dictionary<String, String> OIDs { get; } = new Dictionary<String, String>();
+        public ObservableCollection<Asn1TreeNode> Tree { get; } = new ObservableCollection<Asn1TreeNode>();
 
         public String Path {
             get => path;
             set {
                 path = value;
-                OnPropertyChanged("Path");
-                OnPropertyChanged("Title");
+                OnPropertyChanged(nameof(Path));
+                OnPropertyChanged(nameof(Title));
             }
         }
         public String Title => String.IsNullOrEmpty(Path)
             ? "ASN.1 Editor"
-            : "ASN.1 Editor " + new FileInfo(Path).Name;
+            : "ASN.1 Editor - " + new FileInfo(Path).Name;
         public Boolean HasClipboardData {
             get => hasClipboard;
             set {
                 hasClipboard = value;
-                OnPropertyChanged("HasClipboardData");
+                OnPropertyChanged(nameof(HasClipboardData));
             }
         }
         public Asn1TreeNode SelectedTreeNode {
             get => selectedNode;
             set {
                 selectedNode = value;
-                OnPropertyChanged("SelectedTreeNode");
+                OnPropertyChanged(nameof(SelectedTreeNode));
                 if (selectedNode != null) {
                     HexViewerContext.View.SelectHexView(selectedNode.Value);
                 }
@@ -83,21 +84,21 @@ namespace SysadminsLV.Asn1Editor.API.ViewModel {
             get => hexVisible;
             set {
                 hexVisible = value;
-                OnPropertyChanged("HexViewerVisible");
+                OnPropertyChanged(nameof(HexViewerVisible));
             }
         }
         public Boolean HexViewerChecked {
             get => hexChecked;
             set {
                 hexChecked = value;
-                OnPropertyChanged("HexViewerChecked");
+                OnPropertyChanged(nameof(HexViewerChecked));
             }
         }
         public Boolean IsBusy {
             get => isBusy;
             set {
                 isBusy = value;
-                OnPropertyChanged("IsBusy");
+                OnPropertyChanged(nameof(IsBusy));
             }
         }
 
@@ -105,7 +106,7 @@ namespace SysadminsLV.Asn1Editor.API.ViewModel {
             HexViewerVisible = Visibility.Collapsed;
             HexViewerChecked = false;
         }
-        void OpenFile(Object obj) {
+        void openFile(Object obj) {
             OpenFileDialog dlg = new OpenFileDialog {
                 FileName = "",
                 DefaultExt = ".*",
@@ -115,9 +116,9 @@ namespace SysadminsLV.Asn1Editor.API.ViewModel {
             if (result != true) { return; }
             OpenExisting(dlg.FileName);
         }
-        void SaveFile(Object obj) {
+        void saveFile(Object obj) {
             if (obj != null || String.IsNullOrEmpty(Path)) {
-                if (!GetFilePath()) { return; }
+                if (!getFilePath()) { return; }
             }
             try {
                 File.WriteAllBytes(Path, RawData.ToArray());
@@ -125,9 +126,9 @@ namespace SysadminsLV.Asn1Editor.API.ViewModel {
                 Tools.MsgBox("Save Error", e.Message);
             }
         }
-        async void Decode() {
+        async void decode() {
             IsBusy = true;
-            if (await DecodeFile()) {
+            if (await decodeFile()) {
                 Tree.Clear();
                 try {
                     Asn1TreeNode rootNode = await AsnTreeBuilder.BuildTree(RawData.ToArray());
@@ -141,10 +142,10 @@ namespace SysadminsLV.Asn1Editor.API.ViewModel {
         }
 
         
-        static Boolean CanPrintSave(Object obj) {
+        static Boolean canPrintSave(Object obj) {
             return RawData.Count > 0;
         }
-        Boolean GetFilePath() {
+        Boolean getFilePath() {
             SaveFileDialog dlg = new SaveFileDialog {
                 FileName = "",
                 DefaultExt = ".*",
@@ -155,12 +156,12 @@ namespace SysadminsLV.Asn1Editor.API.ViewModel {
             Path = dlg.FileName;
             return true;
         }
-        void ChangeHexViewer(Object obj) {
+        void changeHexViewer(Object obj) {
             HexViewerVisible = HexViewerChecked
                 ? Visibility.Visible
                 : Visibility.Collapsed;
         }
-        async Task<Boolean> DecodeFile() {
+        async Task<Boolean> decodeFile() {
             if (RawData.Count > 0) {
                 return true;
             }
@@ -177,12 +178,12 @@ namespace SysadminsLV.Asn1Editor.API.ViewModel {
             if (!File.Exists(filePath)) { return; }
             Path = filePath;
             RawData.Clear();
-            Decode();
+            decode();
         }
         public void OpenExisting(String filePath) {
             Path = filePath;
             RawData.Clear();
-            Decode();
+            decode();
         }
         public void OpenRaw(String base64String) {
             OpenRaw(Convert.FromBase64String(base64String));
@@ -191,16 +192,16 @@ namespace SysadminsLV.Asn1Editor.API.ViewModel {
             Path = null;
             RawData.Clear();
             RawData.AddRange(rawBytes);
-            Decode();
+            decode();
         }
 
         void onSettingChange(Object sender, PropertyChangedEventArgs e) {
             if (Tree.Count == 0) { return; }
             switch (e.PropertyName) {
-                case "IntAsInt":
+                case nameof(Settings.IntAsInt):
                     StaticCommands.UpdateSettingsInteger(Tree[0], RawData);
                     break;
-                case "DecodePayload":
+                case nameof(Settings.DecodePayload):
                     StaticCommands.UpdateSettingsDecode(Tree[0]);
                     break;
             }

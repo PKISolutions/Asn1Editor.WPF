@@ -65,7 +65,7 @@ namespace SysadminsLV.Asn1Editor.API.ModelObjects {
             }
             ((MainWindowVM)Application.Current.MainWindow.DataContext).HexViewerContext.BuildHexView(null);
         }
-        public Int32 AddChild(Asn1Lite value, Boolean forcePathUpdate = false) {
+        public void AddChild(Asn1Lite value, Boolean forcePathUpdate = false) {
             var node = new Asn1TreeNode(value) { Parent = this };
             _children.Add(node);
             if (forcePathUpdate) {
@@ -73,7 +73,6 @@ namespace SysadminsLV.Asn1Editor.API.ModelObjects {
                 UpdatePath(node, Path, _children.Count - 1);
             }
             Value.IsContainer = true;
-            return _children.Count - 1;
         }
         public void AddNewNode(Asn1Lite value) {
             value.Offset = Value.Offset + Value.TagLength;

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.ComponentModel;
 using System.Windows;
+using SysadminsLV.Asn1Editor.API.Interfaces;
 using SysadminsLV.Asn1Editor.API.ViewModel;
 
 namespace SysadminsLV.Asn1Editor.Views.Windows {
@@ -8,8 +9,9 @@ namespace SysadminsLV.Asn1Editor.Views.Windows {
     /// Interaction logic for MainWindow.xaml
     /// </summary>
     public partial class MainWindow {
-        public MainWindow() {
+        public MainWindow(IMainWindowVM vm) {
             InitializeComponent();
+            DataContext = vm;
         }
 
         void CloseClick(Object sender, RoutedEventArgs e) {

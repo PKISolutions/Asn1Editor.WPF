@@ -3,15 +3,16 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:vm="clr-namespace:SysadminsLV.Asn1Editor.API.ViewModel"
         xmlns:uc="clr-namespace:SysadminsLV.Asn1Editor.Views.UserControls"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        mc:Ignorable="d"
+        d:DataContext="{d:DesignInstance vm:MainWindowVM}"
         Title="{Binding Title}"
-        Icon="../Images/asnlogo.ico"
+        Icon="/Views/Images/asnlogo.ico"
         WindowStartupLocation="CenterScreen"
         Closing="OnClosing"
         Height="600"
         Width="800">
-    <Window.DataContext>
-        <vm:MainWindowVM/>
-    </Window.DataContext>
     <Window.InputBindings>
         <KeyBinding Modifiers="Ctrl" Key="S" Command="{Binding SaveCommand}"/>
         <KeyBinding Modifiers="Ctrl" Key="O" Command="{Binding OpenCommand}"/>
@@ -22,12 +23,12 @@
             <MenuItem Header="File">
                 <MenuItem Header="Open" Command="{Binding OpenCommand}" InputGestureText="Ctrl + O">
                     <MenuItem.Icon>
-                        <Image Source="../Images/Menu/open_16x16.png"/>
+                        <Image Source="/Views/Images/Menu/open_16x16.png"/>
                     </MenuItem.Icon>
                 </MenuItem>
                 <MenuItem Header="Save" Command="{Binding SaveCommand}" InputGestureText="Ctrl + S">
                     <MenuItem.Icon>
-                        <Image Source="../Images/Menu/save_16x16.png"/>
+                        <Image Source="/Views/Images/Menu/save_16x16.png"/>
                     </MenuItem.Icon>
                 </MenuItem>
                 <MenuItem Header="Save As..." Command="{Binding SaveCommand}" CommandParameter="1"/>
@@ -35,93 +36,93 @@
             </MenuItem>
             <MenuItem Header="Edit">
                 <MenuItem Header="Edit"
-                          Command="{Binding TreeCommands.EditNodeCommand}"
+                          Command="{Binding TreeCommands2.EditNodeCommand}"
                           InputGestureText="Ctrl + E">
                     <MenuItem.Icon>
-                        <Image Source="../Images/Menu/edit_16x16.png"/>
+                        <Image Source="/Views/Images/Menu/edit_16x16.png"/>
                     </MenuItem.Icon>
                 </MenuItem>
                 <MenuItem Header="Edit in hex mode"
-                          Command="{Binding TreeCommands.EditNodeCommand}"
+                          Command="{Binding TreeCommands2.EditNodeCommand}"
                           CommandParameter="hex"/>
                 <MenuItem Header="Save selected node as..."
-                          Command="{Binding TreeCommands.SaveNodeCommand}"
+                          Command="{Binding TreeCommands2.SaveNodeCommand}"
                           CommandParameter="{Binding SelectedTreeNode.Value}"/>
                 <MenuItem Header="View node text"
-                          Command="{Binding TreeCommands.ShowTextCommand}"
+                          Command="{Binding TreeCommands2.ShowTextCommand}"
                           CommandParameter="{Binding SelectedTreeNode}">
                     <MenuItem.Icon>
-                        <Image Source="../Images/Menu/viewtext_16x16.png"/>
+                        <Image Source="/Views/Images/Menu/viewtext_16x16.png"/>
                     </MenuItem.Icon>
                 </MenuItem>
                 <Separator/>
                 <MenuItem Header="New node"
-                          Command="{Binding TreeCommands.NewNodeCommand}"
+                          Command="{Binding TreeCommands2.NewNodeCommand}"
                           CommandParameter="{Binding SelectedTreeNode}"
                           InputGestureText="Ctrl + N">
                     <MenuItem.Icon>
-                        <Image Source="../Images/Menu/newnode_16x16.png"/>
+                        <Image Source="/Views/Images/Menu/newnode_16x16.png"/>
                     </MenuItem.Icon>
                 </MenuItem>
                 <MenuItem Header="Cut"
-                          Command="{Binding TreeCommands.CutNodeCommand}"
+                          Command="{Binding TreeCommands2.CutNodeCommand}"
                           CommandParameter="{Binding SelectedTreeNode}"
                           InputGestureText="Ctrl + X">
                     <MenuItem.Icon>
-                        <Image Source="../Images/Menu/cut_16x16.png"/>
+                        <Image Source="/Views/Images/Menu/cut_16x16.png"/>
                     </MenuItem.Icon>
                 </MenuItem>
                 <MenuItem Header="Copy"
-                          Command="{Binding TreeCommands.CopyNodeCommand}"
+                          Command="{Binding TreeCommands2.CopyNodeCommand}"
                           CommandParameter="{Binding SelectedTreeNode}"
                           InputGestureText="Ctrl + C">
                     <MenuItem.Icon>
-                        <Image Source="../Images/Menu/copy_16x16.png"/>
+                        <Image Source="/Views/Images/Menu/copy_16x16.png"/>
                     </MenuItem.Icon>
                 </MenuItem>
                 <MenuItem Header="Paste before"
-                          Command="{Binding TreeCommands.PasteBeforeCommand}"
+                          Command="{Binding TreeCommands2.PasteBeforeCommand}"
                           CommandParameter="{Binding SelectedTreeNode}">
                     <MenuItem.Icon>
-                        <Image Source="../Images/Menu/insertbefore_16x16.png"/>
+                        <Image Source="/Views/Images/Menu/insertbefore_16x16.png"/>
                     </MenuItem.Icon>
                 </MenuItem>
                 <MenuItem Header="Paste After"
-                          Command="{Binding TreeCommands.PasteAfterCommand}"
+                          Command="{Binding TreeCommands2.PasteAfterCommand}"
                           CommandParameter="{Binding SelectedTreeNode}"
                           InputGestureText="Ctrl + V">
                     <MenuItem.Icon>
-                        <Image Source="../Images/Menu/insertafter_16x16.png"/>
+                        <Image Source="/Views/Images/Menu/insertafter_16x16.png"/>
                     </MenuItem.Icon>
                 </MenuItem>
                 <MenuItem Header="Insert as a last child node"
-                          Command="{Binding TreeCommands.PasteLastCommand}"
+                          Command="{Binding TreeCommands2.PasteLastCommand}"
                           CommandParameter="{Binding SelectedTreeNode}">
                     <MenuItem.Icon>
-                        <Image Source="../Images/Menu/insertlast_16x16.png"/>
+                        <Image Source="/Views/Images/Menu/insertlast_16x16.png"/>
                     </MenuItem.Icon>
                 </MenuItem>
                 <Separator/>
                 <MenuItem Header="Remove"
-                          Command="{Binding TreeCommands.DeleteNodeCommand}"
+                          Command="{Binding TreeCommands2.DeleteNodeCommand}"
                           CommandParameter="{Binding SelectedTreeNode}"
                           InputGestureText="Del">
                     <MenuItem.Icon>
-                        <Image Source="../Images/Menu/delete_16x16.png"/>
+                        <Image Source="/Views/Images/Menu/delete_16x16.png"/>
                     </MenuItem.Icon>
                 </MenuItem>
             </MenuItem>
             <MenuItem Header="_Tools">
-                <MenuItem Header="Settings" Command="{Binding SettingsCommand}">
+                <MenuItem Header="Settings" Command="{Binding AppCommands.ShowSettingsCommand}">
                     <MenuItem.Icon>
-                        <Image Source="../Images/Menu/info_16x16.png"/>
+                        <Image Source="/Views/Images/Menu/info_16x16.png"/>
                     </MenuItem.Icon>
                 </MenuItem>
             </MenuItem>
             <MenuItem Header="_Help">
-                <MenuItem Header="About" Command="{Binding AboutCommand}">
+                <MenuItem Header="About" Command="{Binding AppCommands.ShowAboutCommand}">
                     <MenuItem.Icon>
-                        <Image Source="../Images/Menu/info_16x16.png"/>
+                        <Image Source="/Views/Images/Menu/info_16x16.png"/>
                     </MenuItem.Icon>
                 </MenuItem>
             </MenuItem>
@@ -131,66 +132,66 @@
                 <ToggleButton Command="{Binding HexViewerChanged}"
                               IsChecked="{Binding HexViewerChecked}"
                               ToolTip="Show or hide hex viewer">
-                    <Image Source="../Images/Menu/hexview_16x16.png" Width="16"/>	
+                    <Image Source="/Views/Images/Menu/hexview_16x16.png" Width="16"/>	
                 </ToggleButton>
                 <Button Command="{Binding ShowConverterCommand}" ToolTip="Open data converter">
-                    <Image Source="../Images/Menu/converter_16x16.png"/>	
+                    <Image Source="/Views/Images/Menu/converter_16x16.png"/>	
                 </Button>
             </ToolBar>
             <ToolBar>
                 <Button Command="{Binding OpenCommand}">
-                    <Image Source="../Images/Menu/open_16x16.png"/>
+                    <Image Source="/Views/Images/Menu/open_16x16.png"/>
                 </Button>
                 <Button Command="{Binding SaveCommand}">
-                    <Image Source="../Images/Menu/save_16x16.png"/>
+                    <Image Source="/Views/Images/Menu/save_16x16.png"/>
                 </Button>
             </ToolBar>
             <ToolBar>
-                <Button Command="{Binding TreeCommands.EditNodeCommand}"
+                <Button Command="{Binding TreeCommands2.EditNodeCommand}"
                         ToolTip="Edit selected node">
-                    <Image Source="../Images/Menu/edit_16x16.png" Width="16"/>
+                    <Image Source="/Views/Images/Menu/edit_16x16.png" Width="16"/>
                 </Button>
-                <Button Command="{Binding TreeCommands.ShowTextCommand}"
+                <Button Command="{Binding TreeCommands.ShowNodeTextViewer}"
                         CommandParameter="{Binding SelectedTreeNode}"
                         ToolTip="View node text">
-                    <Image Source="../Images/Menu/viewtext_16x16.png"/>
+                    <Image Source="/Views/Images/Menu/viewtext_16x16.png"/>
                 </Button>
                 <Separator/>
-                <Button Command="{Binding TreeCommands.CutNodeCommand}"
+                <Button Command="{Binding TreeCommands2.CutNodeCommand}"
                         CommandParameter="{Binding SelectedTreeNode}"
                         ToolTip="Cut selected node">
-                    <Image Source="../Images/Menu/cut_16x16.png"/>
+                    <Image Source="/Views/Images/Menu/cut_16x16.png"/>
                 </Button>
-                <Button Command="{Binding TreeCommands.CopyNodeCommand}"
+                <Button Command="{Binding TreeCommands2.CopyNodeCommand}"
                         CommandParameter="{Binding SelectedTreeNode}"
                         ToolTip="Copy selected node">
-                    <Image Source="../Images/Menu/copy_16x16.png"/>
+                    <Image Source="/Views/Images/Menu/copy_16x16.png"/>
                 </Button>
-                <Button Command="{Binding TreeCommands.PasteBeforeCommand}"
+                <Button Command="{Binding TreeCommands2.PasteBeforeCommand}"
                         CommandParameter="{Binding SelectedTreeNode}"
                         ToolTip="Insert before selected node">
-                    <Image Source="../Images/Menu/insertbefore_16x16.png"/>
+                    <Image Source="/Views/Images/Menu/insertbefore_16x16.png"/>
                 </Button>
-                <Button Command="{Binding TreeCommands.PasteAfterCommand}"
+                <Button Command="{Binding TreeCommands2.PasteAfterCommand}"
                         CommandParameter="{Binding SelectedTreeNode}"
                         ToolTip="Insert after selected node">
-                    <Image Source="../Images/Menu/insertafter_16x16.png"/>
+                    <Image Source="/Views/Images/Menu/insertafter_16x16.png"/>
                 </Button>
-                <Button Command="{Binding TreeCommands.PasteLastCommand}"
+                <Button Command="{Binding TreeCommands2.PasteLastCommand}"
                         CommandParameter="{Binding SelectedTreeNode}"
                         ToolTip="Insert as a last child node">
-                    <Image Source="../Images/Menu/insertlast_16x16.png"/>
+                    <Image Source="/Views/Images/Menu/insertlast_16x16.png"/>
                 </Button>
                 <Separator/>
-                <Button Command="{Binding TreeCommands.NewNodeCommand}"
+                <Button Command="{Binding TreeCommands2.NewNodeCommand}"
                         CommandParameter="{Binding SelectedTreeNode}"
                         ToolTip="New node">
-                    <Image Source="../Images/Menu/newnode_16x16.png"/>
+                    <Image Source="/Views/Images/Menu/newnode_16x16.png"/>
                 </Button>
-                <Button Command="{Binding TreeCommands.DeleteNodeCommand}"
+                <Button Command="{Binding TreeCommands2.DeleteNodeCommand}"
                         CommandParameter="{Binding SelectedTreeNode}"
                         ToolTip="Delete selected node">
-                    <Image Source="../Images/Menu/delete_16x16.png"/>
+                    <Image Source="/Views/Images/Menu/delete_16x16.png"/>
                 </Button>
             </ToolBar>
         </ToolBarTray>

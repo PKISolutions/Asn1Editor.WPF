@@ -15,16 +15,8 @@ namespace SysadminsLV.Asn1Editor.Views.Windows {
         /// <summary>
         /// Default constructor is protected so callers must use one with a parent.
         /// </summary>
-        AboutBox() {
+        public AboutBox() {
             InitializeComponent();
-        }
-
-        /// <summary>
-        /// Constructor that takes a parent for this AboutBox dialog.
-        /// </summary>
-        /// <param name="parent">Parent window for this dialog.</param>
-        public AboutBox(Window parent) : this() {
-            Owner = parent;
         }
 
         /// <summary>
@@ -32,30 +24,28 @@ namespace SysadminsLV.Asn1Editor.Views.Windows {
         /// </summary>
         /// <param name="sender">Object the sent the event.</param>
         /// <param name="e">Navigation events arguments.</param>
-        private void HyperlinkRequestNavigate(Object sender, RequestNavigateEventArgs e) {
+        void hyperlinkRequestNavigate(Object sender, RequestNavigateEventArgs e) {
             if (e.Uri != null && String.IsNullOrEmpty(e.Uri.OriginalString) == false) {
                 String uri = e.Uri.AbsoluteUri;
                 Process.Start(new ProcessStartInfo(uri));
                 e.Handled = true;
             }
         }
-
-        private XmlDocument xmlDoc;
-
-        private const String propertyNameTitle = "Title";
-        private const String propertyNameDescription = "Description";
-        private const String propertyNameProduct = "Product";
-        private const String propertyNameCopyright = "Copyright";
-        private const String propertyNameCompany = "Company";
-        private const String xPathRoot = "ApplicationInfo/";
-        private const String xPathTitle = xPathRoot + propertyNameTitle;
-        private const String xPathVersion = xPathRoot + "Version";
-        private const String xPathDescription = xPathRoot + propertyNameDescription;
-        private const String xPathProduct = xPathRoot + propertyNameProduct;
-        private const String xPathCopyright = xPathRoot + propertyNameCopyright;
-        private const String xPathCompany = xPathRoot + propertyNameCompany;
-        private const String xPathLink = xPathRoot + "Link";
-        private const String xPathLinkUri = xPathRoot + "Link/@Uri";
+        XmlDocument xmlDoc;
+        const String propertyNameTitle = "Title";
+        const String propertyNameDescription = "Description";
+        const String propertyNameProduct = "Product";
+        const String propertyNameCopyright = "Copyright";
+        const String propertyNameCompany = "Company";
+        const String xPathRoot = "ApplicationInfo/";
+        const String xPathTitle = xPathRoot + propertyNameTitle;
+        const String xPathVersion = xPathRoot + "Version";
+        const String xPathDescription = xPathRoot + propertyNameDescription;
+        const String xPathProduct = xPathRoot + propertyNameProduct;
+        const String xPathCopyright = xPathRoot + propertyNameCopyright;
+        const String xPathCompany = xPathRoot + propertyNameCompany;
+        const String xPathLink = xPathRoot + "Link";
+        const String xPathLinkUri = xPathRoot + "Link/@Uri";
 
         #region Properties
         /// <summary>
@@ -129,7 +119,7 @@ namespace SysadminsLV.Asn1Editor.Views.Windows {
         /// <param name="xpathQuery">XPath to the element in the XML data resource.</param>
         /// <returns>The resulting string to use for a property.
         /// Returns null if no data could be retrieved.</returns>
-        private String CalculatePropertyValue<T>(String propertyName, String xpathQuery) {
+        String CalculatePropertyValue<T>(String propertyName, String xpathQuery) {
             String result = String.Empty;
             // first, try to get the property value from an attribute.
             Object[] attributes = Assembly.GetExecutingAssembly().GetCustomAttributes(typeof(T), false);
@@ -152,7 +142,7 @@ namespace SysadminsLV.Asn1Editor.Views.Windows {
         /// <summary>
         /// Gets the XmlDataProvider's document from the resource dictionary.
         /// </summary>
-        private XmlDocument ResourceXmlDocument {
+        XmlDocument ResourceXmlDocument {
             get {
                 if (xmlDoc == null) {
                     // if we haven't already found the resource XmlDocument, then try to find it.
@@ -172,7 +162,7 @@ namespace SysadminsLV.Asn1Editor.Views.Windows {
         /// <param name="xpathQuery">An XPath query to the XML element to retrieve.</param>
         /// <returns>The resulting string value for the specified XML element. 
         /// Returns empty string if resource element couldn't be found.</returns>
-        private String GetLogicalResourceString(String xpathQuery) {
+        String GetLogicalResourceString(String xpathQuery) {
             String result = String.Empty;
             // get the About xml information from the resources.
             XmlDocument doc = ResourceXmlDocument;
@@ -187,7 +177,7 @@ namespace SysadminsLV.Asn1Editor.Views.Windows {
         }
         #endregion
 
-        private void OkButton_OnClick(Object Sender, RoutedEventArgs E) {
+        void OkButton_OnClick(Object Sender, RoutedEventArgs E) {
             Close();
         }
     }

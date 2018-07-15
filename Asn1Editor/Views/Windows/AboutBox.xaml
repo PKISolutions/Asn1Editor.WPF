@@ -71,7 +71,7 @@
                 <Button x:Name="okButton" x:Uid="okButton" Content="OK" MinWidth="75" DockPanel.Dock="Right" Margin="0,5" IsCancel="True" IsDefault="True" Click="OkButton_OnClick"/>
                 <Label x:Name="productLink" x:Uid="productLink" Style="{StaticResource LinkLabelStyle}" >
                     <Hyperlink x:Name="hyperlink" x:Uid="hyperlink" NavigateUri="{Binding Mode=OneTime, Path=LinkUri}"  Style="{StaticResource LinkLabelStyle}"
-                               RequestNavigate="HyperlinkRequestNavigate">
+                               RequestNavigate="hyperlinkRequestNavigate">
                         <TextBlock Text="{Binding Mode=OneTime, Path=LinkText}" />
                     </Hyperlink>
                 </Label>

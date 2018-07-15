@@ -1,24 +1,25 @@
 ﻿using System;
-using System.ComponentModel;
 using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Text;
 using System.Windows.Input;
 using Microsoft.Win32;
+using SysadminsLV.Asn1Editor.API.Interfaces;
 using SysadminsLV.Asn1Editor.API.ModelObjects;
 using SysadminsLV.Asn1Editor.API.Utils;
 using SysadminsLV.Asn1Editor.Properties;
 using SysadminsLV.WPF.OfficeTheme.Toolkit.Commands;
 
 namespace SysadminsLV.Asn1Editor.API.ViewModel {
-    class TextViewerVM : INotifyPropertyChanged {
+    class TextViewerVM : ViewModelBase, ITextViewerVM {
         Asn1TreeNode rootNode;
         const String master = "123";
         const String delimieter = "      |      |       |";
         const Int32 minLength = 60;
         const Int32 defaultLength = 80;
         const Int32 maxLength = 400;
+        Boolean? dialogResult;
         String n = Environment.NewLine;
         String text;
         Int32 currentLength = 80;
@@ -27,44 +28,55 @@ namespace SysadminsLV.Asn1Editor.API.ViewModel {
 
         public TextViewerVM() {
             CurrentLength = defaultLength.ToString(CultureInfo.InvariantCulture);
-            SaveCommand = new RelayCommand(SaveFile);
-            PrintCommand = new RelayCommand(Print);
+            SaveCommand = new RelayCommand(saveFile);
+            PrintCommand = new RelayCommand(print);
             ApplyCommand = new RelayCommand(applyNewLength);
+            CloseCommand = new RelayCommand(close);
             TextBoxWidth = Tools.MeasureString(master, Settings.Default.FontSize, false);
         }
 
         public ICommand SaveCommand { get; set; }
         public ICommand PrintCommand { get; set; }
         public ICommand ApplyCommand { get; set; }
+        public ICommand CloseCommand { get; }
 
         public String Text {
             get => text;
             set {
                 text = value;
-                OnPropertyChanged("Text");
+                OnPropertyChanged(nameof(Text));
             }
         }
         public String CurrentLength {
             get => currentLengthStr;
             set {
                 currentLengthStr = value;
-                OnPropertyChanged("CurrentLength");
+                OnPropertyChanged(nameof(CurrentLength));
             }
         }
         public Double TextBoxWidth {
             get => width;
             set {
                 width = value;
-                OnPropertyChanged("TextBoxWidth");
+                OnPropertyChanged(nameof(TextBoxWidth));
+            }
+        }
+        public Boolean? DialogResult {
+            get => dialogResult;
+            set {
+                dialogResult = value;
+                OnPropertyChanged(nameof(DialogResult));
             }
         }
 
-        void Print(Object obj) {
+        void close(Object o) {
+            DialogResult = true;
+        }
+        void print(Object obj) {
             StaticCommands.Print(Text);
         }
         void applyNewLength(Object obj) {
-            Int32 value;
-            if (!Int32.TryParse(CurrentLength, NumberStyles.Integer, null, out value)) {
+            if (!Int32.TryParse(CurrentLength, NumberStyles.Integer, null, out Int32 value)) {
                 CurrentLength = currentLength.ToString(CultureInfo.InvariantCulture);
                 return;
             }
@@ -73,9 +85,9 @@ namespace SysadminsLV.Asn1Editor.API.ViewModel {
                 ? minLength
                 : value;
             CurrentLength = currentLength.ToString(CultureInfo.InvariantCulture);
-            GenerateTable();
+            generateTable();
         }
-        void GenerateTable() {
+        void generateTable() {
             if (rootNode == null) { return; }
             StringBuilder SB = new StringBuilder("Offset|Length|LenByte|" + n);
             SB.Append("======+======+=======+" + new String('=', currentLength + 10) + n);
@@ -86,16 +98,15 @@ namespace SysadminsLV.Asn1Editor.API.ViewModel {
                     node.PayloadLength,
                     node.HeaderLength - 1,
                     padding,
-                    node.TagName
-                    );
-                SB.Append(str + CalculateValue(node, str.Length, padding.Length));
+                    node.TagName);
+                SB.Append(str + calculateValue(node, str.Length, padding.Length));
             }
             Text = SB.ToString();
         }
-        String CalculateValue(Asn1Lite node, Int32 lineLength, Int32 padding) {
+        String calculateValue(Asn1Lite node, Int32 lineLength, Int32 padding) {
             if (String.IsNullOrEmpty(node.ExplicitValue)) { return n; }
             if (24 + padding + node.ExplicitValue.Length <= currentLength) {
-                return "'" + node.ExplicitValue.Trim() + "'" + n;
+                return $"'{node.ExplicitValue.Trim()}'{n}";
             }
             Int32 remaining = currentLength - 22 - padding;
             if (node.ExplicitValue.Length <= remaining - 2) {
@@ -111,10 +122,10 @@ namespace SysadminsLV.Asn1Editor.API.ViewModel {
             return Utils.Extensions.StringExtensions
                 .SplitByLength(node.ExplicitValue, currentLength - padding)
                 .Aggregate(n, (current, line) => 
-                    current + String.Format("{0}{1}{2}{3}", delimieter, new String(' ', padding + 3), line.Trim(), n));
+                    current + $"{delimieter}{new String(' ', padding + 3)}{line.Trim()}{n}");
         }
-        void SaveFile(Object obj) {
-            String path = GetFilePath();
+        void saveFile(Object obj) {
+            String path = getFilePath();
             if (String.IsNullOrEmpty(path)) { return; }
             try {
                 File.WriteAllText(path, Text);
@@ -123,7 +134,7 @@ namespace SysadminsLV.Asn1Editor.API.ViewModel {
             }
         }
 
-        static String GetFilePath() {
+        static String getFilePath() {
             SaveFileDialog dlg = new SaveFileDialog {
                 FileName = "",
                 DefaultExt = ".*",
@@ -136,14 +147,7 @@ namespace SysadminsLV.Asn1Editor.API.ViewModel {
         }
         public void SetBinding(Asn1TreeNode node) {
             rootNode = node;
-            GenerateTable();
+            generateTable();
         }
-        void OnPropertyChanged(String PropertyName) {
-            PropertyChangedEventHandler handler = PropertyChanged;
-            if (handler != null) {
-                handler(this, new PropertyChangedEventArgs(PropertyName));
-            }
-        }
-        public event PropertyChangedEventHandler PropertyChanged;
     }
 }
