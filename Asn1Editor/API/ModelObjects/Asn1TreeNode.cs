@@ -117,6 +117,7 @@ namespace SysadminsLV.Asn1Editor.API.ModelObjects {
                 MainWindowVM.RawData.RemoveRange(t.Value.Offset + 1, t.Value.HeaderLength - 1);
                 MainWindowVM.RawData.InsertRange(t.Value.Offset + 1, newLenBytes);
                 Int32 diff = newLenBytes.Length - (t.Value.HeaderLength - 1);
+                difference += diff;
                 if (diff != 0) {
                     t.UpdateOffset(diff);
                 }
