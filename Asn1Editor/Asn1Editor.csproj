@@ -144,10 +144,12 @@
     <Compile Include="API\Generic\IObservableList.cs" />
     <Compile Include="API\Interfaces\IAppCommands.cs" />
     <Compile Include="API\Interfaces\IDataSource.cs" />
+    <Compile Include="API\Interfaces\IHexViewerVM.cs" />
     <Compile Include="API\Interfaces\IMainWindowVM.cs" />
     <Compile Include="API\Interfaces\ITextViewerVM.cs" />
     <Compile Include="API\Interfaces\ITreeCommands.cs" />
     <Compile Include="API\Interfaces\IWindowFactory.cs" />
+    <Compile Include="API\ModelObjects\DataSource.cs" />
     <Compile Include="API\ModelObjects\NodeAddOption.cs" />
     <Compile Include="API\Utils\ASN\AsnDecoder.cs" />
     <Compile Include="API\Utils\ASN\AsnTreeBuilder.cs" />

@@ -1,124 +1,80 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Linq;
 using System.Text;
-using System.Windows;
 using System.Windows.Documents;
-using System.Windows.Input;
+using SysadminsLV.Asn1Editor.API.Interfaces;
 using SysadminsLV.Asn1Editor.API.Utils;
 using SysadminsLV.Asn1Editor.Properties;
 using SysadminsLV.Asn1Parser;
-using SysadminsLV.WPF.OfficeTheme.Toolkit.Commands;
+using Unity;
 
 namespace SysadminsLV.Asn1Editor.API.ViewModel {
-    class HexViewerVM : INotifyPropertyChanged {
+    class HexViewerVM : ViewModelBase, IHexViewerVM {
         const String masterAddr = "12345678";
         const String masterHex = "123456789012345678901234567890123456789012345678";
         const String masterAscii = "1234567890123456";
-        Visibility hexAddressVisible;
-        Visibility asciiValueVisible;
-        Boolean hexAddressChecked;
-        Boolean asciiValueChecked;
         FlowDocument addressDocument;
         FlowDocument hexDocument;
         FlowDocument asciiDocument;
         Double addrWidth, hexWidth, asciiWidth;
 
         public HexViewerVM() {
-            ChangeHexAddressCommand = new RelayCommand(ChangeHexAddress);
-            ChangeAsciiValueCommand = new RelayCommand(ChangeAsciiValue);
-            Init();
+            init();
         }
 
-        public MainWindowVM ParentVM { get; set; }
         public IHexView View { get; set; }
 
-        public ICommand ChangeHexAddressCommand { get; set; }
-        public ICommand ChangeAsciiValueCommand { get; set; }
-
-        public Visibility HexAddressVisible {
-            get => hexAddressVisible;
-            set {
-                hexAddressVisible = value;
-                OnPropertyChanged("HexAddressVisible");
-            }
-        }
-        public Visibility AsciiValueVisible {
-            get => asciiValueVisible;
-            set {
-                asciiValueVisible = value;
-                OnPropertyChanged("AsciiValueVisible");
-            }
-        }
-        public Boolean HexAddressChecked {
-            get => hexAddressChecked;
-            set {
-                hexAddressChecked = value;
-                OnPropertyChanged("HexAddressChecked");
-            }
-        }
-        public Boolean AsciiValueChecked {
-            get => asciiValueChecked;
-            set {
-                asciiValueChecked = value;
-                OnPropertyChanged("AsciiValueChecked");
-            }
-        }
         public FlowDocument AddressDocument {
             get => addressDocument;
             set {
                 addressDocument = value;
-                OnPropertyChanged("AddressDocument");
+                OnPropertyChanged(nameof(AddressDocument));
             }
         }
         public FlowDocument HexDocument {
             get => hexDocument;
             set {
                 hexDocument = value;
-                OnPropertyChanged("HexDocument");
+                OnPropertyChanged(nameof(HexDocument));
             }
         }
         public FlowDocument AsciiDocument {
             get => asciiDocument;
             set {
                 asciiDocument = value;
-                OnPropertyChanged("AsciiDocument");
+                OnPropertyChanged(nameof(AsciiDocument));
             }
         }
         public Double AddrWidth {
             get => addrWidth;
             set {
                 addrWidth = value;
-                OnPropertyChanged("AddrWidth");
+                OnPropertyChanged(nameof(AddrWidth));
             }
         }
         public Double HexWidth {
             get => hexWidth;
             set {
                 hexWidth = value;
-                OnPropertyChanged("HexWidth");
+                OnPropertyChanged(nameof(HexWidth));
             }
         }
         public Double AsciiWidth {
             get => asciiWidth;
             set {
                 asciiWidth = value;
-                OnPropertyChanged("AsciiWidth");
+                OnPropertyChanged(nameof(AsciiWidth));
             }
         }
 
-        void Init() {
+        void init() {
             calculateWidths();
             Settings.Default.PropertyChanged += (Sender, Args) => {
                 if (Args.PropertyName == "FontSize") {
                     calculateWidths();
                 }
             };
-            HexAddressVisible = Visibility.Visible;
-            AsciiValueVisible = Visibility.Visible;
-            HexAddressChecked = true;
-            AsciiValueChecked = true;
         }
         void calculateWidths() {
             AddrWidth = Tools.MeasureString(masterAddr, Settings.Default.FontSize, false);
@@ -129,7 +85,7 @@ namespace SysadminsLV.Asn1Editor.API.ViewModel {
             AddressDocument = new FlowDocument();
             Paragraph addressParagraph = new Paragraph();
             foreach (Int32 row in Enumerable.Range(0, (Int32)Math.Ceiling((Double)rawData.Count / 16))) {
-                addressParagraph.Inlines.Add(new Run(String.Format("{0:X8}", row * 16) + Environment.NewLine));
+                addressParagraph.Inlines.Add(new Run($"{row * 16:X8}" + Environment.NewLine));
             }
             AddressDocument.Blocks.Add(addressParagraph);
         }
@@ -155,33 +111,16 @@ namespace SysadminsLV.Asn1Editor.API.ViewModel {
             asciiParagraph.Inlines.Add(new Run(SB + Environment.NewLine));
             AsciiDocument.Blocks.Add(asciiParagraph);
         }
-        void ChangeHexAddress(Object obj) {
-            HexAddressVisible = HexAddressChecked
-                ? Visibility.Visible
-                : Visibility.Collapsed;
-        }
-        void ChangeAsciiValue(Object obj) {
-            AsciiValueVisible = AsciiValueChecked
-                ? Visibility.Visible
-                : Visibility.Collapsed;
-        }
-
+        
         public void BuildHexView(Byte[] rawData) {
+            var data = App.Container.Resolve<IDataSource>();
             if (rawData == null) {
-                if (MainWindowVM.RawData.Count == 0) { return; }
-                rawData = MainWindowVM.RawData.ToArray();
+                if (data.RawData.Count == 0) { return; }
+                rawData = data.RawData.ToArray();
             }
             buildAddress(rawData);
             buildHex(rawData);
             buildAscii(rawData);
         }
-
-        void OnPropertyChanged(String PropertyName) {
-            PropertyChangedEventHandler handler = PropertyChanged;
-            if (handler != null) {
-                handler(this, new PropertyChangedEventArgs(PropertyName));
-            }
-        }
-        public event PropertyChangedEventHandler PropertyChanged;
     }
 }

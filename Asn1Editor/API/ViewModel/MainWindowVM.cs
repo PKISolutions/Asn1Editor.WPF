@@ -7,7 +7,6 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
 using Microsoft.Win32;
-using SysadminsLV.Asn1Editor.API.Generic;
 using SysadminsLV.Asn1Editor.API.Interfaces;
 using SysadminsLV.Asn1Editor.API.ModelObjects;
 using SysadminsLV.Asn1Editor.API.Utils;
@@ -17,15 +16,17 @@ using SysadminsLV.WPF.OfficeTheme.Toolkit.Commands;
 
 namespace SysadminsLV.Asn1Editor.API.ViewModel {
     class MainWindowVM : ViewModelBase, IMainWindowVM {
+        readonly IDataSource _data;
         String path;
         Asn1TreeNode selectedNode;
         Visibility hexVisible;
         Boolean hexChecked, hasClipboard, isBusy;
 
-        public MainWindowVM(IAppCommands appCommands, ITreeCommands treeCommands) {
+        public MainWindowVM(IAppCommands appCommands, ITreeCommands treeCommands, IDataSource data) {
             AppCommands = appCommands;
             TreeCommands = treeCommands;
-            HexViewerContext = new HexViewerVM { ParentVM = this };
+            _data = data;
+            HexViewerContext = new HexViewerVM();
             TreeCommands2 = new TreeViewCommands(this);
             OpenCommand = new RelayCommand(openFile);
             SaveCommand = new RelayCommand(saveFile, canPrintSave);
@@ -48,10 +49,11 @@ namespace SysadminsLV.Asn1Editor.API.ViewModel {
         public HexViewerVM HexViewerContext { get; set; }
         public TreeViewCommands TreeCommands2 { get; set; }
 
-        public static ObservableList<Byte> RawData { get; } = new ObservableList<Byte> { IsNotifying = true };
+        //public static ObservableList<Byte> RawData { get; } = new ObservableList<Byte> { IsNotifying = true };
         public static Dictionary<String, String> OIDs { get; } = new Dictionary<String, String>();
-        public ObservableCollection<Asn1TreeNode> Tree { get; } = new ObservableCollection<Asn1TreeNode>();
+        public ObservableCollection<Asn1TreeNode> Tree => _data.Tree;
 
+        public Int32 FileLength => _data.RawData.Count;
         public String Path {
             get => path;
             set {
@@ -121,7 +123,7 @@ namespace SysadminsLV.Asn1Editor.API.ViewModel {
                 if (!getFilePath()) { return; }
             }
             try {
-                File.WriteAllBytes(Path, RawData.ToArray());
+                File.WriteAllBytes(Path, _data.RawData.ToArray());
             } catch (Exception e) {
                 Tools.MsgBox("Save Error", e.Message);
             }
@@ -131,9 +133,9 @@ namespace SysadminsLV.Asn1Editor.API.ViewModel {
             if (await decodeFile()) {
                 Tree.Clear();
                 try {
-                    Asn1TreeNode rootNode = await AsnTreeBuilder.BuildTree(RawData.ToArray());
+                    Asn1TreeNode rootNode = await AsnTreeBuilder.BuildTree(_data.RawData.ToArray());
                     Tree.Add(rootNode);
-                    HexViewerContext.BuildHexView(RawData.ToArray());
+                    HexViewerContext.BuildHexView(_data.RawData.ToArray());
                 } catch (Exception e) {
                     Tools.MsgBox("Error", e.Message);
                 }
@@ -142,8 +144,8 @@ namespace SysadminsLV.Asn1Editor.API.ViewModel {
         }
 
         
-        static Boolean canPrintSave(Object obj) {
-            return RawData.Count > 0;
+        Boolean canPrintSave(Object obj) {
+            return _data.RawData.Count > 0;
         }
         Boolean getFilePath() {
             SaveFileDialog dlg = new SaveFileDialog {
@@ -162,11 +164,11 @@ namespace SysadminsLV.Asn1Editor.API.ViewModel {
                 : Visibility.Collapsed;
         }
         async Task<Boolean> decodeFile() {
-            if (RawData.Count > 0) {
+            if (_data.RawData.Count > 0) {
                 return true;
             }
             try {
-                RawData.AddRange(await FileUtility.FileToBinary(Path));
+                _data.RawData.AddRange(await FileUtility.FileToBinary(Path));
                 return true;
             } catch (Exception e) {
                 Tools.MsgBox("Read Error", e.Message);
@@ -177,12 +179,12 @@ namespace SysadminsLV.Asn1Editor.API.ViewModel {
         public void DropFile(String filePath) {
             if (!File.Exists(filePath)) { return; }
             Path = filePath;
-            RawData.Clear();
+            _data.RawData.Clear();
             decode();
         }
         public void OpenExisting(String filePath) {
             Path = filePath;
-            RawData.Clear();
+            _data.RawData.Clear();
             decode();
         }
         public void OpenRaw(String base64String) {
@@ -190,8 +192,8 @@ namespace SysadminsLV.Asn1Editor.API.ViewModel {
         }
         public void OpenRaw(IEnumerable<Byte> rawBytes) {
             Path = null;
-            RawData.Clear();
-            RawData.AddRange(rawBytes);
+            _data.RawData.Clear();
+            _data.RawData.AddRange(rawBytes);
             decode();
         }
 
@@ -199,7 +201,7 @@ namespace SysadminsLV.Asn1Editor.API.ViewModel {
             if (Tree.Count == 0) { return; }
             switch (e.PropertyName) {
                 case nameof(Settings.IntAsInt):
-                    StaticCommands.UpdateSettingsInteger(Tree[0], RawData);
+                    StaticCommands.UpdateSettingsInteger(Tree[0], _data.RawData);
                     break;
                 case nameof(Settings.DecodePayload):
                     StaticCommands.UpdateSettingsDecode(Tree[0]);

@@ -222,7 +222,7 @@
             </StatusBarItem>
             <StatusBarItem HorizontalAlignment="Right">
                 <TextBlock Text="Size: ">
-                    <Run Text="{Binding RawData.Count, Mode=OneWay}"/>
+                    <Run Text="{Binding FileLength, Mode=OneWay}"/>
                     <Run Text="bytes"/>
                 </TextBlock>
             </StatusBarItem>

@@ -7,6 +7,7 @@ using System.Reflection;
 using System.Windows;
 using System.Windows.Threading;
 using SysadminsLV.Asn1Editor.API.Interfaces;
+using SysadminsLV.Asn1Editor.API.ModelObjects;
 using SysadminsLV.Asn1Editor.API.Utils;
 using SysadminsLV.Asn1Editor.API.Utils.WPF;
 using SysadminsLV.Asn1Editor.API.ViewModel;
@@ -89,6 +90,7 @@ namespace SysadminsLV.Asn1Editor {
             Container.RegisterType<IWindowFactory, WindowFactory>();
             Container.RegisterType<IAppCommands, AppCommands>();
             Container.RegisterType<ITreeCommands, TreeNodeCommands>();
+            Container.RegisterSingleton<IDataSource, DataSource>();
             // view models
             Container.RegisterSingleton<IMainWindowVM, MainWindowVM>();
             Container.RegisterType<ITextViewerVM, TextViewerVM>();

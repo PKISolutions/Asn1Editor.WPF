@@ -5,11 +5,13 @@ using System.Linq;
 using System.Windows;
 using System.Windows.Input;
 using Microsoft.Win32;
+using SysadminsLV.Asn1Editor.API.Interfaces;
 using SysadminsLV.Asn1Editor.API.ModelObjects;
 using SysadminsLV.Asn1Editor.API.Utils;
 using SysadminsLV.Asn1Editor.Views.Windows;
 using SysadminsLV.Asn1Parser;
 using SysadminsLV.WPF.OfficeTheme.Toolkit.Commands;
+using Unity;
 
 namespace SysadminsLV.Asn1Editor.API.ViewModel {
     class TreeViewCommands {
@@ -20,16 +22,16 @@ namespace SysadminsLV.Asn1Editor.API.ViewModel {
 
         public TreeViewCommands(MainWindowVM Parent) {
             _parentVM = Parent;
-            SaveNodeCommand = new RelayCommand(SaveNode, CanContextMenu);
-            EditNodeCommand = new RelayCommand(EditNode, CanContextMenu);
-            ShowTextCommand = new RelayCommand(StaticCommands.ShowText, CanContextMenu);
-            NewNodeCommand = new RelayCommand(NewNode, CanNew);
-            CutNodeCommand = new RelayCommand(CutNode, CanRemove);
-            CopyNodeCommand = new RelayCommand(CopyNode, CanContextMenu);
-            PasteBeforeCommand = new RelayCommand(PasteBefore, CanPasteAfterBefore);
-            PasteAfterCommand = new RelayCommand(PasteAfter, CanPasteAfterBefore);
-            PasteLastCommand = new RelayCommand(PasteLast, CanPasteLast);
-            DeleteNodeCommand = new RelayCommand(RemoveNode, CanRemove);
+            SaveNodeCommand = new RelayCommand(saveNode, canContextMenu);
+            EditNodeCommand = new RelayCommand(editNode, canContextMenu);
+            ShowTextCommand = new RelayCommand(StaticCommands.ShowText, canContextMenu);
+            NewNodeCommand = new RelayCommand(newNode, canNew);
+            CutNodeCommand = new RelayCommand(cutNode, canRemove);
+            CopyNodeCommand = new RelayCommand(copyNode, canContextMenu);
+            PasteBeforeCommand = new RelayCommand(pasteBefore, canPasteAfterBefore);
+            PasteAfterCommand = new RelayCommand(pasteAfter, canPasteAfterBefore);
+            PasteLastCommand = new RelayCommand(pasteLast, canPasteLast);
+            DeleteNodeCommand = new RelayCommand(removeNode, canRemove);
         }
 
         public ICommand EditNodeCommand { get; set; }
@@ -43,13 +45,14 @@ namespace SysadminsLV.Asn1Editor.API.ViewModel {
         public ICommand PasteAfterCommand { get; set; }
         public ICommand PasteLastCommand { get; set; }
 
-        void EditNode(Object obj) {
+        void editNode(Object obj) {
             TagDataEditor dlg = (String)obj == "hex"
                 ? new TagDataEditor(_parentVM.SelectedTreeNode.Value, true)
                 : new TagDataEditor(_parentVM.SelectedTreeNode.Value);
             dlg.ShowDialog();
         }
-        void NewNode(Object obj) {
+        void newNode(Object obj) {
+            var data = App.Container.Resolve<IDataSource>();
             Asn1Lite asn = new Asn1Lite(new Asn1Reader(new Byte[] { 48, 0 })) { IsContainer = true };
             TagDataEditor dlg = new TagDataEditor(asn);
             ((TagDataEditorVM)dlg.DataContext).TagIsReadOnly = false;
@@ -57,8 +60,8 @@ namespace SysadminsLV.Asn1Editor.API.ViewModel {
             if (!((TagDataEditorVM)dlg.DataContext).Accepted) { return; }
             if (obj == null) {
                 Asn1TreeNode node = new Asn1TreeNode(asn);
-                _parentVM.Tree.Add(node);
-                MainWindowVM.RawData.AddRange(new Byte[] { 48, 0 });
+                data.Tree.Add(node);
+                data.RawData.AddRange(new Byte[] { 48, 0 });
                 _parentVM.HexViewerContext.BuildHexView(null);
             } else {
                 asn = new Asn1Lite(new Asn1Reader(new Byte[] { ((TagDataEditorVM)dlg.DataContext).Tag, 0 })) {
@@ -69,32 +72,32 @@ namespace SysadminsLV.Asn1Editor.API.ViewModel {
                         .Value.TagLength
                 };
                 asn.PayloadStartOffset = asn.Offset + 2;
-                MainWindowVM.RawData.Insert(_parentVM.SelectedTreeNode.Value.Offset + _parentVM.SelectedTreeNode.Value.TagLength, 0);
-                MainWindowVM.RawData.Insert(_parentVM.SelectedTreeNode.Value.Offset + _parentVM.SelectedTreeNode.Value.TagLength, asn.Tag);
+                data.RawData.Insert(_parentVM.SelectedTreeNode.Value.Offset + _parentVM.SelectedTreeNode.Value.TagLength, 0);
+                data.RawData.Insert(_parentVM.SelectedTreeNode.Value.Offset + _parentVM.SelectedTreeNode.Value.TagLength, asn.Tag);
                 asn.IsRoot = false;
                 asn.Deepness += _parentVM.SelectedTreeNode.Value.Deepness;
                 _parentVM.SelectedTreeNode.AddChild(asn, true);
                 _parentVM.HexViewerContext.BuildHexView(null);
             }
         }
-        void CutNode(Object obj) {
+        void cutNode(Object obj) {
             ClipboardManager.SetClipboardData(
-                MainWindowVM.RawData
+                App.Container.Resolve<IDataSource>().RawData
                 .Skip(((Asn1TreeNode)obj).Value.Offset)
                 .Take(((Asn1TreeNode)obj).Value.TagLength)
             );
             _parentVM.HasClipboardData = true;
             ((Asn1TreeNode)obj).Parent.RemoveChild((Asn1TreeNode)obj);
         }
-        void CopyNode(Object obj) {
+        void copyNode(Object obj) {
             ClipboardManager.SetClipboardData(
-                MainWindowVM.RawData
+                App.Container.Resolve<IDataSource>().RawData
                 .Skip(((Asn1TreeNode)obj).Value.Offset)
                 .Take(((Asn1TreeNode)obj).Value.TagLength)
             );
             _parentVM.HasClipboardData = true;
         }
-        static async void PasteBefore(Object obj) {
+        static async void pasteBefore(Object obj) {
             Asn1TreeNode childNode = await ClipboardManager.GetClipboardData();
             ((Asn1TreeNode)obj).Parent.InsertChildNode(
                 childNode,
@@ -102,7 +105,7 @@ namespace SysadminsLV.Asn1Editor.API.ViewModel {
                 NodeAddOption.Before
             );
         }
-        static async void PasteAfter(Object obj) {
+        static async void pasteAfter(Object obj) {
             Asn1TreeNode childNode = await ClipboardManager.GetClipboardData();
             ((Asn1TreeNode)obj).Parent.InsertChildNode(
                 childNode,
@@ -110,7 +113,7 @@ namespace SysadminsLV.Asn1Editor.API.ViewModel {
                 NodeAddOption.After
             );
         }
-        static async void PasteLast(Object obj) {
+        static async void pasteLast(Object obj) {
             Asn1TreeNode childNode = await ClipboardManager.GetClipboardData();
             ((Asn1TreeNode)obj).InsertChildNode(
                 childNode,
@@ -118,7 +121,7 @@ namespace SysadminsLV.Asn1Editor.API.ViewModel {
                 NodeAddOption.Last
             );
         }
-        static void SaveNode(Object obj) {
+        static void saveNode(Object obj) {
             SaveFileDialog dlg = new SaveFileDialog {
                 FileName = "",
                 DefaultExt = ".*",
@@ -128,40 +131,40 @@ namespace SysadminsLV.Asn1Editor.API.ViewModel {
             if (result == true) {
                 Asn1Lite node = (Asn1Lite)obj;
                 try {
-                    File.WriteAllBytes(dlg.FileName, MainWindowVM.RawData.Skip(node.Offset).Take(node.TagLength).ToArray());
+                    File.WriteAllBytes(dlg.FileName, App.Container.Resolve<IDataSource>().RawData.Skip(node.Offset).Take(node.TagLength).ToArray());
                 } catch (Exception e) {
                     Tools.MsgBox("Save Error", e.Message);
                 }
             }
         }
-        static void RemoveNode(Object obj) {
+        static void removeNode(Object obj) {
             MessageBoxResult response = Tools.MsgBox("Delete", "Do you want to delete the node?\nThis action cannot be undone.", MessageBoxImage.Question, MessageBoxButton.YesNo);
             if (response == MessageBoxResult.Yes) {
                 ((Asn1TreeNode)obj).Parent.RemoveChild((Asn1TreeNode)obj);
             }
         }
 
-        Boolean CanNew(Object obj) {
+        Boolean canNew(Object obj) {
             return _parentVM.Tree.Count == 0 ||
                    _parentVM.SelectedTreeNode != null &&
                    !_excludedTags.Contains(_parentVM.SelectedTreeNode.Value.Tag);
         }
-        Boolean CanRemove(Object obj) {
+        Boolean canRemove(Object obj) {
             if (obj == null) { return false; }
-            return ((Asn1TreeNode)obj).Parent != null && CanContextMenu(null);
+            return ((Asn1TreeNode)obj).Parent != null && canContextMenu(null);
         }
-        Boolean CanPasteAfterBefore(Object obj) {
+        Boolean canPasteAfterBefore(Object obj) {
             return _parentVM.HasClipboardData &&
                 _parentVM.SelectedTreeNode != null &&
                 _parentVM.SelectedTreeNode.Parent != null;
         }
-        Boolean CanPasteLast(Object obj) {
+        Boolean canPasteLast(Object obj) {
             return obj != null &&
                 _parentVM.HasClipboardData &&
                 !_excludedTags.Contains(((Asn1TreeNode)obj).Value.Tag) &&
                 String.IsNullOrEmpty(((Asn1TreeNode)obj).Value.ExplicitValue);
         }
-        Boolean CanContextMenu(Object obj) {
+        Boolean canContextMenu(Object obj) {
             return _parentVM.SelectedTreeNode != null;
         }
     }

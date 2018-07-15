@@ -34,7 +34,9 @@ namespace SysadminsLV.Asn1Editor.Views.UserControls {
         }
         void Tree_OnDrop(Object sender, DragEventArgs e) {
             String[] file = (String[])e.Data.GetData(DataFormats.FileDrop, true);
-            ((MainWindowVM)DataContext).DropFile(file[0]);
+            if (file != null) {
+                ((MainWindowVM) DataContext).DropFile(file[0]);
+            }
         }
 
         static TreeViewItem VisualUpwardSearch(DependencyObject source) {

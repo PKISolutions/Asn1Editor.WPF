@@ -1,10 +1,12 @@
 ﻿using System;
 using System.Windows;
+using SysadminsLV.Asn1Editor.API.Interfaces;
 using SysadminsLV.Asn1Editor.API.Utils;
 using SysadminsLV.Asn1Editor.API.Utils.ASN;
 using SysadminsLV.Asn1Editor.API.ViewModel;
 using SysadminsLV.Asn1Editor.Properties;
 using SysadminsLV.Asn1Parser;
+using Unity;
 
 namespace SysadminsLV.Asn1Editor.API.ModelObjects {
     public class Asn1Lite : ViewModelBase {
@@ -184,8 +186,9 @@ namespace SysadminsLV.Asn1Editor.API.ModelObjects {
         }
 
         void UpdateBinaryCopy(Byte[] newBytes) {
-            MainWindowVM.RawData.RemoveRange(Offset, TagLength);
-            MainWindowVM.RawData.InsertRange(Offset, newBytes);
+            var data = App.Container.Resolve<IDataSource>();
+            data.RawData.RemoveRange(Offset, TagLength);
+            data.RawData.InsertRange(Offset, newBytes);
             //((MainWindowVM)Application.Current.MainWindow.DataContext).HexViewerContext.BuildHexView(null);
         }
     }

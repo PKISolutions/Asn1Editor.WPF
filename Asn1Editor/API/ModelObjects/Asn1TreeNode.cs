@@ -4,9 +4,11 @@ using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Linq;
 using System.Windows;
+using SysadminsLV.Asn1Editor.API.Interfaces;
 using SysadminsLV.Asn1Editor.API.Utils;
 using SysadminsLV.Asn1Editor.API.ViewModel;
 using SysadminsLV.Asn1Parser;
+using Unity;
 
 namespace SysadminsLV.Asn1Editor.API.ModelObjects {
     public class Asn1TreeNode {
@@ -52,7 +54,7 @@ namespace SysadminsLV.Asn1Editor.API.ModelObjects {
             //TODO verify code
             Value.IsContainer = true;
             if (indexToInsert < 0) { return; }
-            MainWindowVM.RawData.InsertRange(newOffset, ClipboardManager.GetClipboardBytes());
+            App.Container.Resolve<IDataSource>().RawData.InsertRange(newOffset, ClipboardManager.GetClipboardBytes());
             _children.Insert(indexToInsert, nodeToInsert);
             NotifySizeChanged(nodeToInsert, nodeToInsert.Value.TagLength);
             _children[indexToInsert].Value.Offset = newOffset;
@@ -86,7 +88,7 @@ namespace SysadminsLV.Asn1Editor.API.ModelObjects {
             //Int32 indexToRemove = Children.IndexOf(node);
             //if (indexToRemove < 0) { return; } // TODO: is it necessary?
             Int32 difference = Children[node.MyIndex].Value.TagLength;
-            MainWindowVM.RawData.RemoveRange(node.Value.Offset, difference);
+            App.Container.Resolve<IDataSource>().RawData.RemoveRange(node.Value.Offset, difference);
             NotifySizeChanged(node, -difference);
             _children.RemoveAt(node.MyIndex);
             ((MainWindowVM)Application.Current.MainWindow.DataContext).HexViewerContext.BuildHexView(null);
@@ -113,8 +115,8 @@ namespace SysadminsLV.Asn1Editor.API.ModelObjects {
                     }
                 }
                 Byte[] newLenBytes = Asn1Utils.GetLengthBytes(t.Value.PayloadLength + difference);
-                MainWindowVM.RawData.RemoveRange(t.Value.Offset + 1, t.Value.HeaderLength - 1);
-                MainWindowVM.RawData.InsertRange(t.Value.Offset + 1, newLenBytes);
+                App.Container.Resolve<IDataSource>().RawData.RemoveRange(t.Value.Offset + 1, t.Value.HeaderLength - 1);
+                App.Container.Resolve<IDataSource>().RawData.InsertRange(t.Value.Offset + 1, newLenBytes);
                 Int32 diff = newLenBytes.Length - (t.Value.HeaderLength - 1);
                 difference += diff;
                 if (diff != 0) {

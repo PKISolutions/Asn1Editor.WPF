@@ -15,16 +15,16 @@
     <DockPanel>
         <ToolBarTray DockPanel.Dock="Top" IsLocked="True">
                 <ToolBar>
-                    <ToggleButton IsChecked="{Binding HexViewerContext.HexAddressChecked}"
-                                  Command="{Binding HexViewerContext.ChangeHexAddressCommand}"
+                    <ToggleButton x:Name="HexAddressToggle"
+                                  IsChecked="True"
                                   ToolTip="Show or hide address panel">
-                        <Image Source="../Images/Menu/AddressEnabled_32x32.png"/>
+                        <Image Source="/Views/Images/Menu/AddressEnabled_32x32.png"/>
                     </ToggleButton>
                     <Separator/>
-                    <ToggleButton IsChecked="{Binding HexViewerContext.AsciiValueChecked}"
-                                  Command="{Binding HexViewerContext.ChangeAsciiValueCommand}"
+                    <ToggleButton x:Name="AsciiToggle"
+                                  IsChecked="True"
                                   ToolTip="Show or hide ASCII panel">
-                        <Image Source="../Images/Menu/AsciiEnabled_32x32.png"/>
+                        <Image Source="/Views/Images/Menu/AsciiEnabled_32x32.png"/>
                     </ToggleButton>
                 </ToolBar>
             </ToolBarTray>
@@ -33,7 +33,7 @@
         <Border DockPanel.Dock="Top" BorderThickness="0,0,0,1" BorderBrush="#FFACD0FE">
             <DockPanel Background="#D5E7FE">
                 <RichTextBox Width="{Binding HexViewerContext.AddrWidth}"
-                                    Visibility="{Binding HexViewerContext.HexAddressVisible}"
+                                    Visibility="{Binding ElementName=HexAddressToggle, Path=IsChecked, Converter={StaticResource BooleanToVisibility}}"
                                     BorderThickness="0"
                                     Background="#D5E7FE"
                                     IsEnabled="False"
@@ -69,7 +69,7 @@
                     </RichTextBox.Document>
                 </RichTextBox>
                 <RichTextBox Width="{Binding HexViewerContext.AsciiWidth}"
-                                    Visibility="{Binding HexViewerContext.AsciiValueVisible}"
+                             Visibility="{Binding ElementName=AsciiToggle, Path=IsChecked, Converter={StaticResource BooleanToVisibility}}"
                                     BorderThickness="0"
                                     Background="#D5E7FE"
                                     IsEnabled="False"
@@ -95,7 +95,7 @@
                                               Foreground="Blue"
                                               BorderBrush="{StaticResource NormalBorderBrush}"
                                               BorderThickness="0,0,1,0"
-                                              Visibility="{Binding HexViewerContext.HexAddressVisible}"
+                                              Visibility="{Binding ElementName=HexAddressToggle, Path=IsChecked, Converter={StaticResource BooleanToVisibility}}"
                                               IsReadOnly="True"
                                               IsReadOnlyCaretVisible="True"
                                               Document="{Binding HexViewerContext.AddressDocument}"
@@ -116,7 +116,7 @@
                                               Foreground="Green"
                                               BorderBrush="{StaticResource NormalBorderBrush}"
                                               BorderThickness="0,0,1,0"
-                                              Visibility="{Binding HexViewerContext.AsciiValueVisible}"
+                                              Visibility="{Binding ElementName=AsciiToggle, Path=IsChecked, Converter={StaticResource BooleanToVisibility}}"
                                               IsReadOnly="True"
                                               IsReadOnlyCaretVisible="True"
                                               Document="{Binding HexViewerContext.AsciiDocument}"

@@ -7,6 +7,7 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Documents;
 using System.Windows.Media;
+using SysadminsLV.Asn1Editor.API.Interfaces;
 using SysadminsLV.Asn1Editor.API.ModelObjects;
 using SysadminsLV.Asn1Editor.Properties;
 using SysadminsLV.Asn1Editor.Views.Windows;
@@ -74,7 +75,7 @@ namespace SysadminsLV.Asn1Editor.API.ViewModel {
             converter = new Converter();
             converter.Closed += (Sender, Args) => { converterClosed = true; };
             ((ConverterVM)converter.DataContext).PropertyChanged += OnPropertyChanged;
-            ((ConverterVM)converter.DataContext).SetBytes(MainWindowVM.RawData);
+            ((ConverterVM)converter.DataContext).SetBytes(App.Container.Resolve<IDataSource>().RawData);
             converter.Show();
             converter.Focus();
         }
@@ -98,7 +99,7 @@ namespace SysadminsLV.Asn1Editor.API.ViewModel {
 
         static void OnPropertyChanged(Object sender, PropertyChangedEventArgs e) {
             if (e.PropertyName == "Decode") {
-                ((MainWindowVM)Application.Current.MainWindow.DataContext).OpenRaw(((ConverterVM)sender).RawData);
+                App.Container.Resolve<IMainWindowVM>().OpenRaw(((ConverterVM)sender).RawData);
             }
         }
     }

@@ -3,15 +3,18 @@ using System.Globalization;
 using System.Linq;
 using System.Windows;
 using System.Windows.Input;
+using SysadminsLV.Asn1Editor.API.Interfaces;
 using SysadminsLV.Asn1Editor.API.ModelObjects;
 using SysadminsLV.Asn1Editor.API.Utils;
 using SysadminsLV.Asn1Editor.API.Utils.ASN;
 using SysadminsLV.Asn1Editor.Properties;
 using SysadminsLV.Asn1Parser;
 using SysadminsLV.WPF.OfficeTheme.Toolkit.Commands;
+using Unity;
 
 namespace SysadminsLV.Asn1Editor.API.ViewModel {
     class TagDataEditorVM : ViewModelBase {
+        readonly IDataSource _data;
         const String masterTag = "123";
         const String masterUnused = "1";
         Boolean? dialogResult;
@@ -145,7 +148,7 @@ namespace SysadminsLV.Asn1Editor.API.ViewModel {
             TagValue = IsReadonly || asnNode.Tag == (Byte)Asn1Type.NULL
                 ? "Containers and NULL (0x05) tags are not editable"
                 : hex
-                    ? HexUtility.BinaryToHex(MainWindowVM.RawData.Skip(asnNode.PayloadStartOffset).Take(asnNode.PayloadLength).ToArray())
+                    ? HexUtility.BinaryToHex(App.Container.Resolve<IDataSource>().RawData.Skip(asnNode.PayloadStartOffset).Take(asnNode.PayloadLength).ToArray())
                     : AsnDecoder.GetEditValue(asnNode);
             oldValue = TagValue;
             UnusedBitsVisible = asnNode.Tag == (Byte)Asn1Type.BIT_STRING

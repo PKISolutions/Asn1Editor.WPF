@@ -7,9 +7,11 @@ using SysadminsLV.WPF.OfficeTheme.Toolkit.Commands;
 namespace SysadminsLV.Asn1Editor.API.ViewModel {
     class TreeNodeCommands : ITreeCommands {
         readonly IWindowFactory _windowFactory;
+        readonly IDataSource _data;
 
-        public TreeNodeCommands(IWindowFactory windowFactory) {
+        public TreeNodeCommands(IWindowFactory windowFactory, IDataSource data) {
             _windowFactory = windowFactory;
+            _data = data;
             ShowNodeTextViewer = new RelayCommand(showNodeTextViewer);
         }
 

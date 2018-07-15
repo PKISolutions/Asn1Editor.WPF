@@ -7,14 +7,16 @@ using System.Numerics;
 using System.Security.Cryptography;
 using System.Security.Cryptography.X509Certificates;
 using System.Text;
+using SysadminsLV.Asn1Editor.API.Interfaces;
 using SysadminsLV.Asn1Editor.API.ModelObjects;
 using SysadminsLV.Asn1Editor.API.ViewModel;
 using SysadminsLV.Asn1Editor.Properties;
 using SysadminsLV.Asn1Parser;
 using SysadminsLV.Asn1Parser.Universal;
+using Unity;
 
 namespace SysadminsLV.Asn1Editor.API.Utils.ASN {
-    static class AsnDecoder {
+    class AsnDecoder {
         static List<Byte> generatePrintableStringTable() {
             List<Byte> allowed = new List<Byte> { 32 };
             for (Byte index = 0x30; index <= 0x39; index++) { allowed.Add(index); }
@@ -26,7 +28,7 @@ namespace SysadminsLV.Asn1Editor.API.Utils.ASN {
             return allowed;
         }
         public static String GetEditValue(Asn1Lite asn) {
-            var raw = MainWindowVM.RawData;
+            var raw = App.Container.Resolve<IDataSource>().RawData;
             switch (asn.Tag) {
                 case (Byte)Asn1Type.BOOLEAN:
                 case (Byte)Asn1Type.UTCTime:
