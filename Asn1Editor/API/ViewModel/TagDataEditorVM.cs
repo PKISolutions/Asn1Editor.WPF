@@ -13,7 +13,7 @@ using SysadminsLV.WPF.OfficeTheme.Toolkit.Commands;
 using Unity;
 
 namespace SysadminsLV.Asn1Editor.API.ViewModel {
-    class TagDataEditorVM : ViewModelBase {
+    class TagDataEditorVM : ViewModelBase, ITagDataEditorVM {
         readonly IDataSource _data;
         const String masterTag = "123";
         const String masterUnused = "1";

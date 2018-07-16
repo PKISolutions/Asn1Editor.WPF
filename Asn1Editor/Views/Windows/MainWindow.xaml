@@ -50,8 +50,7 @@
                           Command="{Binding TreeCommands2.SaveNodeCommand}"
                           CommandParameter="{Binding SelectedTreeNode.Value}"/>
                 <MenuItem Header="View node text"
-                          Command="{Binding TreeCommands2.ShowTextCommand}"
-                          CommandParameter="{Binding SelectedTreeNode}">
+                          Command="{Binding TreeCommands.ShowNodeTextViewer}">
                     <MenuItem.Icon>
                         <Image Source="/Views/Images/Menu/viewtext_16x16.png"/>
                     </MenuItem.Icon>
@@ -152,7 +151,6 @@
                     <Image Source="/Views/Images/Menu/edit_16x16.png" Width="16"/>
                 </Button>
                 <Button Command="{Binding TreeCommands.ShowNodeTextViewer}"
-                        CommandParameter="{Binding SelectedTreeNode}"
                         ToolTip="View node text">
                     <Image Source="/Views/Images/Menu/viewtext_16x16.png"/>
                 </Button>

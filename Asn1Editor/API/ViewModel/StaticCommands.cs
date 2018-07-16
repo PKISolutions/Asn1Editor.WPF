@@ -79,19 +79,19 @@ namespace SysadminsLV.Asn1Editor.API.ViewModel {
             converter.Show();
             converter.Focus();
         }
-        public static void ShowText(Object obj) {
-            if (obj == null) { return; }
-            if (!textViewerClosed) {
-                textViewer.Focus();
-                return;
-            }
-            textViewerClosed = false;
-            textViewer = App.Container.Resolve<TextViewer>();
-            textViewer.Closed += (Sender, Args) => { textViewerClosed = true; };
-            ((TextViewerVM)textViewer.DataContext).SetBinding((Asn1TreeNode)obj);
-            textViewer.Show();
-            textViewer.Focus();
-        }
+        //public static void ShowText(Object obj) {
+        //    if (obj == null) { return; }
+        //    if (!textViewerClosed) {
+        //        textViewer.Focus();
+        //        return;
+        //    }
+        //    textViewerClosed = false;
+        //    textViewer = App.Container.Resolve<TextViewer>();
+        //    textViewer.Closed += (Sender, Args) => { textViewerClosed = true; };
+        //    ((TextViewerVM)textViewer.DataContext).SetBinding((Asn1TreeNode)obj);
+        //    textViewer.Show();
+        //    textViewer.Focus();
+        //}
         public static void ClearResources() {
             if (!textViewerClosed) { textViewer.Close(); }
             if (!converterClosed) { converter.Close(); }

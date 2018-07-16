@@ -143,6 +143,8 @@
     <Compile Include="API\Generic\ObservableList.cs" />
     <Compile Include="API\Generic\IObservableList.cs" />
     <Compile Include="API\Interfaces\IAppCommands.cs" />
+    <Compile Include="API\Interfaces\ITagDataEditor.cs" />
+    <Compile Include="API\Interfaces\ITagDataEditorVM.cs" />
     <Compile Include="Views\UserControls\HexViewer\IBinarySource.cs" />
     <Compile Include="API\Interfaces\IDataSource.cs" />
     <Compile Include="API\Interfaces\IMainWindowVM.cs" />

@@ -5,6 +5,6 @@ namespace SysadminsLV.Asn1Editor.API.Interfaces {
         void ShowSettingsDialog();
         void ShowAboutdialog();
         void ShowTagcontentEditor(Asn1Lite node);
-        void ShowNodeTextViewer(Asn1TreeNode node);
+        void ShowNodeTextViewer();
     }
 }

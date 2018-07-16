@@ -17,9 +17,8 @@ namespace SysadminsLV.Asn1Editor.API.Utils.WPF {
         public void ShowTagcontentEditor(Asn1Lite node) {
             throw new NotImplementedException();
         }
-        public void ShowNodeTextViewer(Asn1TreeNode node) {
+        public void ShowNodeTextViewer() {
             hwnd = App.Container.Resolve<TextViewer>();
-            ((ITextViewerVM)hwnd.DataContext).SetBinding(node);
             ShowAsWindow();
         }
     }

@@ -178,8 +178,7 @@
                               Command="{Binding TreeCommands.SaveNodeCommand}"
                               CommandParameter="{Binding SelectedTreeNode.Value}"/>
                     <MenuItem Header="View node text..."
-                              Command="{Binding TreeCommands.ShowTextCommand}"
-                              CommandParameter="{Binding SelectedTreeNode}"/>
+                              Command="{Binding TreeCommands.ShowNodeTextViewer}"/>
                     <Separator/>
                     <MenuItem Header="New node"
                               Command="{Binding TreeCommands.NewNodeCommand}"

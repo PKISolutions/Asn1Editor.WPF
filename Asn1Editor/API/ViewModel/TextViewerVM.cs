@@ -13,7 +13,7 @@ using SysadminsLV.WPF.OfficeTheme.Toolkit.Commands;
 
 namespace SysadminsLV.Asn1Editor.API.ViewModel {
     class TextViewerVM : ViewModelBase, ITextViewerVM {
-        Asn1TreeNode rootNode;
+        readonly Asn1TreeNode rootNode;
         const String master = "123";
         const String delimieter = "      |      |       |";
         const Int32 minLength = 60;
@@ -26,13 +26,15 @@ namespace SysadminsLV.Asn1Editor.API.ViewModel {
         String currentLengthStr = "80";
         Double width;
 
-        public TextViewerVM() {
+        public TextViewerVM(IDataSource data) {
+            rootNode = data.SelectedNode;
             CurrentLength = defaultLength.ToString(CultureInfo.InvariantCulture);
             SaveCommand = new RelayCommand(saveFile);
             PrintCommand = new RelayCommand(print);
             ApplyCommand = new RelayCommand(applyNewLength);
             CloseCommand = new RelayCommand(close);
             TextBoxWidth = Tools.MeasureString(master, Settings.Default.FontSize, false);
+            generateTable();
         }
 
         public ICommand SaveCommand { get; set; }
@@ -93,17 +95,17 @@ namespace SysadminsLV.Asn1Editor.API.ViewModel {
             SB.Append("======+======+=======+" + new String('=', currentLength + 10) + n);
             foreach (Asn1Lite node in rootNode.Flatten()) {
                 String padding = new String(' ', (node.Deepness - rootNode.Value.Deepness + 1) * 3);
-                var str = String.Format("{0,6}|{1,6}|{2,7}|{3}{4} : ",
+                String str = String.Format("{0,6}|{1,6}|{2,7}|{3}{4} : ",
                     node.Offset,
                     node.PayloadLength,
                     node.HeaderLength - 1,
                     padding,
                     node.TagName);
-                SB.Append(str + calculateValue(node, str.Length, padding.Length));
+                SB.Append(str + calculateValue(node, padding.Length));
             }
             Text = SB.ToString();
         }
-        String calculateValue(Asn1Lite node, Int32 lineLength, Int32 padding) {
+        String calculateValue(Asn1Lite node, Int32 padding) {
             if (String.IsNullOrEmpty(node.ExplicitValue)) { return n; }
             if (24 + padding + node.ExplicitValue.Length <= currentLength) {
                 return $"'{node.ExplicitValue.Trim()}'{n}";
@@ -121,7 +123,7 @@ namespace SysadminsLV.Asn1Editor.API.ViewModel {
             }
             return Utils.Extensions.StringExtensions
                 .SplitByLength(node.ExplicitValue, currentLength - padding)
-                .Aggregate(n, (current, line) => 
+                .Aggregate(n, (current, line) =>
                     current + $"{delimieter}{new String(' ', padding + 3)}{line.Trim()}{n}");
         }
         void saveFile(Object obj) {
@@ -144,10 +146,6 @@ namespace SysadminsLV.Asn1Editor.API.ViewModel {
             return result != true
                 ? String.Empty
                 : dlg.FileName;
-        }
-        public void SetBinding(Asn1TreeNode node) {
-            rootNode = node;
-            generateTable();
         }
     }
 }

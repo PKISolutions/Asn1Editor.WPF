@@ -24,7 +24,6 @@ namespace SysadminsLV.Asn1Editor.API.ViewModel {
             _parentVM = Parent;
             SaveNodeCommand = new RelayCommand(saveNode, canContextMenu);
             EditNodeCommand = new RelayCommand(editNode, canContextMenu);
-            ShowTextCommand = new RelayCommand(StaticCommands.ShowText, canContextMenu);
             NewNodeCommand = new RelayCommand(newNode, canNew);
             CutNodeCommand = new RelayCommand(cutNode, canRemove);
             CopyNodeCommand = new RelayCommand(copyNode, canContextMenu);
@@ -36,7 +35,6 @@ namespace SysadminsLV.Asn1Editor.API.ViewModel {
 
         public ICommand EditNodeCommand { get; set; }
         public ICommand SaveNodeCommand { get; set; }
-        public ICommand ShowTextCommand { get; set; }
         public ICommand NewNodeCommand { get; set; }
         public ICommand DeleteNodeCommand { get; set; }
         public ICommand CutNodeCommand { get; set; }
