@@ -3,17 +3,21 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
+using SysadminsLV.Asn1Editor.API.Interfaces;
 using SysadminsLV.Asn1Editor.API.ModelObjects;
 using SysadminsLV.Asn1Editor.API.ViewModel;
 using SysadminsLV.Asn1Editor.Views.Windows;
+using Unity;
 
 namespace SysadminsLV.Asn1Editor.Views.UserControls {
     /// <summary>
     /// Interaction logic for AsnTreeView.xaml
     /// </summary>
     public partial class AsnTreeView {
+        readonly IDataSource _data;
         public AsnTreeView() {
             InitializeComponent();
+            _data = App.Container.Resolve<IDataSource>();
         }
 
         void TreeViewDoubleClick(Object sender, MouseButtonEventArgs e) {
@@ -28,9 +32,9 @@ namespace SysadminsLV.Asn1Editor.Views.UserControls {
                 e.Handled = true;
             }
         }
-        void TreeViewSelectedItemChanged(Object sender, RoutedPropertyChangedEventArgs<Object> e) {
+        void OnTreeViewSelectedItemChanged(Object sender, RoutedPropertyChangedEventArgs<Object> e) {
             if (e.NewValue == null) { return; }
-            ((MainWindowVM)DataContext).SelectedTreeNode = (Asn1TreeNode)e.NewValue;
+            _data.SelectedNode = e.NewValue as Asn1TreeNode;
         }
         void Tree_OnDrop(Object sender, DragEventArgs e) {
             String[] file = (String[])e.Data.GetData(DataFormats.FileDrop, true);

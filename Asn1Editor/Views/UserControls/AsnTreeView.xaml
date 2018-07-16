@@ -18,92 +18,92 @@
             </Style.Setters>
             <Style.Triggers>
                 <DataTrigger Binding="{Binding Value.TagName}" Value="BOOLEAN">
-                    <Setter Property="Source" Value="../Images/AsnEditor/BOOLEAN.png"/>
+                    <Setter Property="Source" Value="/Views/Images/AsnEditor/BOOLEAN.png"/>
                 </DataTrigger>
                 <DataTrigger Binding="{Binding Value.TagName}" Value="INTEGER">
-                    <Setter Property="Source" Value="../Images/AsnEditor/Integer.png"/>
+                    <Setter Property="Source" Value="/Views/Images/AsnEditor/Integer.png"/>
                 </DataTrigger>
                 <DataTrigger Binding="{Binding Value.TagName}" Value="BIT_STRING">
-                    <Setter Property="Source" Value="../Images/AsnEditor/BIT_STRING.png"/>
+                    <Setter Property="Source" Value="/Views/Images/AsnEditor/BIT_STRING.png"/>
                 </DataTrigger>
                 <DataTrigger Binding="{Binding Value.TagName}" Value="OCTET_STRING">
-                    <Setter Property="Source" Value="../Images/AsnEditor/OCTET_STRING.png"/>
+                    <Setter Property="Source" Value="/Views/Images/AsnEditor/OCTET_STRING.png"/>
                 </DataTrigger>
                 <DataTrigger Binding="{Binding Value.TagName}" Value="NULL">
-                    <Setter Property="Source" Value="../Images/AsnEditor/NULL.png"/>
+                    <Setter Property="Source" Value="/Views/Images/AsnEditor/NULL.png"/>
                 </DataTrigger>
                 <DataTrigger Binding="{Binding Value.TagName}" Value="OBJECT_IDENTIFIER">
-                    <Setter Property="Source" Value="../Images/AsnEditor/OBJECT_IDENTIFIER.png"/>
+                    <Setter Property="Source" Value="/Views/Images/AsnEditor/OBJECT_IDENTIFIER.png"/>
                 </DataTrigger>
                 <DataTrigger Binding="{Binding Value.TagName}" Value="ObjectDescriptor">
-                    <Setter Property="Source" Value="../Images/AsnEditor/OBJECT_IDENTIFIER.png"/>
+                    <Setter Property="Source" Value="/Views/Images/AsnEditor/OBJECT_IDENTIFIER.png"/>
                 </DataTrigger>
                 <DataTrigger Binding="{Binding Value.TagName}" Value="RELATIVE_OID">
-                    <Setter Property="Source" Value="../Images/AsnEditor/OBJECT_IDENTIFIER.png"/>
+                    <Setter Property="Source" Value="/Views/Images/AsnEditor/OBJECT_IDENTIFIER.png"/>
                 </DataTrigger>
                 <DataTrigger Binding="{Binding Value.TagName}" Value="EXTERNAL">
-                    <Setter Property="Source" Value="../Images/AsnEditor/External.png"/>
+                    <Setter Property="Source" Value="/Views/Images/AsnEditor/External.png"/>
                 </DataTrigger>
                 <DataTrigger Binding="{Binding Value.TagName}" Value="REAL">
-                    <Setter Property="Source" Value="../Images/AsnEditor/REAL.png"/>
+                    <Setter Property="Source" Value="/Views/Images/AsnEditor/REAL.png"/>
                 </DataTrigger>
                 <DataTrigger Binding="{Binding Value.TagName}" Value="ENUMERATED">
-                    <Setter Property="Source" Value="../Images/AsnEditor/ENUMERATED.png"/>
+                    <Setter Property="Source" Value="/Views/Images/AsnEditor/ENUMERATED.png"/>
                 </DataTrigger>
                 <!--String types-->
                 <DataTrigger Binding="{Binding Value.TagName}" Value="UTF8String">
-                    <Setter Property="Source" Value="../Images/AsnEditor/String.png"/>
+                    <Setter Property="Source" Value="/Views/Images/AsnEditor/String.png"/>
                 </DataTrigger>
                 <DataTrigger Binding="{Binding Value.TagName}" Value="NumericString">
-                    <Setter Property="Source" Value="../Images/AsnEditor/String.png"/>
+                    <Setter Property="Source" Value="/Views/Images/AsnEditor/String.png"/>
                 </DataTrigger>
                 <DataTrigger Binding="{Binding Value.TagName}" Value="PrintableString">
-                    <Setter Property="Source" Value="../Images/AsnEditor/String.png"/>
+                    <Setter Property="Source" Value="/Views/Images/AsnEditor/String.png"/>
                 </DataTrigger>
                 <DataTrigger Binding="{Binding Value.TagName}" Value="TeletexString">
-                    <Setter Property="Source" Value="../Images/AsnEditor/String.png"/>
+                    <Setter Property="Source" Value="/Views/Images/AsnEditor/String.png"/>
                 </DataTrigger>
                 <DataTrigger Binding="{Binding Value.TagName}" Value="VideotexString">
-                    <Setter Property="Source" Value="../Images/AsnEditor/String.png"/>
+                    <Setter Property="Source" Value="/Views/Images/AsnEditor/String.png"/>
                 </DataTrigger>
                 <DataTrigger Binding="{Binding Value.TagName}" Value="IA5String">
-                    <Setter Property="Source" Value="../Images/AsnEditor/String.png"/>
+                    <Setter Property="Source" Value="/Views/Images/AsnEditor/String.png"/>
                 </DataTrigger>
                 <DataTrigger Binding="{Binding Value.TagName}" Value="GraphicString">
-                    <Setter Property="Source" Value="../Images/AsnEditor/String.png"/>
+                    <Setter Property="Source" Value="/Views/Images/AsnEditor/String.png"/>
                 </DataTrigger>
                 <DataTrigger Binding="{Binding Value.TagName}" Value="VisibleString">
-                    <Setter Property="Source" Value="../Images/AsnEditor/String.png"/>
+                    <Setter Property="Source" Value="/Views/Images/AsnEditor/String.png"/>
                 </DataTrigger>
                 <DataTrigger Binding="{Binding Value.TagName}" Value="GeneralString">
-                    <Setter Property="Source" Value="../Images/AsnEditor/String.png"/>
+                    <Setter Property="Source" Value="/Views/Images/AsnEditor/String.png"/>
                 </DataTrigger>
                 <DataTrigger Binding="{Binding Value.TagName}" Value="UniversalString">
-                    <Setter Property="Source" Value="../Images/AsnEditor/String.png"/>
+                    <Setter Property="Source" Value="/Views/Images/AsnEditor/String.png"/>
                 </DataTrigger>
                 <DataTrigger Binding="{Binding Value.TagName}" Value="BMPString">
-                    <Setter Property="Source" Value="../Images/AsnEditor/String.png"/>
+                    <Setter Property="Source" Value="/Views/Images/AsnEditor/String.png"/>
                 </DataTrigger>
                 <DataTrigger Binding="{Binding Value.TagName}" Value="CHARACTER_STRING">
-                    <Setter Property="Source" Value="../Images/AsnEditor/String.png"/>
+                    <Setter Property="Source" Value="/Views/Images/AsnEditor/String.png"/>
                 </DataTrigger>
                 <DataTrigger Binding="{Binding Value.TagName}" Value="UTCTime">
-                    <Setter Property="Source" Value="../Images/AsnEditor/DateTime.png"/>
+                    <Setter Property="Source" Value="/Views/Images/AsnEditor/DateTime.png"/>
                 </DataTrigger>
                 <DataTrigger Binding="{Binding Value.TagName}" Value="Generalizedtime">
-                    <Setter Property="Source" Value="../Images/AsnEditor/DateTime.png"/>
+                    <Setter Property="Source" Value="/Views/Images/AsnEditor/DateTime.png"/>
                 </DataTrigger>
                 <DataTrigger Binding="{Binding Value.TagName}" Value="SEQUENCE">
-                    <Setter Property="Source" Value="../Images/AsnEditor/SEQUENCE.png"/>
+                    <Setter Property="Source" Value="/Views/Images/AsnEditor/SEQUENCE.png"/>
                 </DataTrigger>
                 <DataTrigger Binding="{Binding Value.TagName}" Value="SET">
-                    <Setter Property="Source" Value="../Images/AsnEditor/SET.png"/>
+                    <Setter Property="Source" Value="/Views/Images/AsnEditor/SET.png"/>
                 </DataTrigger>
                 <DataTrigger Binding="{Binding Value.IsContextSpecific}" Value="True">
-                    <Setter Property="Source" Value="../Images/AsnEditor/CONTEXT_SPECIFIC.png"/>
+                    <Setter Property="Source" Value="/Views/Images/AsnEditor/CONTEXT_SPECIFIC.png"/>
                 </DataTrigger>
                 <DataTrigger Binding="{Binding Value.IsRoot}" Value="True">
-                    <Setter Property="Source" Value="../Images/AsnEditor/Root.png"/>
+                    <Setter Property="Source" Value="/Views/Images/AsnEditor/Root.png"/>
                 </DataTrigger>
             </Style.Triggers>
         </Style>
@@ -134,7 +134,7 @@
                   Drop="Tree_OnDrop"
                   AllowDrop="True"
                   ItemsSource="{Binding Tree}"
-                  SelectedItemChanged="TreeViewSelectedItemChanged"
+                  SelectedItemChanged="OnTreeViewSelectedItemChanged"
                   MouseDoubleClick="TreeViewDoubleClick"
                   MouseRightButtonDown="OnPreviewMouseRightButtonDown"
                   BorderThickness="1"
@@ -164,20 +164,20 @@
             </TreeView.ItemContainerStyle>
             <TreeView.ContextMenu>
                 <ContextMenu>
-                    <MenuItem Header="Edit..."
+                    <MenuItem Header="Edit/Views."
                               Command="{Binding TreeCommands.EditNodeCommand}"
                               InputGestureText="Ctrl + E">
                         <MenuItem.Icon>
-                            <Image Source="../Images/Menu/edit_16x16.png"/>
+                            <Image Source="/Views/Images/Menu/edit_16x16.png" Width="16"/>
                         </MenuItem.Icon>
                     </MenuItem>
-                    <MenuItem Header="Edit in hex mode..."
+                    <MenuItem Header="Edit in hex mode/Views."
                               Command="{Binding TreeCommands.EditNodeCommand}"
                               CommandParameter="hex"/>
-                    <MenuItem Header="Save selected node as..."
+                    <MenuItem Header="Save selected node as/Views."
                               Command="{Binding TreeCommands.SaveNodeCommand}"
                               CommandParameter="{Binding SelectedTreeNode.Value}"/>
-                    <MenuItem Header="View node text..."
+                    <MenuItem Header="View node text/Views."
                               Command="{Binding TreeCommands.ShowNodeTextViewer}"/>
                     <Separator/>
                     <MenuItem Header="New node"
@@ -185,7 +185,7 @@
                               CommandParameter="{Binding SelectedTreeNode}"
                               InputGestureText="Ctrl + N">
                         <MenuItem.Icon>
-                            <Image Source="../Images/Menu/newnode_16x16.png"/>
+                            <Image Source="/Views/Images/Menu/newnode_16x16.png"/>
                         </MenuItem.Icon>
                     </MenuItem>
                     <MenuItem Header="Cut"
@@ -193,7 +193,7 @@
                               CommandParameter="{Binding SelectedTreeNode}"
                               InputGestureText="Ctrl + X">
                         <MenuItem.Icon>
-                            <Image Source="../Images/Menu/cut_16x16.png"/>
+                            <Image Source="/Views/Images/Menu/cut_16x16.png"/>
                         </MenuItem.Icon>
                     </MenuItem>
                     <MenuItem Header="Copy"
@@ -201,14 +201,14 @@
                               CommandParameter="{Binding SelectedTreeNode}"
                               InputGestureText="Ctrl + C">
                         <MenuItem.Icon>
-                            <Image Source="../Images/Menu/copy_16x16.png"/>
+                            <Image Source="/Views/Images/Menu/copy_16x16.png"/>
                         </MenuItem.Icon>
                     </MenuItem>
                     <MenuItem Header="Paste before"
                               Command="{Binding TreeCommands.PasteBeforeCommand}"
                               CommandParameter="{Binding SelectedTreeNode}">
                         <MenuItem.Icon>
-                            <Image Source="../Images/Menu/insertbefore_16x16.png"/>
+                            <Image Source="/Views/Images/Menu/insertbefore_16x16.png"/>
                         </MenuItem.Icon>
                     </MenuItem>
                     <MenuItem Header="Paste After"
@@ -216,14 +216,14 @@
                               CommandParameter="{Binding SelectedTreeNode}"
                               InputGestureText="Ctrl + V">
                         <MenuItem.Icon>
-                            <Image Source="../Images/Menu/insertafter_16x16.png"/>
+                            <Image Source="/Views/Images/Menu/insertafter_16x16.png"/>
                         </MenuItem.Icon>
                     </MenuItem>
                     <MenuItem Header="Insert as a last child node"
                               Command="{Binding TreeCommands.PasteLastCommand}"
                               CommandParameter="{Binding SelectedTreeNode}">
                         <MenuItem.Icon>
-                            <Image Source="../Images/Menu/insertlast_16x16.png"/>
+                            <Image Source="/Views/Images/Menu/insertlast_16x16.png"/>
                         </MenuItem.Icon>
                     </MenuItem>
                     <Separator/>
@@ -232,7 +232,7 @@
                               CommandParameter="{Binding SelectedTreeNode}"
                               InputGestureText="Del">
                         <MenuItem.Icon>
-                            <Image Source="../Images/Menu/delete_16x16.png"/>
+                            <Image Source="/Views/Images/Menu/delete_16x16.png"/>
                         </MenuItem.Icon>
                     </MenuItem>
                 </ContextMenu>
