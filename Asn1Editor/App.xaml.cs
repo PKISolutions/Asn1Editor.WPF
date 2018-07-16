@@ -95,6 +95,7 @@ namespace SysadminsLV.Asn1Editor {
             // view models
             Container.RegisterSingleton<IMainWindowVM, MainWindowVM>();
             Container.RegisterType<ITextViewerVM, TextViewerVM>();
+            Container.RegisterType<ITreeViewVM, TreeViewVM>();
             Container.RegisterType<ITagDataEditorVM, TagDataEditorVM>();
         }
 

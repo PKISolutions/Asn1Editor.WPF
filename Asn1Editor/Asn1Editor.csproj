@@ -145,6 +145,9 @@
     <Compile Include="API\Interfaces\IAppCommands.cs" />
     <Compile Include="API\Interfaces\ITagDataEditor.cs" />
     <Compile Include="API\Interfaces\ITagDataEditorVM.cs" />
+    <Compile Include="API\Interfaces\ITreeViewVM.cs" />
+    <Compile Include="API\Utils\NodeEditMode.cs" />
+    <Compile Include="API\ViewModel\TreeViewVM.cs" />
     <Compile Include="Views\UserControls\HexViewer\IBinarySource.cs" />
     <Compile Include="API\Interfaces\IDataSource.cs" />
     <Compile Include="API\Interfaces\IMainWindowVM.cs" />
@@ -168,7 +171,6 @@
     <Compile Include="API\Utils\WPF\WindowFactoryBase.cs" />
     <Compile Include="API\ViewModel\AppCommands.cs" />
     <Compile Include="API\ViewModel\ConverterVM.cs" />
-    <Compile Include="API\ViewModel\IHexView.cs" />
     <Compile Include="API\ViewModel\StaticCommands.cs" />
     <Compile Include="API\ViewModel\TagDataEditorVM.cs" />
     <Compile Include="API\ViewModel\TextViewerVM.cs" />

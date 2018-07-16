@@ -23,7 +23,6 @@ namespace SysadminsLV.Asn1Editor.API.ViewModel {
         public TreeViewCommands(MainWindowVM Parent) {
             _parentVM = Parent;
             SaveNodeCommand = new RelayCommand(saveNode, canContextMenu);
-            EditNodeCommand = new RelayCommand(editNode, canContextMenu);
             NewNodeCommand = new RelayCommand(newNode, canNew);
             CutNodeCommand = new RelayCommand(cutNode, canRemove);
             CopyNodeCommand = new RelayCommand(copyNode, canContextMenu);
@@ -33,7 +32,6 @@ namespace SysadminsLV.Asn1Editor.API.ViewModel {
             DeleteNodeCommand = new RelayCommand(removeNode, canRemove);
         }
 
-        public ICommand EditNodeCommand { get; set; }
         public ICommand SaveNodeCommand { get; set; }
         public ICommand NewNodeCommand { get; set; }
         public ICommand DeleteNodeCommand { get; set; }
@@ -44,15 +42,16 @@ namespace SysadminsLV.Asn1Editor.API.ViewModel {
         public ICommand PasteLastCommand { get; set; }
 
         void editNode(Object obj) {
-            TagDataEditor dlg = (String)obj == "hex"
-                ? new TagDataEditor(_parentVM.SelectedTreeNode.Value, true)
-                : new TagDataEditor(_parentVM.SelectedTreeNode.Value);
-            dlg.ShowDialog();
+            //TagDataEditor dlg = (String)obj == "hex"
+            //    ? new TagDataEditor(_parentVM.SelectedTreeNode.Value, true)
+            //    : new TagDataEditor(_parentVM.SelectedTreeNode.Value);
+            //dlg.ShowDialog();
         }
         void newNode(Object obj) {
             var data = App.Container.Resolve<IDataSource>();
             Asn1Lite asn = new Asn1Lite(new Asn1Reader(new Byte[] { 48, 0 })) { IsContainer = true };
-            TagDataEditor dlg = new TagDataEditor(asn);
+            // TODO: parameter
+            TagDataEditor dlg = new TagDataEditor(null);
             ((TagDataEditorVM)dlg.DataContext).TagIsReadOnly = false;
             dlg.ShowDialog();
             if (!((TagDataEditorVM)dlg.DataContext).Accepted) { return; }

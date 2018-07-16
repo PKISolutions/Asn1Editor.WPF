@@ -10,7 +10,6 @@ using SysadminsLV.Asn1Editor.API.Utils.ASN;
 using SysadminsLV.Asn1Editor.Properties;
 using SysadminsLV.Asn1Parser;
 using SysadminsLV.WPF.OfficeTheme.Toolkit.Commands;
-using Unity;
 
 namespace SysadminsLV.Asn1Editor.API.ViewModel {
     class TagDataEditorVM : ViewModelBase, ITagDataEditorVM {
@@ -18,22 +17,23 @@ namespace SysadminsLV.Asn1Editor.API.ViewModel {
         const String masterTag = "123";
         const String masterUnused = "1";
         Boolean? dialogResult;
-        Asn1Lite asn;
         String tagDetails, tagValue, oldValue;
         Boolean isReadonly, tagIsReadOnly = true;
         Visibility unusedBitsVisible = Visibility.Collapsed;
         Byte unusedBits, tag;
         Double tagTextBoxWidth, unusedTextBoxWidth;
 
-        public TagDataEditorVM() {
+        public TagDataEditorVM(IDataSource data) {
+            _data = data;
             OkCommand = new RelayCommand(submitValues);
             CloseCommand = new RelayCommand(close);
-            init();
+            initialize();
         }
 
         public ICommand OkCommand { get; set; }
         public ICommand CloseCommand { get; set; }
         public Boolean Accepted { get; private set; }
+        public Asn1Lite Node { get; private set; }
 
         public String TagDetails {
             get => tagDetails;
@@ -108,7 +108,7 @@ namespace SysadminsLV.Asn1Editor.API.ViewModel {
             }
         }
 
-        void init() {
+        void initialize() {
             calculateLengths();
             Settings.Default.PropertyChanged += (Sender, Args) => {
                 if (Args.PropertyName == nameof(Settings.FontSize)) {
@@ -126,32 +126,49 @@ namespace SysadminsLV.Asn1Editor.API.ViewModel {
                 Tools.MsgBox("Error", "Invalid tag number");
                 return;
             }
-            asn.Tag = Tag;
+            Node.Tag = Tag;
             if (TagValue == oldValue) {
                 DialogResult = true;
                 return;
             }
-            if (asn.ValidateValue(TagValue, UnusedBits)) {
+            if (Node.ValidateValue(TagValue, UnusedBits)) {
                 DialogResult = true;
             }
         }
         void close(Object o) {
             DialogResult = true;
         }
+        void editText() {
+            TagValue = AsnDecoder.GetEditValue(Node);
+        }
+        void editHex() {
+            TagValue = HexUtility
+                .BinaryToHex(_data.RawData
+                    .Skip(Node.PayloadStartOffset)
+                    .Take(Node.PayloadLength)
+                .ToArray());
+        }
 
-        public void SetBinding(Asn1Lite asnNode, Boolean hex) {
-            asn = asnNode;
-            Tag = asnNode.Tag;
-            UnusedBits = asnNode.UnusedBits;
-            IsReadonly = asnNode.IsContainer || asnNode.Tag == (Byte)Asn1Type.NULL;
-            TagDetails = String.Format(Resources.TagEditorHeaderTemp, Tag, asnNode.TagName, asnNode.Offset, asnNode.PayloadLength, asnNode.Deepness, asnNode.Path);
-            TagValue = IsReadonly || asnNode.Tag == (Byte)Asn1Type.NULL
-                ? "Containers and NULL (0x05) tags are not editable"
-                : hex
-                    ? HexUtility.BinaryToHex(App.Container.Resolve<IDataSource>().RawData.Skip(asnNode.PayloadStartOffset).Take(asnNode.PayloadLength).ToArray())
-                    : AsnDecoder.GetEditValue(asnNode);
+        public void SetBinding(NodeEditMode editMode) {
+            Node = _data.SelectedNode.Value;
+            Tag = Node.Tag;
+            UnusedBits = Node.UnusedBits;
+            IsReadonly = Node.IsContainer || Node.Tag == (Byte)Asn1Type.NULL;
+            TagDetails = String.Format(Resources.TagEditorHeaderTemp, Tag, Node.TagName, Node.Offset, Node.PayloadLength, Node.Deepness, Node.Path);
+            if (IsReadonly || Node.Tag == (Byte)Asn1Type.NULL) {
+                TagValue = "Containers and NULL (0x05) tags are not editable";
+            } else {
+                switch (editMode) {
+                    case NodeEditMode.Text:
+                        editText();
+                        break;
+                    case NodeEditMode.Hex:
+                        editHex();
+                        break;
+                }
+            }
             oldValue = TagValue;
-            UnusedBitsVisible = asnNode.Tag == (Byte)Asn1Type.BIT_STRING
+            UnusedBitsVisible = Node.Tag == (Byte)Asn1Type.BIT_STRING
                 ? Visibility.Visible
                 : Visibility.Hidden;
         }

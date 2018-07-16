@@ -2,8 +2,12 @@
         Name="editor"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        xmlns:viewModel="clr-namespace:SysadminsLV.Asn1Editor.API.ViewModel"
+        xmlns:vm="clr-namespace:SysadminsLV.Asn1Editor.API.ViewModel"
         xmlns:properties="clr-namespace:SysadminsLV.Asn1Editor.Properties"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        mc:Ignorable="d"
+        d:DataContext="{d:DesignInstance vm:TagDataEditorVM}"
         xmlns:cmd="clr-namespace:SysadminsLV.WPF.OfficeTheme.Toolkit.Commands;assembly=Wpf.OfficeTheme"
         cmd:DialogCloser.DialogResult="{Binding DialogResult}"
         WindowStartupLocation="CenterOwner"
@@ -11,9 +15,6 @@
         Title="Node Content Editor"
         Height="360"
         Width="500">
-    <Window.DataContext>
-        <viewModel:TagDataEditorVM/>
-    </Window.DataContext>
     <Window.InputBindings>
         <KeyBinding Key="Escape" Command="{Binding CloseCommand}"/>
     </Window.InputBindings>

@@ -5,8 +5,8 @@ using System.Windows.Input;
 using System.Windows.Media;
 using SysadminsLV.Asn1Editor.API.Interfaces;
 using SysadminsLV.Asn1Editor.API.ModelObjects;
+using SysadminsLV.Asn1Editor.API.Utils;
 using SysadminsLV.Asn1Editor.API.ViewModel;
-using SysadminsLV.Asn1Editor.Views.Windows;
 using Unity;
 
 namespace SysadminsLV.Asn1Editor.Views.UserControls {
@@ -14,19 +14,21 @@ namespace SysadminsLV.Asn1Editor.Views.UserControls {
     /// Interaction logic for AsnTreeView.xaml
     /// </summary>
     public partial class AsnTreeView {
+        readonly ITreeViewVM _treeVM;
         readonly IDataSource _data;
+        
         public AsnTreeView() {
             InitializeComponent();
+            _treeVM = App.Container.Resolve<ITreeViewVM>();
             _data = App.Container.Resolve<IDataSource>();
         }
 
-        void TreeViewDoubleClick(Object sender, MouseButtonEventArgs e) {
+        void OnTreeViewDoubleClick(Object sender, MouseButtonEventArgs e) {
             if (tree.SelectedItem == null) { return; }
-            TagDataEditor dlg = new TagDataEditor(((Asn1TreeNode)tree.SelectedItem).Value);
-            dlg.ShowDialog();
+            _treeVM.TreeCommands.EditNodeCommand.Execute(NodeEditMode.Text);
         }
         void OnPreviewMouseRightButtonDown(Object sender, MouseButtonEventArgs e) {
-            TreeViewItem treeViewItem = VisualUpwardSearch(e.OriginalSource as DependencyObject);
+            TreeViewItem treeViewItem = visualUpwardSearch(e.OriginalSource as DependencyObject);
             if (treeViewItem != null) {
                 treeViewItem.Focus();
                 e.Handled = true;
@@ -43,7 +45,7 @@ namespace SysadminsLV.Asn1Editor.Views.UserControls {
             }
         }
 
-        static TreeViewItem VisualUpwardSearch(DependencyObject source) {
+        static TreeViewItem visualUpwardSearch(DependencyObject source) {
             while (source != null && !(source is TreeViewItem)) {
                 source = VisualTreeHelper.GetParent(source);
             }

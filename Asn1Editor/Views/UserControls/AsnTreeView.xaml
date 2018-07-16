@@ -7,6 +7,7 @@
              xmlns:uc="clr-namespace:SysadminsLV.Asn1Editor.Views.UserControls"
              xmlns:vm="clr-namespace:SysadminsLV.Asn1Editor.API.ViewModel"
              xmlns:properties="clr-namespace:SysadminsLV.Asn1Editor.Properties"
+             xmlns:clr="clr-namespace:SysadminsLV.Asn1Editor.API.Utils"
              mc:Ignorable="d"
              d:DataContext="{d:DesignInstance vm:MainWindowVM}"
              d:DesignHeight="300" d:DesignWidth="300">
@@ -135,7 +136,7 @@
                   AllowDrop="True"
                   ItemsSource="{Binding Tree}"
                   SelectedItemChanged="OnTreeViewSelectedItemChanged"
-                  MouseDoubleClick="TreeViewDoubleClick"
+                  MouseDoubleClick="OnTreeViewDoubleClick"
                   MouseRightButtonDown="OnPreviewMouseRightButtonDown"
                   BorderThickness="1"
                   BorderBrush="{StaticResource NormalBorderBrush}"
@@ -164,20 +165,21 @@
             </TreeView.ItemContainerStyle>
             <TreeView.ContextMenu>
                 <ContextMenu>
-                    <MenuItem Header="Edit/Views."
+                    <MenuItem Header="Edit..."
                               Command="{Binding TreeCommands.EditNodeCommand}"
+                              CommandParameter="{x:Static clr:NodeEditMode.Text}"
                               InputGestureText="Ctrl + E">
                         <MenuItem.Icon>
                             <Image Source="/Views/Images/Menu/edit_16x16.png" Width="16"/>
                         </MenuItem.Icon>
                     </MenuItem>
-                    <MenuItem Header="Edit in hex mode/Views."
+                    <MenuItem Header="Edit in hex mode..."
                               Command="{Binding TreeCommands.EditNodeCommand}"
-                              CommandParameter="hex"/>
-                    <MenuItem Header="Save selected node as/Views."
+                              CommandParameter="{x:Static clr:NodeEditMode.Hex}"/>
+                    <MenuItem Header="Save selected node as..."
                               Command="{Binding TreeCommands.SaveNodeCommand}"
                               CommandParameter="{Binding SelectedTreeNode.Value}"/>
-                    <MenuItem Header="View node text/Views."
+                    <MenuItem Header="View node text..."
                               Command="{Binding TreeCommands.ShowNodeTextViewer}"/>
                     <Separator/>
                     <MenuItem Header="New node"
