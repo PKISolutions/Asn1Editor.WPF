@@ -82,9 +82,9 @@
                 </StackPanel>
             </StatusBarItem>
         </StatusBar>
-        <HeaderedContentControl Header="ExplicitValue">
+        <HeaderedContentControl Header="Explicit Value">
             <TextBox Text="{Binding TagValue}"
-                     IsReadOnly="{Binding IsReadonly}"
+                     IsReadOnly="{Binding IsReadOnly}"
                      IsReadOnlyCaretVisible="True"
                      AcceptsReturn="True"
                      FontFamily="Consolas"

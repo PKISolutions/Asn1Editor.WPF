@@ -32,7 +32,6 @@ namespace SysadminsLV.Asn1Editor.API.ViewModel {
 
         public ICommand OkCommand { get; set; }
         public ICommand CloseCommand { get; set; }
-        public Boolean Accepted { get; private set; }
         public Asn1Lite Node { get; private set; }
 
         public String TagDetails {
@@ -79,11 +78,11 @@ namespace SysadminsLV.Asn1Editor.API.ViewModel {
                 OnPropertyChanged(nameof(UnusedBitsVisible));
             }
         }
-        public Boolean IsReadonly {
+        public Boolean IsReadOnly {
             get => isReadonly;
             set {
                 isReadonly = value;
-                OnPropertyChanged(nameof(IsReadonly));
+                OnPropertyChanged(nameof(IsReadOnly));
             }
         }
         public Double TagTextBoxWidth {
@@ -121,7 +120,6 @@ namespace SysadminsLV.Asn1Editor.API.ViewModel {
             UnusedTextBoxWidth = Tools.MeasureString(masterUnused, Settings.Default.FontSize, false);
         }
         void submitValues(Object obj) {
-            Accepted = true;
             if (Tag == 0) {
                 Tools.MsgBox("Error", "Invalid tag number");
                 return;
@@ -136,7 +134,14 @@ namespace SysadminsLV.Asn1Editor.API.ViewModel {
             }
         }
         void close(Object o) {
+            Node = null;
             DialogResult = true;
+        }
+        void newNode() {
+            Node = new Asn1Lite(new Asn1Reader(new Byte[] { 48, 0 })) {
+                IsContainer = true
+            };
+            TagIsReadOnly = false;
         }
         void editText() {
             TagValue = AsnDecoder.GetEditValue(Node);
@@ -150,12 +155,15 @@ namespace SysadminsLV.Asn1Editor.API.ViewModel {
         }
 
         public void SetBinding(NodeEditMode editMode) {
+            if (editMode == NodeEditMode.NewNode) {
+                newNode();
+            }
             Node = _data.SelectedNode.Value;
             Tag = Node.Tag;
             UnusedBits = Node.UnusedBits;
-            IsReadonly = Node.IsContainer || Node.Tag == (Byte)Asn1Type.NULL;
+            IsReadOnly = Node.IsContainer || Node.Tag == (Byte)Asn1Type.NULL;
             TagDetails = String.Format(Resources.TagEditorHeaderTemp, Tag, Node.TagName, Node.Offset, Node.PayloadLength, Node.Deepness, Node.Path);
-            if (IsReadonly || Node.Tag == (Byte)Asn1Type.NULL) {
+            if (IsReadOnly || Node.Tag == (Byte)Asn1Type.NULL) {
                 TagValue = "Containers and NULL (0x05) tags are not editable";
             } else {
                 switch (editMode) {

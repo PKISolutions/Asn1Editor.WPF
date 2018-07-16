@@ -168,7 +168,7 @@ namespace SysadminsLV.Asn1Editor.API.ModelObjects {
             ExplicitValue = AsnDecoder.GetViewValue(asn);
             OffsetChange = asn.PayloadLength - PayloadLength;
             PayloadLength = asn.PayloadLength;
-            UpdateBinaryCopy(binValue);
+            updateBinaryCopy(binValue);
             return true;
         }
         public override Boolean Equals(Object obj) {
@@ -185,7 +185,7 @@ namespace SysadminsLV.Asn1Editor.API.ModelObjects {
             }
         }
 
-        void UpdateBinaryCopy(Byte[] newBytes) {
+        void updateBinaryCopy(Byte[] newBytes) {
             var data = App.Container.Resolve<IDataSource>();
             data.RawData.RemoveRange(Offset, TagLength);
             data.RawData.InsertRange(Offset, newBytes);

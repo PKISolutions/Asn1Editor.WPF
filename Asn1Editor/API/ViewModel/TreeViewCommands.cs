@@ -54,7 +54,7 @@ namespace SysadminsLV.Asn1Editor.API.ViewModel {
             TagDataEditor dlg = new TagDataEditor(null);
             ((TagDataEditorVM)dlg.DataContext).TagIsReadOnly = false;
             dlg.ShowDialog();
-            if (!((TagDataEditorVM)dlg.DataContext).Accepted) { return; }
+            //if (!((TagDataEditorVM)dlg.DataContext).Accepted) { return; }
             if (obj == null) {
                 Asn1TreeNode node = new Asn1TreeNode(asn);
                 data.Tree.Add(node);
