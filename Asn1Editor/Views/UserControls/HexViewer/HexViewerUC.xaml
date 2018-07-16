@@ -11,6 +11,28 @@
              BorderBrush="#add1ff"
              d:DataContext="{d:DesignInstance vm:MainWindowVM}"
              d:DesignHeight="300" d:DesignWidth="580">
+    <UserControl.Resources>
+        <Style x:Key="RtbHeaderStyle" TargetType="RichTextBox" BasedOn="{StaticResource {x:Type RichTextBox}}">
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="Background" Value="#D5E7FE"/>
+            <Setter Property="Foreground" Value="Navy"/>
+            <Setter Property="IsEnabled" Value="False"/>
+            <Setter Property="FontFamily" Value="Consolas"/>
+            <Setter Property="FontSize" Value="{Binding Path=FontSize, Source={x:Static properties:Settings.Default}}"/>
+            <Setter Property="FontWeight" Value="Bold"/>
+            <Setter Property="ContextMenu" Value="{x:Null}"/>
+            <Setter Property="IsUndoEnabled" Value="False"/>
+        </Style>
+        <Style x:Key="RtbPaneStyle" TargetType="controls:BindableRichTextBox" BasedOn="{StaticResource {x:Type controls:BindableRichTextBox}}">
+            <Setter Property="BorderBrush" Value="{StaticResource NormalBorderBrush}"/>
+            <Setter Property="BorderThickness" Value="0,0,1,0"/>
+            <Setter Property="IsReadOnly" Value="True"/>
+            <Setter Property="IsUndoEnabled" Value="False"/>
+            <Setter Property="FontFamily" Value="Consolas"/>
+            <Setter Property="FontSize" Value="{Binding Path=FontSize, Source={x:Static properties:Settings.Default}}"/>
+            <Setter Property="IsReadOnlyCaretVisible" Value="True"/>
+        </Style>
+    </UserControl.Resources>
     <DockPanel>
         <ToolBarTray DockPanel.Dock="Top" IsLocked="True">
             <ToolBar>
@@ -33,16 +55,8 @@
             <DockPanel Background="#D5E7FE">
                 <RichTextBox x:Name="HexAddrHeaderRtb"
                              x:FieldModifier="private"
-                             Width="{Binding HexViewerContext.AddrWidth}"
-                             Visibility="{Binding ElementName=HexAddressToggle, Path=IsChecked, Converter={StaticResource BooleanToVisibility}}"
-                             BorderThickness="0"
-                             Background="#D5E7FE"
-                             IsEnabled="False"
-                             FontFamily="Consolas"
-                             FontSize="{Binding Path=FontSize, Source={x:Static properties:Settings.Default}}"
-                             FontWeight="Bold"
-                             Foreground="Navy"
-                             ContextMenu="{x:Null}">
+                             Style="{StaticResource RtbHeaderStyle}"
+                             Visibility="{Binding ElementName=HexAddressToggle, Path=IsChecked, Converter={StaticResource BooleanToVisibility}}">
                     <RichTextBox.Document>
                         <FlowDocument>
                             <Paragraph>
@@ -53,15 +67,7 @@
                 </RichTextBox>
                 <RichTextBox x:Name="HexRawHeaderRtb"
                              x:FieldModifier="private"
-                             Width="{Binding HexViewerContext.HexWidth}"
-                             BorderThickness="0"
-                             Background="#D5E7FE"
-                             IsEnabled="False"
-                             FontFamily="Consolas"
-                             FontSize="{Binding Path=FontSize, Source={x:Static properties:Settings.Default}}"
-                             FontWeight="Bold"
-                             Foreground="Navy"
-                             ContextMenu="{x:Null}">
+                             Style="{StaticResource RtbHeaderStyle}">
                     <RichTextBox.Document>
                         <FlowDocument>
                             <Paragraph>
@@ -72,16 +78,8 @@
                 </RichTextBox>
                 <RichTextBox x:Name="HexAsciiHeaderRtb"
                              x:FieldModifier="private"
-                             Width="{Binding HexViewerContext.AsciiWidth}"
-                             Visibility="{Binding ElementName=AsciiToggle, Path=IsChecked, Converter={StaticResource BooleanToVisibility}}"
-                             BorderThickness="0"
-                             Background="#D5E7FE"
-                             IsEnabled="False"
-                             FontFamily="Consolas"
-                             FontSize="{Binding Path=FontSize, Source={x:Static properties:Settings.Default}}"
-                             FontWeight="Bold"
-                             Foreground="Navy"
-                             ContextMenu="{x:Null}">
+                             Style="{StaticResource RtbHeaderStyle}"
+                             Visibility="{Binding ElementName=AsciiToggle, Path=IsChecked, Converter={StaticResource BooleanToVisibility}}">
                     <RichTextBox.Document>
                         <FlowDocument>
                             <Paragraph>
@@ -96,39 +94,21 @@
             <DockPanel>
                 <controls:BindableRichTextBox x:Name="HexAddressPane"
                                               x:FieldModifier="private"
-                                              FontFamily="Consolas"
-                                              FontSize="{Binding Path=FontSize, Source={x:Static properties:Settings.Default}}"
+                                              Style="{StaticResource RtbPaneStyle}"
                                               Foreground="Blue"
-                                              BorderBrush="{StaticResource NormalBorderBrush}"
-                                              BorderThickness="0,0,1,0"
                                               Visibility="{Binding ElementName=HexAddressToggle, Path=IsChecked, Converter={StaticResource BooleanToVisibility}}"
-                                              IsReadOnly="True"
-                                              IsReadOnlyCaretVisible="True"
-                                              Document="{Binding HexViewerContext.AddressDocument}"
                                               Width="{Binding ElementName=HexAddrHeaderRtb, Path=Width}"/>
                 <controls:BindableRichTextBox x:Name="HexRawPane"
                                               x:FieldModifier="private"
-                                              FontFamily="Consolas"
-                                              FontSize="{Binding Path=FontSize, Source={x:Static properties:Settings.Default}}"
+                                              Style="{StaticResource RtbPaneStyle}"
                                               Foreground="Gray"
-                                              BorderBrush="{StaticResource NormalBorderBrush}"
-                                              BorderThickness="0,0,1,0"
-                                              IsReadOnly="True"
-                                              IsReadOnlyCaretVisible="True"
                                               ObserveCaret="True"
-                                              Document="{Binding HexViewerContext.HexDocument}"
                                               Width="{Binding ElementName=HexRawHeaderRtb, Path=Width}"/>
                 <controls:BindableRichTextBox x:Name="HexAsciiPane"
                                               x:FieldModifier="private"
-                                              FontFamily="Consolas"
-                                              FontSize="{Binding Path=FontSize, Source={x:Static properties:Settings.Default}}"
+                                              Style="{StaticResource RtbPaneStyle}"
                                               Foreground="Green"
-                                              BorderBrush="{StaticResource NormalBorderBrush}"
-                                              BorderThickness="0,0,1,0"
                                               Visibility="{Binding ElementName=AsciiToggle, Path=IsChecked, Converter={StaticResource BooleanToVisibility}}"
-                                              IsReadOnly="True"
-                                              IsReadOnlyCaretVisible="True"
-                                              Document="{Binding HexViewerContext.AsciiDocument}"
                                               Width="{Binding ElementName=HexAsciiHeaderRtb, Path=Width}"/>
             </DockPanel>
         </ScrollViewer>
