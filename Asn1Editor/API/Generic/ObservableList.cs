@@ -7,7 +7,6 @@ using System.Linq;
 namespace SysadminsLV.Asn1Editor.API.Generic {
     public class ObservableList<T> : List<T>, IObservableList<T> {
         public ObservableList() {
-            IsNotifying = true;
             CollectionChanged += delegate { OnPropertyChanged(nameof(Count)); };
         }
 

@@ -62,7 +62,7 @@ namespace SysadminsLV.Asn1Editor.API.ViewModel {
                 Asn1TreeNode node = new Asn1TreeNode(asn);
                 data.Tree.Add(node);
                 data.RawData.AddRange(new Byte[] { 48, 0 });
-                _parentVM.HexViewerContext.BuildHexView(null);
+                data.FinishBinaryUpdate();
             } else {
                 asn = new Asn1Lite(new Asn1Reader(new Byte[] { ((TagDataEditorVM)dlg.DataContext).Tag, 0 })) {
                     Offset =
@@ -77,7 +77,7 @@ namespace SysadminsLV.Asn1Editor.API.ViewModel {
                 asn.IsRoot = false;
                 asn.Deepness += _parentVM.SelectedTreeNode.Value.Deepness;
                 _parentVM.SelectedTreeNode.AddChild(asn, true);
-                _parentVM.HexViewerContext.BuildHexView(null);
+                data.FinishBinaryUpdate();
             }
         }
         void cutNode(Object obj) {

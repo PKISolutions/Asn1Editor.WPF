@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.ObjectModel;
+using System.Collections.Specialized;
 using SysadminsLV.Asn1Editor.API.Generic;
 using SysadminsLV.Asn1Editor.API.Interfaces;
 using SysadminsLV.Asn1Editor.API.ViewModel;
@@ -7,6 +8,17 @@ using SysadminsLV.Asn1Editor.API.ViewModel;
 namespace SysadminsLV.Asn1Editor.API.ModelObjects {
     class DataSource : ViewModelBase, IDataSource {
         Asn1TreeNode selectedNode;
+
+        protected void OnCollectionChanged(NotifyCollectionChangedEventArgs e) {
+            if (RawData.IsNotifying && CollectionChanged != null) {
+                try {
+                    CollectionChanged(this, e);
+                } catch (NotSupportedException) {
+                    var alternativeEventArgs = new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Reset);
+                    OnCollectionChanged(alternativeEventArgs);
+                }
+            }
+        }
 
         public Asn1TreeNode SelectedNode {
             get => selectedNode;
@@ -16,6 +28,11 @@ namespace SysadminsLV.Asn1Editor.API.ModelObjects {
             }
         }
         public ObservableCollection<Asn1TreeNode> Tree { get; } = new ObservableCollection<Asn1TreeNode>();
+        public void FinishBinaryUpdate() {
+            OnCollectionChanged(new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Reset));
+        }
         public ObservableList<Byte> RawData { get; } = new ObservableList<Byte> { IsNotifying = true };
+
+        public event NotifyCollectionChangedEventHandler CollectionChanged;
     }
 }

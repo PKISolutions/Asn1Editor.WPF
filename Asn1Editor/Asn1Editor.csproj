@@ -143,8 +143,8 @@
     <Compile Include="API\Generic\ObservableList.cs" />
     <Compile Include="API\Generic\IObservableList.cs" />
     <Compile Include="API\Interfaces\IAppCommands.cs" />
+    <Compile Include="Views\UserControls\HexViewer\IBinarySource.cs" />
     <Compile Include="API\Interfaces\IDataSource.cs" />
-    <Compile Include="API\Interfaces\IHexViewerVM.cs" />
     <Compile Include="API\Interfaces\IMainWindowVM.cs" />
     <Compile Include="API\Interfaces\ITextViewerVM.cs" />
     <Compile Include="API\Interfaces\ITreeCommands.cs" />
@@ -158,7 +158,6 @@
     <Compile Include="API\Utils\Extensions\StringExtensions.cs" />
     <Compile Include="API\Utils\FileUtility.cs" />
     <Compile Include="API\Utils\HexConverter.cs" />
-    <Compile Include="API\Utils\TextUtility.cs" />
     <Compile Include="API\Utils\Tools.cs" />
     <Compile Include="API\Converters\TextBlockTrimConverter.cs" />
     <Compile Include="API\ModelObjects\Asn1Lite.cs" />
@@ -167,7 +166,6 @@
     <Compile Include="API\Utils\WPF\WindowFactoryBase.cs" />
     <Compile Include="API\ViewModel\AppCommands.cs" />
     <Compile Include="API\ViewModel\ConverterVM.cs" />
-    <Compile Include="API\ViewModel\HexViewerVM.cs" />
     <Compile Include="API\ViewModel\IHexView.cs" />
     <Compile Include="API\ViewModel\StaticCommands.cs" />
     <Compile Include="API\ViewModel\TagDataEditorVM.cs" />
@@ -178,6 +176,8 @@
     <Compile Include="Controls\BindableRichTextBox.cs" />
     <Compile Include="Controls\CaretBehavior.cs" />
     <Compile Include="API\Converters\TreeViewLineConverter.cs" />
+    <Compile Include="Views\UserControls\HexViewer\IHexAsnNode.cs" />
+    <Compile Include="Views\UserControls\HexViewer\TextUtility.cs" />
     <Compile Include="Views\Windows\AboutBox.xaml.cs">
       <DependentUpon>AboutBox.xaml</DependentUpon>
     </Compile>
@@ -190,7 +190,7 @@
     <Compile Include="Views\UserControls\BusyIndicator.xaml.cs">
       <DependentUpon>BusyIndicator.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Views\UserControls\HexViewerUC.xaml.cs">
+    <Compile Include="Views\UserControls\HexViewer\HexViewerUC.xaml.cs">
       <DependentUpon>HexViewerUC.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\Windows\Converter.xaml.cs">
@@ -235,7 +235,7 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Views\UserControls\HexViewerUC.xaml">
+    <Page Include="Views\UserControls\HexViewer\HexViewerUC.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

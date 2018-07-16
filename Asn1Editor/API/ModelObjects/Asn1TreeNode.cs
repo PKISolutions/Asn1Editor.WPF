@@ -3,10 +3,8 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Linq;
-using System.Windows;
 using SysadminsLV.Asn1Editor.API.Interfaces;
 using SysadminsLV.Asn1Editor.API.Utils;
-using SysadminsLV.Asn1Editor.API.ViewModel;
 using SysadminsLV.Asn1Parser;
 using Unity;
 
@@ -54,7 +52,8 @@ namespace SysadminsLV.Asn1Editor.API.ModelObjects {
             //TODO verify code
             Value.IsContainer = true;
             if (indexToInsert < 0) { return; }
-            App.Container.Resolve<IDataSource>().RawData.InsertRange(newOffset, ClipboardManager.GetClipboardBytes());
+            var data = App.Container.Resolve<IDataSource>();
+            data.RawData.InsertRange(newOffset, ClipboardManager.GetClipboardBytes());
             _children.Insert(indexToInsert, nodeToInsert);
             NotifySizeChanged(nodeToInsert, nodeToInsert.Value.TagLength);
             _children[indexToInsert].Value.Offset = newOffset;
@@ -65,7 +64,7 @@ namespace SysadminsLV.Asn1Editor.API.ModelObjects {
             foreach (Asn1TreeNode child in _children[indexToInsert].Children) {
                 child.UpdateOffset(newOffset);
             }
-            ((MainWindowVM)Application.Current.MainWindow.DataContext).HexViewerContext.BuildHexView(null);
+            data.FinishBinaryUpdate();
         }
         public void AddChild(Asn1Lite value, Boolean forcePathUpdate = false) {
             var node = new Asn1TreeNode(value) { Parent = this };
@@ -82,7 +81,7 @@ namespace SysadminsLV.Asn1Editor.API.ModelObjects {
             _children.Add(node);
             NotifySizeChanged(node, Value.OffsetChange);
             Value.IsContainer = true;
-            ((MainWindowVM)Application.Current.MainWindow.DataContext).HexViewerContext.BuildHexView(null);
+            App.Container.Resolve<IDataSource>().FinishBinaryUpdate();
         }
         public void RemoveChild(Asn1TreeNode node) {
             //Int32 indexToRemove = Children.IndexOf(node);
@@ -91,7 +90,7 @@ namespace SysadminsLV.Asn1Editor.API.ModelObjects {
             App.Container.Resolve<IDataSource>().RawData.RemoveRange(node.Value.Offset, difference);
             NotifySizeChanged(node, -difference);
             _children.RemoveAt(node.MyIndex);
-            ((MainWindowVM)Application.Current.MainWindow.DataContext).HexViewerContext.BuildHexView(null);
+            App.Container.Resolve<IDataSource>().FinishBinaryUpdate();
             // update path only below removed node
             for (Int32 childIndex = node.MyIndex; childIndex < Children.Count; childIndex++) {
                 UpdatePath(this[childIndex], Path, childIndex);
@@ -140,7 +139,7 @@ namespace SysadminsLV.Asn1Editor.API.ModelObjects {
                     if (Value.OffsetChange != 0) {
                         Parent.NotifySizeChanged(this, Value.OffsetChange);
                     }
-                    ((MainWindowVM)Application.Current.MainWindow.DataContext).HexViewerContext.BuildHexView(null);
+                    App.Container.Resolve<IDataSource>().FinishBinaryUpdate();
                 }
             }
         }
@@ -164,7 +163,7 @@ namespace SysadminsLV.Asn1Editor.API.ModelObjects {
         public override Boolean Equals(Object obj) {
             if (ReferenceEquals(null, obj)) { return false; }
             if (ReferenceEquals(this, obj)) { return true; }
-            return obj.GetType() == GetType() && Equals((Asn1TreeNode) obj);
+            return obj.GetType() == GetType() && Equals((Asn1TreeNode)obj);
         }
     }
 }

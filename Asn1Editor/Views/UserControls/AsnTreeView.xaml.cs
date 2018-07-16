@@ -35,7 +35,7 @@ namespace SysadminsLV.Asn1Editor.Views.UserControls {
         void Tree_OnDrop(Object sender, DragEventArgs e) {
             String[] file = (String[])e.Data.GetData(DataFormats.FileDrop, true);
             if (file != null) {
-                ((MainWindowVM) DataContext).DropFile(file[0]);
+                ((MainWindowVM)DataContext).DropFile(file[0]);
             }
         }
 

@@ -5,6 +5,7 @@
         xmlns:uc="clr-namespace:SysadminsLV.Asn1Editor.Views.UserControls"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:hexViewer="clr-namespace:SysadminsLV.Asn1Editor.Views.UserControls.HexViewer"
         mc:Ignorable="d"
         d:DataContext="{d:DesignInstance vm:MainWindowVM}"
         Title="{Binding Title}"
@@ -129,8 +130,7 @@
         </Menu>
         <ToolBarTray DockPanel.Dock="Top" IsLocked="True">
             <ToolBar>
-                <ToggleButton Command="{Binding HexViewerChanged}"
-                              IsChecked="{Binding HexViewerChecked}"
+                <ToggleButton x:Name="HexViewerToggle"
                               ToolTip="Show or hide hex viewer">
                     <Image Source="/Views/Images/Menu/hexview_16x16.png" Width="16"/>	
                 </ToggleButton>
@@ -227,7 +227,9 @@
                 </TextBlock>
             </StatusBarItem>
         </StatusBar>
-        <uc:HexViewerUC Visibility="{Binding HexViewerVisible}"/>
+        <hexViewer:HexViewerUC DataSource="{Binding DataSource}"
+                               Visibility="{Binding ElementName=HexViewerToggle, Path=IsChecked, Converter={StaticResource BooleanToVisibility}}"
+                               SelectedNode="{Binding SelectedTreeNode.Value, Mode=OneWay}"/>
         <uc:AsnTreeView/>
     </DockPanel>
 </Window>

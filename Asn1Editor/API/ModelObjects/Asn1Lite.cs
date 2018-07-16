@@ -1,15 +1,15 @@
 ﻿using System;
-using System.Windows;
 using SysadminsLV.Asn1Editor.API.Interfaces;
 using SysadminsLV.Asn1Editor.API.Utils;
 using SysadminsLV.Asn1Editor.API.Utils.ASN;
 using SysadminsLV.Asn1Editor.API.ViewModel;
 using SysadminsLV.Asn1Editor.Properties;
+using SysadminsLV.Asn1Editor.Views.UserControls.HexViewer;
 using SysadminsLV.Asn1Parser;
 using Unity;
 
 namespace SysadminsLV.Asn1Editor.API.ModelObjects {
-    public class Asn1Lite : ViewModelBase {
+    public class Asn1Lite : ViewModelBase, IHexAsnNode {
         Byte tag, unusedBits;
         Boolean invalidData;
         Int32 offset, offsetChange;
@@ -44,7 +44,8 @@ namespace SysadminsLV.Asn1Editor.API.ModelObjects {
             Deepness = tree.Value.Deepness + 1;
             Path = tree.Value.Path + "/" + index;
             if (Tag == (Byte)Asn1Type.BIT_STRING) {
-                if (root.PayloadLength > 0) UnusedBits = root.RawData[root.PayloadStartOffset];
+                if (root.PayloadLength > 0)
+                    UnusedBits = root.RawData[root.PayloadStartOffset];
             }
             if (!root.IsConstructed) {
                 try {
@@ -72,15 +73,15 @@ namespace SysadminsLV.Asn1Editor.API.ModelObjects {
             get => tag;
             set {
                 tag = value;
-                OnPropertyChanged("Tag");
+                OnPropertyChanged(nameof(Tag));
             }
         }
         public Byte UnusedBits {
             get => unusedBits;
             set {
                 unusedBits = value;
-                OnPropertyChanged("UnusedBits");
-                OnPropertyChanged("Caption");
+                OnPropertyChanged(nameof(UnusedBits));
+                OnPropertyChanged(nameof(Caption));
             }
         }
         public String TagName {
@@ -88,14 +89,14 @@ namespace SysadminsLV.Asn1Editor.API.ModelObjects {
             set {
                 tagName = value;
                 if (value.StartsWith("CONTEXT SPECIFIC")) { IsContextSpecific = true; }
-                OnPropertyChanged("Caption");
+                OnPropertyChanged(nameof(Caption));
             }
         }
         public Int32 Offset {
             get => offset;
             set {
                 offset = value;
-                OnPropertyChanged("Caption");
+                OnPropertyChanged(nameof(Caption));
             }
         }
         public Int32 OffsetChange {
@@ -103,7 +104,7 @@ namespace SysadminsLV.Asn1Editor.API.ModelObjects {
             set {
                 if (offsetChange == value) { return; }
                 offsetChange = value;
-                OnPropertyChanged("OffsetChange");
+                OnPropertyChanged(nameof(OffsetChange));
             }
         }
 
@@ -113,7 +114,7 @@ namespace SysadminsLV.Asn1Editor.API.ModelObjects {
             get => payloadLength;
             set {
                 payloadLength = value;
-                OnPropertyChanged("Caption");
+                OnPropertyChanged(nameof(Caption));
             }
         }
         public Int32 TagLength => HeaderLength + PayloadLength;
@@ -125,33 +126,33 @@ namespace SysadminsLV.Asn1Editor.API.ModelObjects {
             get => invalidData;
             set {
                 invalidData = value;
-                OnPropertyChanged("InvalidData");
+                OnPropertyChanged(nameof(InvalidData));
             }
         } //TODO
         public Int32 Deepness {
             get => deepness;
             set {
                 deepness = value;
-                OnPropertyChanged("Caption");
+                OnPropertyChanged(nameof(Caption));
             }
         }
         public String Path {
             get => treePath;
             set {
                 treePath = value;
-                OnPropertyChanged("Caption");
+                OnPropertyChanged(nameof(Caption));
             }
         }
         public String ExplicitValue {
             get => explicitValue;
             set {
                 explicitValue = value;
-                OnPropertyChanged("Caption");
+                OnPropertyChanged(nameof(Caption));
             }
         }
 
         public void UpdateView() {
-            OnPropertyChanged("Caption");
+            OnPropertyChanged(nameof(Caption));
         }
         public Boolean ValidateValue(String newValue, Byte unused) {
             Byte[] binValue;
@@ -163,18 +164,17 @@ namespace SysadminsLV.Asn1Editor.API.ModelObjects {
             }
             if (Tag == (Byte)Asn1Type.BIT_STRING) { UnusedBits = unused; }
             Asn1Reader asn = new Asn1Reader(binValue);
-            UpdateBinaryCopy(binValue);
             PayloadStartOffset = Offset + asn.TagLength - asn.PayloadLength;
             ExplicitValue = AsnDecoder.GetViewValue(asn);
             OffsetChange = asn.PayloadLength - PayloadLength;
             PayloadLength = asn.PayloadLength;
-            ((MainWindowVM)Application.Current.MainWindow.DataContext).HexViewerContext.BuildHexView(null);
+            UpdateBinaryCopy(binValue);
             return true;
         }
         public override Boolean Equals(Object obj) {
             if (ReferenceEquals(null, obj)) { return false; }
             if (ReferenceEquals(this, obj)) { return true; }
-            return obj.GetType() == typeof (Asn1Lite) && Equals((Asn1Lite) obj);
+            return obj.GetType() == typeof(Asn1Lite) && Equals((Asn1Lite)obj);
         }
         protected Boolean Equals(Asn1Lite other) {
             return offset == other.offset && tag == other.tag;
@@ -189,7 +189,7 @@ namespace SysadminsLV.Asn1Editor.API.ModelObjects {
             var data = App.Container.Resolve<IDataSource>();
             data.RawData.RemoveRange(Offset, TagLength);
             data.RawData.InsertRange(Offset, newBytes);
-            //((MainWindowVM)Application.Current.MainWindow.DataContext).HexViewerContext.BuildHexView(null);
+            data.FinishBinaryUpdate();
         }
     }
 }

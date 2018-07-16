@@ -5,10 +5,9 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Documents;
 using System.Windows.Media;
-using SysadminsLV.Asn1Editor.API.ModelObjects;
 using SysadminsLV.Asn1Editor.Controls;
 
-namespace SysadminsLV.Asn1Editor.API.Utils {
+namespace SysadminsLV.Asn1Editor.Views.UserControls.HexViewer {
     static class TextUtility {
         static Int32 getOffset(Int32 offset) {
             Int32 line = (Int32)Math.Floor((Double)offset / 16);
@@ -26,7 +25,7 @@ namespace SysadminsLV.Asn1Editor.API.Utils {
             scroller.ScrollToVerticalOffset(rtb.FontSize * (rtb.CurrentLine - 1));
         }
 
-        public static TextRange[] GetTextPointers(Asn1Lite treeNode, BindableRichTextBox rtb, ScrollViewer scroller) {
+        public static TextRange[] GetTextPointers(IHexAsnNode treeNode, BindableRichTextBox rtb, ScrollViewer scroller) {
             TextPointer[] pointers = new TextPointer[6];
             // tag
             pointers[0] = rtb.Document.ContentStart.GetPositionAtOffset(
@@ -54,7 +53,7 @@ namespace SysadminsLV.Asn1Editor.API.Utils {
         }
         public static void Colorize(TextRange[] ranges) {
             foreach (TextRange range in ranges) {
-                range.ApplyPropertyValue(TextElement.FontWeightProperty,FontWeights.Bold);
+                range.ApplyPropertyValue(TextElement.FontWeightProperty, FontWeights.Bold);
             }
             ranges[0].ApplyPropertyValue(TextElement.ForegroundProperty, Brushes.Red);
             ranges[1].ApplyPropertyValue(TextElement.ForegroundProperty, Brushes.Green);
