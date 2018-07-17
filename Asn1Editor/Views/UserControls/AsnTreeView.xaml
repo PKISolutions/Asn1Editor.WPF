@@ -183,8 +183,7 @@
                               Command="{Binding TreeCommands.ShowNodeTextViewer}"/>
                     <Separator/>
                     <MenuItem Header="New node"
-                              Command="{Binding TreeCommands.NewNodeCommand}"
-                              CommandParameter="{x:Static clr:NodeEditMode.NewNode}"
+                              Command="{Binding TreeCommands.AddNewNodeCommand}"
                               InputGestureText="Ctrl + N">
                         <MenuItem.Icon>
                             <Image Source="/Views/Images/Menu/newnode_16x16.png"/>

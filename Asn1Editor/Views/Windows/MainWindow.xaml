@@ -59,8 +59,7 @@
                 </MenuItem>
                 <Separator/>
                 <MenuItem Header="New node"
-                          Command="{Binding TreeCommands2.NewNodeCommand}"
-                          CommandParameter="{x:Static clr:NodeEditMode.NewNode}"
+                          Command="{Binding TreeCommands.AddNewNodeCommand}"
                           InputGestureText="Ctrl + N">
                     <MenuItem.Icon>
                         <Image Source="/Views/Images/Menu/newnode_16x16.png"/>
@@ -184,8 +183,7 @@
                     <Image Source="/Views/Images/Menu/insertlast_16x16.png"/>
                 </Button>
                 <Separator/>
-                <Button Command="{Binding TreeCommands2.NewNodeCommand}"
-                        CommandParameter="{x:Static clr:NodeEditMode.NewNode}"
+                <Button Command="{Binding TreeCommands.AddNewNodeCommand}"
                         ToolTip="New node">
                     <Image Source="/Views/Images/Menu/newnode_16x16.png"/>
                 </Button>

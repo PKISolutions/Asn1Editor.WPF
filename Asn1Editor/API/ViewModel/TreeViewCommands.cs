@@ -50,7 +50,6 @@ namespace SysadminsLV.Asn1Editor.API.ViewModel {
         void newNode(Object obj) {
             var data = App.Container.Resolve<IDataSource>();
             Asn1Lite asn = new Asn1Lite(new Asn1Reader(new Byte[] { 48, 0 })) { IsContainer = true };
-            // TODO: parameter
             TagDataEditor dlg = new TagDataEditor(null);
             ((TagDataEditorVM)dlg.DataContext).TagIsReadOnly = false;
             dlg.ShowDialog();

@@ -11,7 +11,7 @@ namespace SysadminsLV.Asn1Editor.API.Utils.ASN {
             return Task.Factory.StartNew(() => {
                 Asn1Reader asn = new Asn1Reader(rawData);
                 asn.BuildOffsetMap();
-                Asn1Lite root = new Asn1Lite(asn);
+                Asn1Lite root = new Asn1Lite(asn) { IsRoot = true };
                 Asn1TreeNode parent = new Asn1TreeNode(root);
                 if (asn.NextOffset == 0) {
                     return parent;

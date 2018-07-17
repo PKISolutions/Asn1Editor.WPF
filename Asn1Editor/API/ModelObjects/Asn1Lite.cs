@@ -25,7 +25,6 @@ namespace SysadminsLV.Asn1Editor.API.ModelObjects {
             IsContainer = asn.IsConstructed;
             Deepness = 0;
             Path = String.Empty;
-            IsRoot = true;
             try {
                 if (!asn.IsConstructed) {
                     ExplicitValue = AsnDecoder.GetViewValue(asn);
@@ -95,7 +94,9 @@ namespace SysadminsLV.Asn1Editor.API.ModelObjects {
         public Int32 Offset {
             get => offset;
             set {
+                var diff = offset - value;
                 offset = value;
+                PayloadStartOffset += diff;
                 OnPropertyChanged(nameof(Caption));
             }
         }
@@ -162,13 +163,17 @@ namespace SysadminsLV.Asn1Editor.API.ModelObjects {
                 Tools.MsgBox("Error", e.Message);
                 return false;
             }
+
+            var data = App.Container.Resolve<IDataSource>();
+            updateBinaryCopy(binValue, data);
             if (Tag == (Byte)Asn1Type.BIT_STRING) { UnusedBits = unused; }
+
             Asn1Reader asn = new Asn1Reader(binValue);
             PayloadStartOffset = Offset + asn.TagLength - asn.PayloadLength;
             ExplicitValue = AsnDecoder.GetViewValue(asn);
             OffsetChange = asn.PayloadLength - PayloadLength;
             PayloadLength = asn.PayloadLength;
-            updateBinaryCopy(binValue);
+            data.FinishBinaryUpdate();
             return true;
         }
         public override Boolean Equals(Object obj) {
@@ -185,11 +190,9 @@ namespace SysadminsLV.Asn1Editor.API.ModelObjects {
             }
         }
 
-        void updateBinaryCopy(Byte[] newBytes) {
-            var data = App.Container.Resolve<IDataSource>();
+        void updateBinaryCopy(Byte[] newBytes, IDataSource data) {
             data.RawData.RemoveRange(Offset, TagLength);
             data.RawData.InsertRange(Offset, newBytes);
-            data.FinishBinaryUpdate();
         }
     }
 }

@@ -55,14 +55,14 @@ namespace SysadminsLV.Asn1Editor.API.ModelObjects {
             var data = App.Container.Resolve<IDataSource>();
             data.RawData.InsertRange(newOffset, ClipboardManager.GetClipboardBytes());
             _children.Insert(indexToInsert, nodeToInsert);
-            NotifySizeChanged(nodeToInsert, nodeToInsert.Value.TagLength);
+            notifySizeChanged(nodeToInsert, nodeToInsert.Value.TagLength);
             _children[indexToInsert].Value.Offset = newOffset;
             _children[indexToInsert].Value.PayloadStartOffset = newOffset + headerLength;
             for (Int32 index = indexToInsert; index < Children.Count; index++) {
-                UpdatePath(Children[index], Path, index);
+                updatePath(Children[index], Path, index);
             }
             foreach (Asn1TreeNode child in _children[indexToInsert].Children) {
-                child.UpdateOffset(newOffset);
+                child.updateOffset(newOffset);
             }
             data.FinishBinaryUpdate();
         }
@@ -70,8 +70,8 @@ namespace SysadminsLV.Asn1Editor.API.ModelObjects {
             var node = new Asn1TreeNode(value) { Parent = this };
             _children.Add(node);
             if (forcePathUpdate) {
-                NotifySizeChanged(node, node.Value.TagLength);
-                UpdatePath(node, Path, _children.Count - 1);
+                notifySizeChanged(node, node.Value.TagLength);
+                updatePath(node, Path, _children.Count - 1);
             }
             Value.IsContainer = true;
         }
@@ -79,7 +79,7 @@ namespace SysadminsLV.Asn1Editor.API.ModelObjects {
             value.Offset = Value.Offset + Value.TagLength;
             var node = new Asn1TreeNode(value) { Parent = this };
             _children.Add(node);
-            NotifySizeChanged(node, Value.OffsetChange);
+            notifySizeChanged(node, Value.OffsetChange);
             Value.IsContainer = true;
             App.Container.Resolve<IDataSource>().FinishBinaryUpdate();
         }
@@ -88,12 +88,12 @@ namespace SysadminsLV.Asn1Editor.API.ModelObjects {
             //if (indexToRemove < 0) { return; } // TODO: is it necessary?
             Int32 difference = Children[node.MyIndex].Value.TagLength;
             App.Container.Resolve<IDataSource>().RawData.RemoveRange(node.Value.Offset, difference);
-            NotifySizeChanged(node, -difference);
+            notifySizeChanged(node, -difference);
             _children.RemoveAt(node.MyIndex);
             App.Container.Resolve<IDataSource>().FinishBinaryUpdate();
             // update path only below removed node
             for (Int32 childIndex = node.MyIndex; childIndex < Children.Count; childIndex++) {
-                UpdatePath(this[childIndex], Path, childIndex);
+                updatePath(this[childIndex], Path, childIndex);
             }
             if (_children.Count == 0 && !Value.IsRoot) {
                 Value.IsContainer = false;
@@ -103,14 +103,14 @@ namespace SysadminsLV.Asn1Editor.API.ModelObjects {
             return new[] { Value }.Union(_children.SelectMany(x => x.Flatten()));
         }
 
-        void NotifySizeChanged(Asn1TreeNode source, Int32 difference) {
+        void notifySizeChanged(Asn1TreeNode source, Int32 difference) {
             Asn1TreeNode t = this;
             do {
                 if (t.Children.Count > 0) {
                     Int32 callerIndex = t.Children.IndexOf(source);
                     if (callerIndex < 0) { return; }
                     for (Int32 index = callerIndex + 1; index < t.Children.Count; index++) {
-                        t.Children[index].UpdateOffset(difference);
+                        t.Children[index].updateOffset(difference);
                     }
                 }
                 Byte[] newLenBytes = Asn1Utils.GetLengthBytes(t.Value.PayloadLength + difference);
@@ -119,38 +119,38 @@ namespace SysadminsLV.Asn1Editor.API.ModelObjects {
                 Int32 diff = newLenBytes.Length - (t.Value.HeaderLength - 1);
                 difference += diff;
                 if (diff != 0) {
-                    t.UpdateOffset(diff);
+                    t.updateOffset(diff);
                 }
                 source = t;
                 t = t.Parent;
                 source.Value.PayloadLength += difference;
             } while (t != null);
         }
-        void UpdateOffset(Int32 difference) {
+        void updateOffset(Int32 difference) {
             Value.Offset += difference;
             Value.PayloadStartOffset += difference;
             foreach (Asn1TreeNode children in Children) {
-                children.UpdateOffset(difference);
+                children.updateOffset(difference);
             }
         }
         void valuePropertyChanged(Object sender, PropertyChangedEventArgs e) {
             if (e.PropertyName == "OffsetChange") {
                 if (Parent != null) {
                     if (Value.OffsetChange != 0) {
-                        Parent.NotifySizeChanged(this, Value.OffsetChange);
+                        Parent.notifySizeChanged(this, Value.OffsetChange);
                     }
                     App.Container.Resolve<IDataSource>().FinishBinaryUpdate();
                 }
             }
         }
 
-        static void UpdatePath(Asn1TreeNode source, String path, Int32 index) {
+        static void updatePath(Asn1TreeNode source, String path, Int32 index) {
             source.Value.Path = source.Path = path + "/" + index;
             source.MyIndex = index;
             Int32 deepness = source.Value.Path.Split(new[] { '/' }, StringSplitOptions.RemoveEmptyEntries).Length;
             source.Value.Deepness = deepness;
             for (Int32 Index = 0; Index < source.Children.Count; Index++) {
-                UpdatePath(source.Children[Index], source.Path, Index);
+                updatePath(source.Children[Index], source.Path, Index);
             }
         }
 

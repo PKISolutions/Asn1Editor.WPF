@@ -16,6 +16,7 @@ namespace SysadminsLV.Asn1Editor.API.ViewModel {
         readonly IDataSource _data;
         const String masterTag = "123";
         const String masterUnused = "1";
+        NodeEditMode mode;
         Boolean? dialogResult;
         String tagDetails, tagValue, oldValue;
         Boolean isReadonly, tagIsReadOnly = true;
@@ -124,6 +125,10 @@ namespace SysadminsLV.Asn1Editor.API.ViewModel {
                 Tools.MsgBox("Error", "Invalid tag number");
                 return;
             }
+            if (mode == NodeEditMode.NewNode) {
+                saveNewNode();
+                return;
+            }
             Node.Tag = Tag;
             if (TagValue == oldValue) {
                 DialogResult = true;
@@ -137,11 +142,43 @@ namespace SysadminsLV.Asn1Editor.API.ViewModel {
             Node = null;
             DialogResult = true;
         }
-        void newNode() {
-            Node = new Asn1Lite(new Asn1Reader(new Byte[] { 48, 0 })) {
-                IsContainer = true
-            };
-            TagIsReadOnly = false;
+        void saveNewNode() {
+            var asn = new Asn1Reader(new Byte[] { Tag, 0 });
+            Asn1Lite node;
+            // if it is constructed or value is not entered, use it as is and ignore possible entered tag value
+            if (asn.IsConstructed || String.IsNullOrWhiteSpace(TagValue?.Trim())) {
+                node = new Asn1Lite(asn);
+            } else {
+                // some tag value is entered, attempt to validate
+                Byte[] binValue = validateValue();
+                if (binValue == null) {
+                    return;
+                }
+                asn = new Asn1Reader(binValue);
+                node = new Asn1Lite(asn);
+            }
+            // if it is not root node, update offset, depth and mark it non-root
+            if (_data.SelectedNode == null) {
+                node.IsRoot = true;
+            } else {
+                node.Offset = _data.SelectedNode.Value.Offset + _data.SelectedNode.Value.TagLength;
+                node.Deepness += _data.SelectedNode.Value.Deepness;
+            }
+            Node = node;
+            updateNewNodeBinarySource(asn.RawData);
+            DialogResult = true;
+        }
+        Byte[] validateValue() {
+            Byte[] binValue = null;
+            try {
+                binValue = AsnDecoder.EncodeGeneric(Tag, TagValue, UnusedBits);
+            } catch (Exception e) {
+                Tools.MsgBox("Error", e.Message);
+            }
+            return binValue;
+        }
+        void updateNewNodeBinarySource(Byte[] binData) {
+            _data.RawData.InsertRange(Node.Offset, binData);
         }
         void editText() {
             TagValue = AsnDecoder.GetEditValue(Node);
@@ -155,8 +192,11 @@ namespace SysadminsLV.Asn1Editor.API.ViewModel {
         }
 
         public void SetBinding(NodeEditMode editMode) {
+            mode = editMode;
             if (editMode == NodeEditMode.NewNode) {
-                newNode();
+                Tag = 48;
+                TagIsReadOnly = false;
+                return;
             }
             Node = _data.SelectedNode.Value;
             Tag = Node.Tag;
