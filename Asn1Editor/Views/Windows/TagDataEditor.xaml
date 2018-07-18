@@ -13,8 +13,8 @@
         WindowStartupLocation="CenterOwner"
         ShowInTaskbar="False"
         Title="Node Content Editor"
-        Height="360"
-        Width="500">
+        Height="380"
+        Width="530">
     <Window.InputBindings>
         <KeyBinding Key="Escape" Command="{Binding CloseCommand}"/>
     </Window.InputBindings>
@@ -63,7 +63,7 @@
                              FontSize="{Binding Path=FontSize, Source={x:Static properties:Settings.Default}}"/>
                 </StackPanel>
             </StatusBarItem>
-            <Separator/>
+            <Separator Visibility="{Binding UnusedBitsVisible}"/>
             <StatusBarItem>
                 <StackPanel Orientation="Horizontal" Visibility="{Binding UnusedBitsVisible}">
                     <TextBlock Text="Unused bits:" VerticalAlignment="Center" Margin="2,0,2,0"/>
@@ -75,6 +75,10 @@
                              FontSize="{Binding Path=FontSize, Source={x:Static properties:Settings.Default}}"/>
                 </StackPanel>
             </StatusBarItem>
+            <Separator/>
+            <StatusBarItem>
+                <TextBlock Text="{Binding TagName, Mode=OneWay}"/>
+            </StatusBarItem>
             <StatusBarItem HorizontalAlignment="Right">
                 <StackPanel Orientation="Horizontal">
                     <Button Content="Ok" Width="60" Command="{Binding OkCommand}" IsDefault="True"/>
@@ -83,16 +87,32 @@
             </StatusBarItem>
         </StatusBar>
         <HeaderedContentControl Header="Explicit Value">
-            <TextBox Text="{Binding TagValue}"
-                     IsReadOnly="{Binding IsReadOnly}"
-                     IsReadOnlyCaretVisible="True"
-                     AcceptsReturn="True"
-                     FontFamily="Consolas"
-                     TextWrapping="Wrap"
-                     MinLines="10"
-                     FontSize="{Binding Path=FontSize, Source={x:Static properties:Settings.Default}}"
-                     Style="{StaticResource ValueEditorStyle}"
-                     VerticalScrollBarVisibility="Auto"/>
+            <DockPanel>
+                <StackPanel DockPanel.Dock="Top"
+                            Orientation="Horizontal"
+                            MinHeight="25"
+                            Visibility="{Binding IsEditable, Converter={StaticResource BooleanToVisibility}}">
+                    <RadioButton Content="Text"
+                                 VerticalAlignment="Center"
+                                 IsChecked="{Binding RbText}"
+                                 GroupName="mode"
+                                 Margin="10,0"/>
+                    <RadioButton Content="Hex"
+                                 VerticalAlignment="Center"
+                                 IsChecked="{Binding RbHex}"
+                                 GroupName="mode"/>
+                </StackPanel>
+                <TextBox Text="{Binding TagValue}"
+                         IsReadOnly="{Binding IsReadOnly}"
+                         IsReadOnlyCaretVisible="True"
+                         AcceptsReturn="True"
+                         FontFamily="Consolas"
+                         TextWrapping="Wrap"
+                         MinLines="10"
+                         FontSize="{Binding Path=FontSize, Source={x:Static properties:Settings.Default}}"
+                         Style="{StaticResource ValueEditorStyle}"
+                         VerticalScrollBarVisibility="Auto"/>
+            </DockPanel>
         </HeaderedContentControl>
     </DockPanel>
 </Window>

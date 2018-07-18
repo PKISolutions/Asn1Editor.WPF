@@ -3,6 +3,7 @@
 namespace SysadminsLV.Asn1Editor.API.Interfaces {
     public interface ITreeCommands {
         ICommand ShowNodeTextViewer { get; }
+        ICommand SaveNodeCommand { get; }
         ICommand EditNodeCommand { get; }
         ICommand AddNewNodeCommand { get; }
         ICommand DeleteNodeCommand { get; }

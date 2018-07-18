@@ -94,7 +94,7 @@ namespace SysadminsLV.Asn1Editor.API.ModelObjects {
         public Int32 Offset {
             get => offset;
             set {
-                var diff = offset - value;
+                var diff = value - offset;
                 offset = value;
                 PayloadStartOffset += diff;
                 OnPropertyChanged(nameof(Caption));

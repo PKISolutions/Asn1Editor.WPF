@@ -23,7 +23,6 @@ namespace SysadminsLV.Asn1Editor.API.ViewModel {
             AppCommands = appCommands;
             TreeCommands = treeCommands;
             DataSource = data;
-            TreeCommands2 = new TreeViewCommands(this);
             OpenCommand = new RelayCommand(openFile);
             SaveCommand = new RelayCommand(saveFile, canPrintSave);
             ShowConverterCommand = new RelayCommand(StaticCommands.ShowConverter);
@@ -38,13 +37,11 @@ namespace SysadminsLV.Asn1Editor.API.ViewModel {
 
         public IAppCommands AppCommands { get; }
         public ITreeCommands TreeCommands { get; }
-        public TreeViewCommands TreeCommands2 { get; set; }
 
         public IDataSource DataSource { get; }
         public static Dictionary<String, String> OIDs { get; } = new Dictionary<String, String>();
         public ObservableCollection<Asn1TreeNode> Tree => DataSource.Tree;
 
-        public Int32 FileLength => DataSource.RawData.Count;
         public String Path {
             get => path;
             set {

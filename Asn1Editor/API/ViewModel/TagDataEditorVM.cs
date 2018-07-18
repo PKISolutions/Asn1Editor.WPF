@@ -19,7 +19,7 @@ namespace SysadminsLV.Asn1Editor.API.ViewModel {
         NodeEditMode mode;
         Boolean? dialogResult;
         String tagDetails, tagValue, oldValue;
-        Boolean isReadonly, tagIsReadOnly = true;
+        Boolean rbText = true, rbHex, isReadonly, tagIsReadOnly = true;
         Visibility unusedBitsVisible = Visibility.Collapsed;
         Byte unusedBits, tag;
         Double tagTextBoxWidth, unusedTextBoxWidth;
@@ -62,9 +62,13 @@ namespace SysadminsLV.Asn1Editor.API.ViewModel {
                 if (Byte.TryParse(value.ToString(CultureInfo.InvariantCulture), out Byte t)) {
                     tag = t;
                 }
+                if (t != 0) {
+                    OnPropertyChanged(nameof(TagName));
+                }
                 OnPropertyChanged(nameof(Tag));
             }
         }
+        public String TagName => Asn1Utils.GetTagName(Tag);
         public Byte UnusedBits {
             get => unusedBits;
             set {
@@ -84,8 +88,10 @@ namespace SysadminsLV.Asn1Editor.API.ViewModel {
             set {
                 isReadonly = value;
                 OnPropertyChanged(nameof(IsReadOnly));
+                OnPropertyChanged(nameof(IsEditable));
             }
         }
+        public Boolean IsEditable => !IsReadOnly;
         public Double TagTextBoxWidth {
             get => tagTextBoxWidth;
             set {
@@ -98,6 +104,32 @@ namespace SysadminsLV.Asn1Editor.API.ViewModel {
             set {
                 unusedTextBoxWidth = value;
                 OnPropertyChanged(nameof(UnusedTextBoxWidth));
+            }
+        }
+        public Boolean RbText {
+            get => rbText;
+            set {
+                if (rbText == value) {
+                    return;
+                }
+                rbText = value;
+                if (rbText) {
+                    editText();
+                }
+                OnPropertyChanged(nameof(RbText));
+            }
+        }
+        public Boolean RbHex {
+            get => rbHex;
+            set {
+                if (rbHex == value) {
+                    return;
+                }
+                rbHex = value;
+                if (rbHex) {
+                    editHex();
+                }
+                OnPropertyChanged(nameof(RbHex));
             }
         }
         public Boolean? DialogResult {
@@ -206,19 +238,12 @@ namespace SysadminsLV.Asn1Editor.API.ViewModel {
             if (IsReadOnly || Node.Tag == (Byte)Asn1Type.NULL) {
                 TagValue = "Containers and NULL (0x05) tags are not editable";
             } else {
-                switch (editMode) {
-                    case NodeEditMode.Text:
-                        editText();
-                        break;
-                    case NodeEditMode.Hex:
-                        editHex();
-                        break;
-                }
+                editText();
             }
             oldValue = TagValue;
             UnusedBitsVisible = Node.Tag == (Byte)Asn1Type.BIT_STRING
                 ? Visibility.Visible
-                : Visibility.Hidden;
+                : Visibility.Collapsed;
         }
     }
 }

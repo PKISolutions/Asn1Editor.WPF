@@ -6,7 +6,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:hexViewer="clr-namespace:SysadminsLV.Asn1Editor.Views.UserControls.HexViewer"
-        xmlns:clr="clr-namespace:SysadminsLV.Asn1Editor.API.Utils"
+        xmlns:nc="clr-namespace:SysadminsLV.Asn1Editor.Views.UserControls.NodeCommands"
         mc:Ignorable="d"
         d:DataContext="{d:DesignInstance vm:MainWindowVM}"
         Title="{Binding Title}"
@@ -37,20 +37,9 @@
                 <MenuItem Header="_Exit" Click="CloseClick" InputGestureText="Alt + F4"/>
             </MenuItem>
             <MenuItem Header="Edit">
-                <MenuItem Header="Edit"
-                          Command="{Binding TreeCommands.EditNodeCommand}"
-                          CommandParameter="{x:Static clr:NodeEditMode.Text}"
-                          InputGestureText="Ctrl + E">
-                    <MenuItem.Icon>
-                        <Image Source="/Views/Images/Menu/edit_16x16.png" Width="16"/>
-                    </MenuItem.Icon>
-                </MenuItem>
-                <MenuItem Header="Edit in hex mode"
-                          Command="{Binding TreeCommands.EditNodeCommand}"
-                          CommandParameter="{x:Static clr:NodeEditMode.Hex}"/>
+                <nc:EditNodeMenu/>
                 <MenuItem Header="Save selected node as..."
-                          Command="{Binding TreeCommands2.SaveNodeCommand}"
-                          CommandParameter="{Binding SelectedTreeNode.Value}"/>
+                          Command="{Binding TreeCommands.SaveNodeCommand}"/>
                 <MenuItem Header="View node text"
                           Command="{Binding TreeCommands.ShowNodeTextViewer}">
                     <MenuItem.Icon>
@@ -66,47 +55,41 @@
                     </MenuItem.Icon>
                 </MenuItem>
                 <MenuItem Header="Cut"
-                          Command="{Binding TreeCommands2.CutNodeCommand}"
-                          CommandParameter="{Binding SelectedTreeNode}"
+                          Command="{Binding TreeCommands.CutNodeCommand}"
                           InputGestureText="Ctrl + X">
                     <MenuItem.Icon>
                         <Image Source="/Views/Images/Menu/cut_16x16.png"/>
                     </MenuItem.Icon>
                 </MenuItem>
                 <MenuItem Header="Copy"
-                          Command="{Binding TreeCommands2.CopyNodeCommand}"
-                          CommandParameter="{Binding SelectedTreeNode}"
+                          Command="{Binding TreeCommands.CopyNodeCommand}"
                           InputGestureText="Ctrl + C">
                     <MenuItem.Icon>
                         <Image Source="/Views/Images/Menu/copy_16x16.png"/>
                     </MenuItem.Icon>
                 </MenuItem>
                 <MenuItem Header="Paste before"
-                          Command="{Binding TreeCommands2.PasteBeforeCommand}"
-                          CommandParameter="{Binding SelectedTreeNode}">
+                          Command="{Binding TreeCommands.PasteBeforeCommand}">
                     <MenuItem.Icon>
                         <Image Source="/Views/Images/Menu/insertbefore_16x16.png"/>
                     </MenuItem.Icon>
                 </MenuItem>
                 <MenuItem Header="Paste After"
-                          Command="{Binding TreeCommands2.PasteAfterCommand}"
-                          CommandParameter="{Binding SelectedTreeNode}"
+                          Command="{Binding TreeCommands.PasteAfterCommand}"
                           InputGestureText="Ctrl + V">
                     <MenuItem.Icon>
                         <Image Source="/Views/Images/Menu/insertafter_16x16.png"/>
                     </MenuItem.Icon>
                 </MenuItem>
                 <MenuItem Header="Insert as a last child node"
-                          Command="{Binding TreeCommands2.PasteLastCommand}"
-                          CommandParameter="{Binding SelectedTreeNode}">
+                          Command="{Binding TreeCommands.PasteLastCommand}">
                     <MenuItem.Icon>
                         <Image Source="/Views/Images/Menu/insertlast_16x16.png"/>
                     </MenuItem.Icon>
                 </MenuItem>
                 <Separator/>
                 <MenuItem Header="Remove"
-                          Command="{Binding TreeCommands2.DeleteNodeCommand}"
-                          CommandParameter="{Binding SelectedTreeNode}"
+                          Command="{Binding TreeCommands.DeleteNodeCommand}"
                           InputGestureText="Del">
                     <MenuItem.Icon>
                         <Image Source="/Views/Images/Menu/delete_16x16.png"/>
@@ -148,7 +131,6 @@
             </ToolBar>
             <ToolBar>
                 <Button Command="{Binding TreeCommands.EditNodeCommand}"
-                        CommandParameter="{x:Static clr:NodeEditMode.Text}"
                         ToolTip="Edit selected node">
                     <Image Source="/Views/Images/Menu/edit_16x16.png" Width="16"/>
                 </Button>
@@ -157,28 +139,23 @@
                     <Image Source="/Views/Images/Menu/viewtext_16x16.png"/>
                 </Button>
                 <Separator/>
-                <Button Command="{Binding TreeCommands2.CutNodeCommand}"
-                        CommandParameter="{Binding SelectedTreeNode}"
+                <Button Command="{Binding TreeCommands.CutNodeCommand}"
                         ToolTip="Cut selected node">
                     <Image Source="/Views/Images/Menu/cut_16x16.png"/>
                 </Button>
-                <Button Command="{Binding TreeCommands2.CopyNodeCommand}"
-                        CommandParameter="{Binding SelectedTreeNode}"
+                <Button Command="{Binding TreeCommands.CopyNodeCommand}"
                         ToolTip="Copy selected node">
                     <Image Source="/Views/Images/Menu/copy_16x16.png"/>
                 </Button>
-                <Button Command="{Binding TreeCommands2.PasteBeforeCommand}"
-                        CommandParameter="{Binding SelectedTreeNode}"
+                <Button Command="{Binding TreeCommands.PasteBeforeCommand}"
                         ToolTip="Insert before selected node">
                     <Image Source="/Views/Images/Menu/insertbefore_16x16.png"/>
                 </Button>
-                <Button Command="{Binding TreeCommands2.PasteAfterCommand}"
-                        CommandParameter="{Binding SelectedTreeNode}"
+                <Button Command="{Binding TreeCommands.PasteAfterCommand}"
                         ToolTip="Insert after selected node">
                     <Image Source="/Views/Images/Menu/insertafter_16x16.png"/>
                 </Button>
-                <Button Command="{Binding TreeCommands2.PasteLastCommand}"
-                        CommandParameter="{Binding SelectedTreeNode}"
+                <Button Command="{Binding TreeCommands.PasteLastCommand}"
                         ToolTip="Insert as a last child node">
                     <Image Source="/Views/Images/Menu/insertlast_16x16.png"/>
                 </Button>
@@ -187,8 +164,7 @@
                         ToolTip="New node">
                     <Image Source="/Views/Images/Menu/newnode_16x16.png"/>
                 </Button>
-                <Button Command="{Binding TreeCommands2.DeleteNodeCommand}"
-                        CommandParameter="{Binding SelectedTreeNode}"
+                <Button Command="{Binding TreeCommands.DeleteNodeCommand}"
                         ToolTip="Delete selected node">
                     <Image Source="/Views/Images/Menu/delete_16x16.png"/>
                 </Button>
@@ -197,20 +173,20 @@
         <StatusBar Foreground="DarkBlue" VerticalAlignment="Bottom" DockPanel.Dock="Bottom">
             <StatusBarItem>
                 <TextBlock Text="Tag: ">
-                    <Run Text="{Binding SelectedTreeNode.Value.Tag}"/>
+                    <Run Text="{Binding DataSource.SelectedNode.Value.Tag}"/>
                     <Run Text="{Binding Path=SelectedTreeNode.Value.Tag, StringFormat=(0x{0:X2})}"/>
                 </TextBlock>
             </StatusBarItem>
             <Separator/>
             <StatusBarItem>
                 <TextBlock Text="Tag name: ">
-                    <Run Text="{Binding SelectedTreeNode.Value.TagName}"/>
+                    <Run Text="{Binding  DataSource.SelectedNode.Value.TagName}"/>
                 </TextBlock>
             </StatusBarItem>
             <Separator/>
             <StatusBarItem>
                 <TextBlock Text="Payload length: ">
-                    <Run Text="{Binding SelectedTreeNode.Value.PayloadLength}"/>
+                    <Run Text="{Binding  DataSource.SelectedNode.Value.PayloadLength}"/>
                 </TextBlock>
             </StatusBarItem>
             <Separator/>
@@ -221,7 +197,7 @@
             </StatusBarItem>
             <StatusBarItem HorizontalAlignment="Right">
                 <TextBlock Text="Size: ">
-                    <Run Text="{Binding FileLength, Mode=OneWay}"/>
+                    <Run Text="{Binding DataSource.RawData.Count, Mode=OneWay}"/>
                     <Run Text="bytes"/>
                 </TextBlock>
             </StatusBarItem>

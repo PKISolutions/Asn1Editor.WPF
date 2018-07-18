@@ -15,7 +15,7 @@ namespace SysadminsLV.Asn1Editor.API.Utils {
         public static void ClearClipboard() {
             _rawData.Clear();
         }
-        public static async Task<Asn1TreeNode> GetClipboardData() {
+        public static async Task<Asn1TreeNode> GetClipboardDataAsync() {
             return await AsnTreeBuilder.BuildTree(_rawData.ToArray());
         }
         public static IEnumerable<Byte> GetClipboardBytes() {

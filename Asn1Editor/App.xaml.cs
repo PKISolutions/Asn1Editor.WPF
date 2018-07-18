@@ -89,7 +89,7 @@ namespace SysadminsLV.Asn1Editor {
 
             Container.RegisterType<IWindowFactory, WindowFactory>();
             Container.RegisterType<IAppCommands, AppCommands>();
-            Container.RegisterType<ITreeCommands, TreeNodeCommands>();
+            Container.RegisterType<ITreeCommands, TreeViewCommands>();
             Container.RegisterSingleton<IDataSource, DataSource>();
             Container.RegisterType<ITagDataEditor, TagDataEditor>();
             // view models

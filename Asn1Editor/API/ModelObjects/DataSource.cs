@@ -8,6 +8,7 @@ using SysadminsLV.Asn1Editor.API.ViewModel;
 namespace SysadminsLV.Asn1Editor.API.ModelObjects {
     class DataSource : ViewModelBase, IDataSource {
         Asn1TreeNode selectedNode;
+        Boolean hasClipboard;
 
         protected void OnCollectionChanged(NotifyCollectionChangedEventArgs e) {
             if (RawData.IsNotifying && CollectionChanged != null) {
@@ -19,7 +20,13 @@ namespace SysadminsLV.Asn1Editor.API.ModelObjects {
                 }
             }
         }
-
+        public Boolean HasClipboardData {
+            get => hasClipboard;
+            set {
+                hasClipboard = value;
+                OnPropertyChanged(nameof(HasClipboardData));
+            }
+        }
         public Asn1TreeNode SelectedNode {
             get => selectedNode;
             set {
