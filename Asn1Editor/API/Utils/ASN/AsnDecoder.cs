@@ -35,7 +35,7 @@ namespace SysadminsLV.Asn1Editor.API.Utils.ASN {
                 case (Byte)Asn1Type.Generalizedtime:
                     return asn.ExplicitValue;
                 case (Byte)Asn1Type.INTEGER:
-                    return HexUtility.GetHexEditString(raw.Skip(asn.PayloadStartOffset).Take(asn.PayloadLength).ToArray());
+                    return new Asn1Integer(raw.Skip(asn.Offset).Take(asn.TagLength).ToArray()).Value.ToString();
                 case (Byte)Asn1Type.BIT_STRING:
                     return HexUtility.GetHexEditString(raw.Skip(asn.PayloadStartOffset + 1).Take(asn.PayloadLength - 1).ToArray());
                 case (Byte)Asn1Type.OBJECT_IDENTIFIER:

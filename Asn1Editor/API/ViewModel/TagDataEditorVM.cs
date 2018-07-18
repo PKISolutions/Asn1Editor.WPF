@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Globalization;
 using System.Linq;
-using System.Windows;
 using System.Windows.Input;
 using SysadminsLV.Asn1Editor.API.Interfaces;
 using SysadminsLV.Asn1Editor.API.ModelObjects;
@@ -20,7 +19,6 @@ namespace SysadminsLV.Asn1Editor.API.ViewModel {
         Boolean? dialogResult;
         String tagDetails, tagValue, oldValue;
         Boolean rbText = true, rbHex, isReadonly, tagIsReadOnly = true;
-        Visibility unusedBitsVisible = Visibility.Collapsed;
         Byte unusedBits, tag;
         Double tagTextBoxWidth, unusedTextBoxWidth;
 
@@ -65,6 +63,7 @@ namespace SysadminsLV.Asn1Editor.API.ViewModel {
                 if (t != 0) {
                     OnPropertyChanged(nameof(TagName));
                 }
+                OnPropertyChanged(nameof(UnusedBitsVisible));
                 OnPropertyChanged(nameof(Tag));
             }
         }
@@ -76,13 +75,7 @@ namespace SysadminsLV.Asn1Editor.API.ViewModel {
                 OnPropertyChanged(nameof(UnusedBits));
             }
         }
-        public Visibility UnusedBitsVisible {
-            get => unusedBitsVisible;
-            set {
-                unusedBitsVisible = value;
-                OnPropertyChanged(nameof(UnusedBitsVisible));
-            }
-        }
+        public Boolean UnusedBitsVisible => Tag == (Byte) Asn1Type.BIT_STRING;
         public Boolean IsReadOnly {
             get => isReadonly;
             set {
@@ -161,14 +154,11 @@ namespace SysadminsLV.Asn1Editor.API.ViewModel {
                 saveNewNode();
                 return;
             }
-            Node.Tag = Tag;
             if (TagValue == oldValue) {
                 DialogResult = true;
                 return;
             }
-            if (Node.ValidateValue(TagValue, UnusedBits)) {
-                DialogResult = true;
-            }
+            saveEditChanges();
         }
         void close(Object o) {
             Node = null;
@@ -200,6 +190,21 @@ namespace SysadminsLV.Asn1Editor.API.ViewModel {
             updateNewNodeBinarySource(asn.RawData);
             DialogResult = true;
         }
+        void saveEditChanges() {
+            var binValue = validateValue();
+            if (binValue == null) {
+                return;
+            }
+            updateBinaryCopy(binValue);
+            Node.UnusedBits = UnusedBits;
+            var asn = new Asn1Reader(binValue);
+            Node.PayloadStartOffset = Node.Offset + asn.TagLength - asn.PayloadLength;
+            Node.ExplicitValue = AsnDecoder.GetViewValue(asn);
+            Node.OffsetChange = asn.PayloadLength - Node.PayloadLength;
+            Node.PayloadLength = asn.PayloadLength;
+            _data.FinishBinaryUpdate();
+            DialogResult = true;
+        }
         Byte[] validateValue() {
             Byte[] binValue = null;
             try {
@@ -212,6 +217,10 @@ namespace SysadminsLV.Asn1Editor.API.ViewModel {
         void updateNewNodeBinarySource(Byte[] binData) {
             _data.RawData.InsertRange(Node.Offset, binData);
         }
+        void updateBinaryCopy(Byte[] newBytes) {
+            _data.RawData.RemoveRange(Node.Offset, Node.TagLength);
+            _data.RawData.InsertRange(Node.Offset, newBytes);
+        }
         void editText() {
             TagValue = AsnDecoder.GetEditValue(Node);
         }
@@ -222,6 +231,13 @@ namespace SysadminsLV.Asn1Editor.API.ViewModel {
                     .Take(Node.PayloadLength)
                 .ToArray());
         }
+        void copyValues() {
+            Node = _data.SelectedNode.Value;
+            Tag = Node.Tag;
+            UnusedBits = Node.UnusedBits;
+            IsReadOnly = Node.IsContainer || Node.Tag == (Byte)Asn1Type.NULL;
+            TagDetails = String.Format(Resources.TagEditorHeaderTemp, Tag, Node.TagName, Node.Offset, Node.PayloadLength, Node.Deepness, Node.Path);
+        }
 
         public void SetBinding(NodeEditMode editMode) {
             mode = editMode;
@@ -230,20 +246,13 @@ namespace SysadminsLV.Asn1Editor.API.ViewModel {
                 TagIsReadOnly = false;
                 return;
             }
-            Node = _data.SelectedNode.Value;
-            Tag = Node.Tag;
-            UnusedBits = Node.UnusedBits;
-            IsReadOnly = Node.IsContainer || Node.Tag == (Byte)Asn1Type.NULL;
-            TagDetails = String.Format(Resources.TagEditorHeaderTemp, Tag, Node.TagName, Node.Offset, Node.PayloadLength, Node.Deepness, Node.Path);
+            copyValues();
             if (IsReadOnly || Node.Tag == (Byte)Asn1Type.NULL) {
                 TagValue = "Containers and NULL (0x05) tags are not editable";
             } else {
                 editText();
             }
             oldValue = TagValue;
-            UnusedBitsVisible = Node.Tag == (Byte)Asn1Type.BIT_STRING
-                ? Visibility.Visible
-                : Visibility.Collapsed;
         }
     }
 }

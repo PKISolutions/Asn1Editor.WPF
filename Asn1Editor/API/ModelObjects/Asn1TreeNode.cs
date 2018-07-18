@@ -64,7 +64,6 @@ namespace SysadminsLV.Asn1Editor.API.ModelObjects {
             foreach (Asn1TreeNode child in _children[indexToInsert].Children) {
                 child.updateOffset(newOffset);
             }
-            data.FinishBinaryUpdate();
         }
         public void AddChild(Asn1Lite value, Boolean forcePathUpdate = false) {
             var node = new Asn1TreeNode(value) { Parent = this };
@@ -75,14 +74,6 @@ namespace SysadminsLV.Asn1Editor.API.ModelObjects {
             }
             Value.IsContainer = true;
         }
-        public void AddNewNode(Asn1Lite value) {
-            value.Offset = Value.Offset + Value.TagLength;
-            var node = new Asn1TreeNode(value) { Parent = this };
-            _children.Add(node);
-            notifySizeChanged(node, Value.OffsetChange);
-            Value.IsContainer = true;
-            App.Container.Resolve<IDataSource>().FinishBinaryUpdate();
-        }
         public void RemoveChild(Asn1TreeNode node) {
             //Int32 indexToRemove = Children.IndexOf(node);
             //if (indexToRemove < 0) { return; } // TODO: is it necessary?
@@ -90,7 +81,6 @@ namespace SysadminsLV.Asn1Editor.API.ModelObjects {
             App.Container.Resolve<IDataSource>().RawData.RemoveRange(node.Value.Offset, difference);
             notifySizeChanged(node, -difference);
             _children.RemoveAt(node.MyIndex);
-            App.Container.Resolve<IDataSource>().FinishBinaryUpdate();
             // update path only below removed node
             for (Int32 childIndex = node.MyIndex; childIndex < Children.Count; childIndex++) {
                 updatePath(this[childIndex], Path, childIndex);
@@ -134,12 +124,11 @@ namespace SysadminsLV.Asn1Editor.API.ModelObjects {
             }
         }
         void valuePropertyChanged(Object sender, PropertyChangedEventArgs e) {
-            if (e.PropertyName == "OffsetChange") {
+            if (e.PropertyName == nameof(Asn1Lite.OffsetChange)) {
                 if (Parent != null) {
                     if (Value.OffsetChange != 0) {
                         Parent.notifySizeChanged(this, Value.OffsetChange);
                     }
-                    App.Container.Resolve<IDataSource>().FinishBinaryUpdate();
                 }
             }
         }

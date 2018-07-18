@@ -89,6 +89,7 @@ namespace SysadminsLV.Asn1Editor.API.ViewModel {
         void cutNode(Object o) {
             copyNode(null);
             _data.SelectedNode.Parent.RemoveChild(_data.SelectedNode);
+            _data.FinishBinaryUpdate();
         }
         void copyNode(Object o) {
             ClipboardManager.SetClipboardData(
@@ -105,6 +106,7 @@ namespace SysadminsLV.Asn1Editor.API.ViewModel {
                 _data.SelectedNode,
                 NodeAddOption.Before
             );
+            _data.FinishBinaryUpdate();
         }
         async void pasteAfter(Object o) {
             Asn1TreeNode childNode = await ClipboardManager.GetClipboardDataAsync();
@@ -113,6 +115,7 @@ namespace SysadminsLV.Asn1Editor.API.ViewModel {
                 _data.SelectedNode,
                 NodeAddOption.After
             );
+            _data.FinishBinaryUpdate();
         }
         async void pasteLast(Object o) {
             Asn1TreeNode childNode = await ClipboardManager.GetClipboardDataAsync();
@@ -121,6 +124,7 @@ namespace SysadminsLV.Asn1Editor.API.ViewModel {
                 _data.SelectedNode,
                 NodeAddOption.Last
             );
+            _data.FinishBinaryUpdate();
         }
 
         Boolean canExecuteTreeCommands(Object o) {

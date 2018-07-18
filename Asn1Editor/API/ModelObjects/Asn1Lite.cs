@@ -1,12 +1,9 @@
 ﻿using System;
-using SysadminsLV.Asn1Editor.API.Interfaces;
-using SysadminsLV.Asn1Editor.API.Utils;
 using SysadminsLV.Asn1Editor.API.Utils.ASN;
 using SysadminsLV.Asn1Editor.API.ViewModel;
 using SysadminsLV.Asn1Editor.Properties;
 using SysadminsLV.Asn1Editor.Views.UserControls.HexViewer;
 using SysadminsLV.Asn1Parser;
-using Unity;
 
 namespace SysadminsLV.Asn1Editor.API.ModelObjects {
     public class Asn1Lite : ViewModelBase, IHexAsnNode {
@@ -17,41 +14,17 @@ namespace SysadminsLV.Asn1Editor.API.ModelObjects {
         String tagName, explicitValue, treePath;
 
         public Asn1Lite(Asn1Reader asn) {
-            Offset = asn.Offset;
-            Tag = asn.Tag;
-            TagName = asn.TagName;
-            PayloadLength = asn.PayloadLength;
-            PayloadStartOffset = asn.PayloadStartOffset;
-            IsContainer = asn.IsConstructed;
+            initialize(asn);
             Deepness = 0;
             Path = String.Empty;
-            try {
-                if (!asn.IsConstructed) {
-                    ExplicitValue = AsnDecoder.GetViewValue(asn);
-                }
-            } catch {
-                InvalidData = true;
-            }
         }
         public Asn1Lite(Asn1Reader root, Asn1TreeNode tree, Int32 index) {
-            Offset = root.Offset;
-            Tag = root.Tag;
-            TagName = root.TagName;
-            PayloadLength = root.PayloadLength;
-            PayloadStartOffset = root.PayloadStartOffset;
-            IsContainer = root.IsConstructed;
+            initialize(root);
             Deepness = tree.Value.Deepness + 1;
-            Path = tree.Value.Path + "/" + index;
+            Path = $"{tree.Value.Path}/{index}";
             if (Tag == (Byte)Asn1Type.BIT_STRING) {
                 if (root.PayloadLength > 0)
                     UnusedBits = root.RawData[root.PayloadStartOffset];
-            }
-            if (!root.IsConstructed) {
-                try {
-                    ExplicitValue = AsnDecoder.GetViewValue(root);
-                } catch {
-                    InvalidData = true;
-                }
             }
         }
 
@@ -152,30 +125,26 @@ namespace SysadminsLV.Asn1Editor.API.ModelObjects {
             }
         }
 
+        void initialize(Asn1Reader asn) {
+            Offset = asn.Offset;
+            Tag = asn.Tag;
+            TagName = asn.TagName;
+            PayloadLength = asn.PayloadLength;
+            PayloadStartOffset = asn.PayloadStartOffset;
+            IsContainer = asn.IsConstructed;
+            if (!asn.IsConstructed) {
+                try {
+                    ExplicitValue = AsnDecoder.GetViewValue(asn);
+                } catch {
+                    InvalidData = true;
+                }
+            }
+        }
+
         public void UpdateView() {
             OnPropertyChanged(nameof(Caption));
         }
-        public Boolean ValidateValue(String newValue, Byte unused) {
-            Byte[] binValue;
-            try {
-                binValue = AsnDecoder.EncodeGeneric(Tag, newValue, unused);
-            } catch (Exception e) {
-                Tools.MsgBox("Error", e.Message);
-                return false;
-            }
-
-            var data = App.Container.Resolve<IDataSource>();
-            updateBinaryCopy(binValue, data);
-            if (Tag == (Byte)Asn1Type.BIT_STRING) { UnusedBits = unused; }
-
-            Asn1Reader asn = new Asn1Reader(binValue);
-            PayloadStartOffset = Offset + asn.TagLength - asn.PayloadLength;
-            ExplicitValue = AsnDecoder.GetViewValue(asn);
-            OffsetChange = asn.PayloadLength - PayloadLength;
-            PayloadLength = asn.PayloadLength;
-            data.FinishBinaryUpdate();
-            return true;
-        }
+        
         public override Boolean Equals(Object obj) {
             if (ReferenceEquals(null, obj)) { return false; }
             if (ReferenceEquals(this, obj)) { return true; }
@@ -188,11 +157,6 @@ namespace SysadminsLV.Asn1Editor.API.ModelObjects {
             unchecked {
                 return (offset * 397) ^ tag.GetHashCode();
             }
-        }
-
-        void updateBinaryCopy(Byte[] newBytes, IDataSource data) {
-            data.RawData.RemoveRange(Offset, TagLength);
-            data.RawData.InsertRange(Offset, newBytes);
         }
     }
 }
