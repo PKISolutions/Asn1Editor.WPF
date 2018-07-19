@@ -4,7 +4,6 @@ using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Linq;
 using SysadminsLV.Asn1Editor.API.Interfaces;
-using SysadminsLV.Asn1Editor.API.Utils;
 using SysadminsLV.Asn1Parser;
 using Unity;
 
@@ -48,14 +47,11 @@ namespace SysadminsLV.Asn1Editor.API.ModelObjects {
                 default:
                     return;
             }
-            //TODO verify code
             Value.IsContainer = true;
             if (indexToInsert < 0) { return; }
-            var data = App.Container.Resolve<IDataSource>();
-            data.RawData.InsertRange(newOffset, ClipboardManager.GetClipboardBytes());
+            nodeToInsert.Value.Offset = newOffset;
             Children.Insert(indexToInsert, nodeToInsert);
             notifySizeChanged(nodeToInsert, nodeToInsert.Value.TagLength);
-            Children[indexToInsert].Value.Offset = newOffset;
             for (Int32 index = indexToInsert; index < Children.Count; index++) {
                 updatePath(Children[index], Path, index);
             }
@@ -91,6 +87,7 @@ namespace SysadminsLV.Asn1Editor.API.ModelObjects {
             Asn1TreeNode t = this;
             do {
                 if (t.Children.Count > 0) {
+                    // update offset of every node below modified (source) node
                     Int32 callerIndex = t.Children.IndexOf(source);
                     if (callerIndex < 0) { return; }
                     for (Int32 index = callerIndex + 1; index < t.Children.Count; index++) {
@@ -102,7 +99,6 @@ namespace SysadminsLV.Asn1Editor.API.ModelObjects {
                 App.Container.Resolve<IDataSource>().RawData.InsertRange(t.Value.Offset + 1, newLenBytes);
                 // check if extra length byte is added. If so, add this byte to difference variable
                 Int32 diff = newLenBytes.Length - (t.Value.HeaderLength - 1);
-                // update offset of every node below modified (source) node
                 if (diff != 0) {
                     // shift payload start offset to extra length bytes
                     t.Value.PayloadStartOffset += diff;
@@ -118,18 +114,12 @@ namespace SysadminsLV.Asn1Editor.API.ModelObjects {
         void updateOffset(Int32 difference) {
             Value.Offset += difference;
             foreach (Asn1TreeNode child in Children) {
-                //child.Value.Offset += difference;
                 child.updateOffset(difference);
             }
         }
         void valuePropertyChanged(Object sender, PropertyChangedEventArgs e) {
-            if (e.PropertyName == nameof(Asn1Lite.OffsetChange)) {
-                if (Parent != null) {
-                    if (Value.OffsetChange != 0) {
-                        Parent.notifySizeChanged(this, Value.OffsetChange);
-                    }
-                }
-            }
+            if (e.PropertyName == nameof(Asn1Lite.OffsetChange) && Parent != null && Value.OffsetChange != 0)
+                Parent.notifySizeChanged(this, Value.OffsetChange);
         }
 
         static void updatePath(Asn1TreeNode source, String path, Int32 index) {
@@ -137,8 +127,8 @@ namespace SysadminsLV.Asn1Editor.API.ModelObjects {
             source.MyIndex = index;
             Int32 deepness = source.Value.Path.Split(new[] { '/' }, StringSplitOptions.RemoveEmptyEntries).Length;
             source.Value.Deepness = deepness;
-            for (Int32 Index = 0; Index < source.Children.Count; Index++) {
-                updatePath(source.Children[Index], source.Path, Index);
+            for (Int32 i = 0; i < source.Children.Count; i++) {
+                updatePath(source.Children[i], source.Path, i);
             }
         }
 

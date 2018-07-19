@@ -7,6 +7,7 @@
              xmlns:uc="clr-namespace:SysadminsLV.Asn1Editor.Views.UserControls"
              xmlns:vm="clr-namespace:SysadminsLV.Asn1Editor.API.ViewModel"
              xmlns:properties="clr-namespace:SysadminsLV.Asn1Editor.Properties"
+             xmlns:clr="clr-namespace:SysadminsLV.Asn1Editor.API.Utils"
              mc:Ignorable="d"
              d:DataContext="{d:DesignInstance vm:MainWindowVM}"
              d:DesignHeight="300" d:DesignWidth="300">
@@ -157,7 +158,8 @@
             <TreeView.ContextMenu>
                 <ContextMenu>
                     <MenuItem Header="Edit node..."
-                              Command="{Binding TreeCommands.EditNodeCommand}">
+                              Command="{Binding TreeCommands.EditNodeCommand}"
+                              CommandParameter="{x:Static clr:NodeEditMode.Text}">
                         <MenuItem.Icon>
                             <Image Source="/Views/Images/Menu/edit_16x16.png" Width="16"/>
                         </MenuItem.Icon>

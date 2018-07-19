@@ -103,6 +103,7 @@ namespace SysadminsLV.Asn1Editor.API.ViewModel {
         }
         async void pasteBefore(Object o) {
             Asn1TreeNode childNode = await ClipboardManager.GetClipboardDataAsync();
+            _data.RawData.InsertRange(_data.SelectedNode.Value.Offset, ClipboardManager.GetClipboardBytes());
             _data.SelectedNode.Parent.InsertChildNode(
                 childNode,
                 _data.SelectedNode,
@@ -112,6 +113,8 @@ namespace SysadminsLV.Asn1Editor.API.ViewModel {
         }
         async void pasteAfter(Object o) {
             Asn1TreeNode childNode = await ClipboardManager.GetClipboardDataAsync();
+            var newOffset = _data.SelectedNode.Value.Offset + _data.SelectedNode.Value.TagLength;
+            _data.RawData.InsertRange(newOffset, ClipboardManager.GetClipboardBytes());
             _data.SelectedNode.Parent.InsertChildNode(
                 childNode,
                 _data.SelectedNode,
@@ -121,6 +124,8 @@ namespace SysadminsLV.Asn1Editor.API.ViewModel {
         }
         async void pasteLast(Object o) {
             Asn1TreeNode childNode = await ClipboardManager.GetClipboardDataAsync();
+            var newOffset = _data.SelectedNode.Value.Offset + _data.SelectedNode.Value.TagLength;
+            _data.RawData.InsertRange(newOffset, ClipboardManager.GetClipboardBytes());
             _data.SelectedNode.InsertChildNode(
                 childNode,
                 _data.SelectedNode,
