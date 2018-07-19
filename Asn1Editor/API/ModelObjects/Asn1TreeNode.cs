@@ -10,8 +10,6 @@ using Unity;
 
 namespace SysadminsLV.Asn1Editor.API.ModelObjects {
     public class Asn1TreeNode {
-        readonly ObservableCollection<Asn1TreeNode> _children = new ObservableCollection<Asn1TreeNode>();
-
         public Asn1TreeNode(Asn1Lite value) {
             Value = value;
             Path = value.Path;
@@ -22,12 +20,13 @@ namespace SysadminsLV.Asn1Editor.API.ModelObjects {
             Value.PropertyChanged += valuePropertyChanged;
         }
 
-        public Asn1TreeNode this[Int32 index] => _children[index];
+        public Asn1TreeNode this[Int32 index] => Children[index];
         public String Path { get; set; }
         public Int32 MyIndex { get; set; }
         public Asn1TreeNode Parent { get; private set; }
         public Asn1Lite Value { get; }
-        public ObservableCollection<Asn1TreeNode> Children => _children;
+        public ObservableCollection<Asn1TreeNode> Children { get; } = new ObservableCollection<Asn1TreeNode>();
+
         public void InsertChildNode(Asn1TreeNode nodeToInsert, Asn1TreeNode caller, NodeAddOption option) {
             Int32 indexToInsert, newOffset;
             nodeToInsert.Parent = this;
@@ -35,15 +34,15 @@ namespace SysadminsLV.Asn1Editor.API.ModelObjects {
             //Int32 headerLength = nodeToInsert.Value.HeaderLength;
             switch (option) {
                 case NodeAddOption.Before:
-                    indexToInsert = _children.IndexOf(caller);
+                    indexToInsert = Children.IndexOf(caller);
                     newOffset = caller.Value.Offset;
                     break;
                 case NodeAddOption.After:
-                    indexToInsert = _children.IndexOf(caller) + 1;
+                    indexToInsert = Children.IndexOf(caller) + 1;
                     newOffset = caller.Value.Offset + caller.Value.TagLength;
                     break;
                 case NodeAddOption.Last:
-                    indexToInsert = _children.Count;
+                    indexToInsert = Children.Count;
                     newOffset = Value.Offset + Value.TagLength;
                     break;
                 default:
@@ -54,39 +53,38 @@ namespace SysadminsLV.Asn1Editor.API.ModelObjects {
             if (indexToInsert < 0) { return; }
             var data = App.Container.Resolve<IDataSource>();
             data.RawData.InsertRange(newOffset, ClipboardManager.GetClipboardBytes());
-            _children.Insert(indexToInsert, nodeToInsert);
+            Children.Insert(indexToInsert, nodeToInsert);
             notifySizeChanged(nodeToInsert, nodeToInsert.Value.TagLength);
-            _children[indexToInsert].Value.Offset = newOffset;
-            //_children[indexToInsert].Value.PayloadStartOffset = newOffset + headerLength;
+            Children[indexToInsert].Value.Offset = newOffset;
             for (Int32 index = indexToInsert; index < Children.Count; index++) {
                 updatePath(Children[index], Path, index);
             }
-            foreach (Asn1TreeNode child in _children[indexToInsert].Children) {
+            foreach (Asn1TreeNode child in Children[indexToInsert].Children) {
                 child.updateOffset(newOffset);
             }
         }
         public void AddChild(Asn1Lite value, Boolean forcePathUpdate = false) {
             var node = new Asn1TreeNode(value) { Parent = this };
-            _children.Add(node);
+            Children.Add(node);
             if (forcePathUpdate) {
                 notifySizeChanged(node, node.Value.TagLength);
-                updatePath(node, Path, _children.Count - 1);
+                updatePath(node, Path, Children.Count - 1);
             }
             Value.IsContainer = true;
         }
         public void RemoveChild(Asn1TreeNode node) {
             notifySizeChanged(node, -node.Value.TagLength);
-            _children.RemoveAt(node.MyIndex);
+            Children.RemoveAt(node.MyIndex);
             // update path only below removed node
             for (Int32 childIndex = node.MyIndex; childIndex < Children.Count; childIndex++) {
                 updatePath(this[childIndex], Path, childIndex);
             }
-            if (_children.Count == 0 && !Value.IsRoot) {
+            if (Children.Count == 0 && !Value.IsRoot) {
                 Value.IsContainer = false;
             }
         }
         public IEnumerable<Asn1Lite> Flatten() {
-            return new[] { Value }.Union(_children.SelectMany(x => x.Flatten()));
+            return new[] { Value }.Union(Children.SelectMany(x => x.Flatten()));
         }
 
         void notifySizeChanged(Asn1TreeNode source, Int32 difference) {
@@ -102,20 +100,26 @@ namespace SysadminsLV.Asn1Editor.API.ModelObjects {
                 Byte[] newLenBytes = Asn1Utils.GetLengthBytes(t.Value.PayloadLength + difference);
                 App.Container.Resolve<IDataSource>().RawData.RemoveRange(t.Value.Offset + 1, t.Value.HeaderLength - 1);
                 App.Container.Resolve<IDataSource>().RawData.InsertRange(t.Value.Offset + 1, newLenBytes);
+                // check if extra length byte is added. If so, add this byte to difference variable
                 Int32 diff = newLenBytes.Length - (t.Value.HeaderLength - 1);
-                difference += diff;
+                // update offset of every node below modified (source) node
                 if (diff != 0) {
+                    // shift payload start offset to extra length bytes
+                    t.Value.PayloadStartOffset += diff;
                     t.updateOffset(diff);
+                    t.Value.Offset -= diff; // TODO this: updateOffset method updates current node as well which is not neccessary
                 }
                 source = t;
                 t = t.Parent;
                 source.Value.PayloadLength += difference;
+                difference += diff;
             } while (t != null);
         }
         void updateOffset(Int32 difference) {
             Value.Offset += difference;
-            foreach (Asn1TreeNode children in Children) {
-                children.updateOffset(difference);
+            foreach (Asn1TreeNode child in Children) {
+                //child.Value.Offset += difference;
+                child.updateOffset(difference);
             }
         }
         void valuePropertyChanged(Object sender, PropertyChangedEventArgs e) {

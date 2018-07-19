@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Windows.Input;
@@ -214,10 +215,10 @@ namespace SysadminsLV.Asn1Editor.API.ViewModel {
             }
             return binValue;
         }
-        void updateNewNodeBinarySource(Byte[] binData) {
+        void updateNewNodeBinarySource(IEnumerable<Byte> binData) {
             _data.RawData.InsertRange(Node.Offset, binData);
         }
-        void updateBinaryCopy(Byte[] newBytes) {
+        void updateBinaryCopy(IEnumerable<Byte> newBytes) {
             _data.RawData.RemoveRange(Node.Offset, Node.TagLength);
             _data.RawData.InsertRange(Node.Offset, newBytes);
         }
