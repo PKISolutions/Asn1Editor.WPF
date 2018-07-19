@@ -21,7 +21,7 @@ namespace SysadminsLV.Asn1Editor.API.Utils.WPF {
         }
         public void ShowNodeTextViewer() {
             hwnd = App.Container.Resolve<TextViewer>();
-            ShowAsWindow();
+            ShowAsWindow(true);
         }
     }
 }

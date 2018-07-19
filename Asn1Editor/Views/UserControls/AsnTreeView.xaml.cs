@@ -3,29 +3,53 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
-using SysadminsLV.Asn1Editor.API.Interfaces;
-using SysadminsLV.Asn1Editor.API.ModelObjects;
-using SysadminsLV.Asn1Editor.API.Utils;
 using SysadminsLV.Asn1Editor.API.ViewModel;
-using Unity;
 
 namespace SysadminsLV.Asn1Editor.Views.UserControls {
     /// <summary>
     /// Interaction logic for AsnTreeView.xaml
     /// </summary>
     public partial class AsnTreeView {
-        readonly ITreeViewVM _treeVM;
-        readonly IDataSource _data;
-        
         public AsnTreeView() {
             InitializeComponent();
-            _treeVM = App.Container.Resolve<ITreeViewVM>();
-            _data = App.Container.Resolve<IDataSource>();
+            Focusable = true;
+        }
+
+        public static readonly DependencyProperty DoubleClickCommandProperty = DependencyProperty.Register(
+            nameof(DoubleClickCommand),
+            typeof(ICommand),
+            typeof(AsnTreeView),
+            new PropertyMetadata(default(ICommand)));
+
+        public ICommand DoubleClickCommand {
+            get => (ICommand)GetValue(DoubleClickCommandProperty);
+            set => SetValue(DoubleClickCommandProperty, value);
+        }
+
+        public static readonly DependencyProperty DoubleClickCommandParameterProperty = DependencyProperty.Register(
+            nameof(DoubleClickCommandParameter),
+            typeof(Object),
+            typeof(AsnTreeView),
+            new PropertyMetadata(default(Object)));
+
+        public Object DoubleClickCommandParameter {
+            get => GetValue(DoubleClickCommandParameterProperty);
+            set => SetValue(DoubleClickCommandParameterProperty, value);
+        }
+
+        public static readonly DependencyProperty SelectedItemProperty = DependencyProperty.Register(
+            nameof(SelectedItem),
+            typeof(Object),
+            typeof(AsnTreeView),
+            new PropertyMetadata(default(Object)));
+
+        public Object SelectedItem {
+            get => GetValue(SelectedItemProperty);
+            set => SetValue(SelectedItemProperty, value);
         }
 
         void OnTreeViewDoubleClick(Object sender, MouseButtonEventArgs e) {
-            if (tree.SelectedItem == null) { return; }
-            _treeVM.TreeCommands.EditNodeCommand.Execute(NodeEditMode.Text);
+            DoubleClickCommand.Execute(DoubleClickCommandParameter);
         }
         void OnPreviewMouseRightButtonDown(Object sender, MouseButtonEventArgs e) {
             TreeViewItem treeViewItem = visualUpwardSearch(e.OriginalSource as DependencyObject);
@@ -36,7 +60,7 @@ namespace SysadminsLV.Asn1Editor.Views.UserControls {
         }
         void OnTreeViewSelectedItemChanged(Object sender, RoutedPropertyChangedEventArgs<Object> e) {
             if (e.NewValue == null) { return; }
-            _data.SelectedNode = e.NewValue as Asn1TreeNode;
+            SelectedItem = e.NewValue;
         }
         void Tree_OnDrop(Object sender, DragEventArgs e) {
             String[] file = (String[])e.Data.GetData(DataFormats.FileDrop, true);

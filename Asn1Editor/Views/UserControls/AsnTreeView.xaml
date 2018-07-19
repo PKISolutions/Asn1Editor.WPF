@@ -7,8 +7,6 @@
              xmlns:uc="clr-namespace:SysadminsLV.Asn1Editor.Views.UserControls"
              xmlns:vm="clr-namespace:SysadminsLV.Asn1Editor.API.ViewModel"
              xmlns:properties="clr-namespace:SysadminsLV.Asn1Editor.Properties"
-             xmlns:clr="clr-namespace:SysadminsLV.Asn1Editor.API.Utils"
-             xmlns:nc="clr-namespace:SysadminsLV.Asn1Editor.Views.UserControls.NodeCommands"
              mc:Ignorable="d"
              d:DataContext="{d:DesignInstance vm:MainWindowVM}"
              d:DesignHeight="300" d:DesignWidth="300">
@@ -117,14 +115,6 @@
             </Style.Triggers>
         </Style>
     </UserControl.Resources>
-    <UserControl.InputBindings>
-        <KeyBinding Modifiers="Ctrl" Key="E" Command="{Binding TreeCommands.EditNodeCommand}"/>
-        <KeyBinding Modifiers="Ctrl" Key="N" Command="{Binding TreeCommands.NewNodeCommand}" CommandParameter="{Binding SelectedTreeNode}"/>
-        <KeyBinding Modifiers="Ctrl" Key="X" Command="{Binding TreeCommands.CutNodeCommand}" CommandParameter="{Binding SelectedTreeNode}"/>
-        <KeyBinding Modifiers="Ctrl" Key="C" Command="{Binding TreeCommands.CopyNodeCommand}" CommandParameter="{Binding SelectedTreeNode}"/>
-        <KeyBinding Modifiers="Ctrl" Key="V" Command="{Binding TreeCommands.PasteAfterCommand}" CommandParameter="{Binding SelectedTreeNode}"/>
-        <KeyBinding Key="Delete" Command="{Binding TreeCommands.DeleteNodeCommand}" CommandParameter="{Binding SelectedTreeNode}"/>
-    </UserControl.InputBindings>
     <Grid>
         <!--<Grid.RowDefinitions>
             <RowDefinition Height="0"/>
@@ -166,7 +156,12 @@
             </TreeView.ItemContainerStyle>
             <TreeView.ContextMenu>
                 <ContextMenu>
-                    <nc:EditNodeMenu/>
+                    <MenuItem Header="Edit node..."
+                              Command="{Binding TreeCommands.EditNodeCommand}">
+                        <MenuItem.Icon>
+                            <Image Source="/Views/Images/Menu/edit_16x16.png" Width="16"/>
+                        </MenuItem.Icon>
+                    </MenuItem>
                     <MenuItem Header="Save selected node as..."
                               Command="{Binding TreeCommands.SaveNodeCommand}"/>
                     <MenuItem Header="View node text..."

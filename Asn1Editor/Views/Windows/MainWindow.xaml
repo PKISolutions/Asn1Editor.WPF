@@ -6,7 +6,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:hexViewer="clr-namespace:SysadminsLV.Asn1Editor.Views.UserControls.HexViewer"
-        xmlns:nc="clr-namespace:SysadminsLV.Asn1Editor.Views.UserControls.NodeCommands"
+        xmlns:clr="clr-namespace:SysadminsLV.Asn1Editor.API.Utils"
         mc:Ignorable="d"
         d:DataContext="{d:DesignInstance vm:MainWindowVM}"
         Title="{Binding Title}"
@@ -37,7 +37,12 @@
                 <MenuItem Header="_Exit" Click="CloseClick" InputGestureText="Alt + F4"/>
             </MenuItem>
             <MenuItem Header="Edit">
-                <nc:EditNodeMenu/>
+                <MenuItem Header="Edit node..."
+                          Command="{Binding TreeCommands.EditNodeCommand}">
+                    <MenuItem.Icon>
+                        <Image Source="/Views/Images/Menu/edit_16x16.png" Width="16"/>
+                    </MenuItem.Icon>
+                </MenuItem>
                 <MenuItem Header="Save selected node as..."
                           Command="{Binding TreeCommands.SaveNodeCommand}"/>
                 <MenuItem Header="View node text"
@@ -115,10 +120,10 @@
             <ToolBar>
                 <ToggleButton x:Name="HexViewerToggle"
                               ToolTip="Show or hide hex viewer">
-                    <Image Source="/Views/Images/Menu/hexview_16x16.png" Width="16"/>	
+                    <Image Source="/Views/Images/Menu/hexview_16x16.png" Width="16"/>
                 </ToggleButton>
                 <Button Command="{Binding ShowConverterCommand}" ToolTip="Open data converter">
-                    <Image Source="/Views/Images/Menu/converter_16x16.png"/>	
+                    <Image Source="/Views/Images/Menu/converter_16x16.png"/>
                 </Button>
             </ToolBar>
             <ToolBar>
@@ -205,6 +210,17 @@
         <hexViewer:HexViewerUC DataSource="{Binding DataSource}"
                                Visibility="{Binding ElementName=HexViewerToggle, Path=IsChecked, Converter={StaticResource BooleanToVisibility}}"
                                SelectedNode="{Binding DataSource.SelectedNode.Value, Mode=OneWay}"/>
-        <uc:AsnTreeView/>
+        <uc:AsnTreeView DoubleClickCommand="{Binding TreeCommands.EditNodeCommand}"
+                        DoubleClickCommandParameter="{x:Static clr:NodeEditMode.Text}"
+                        SelectedItem="{Binding DataSource.SelectedNode, Mode=OneWayToSource}">
+            <uc:AsnTreeView.InputBindings>
+                <KeyBinding Modifiers="Ctrl" Key="E" Command="{Binding TreeCommands.EditNodeCommand}" CommandParameter="{x:Static clr:NodeEditMode.Text}"/>
+                <KeyBinding Modifiers="Ctrl" Key="N" Command="{Binding TreeCommands.AddNewNodeCommand}"/>
+                <KeyBinding Modifiers="Ctrl" Key="X" Command="{Binding TreeCommands.CutNodeCommand}"/>
+                <KeyBinding Modifiers="Ctrl" Key="C" Command="{Binding TreeCommands.CopyNodeCommand}"/>
+                <KeyBinding Modifiers="Ctrl" Key="V" Command="{Binding TreeCommands.PasteAfterCommand}"/>
+                <KeyBinding Key="Delete" Command="{Binding TreeCommands.DeleteNodeCommand}" CommandParameter="{Binding SelectedTreeNode}"/>
+            </uc:AsnTreeView.InputBindings>
+        </uc:AsnTreeView>
     </DockPanel>
 </Window>

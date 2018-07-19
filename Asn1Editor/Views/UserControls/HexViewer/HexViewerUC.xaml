@@ -3,9 +3,9 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-             xmlns:controls="clr-namespace:SysadminsLV.Asn1Editor.Controls"
              xmlns:vm="clr-namespace:SysadminsLV.Asn1Editor.API.ViewModel"
              xmlns:properties="clr-namespace:SysadminsLV.Asn1Editor.Properties"
+             xmlns:ctrl="clr-namespace:SysadminsLV.WPF.OfficeTheme.Controls;assembly=Wpf.OfficeTheme"
              mc:Ignorable="d"
              BorderThickness="1"
              BorderBrush="#add1ff"
@@ -23,7 +23,7 @@
             <Setter Property="ContextMenu" Value="{x:Null}"/>
             <Setter Property="IsUndoEnabled" Value="False"/>
         </Style>
-        <Style x:Key="RtbPaneStyle" TargetType="controls:BindableRichTextBox" BasedOn="{StaticResource {x:Type controls:BindableRichTextBox}}">
+        <Style x:Key="RtbPaneStyle" TargetType="ctrl:BindableRichTextBox" BasedOn="{StaticResource {x:Type ctrl:BindableRichTextBox}}">
             <Setter Property="BorderBrush" Value="{StaticResource NormalBorderBrush}"/>
             <Setter Property="BorderThickness" Value="0,0,1,0"/>
             <Setter Property="IsReadOnly" Value="True"/>
@@ -92,19 +92,19 @@
         </Border>
         <ScrollViewer VerticalScrollBarVisibility="Visible" Name="Scroller">
             <DockPanel>
-                <controls:BindableRichTextBox x:Name="HexAddressPane"
+                <ctrl:BindableRichTextBox x:Name="HexAddressPane"
                                               x:FieldModifier="private"
                                               Style="{StaticResource RtbPaneStyle}"
                                               Foreground="Blue"
                                               Visibility="{Binding ElementName=HexAddressToggle, Path=IsChecked, Converter={StaticResource BooleanToVisibility}}"
                                               Width="{Binding ElementName=HexAddrHeaderRtb, Path=Width}"/>
-                <controls:BindableRichTextBox x:Name="HexRawPane"
+                <ctrl:BindableRichTextBox x:Name="HexRawPane"
                                               x:FieldModifier="private"
                                               Style="{StaticResource RtbPaneStyle}"
                                               Foreground="Gray"
                                               ObserveCaret="True"
                                               Width="{Binding ElementName=HexRawHeaderRtb, Path=Width}"/>
-                <controls:BindableRichTextBox x:Name="HexAsciiPane"
+                <ctrl:BindableRichTextBox x:Name="HexAsciiPane"
                                               x:FieldModifier="private"
                                               Style="{StaticResource RtbPaneStyle}"
                                               Foreground="Green"

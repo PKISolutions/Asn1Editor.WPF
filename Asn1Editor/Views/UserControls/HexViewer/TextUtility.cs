@@ -5,7 +5,7 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Documents;
 using System.Windows.Media;
-using SysadminsLV.Asn1Editor.Controls;
+using SysadminsLV.WPF.OfficeTheme.Controls;
 
 namespace SysadminsLV.Asn1Editor.Views.UserControls.HexViewer {
     static class TextUtility {

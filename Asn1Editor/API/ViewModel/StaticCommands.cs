@@ -18,8 +18,6 @@ namespace SysadminsLV.Asn1Editor.API.ViewModel {
     static class StaticCommands {
         static Converter converter;
         static Boolean converterClosed = true;
-        static TextViewer textViewer;
-        static Boolean textViewerClosed = true;
 
         public static void UpdateSettingsDecode(Asn1TreeNode rootNode) {
             foreach (Asn1Lite node in rootNode.Flatten()) {
@@ -44,9 +42,9 @@ namespace SysadminsLV.Asn1Editor.API.ViewModel {
             }
         }
         public static void Print(String text) {
-            PrintDialog printDialog = new PrintDialog();
+            var printDialog = new PrintDialog();
             if (!printDialog.ShowDialog().GetValueOrDefault()) { return; }
-            FlowDocument flowDocument = new FlowDocument {
+            var flowDocument = new FlowDocument {
                 PageHeight = printDialog.PrintableAreaHeight,
                 PageWidth = printDialog.PrintableAreaWidth,
                 PagePadding = new Thickness(25),
@@ -56,7 +54,7 @@ namespace SysadminsLV.Asn1Editor.API.ViewModel {
                 flowDocument.ColumnGap -
                 flowDocument.PagePadding.Left -
                 flowDocument.PagePadding.Right;
-            Paragraph paragraph = new Paragraph {
+            var paragraph = new Paragraph {
                 Margin = new Thickness(0),
                 FontFamily = new FontFamily("Consolas"),
                 FontSize = Settings.Default.FontSize,
@@ -79,21 +77,7 @@ namespace SysadminsLV.Asn1Editor.API.ViewModel {
             converter.Show();
             converter.Focus();
         }
-        //public static void ShowText(Object obj) {
-        //    if (obj == null) { return; }
-        //    if (!textViewerClosed) {
-        //        textViewer.Focus();
-        //        return;
-        //    }
-        //    textViewerClosed = false;
-        //    textViewer = App.Container.Resolve<TextViewer>();
-        //    textViewer.Closed += (Sender, Args) => { textViewerClosed = true; };
-        //    ((TextViewerVM)textViewer.DataContext).SetBinding((Asn1TreeNode)obj);
-        //    textViewer.Show();
-        //    textViewer.Focus();
-        //}
         public static void ClearResources() {
-            if (!textViewerClosed) { textViewer.Close(); }
             if (!converterClosed) { converter.Close(); }
         }
 
