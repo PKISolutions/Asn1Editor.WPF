@@ -43,7 +43,7 @@
                 <TextBlock Text="Line width (characters): "/>
             </StatusBarItem>
             <StatusBarItem>
-                <TextBox Text="{Binding CurrentLength}"
+                <TextBox Text="{Binding CurrentLength, UpdateSourceTrigger=PropertyChanged}"
                          Width="{Binding TextBoxWidth}"
                          Background="White"
                          UndoLimit="0"

@@ -22,7 +22,7 @@ namespace SysadminsLV.Asn1Editor.API.Utils {
                 DefaultExt = ".*",
                 Filter = "All files (*.*)|*.*"
             };
-            return dlg.ShowDialog() == true ? dlg.FileName : null;
+            return dlg.ShowDialog() == true ? dlg.FileName : String.Empty;
         }
         public static Double MeasureString(String str, Int32 size, Boolean includeScrollbars) {
             var formattedText = new FormattedText(

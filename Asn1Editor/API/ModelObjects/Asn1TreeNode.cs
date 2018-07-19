@@ -32,7 +32,7 @@ namespace SysadminsLV.Asn1Editor.API.ModelObjects {
             Int32 indexToInsert, newOffset;
             nodeToInsert.Parent = this;
             nodeToInsert.Value.IsRoot = false;
-            Int32 headerLength = nodeToInsert.Value.HeaderLength;
+            //Int32 headerLength = nodeToInsert.Value.HeaderLength;
             switch (option) {
                 case NodeAddOption.Before:
                     indexToInsert = _children.IndexOf(caller);
@@ -57,7 +57,7 @@ namespace SysadminsLV.Asn1Editor.API.ModelObjects {
             _children.Insert(indexToInsert, nodeToInsert);
             notifySizeChanged(nodeToInsert, nodeToInsert.Value.TagLength);
             _children[indexToInsert].Value.Offset = newOffset;
-            _children[indexToInsert].Value.PayloadStartOffset = newOffset + headerLength;
+            //_children[indexToInsert].Value.PayloadStartOffset = newOffset + headerLength;
             for (Int32 index = indexToInsert; index < Children.Count; index++) {
                 updatePath(Children[index], Path, index);
             }
@@ -75,11 +75,7 @@ namespace SysadminsLV.Asn1Editor.API.ModelObjects {
             Value.IsContainer = true;
         }
         public void RemoveChild(Asn1TreeNode node) {
-            //Int32 indexToRemove = Children.IndexOf(node);
-            //if (indexToRemove < 0) { return; } // TODO: is it necessary?
-            Int32 difference = Children[node.MyIndex].Value.TagLength;
-            App.Container.Resolve<IDataSource>().RawData.RemoveRange(node.Value.Offset, difference);
-            notifySizeChanged(node, -difference);
+            notifySizeChanged(node, -node.Value.TagLength);
             _children.RemoveAt(node.MyIndex);
             // update path only below removed node
             for (Int32 childIndex = node.MyIndex; childIndex < Children.Count; childIndex++) {
@@ -118,7 +114,6 @@ namespace SysadminsLV.Asn1Editor.API.ModelObjects {
         }
         void updateOffset(Int32 difference) {
             Value.Offset += difference;
-            Value.PayloadStartOffset += difference;
             foreach (Asn1TreeNode children in Children) {
                 children.updateOffset(difference);
             }

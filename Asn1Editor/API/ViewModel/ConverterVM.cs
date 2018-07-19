@@ -63,7 +63,7 @@ namespace SysadminsLV.Asn1Editor.API.ViewModel {
                 OnPropertyChanged(nameof(CanCheck));
             }
         }
-        public ObservableList<Byte> RawData { get; } = new ObservableList<Byte> {IsNotifying = true};
+        public ObservableList<Byte> RawData { get; } = new ObservableList<Byte> { IsNotifying = true };
 
         #region Radiobuttons
         public Boolean Base64 {
@@ -229,7 +229,7 @@ namespace SysadminsLV.Asn1Editor.API.ViewModel {
                     OnPropertyChanged(nameof(HexRaw));
                     break;
                 default:
-                    Tools.MsgBox("Error","Input text cannot be validated.");
+                    Tools.MsgBox("Error", "Input text cannot be validated.");
                     return;
             }
             RawData.AddRange(HexUtility.AnyToBinary(Text));
@@ -249,14 +249,9 @@ namespace SysadminsLV.Asn1Editor.API.ViewModel {
             return CanCheck = RawData.Count > 0;
         }
         Boolean GetFilePath() {
-            SaveFileDialog dlg = new SaveFileDialog {
-                FileName = "",
-                DefaultExt = ".*",
-                Filter = "All files (*.*)|*.*"
-            };
-            Boolean? result = dlg.ShowDialog();
-            if (result != true) { return false; }
-            Path = dlg.FileName;
+            String path = Tools.GetSaveFileName();
+            if (String.IsNullOrWhiteSpace(path.Trim())) { return false; }
+            Path = path;
             return true;
         }
         void SaveText() {

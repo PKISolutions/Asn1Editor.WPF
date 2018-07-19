@@ -104,7 +104,7 @@
                  DockPanel.Dock="Left"
                  UndoLimit="10"
                  Width="{Binding TextBoxWidth}"
-                 Text="{Binding Text}"
+                 Text="{Binding Text, UpdateSourceTrigger=PropertyChanged}"
                  controls:CaretBehavior.ObserveCaret="True"
                  FontFamily="Consolas"
                  FontSize="{Binding Path=FontSize, Source={x:Static properties:Settings.Default}}"

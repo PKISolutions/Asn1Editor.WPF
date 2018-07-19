@@ -4,7 +4,6 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Windows.Input;
-using Microsoft.Win32;
 using SysadminsLV.Asn1Editor.API.Interfaces;
 using SysadminsLV.Asn1Editor.API.ModelObjects;
 using SysadminsLV.Asn1Editor.API.Utils;
@@ -127,25 +126,13 @@ namespace SysadminsLV.Asn1Editor.API.ViewModel {
                     current + $"{delimieter}{new String(' ', padding + 3)}{line.Trim()}{n}");
         }
         void saveFile(Object obj) {
-            String path = getFilePath();
+            String path = Tools.GetSaveFileName();
             if (String.IsNullOrEmpty(path)) { return; }
             try {
                 File.WriteAllText(path, Text);
             } catch (Exception e) {
                 Tools.MsgBox("Save Error", e.Message);
             }
-        }
-
-        static String getFilePath() {
-            SaveFileDialog dlg = new SaveFileDialog {
-                FileName = "",
-                DefaultExt = ".*",
-                Filter = "All files (*.*)|*.*"
-            };
-            Boolean? result = dlg.ShowDialog();
-            return result != true
-                ? String.Empty
-                : dlg.FileName;
         }
     }
 }

@@ -114,14 +114,9 @@ namespace SysadminsLV.Asn1Editor.API.ViewModel {
             return DataSource.RawData.Count > 0;
         }
         Boolean getFilePath() {
-            SaveFileDialog dlg = new SaveFileDialog {
-                FileName = "",
-                DefaultExt = ".*",
-                Filter = "All files (*.*)|*.*"
-            };
-            Boolean? result = dlg.ShowDialog();
-            if (result != true) { return false; }
-            Path = dlg.FileName;
+            String p = Tools.GetSaveFileName();
+            if (String.IsNullOrWhiteSpace(p.Trim())) { return false; }
+            Path = p;
             return true;
         }
         async Task<Boolean> decodeFile() {

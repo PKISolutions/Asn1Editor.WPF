@@ -80,14 +80,16 @@ namespace SysadminsLV.Asn1Editor.API.ViewModel {
                     _data.Tree.Clear();
                     _data.RawData.Clear();
                     _data.SelectedNode = null;
-                    _data.FinishBinaryUpdate();
                 } else {
+                    _data.RawData.RemoveRange(_data.SelectedNode.Value.Offset, _data.SelectedNode.Value.TagLength);
                     _data.SelectedNode.Parent.RemoveChild(_data.SelectedNode);
                 }
+                _data.FinishBinaryUpdate();
             }
         }
         void cutNode(Object o) {
             copyNode(null);
+            _data.RawData.RemoveRange(_data.SelectedNode.Value.Offset, _data.SelectedNode.Value.TagLength);
             _data.SelectedNode.Parent.RemoveChild(_data.SelectedNode);
             _data.FinishBinaryUpdate();
         }

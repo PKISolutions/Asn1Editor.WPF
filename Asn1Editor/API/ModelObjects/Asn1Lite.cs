@@ -67,7 +67,7 @@ namespace SysadminsLV.Asn1Editor.API.ModelObjects {
         public Int32 Offset {
             get => offset;
             set {
-                var diff = value - offset;
+                Int32 diff = value - offset;
                 offset = value;
                 PayloadStartOffset += diff;
                 OnPropertyChanged(nameof(Caption));
@@ -144,7 +144,7 @@ namespace SysadminsLV.Asn1Editor.API.ModelObjects {
         public void UpdateView() {
             OnPropertyChanged(nameof(Caption));
         }
-        
+
         public override Boolean Equals(Object obj) {
             if (ReferenceEquals(null, obj)) { return false; }
             if (ReferenceEquals(this, obj)) { return true; }
