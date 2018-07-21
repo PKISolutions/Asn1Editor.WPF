@@ -4,6 +4,7 @@ using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
 using SysadminsLV.Asn1Editor.API.ViewModel;
+using SysadminsLV.WPF.OfficeTheme.Toolkit.Commands;
 
 namespace SysadminsLV.Asn1Editor.Views.UserControls {
     /// <summary>
@@ -13,6 +14,15 @@ namespace SysadminsLV.Asn1Editor.Views.UserControls {
         public AsnTreeView() {
             InitializeComponent();
             Focusable = true;
+            ExpandAllCommand = new RelayCommand(expandAll);
+        }
+
+        public static readonly DependencyProperty ExpandAllCommandProperty = DependencyProperty.Register(
+            nameof(ExpandAllCommand), typeof(ICommand), typeof(AsnTreeView), new PropertyMetadata(default(ICommand)));
+
+        public ICommand ExpandAllCommand {
+            get => (ICommand)GetValue(ExpandAllCommandProperty);
+            private set => SetValue(ExpandAllCommandProperty, value);
         }
 
         public static readonly DependencyProperty DoubleClickCommandProperty = DependencyProperty.Register(
@@ -67,6 +77,9 @@ namespace SysadminsLV.Asn1Editor.Views.UserControls {
             if (file != null) {
                 ((MainWindowVM)DataContext).DropFile(file[0]);
             }
+        }
+        void expandAll(Object o) {
+            ((TreeViewItem)tree.Items[0]).IsExpanded = true;
         }
 
         static TreeViewItem visualUpwardSearch(DependencyObject source) {
