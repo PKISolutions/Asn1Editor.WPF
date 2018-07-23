@@ -16,6 +16,7 @@ namespace SysadminsLV.Asn1Editor.API.ViewModel {
         public ICommand ShowAboutCommand { get; }
         public ICommand ShowSettingsCommand { get; }
         public ICommand ShowNodeTextViewer { get; set; }
+        public ICommand ShowConverterWindow { get; set; }
 
         void showAbout(Object o) {
             _windowFactory.ShowAboutdialog();

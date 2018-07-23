@@ -15,30 +15,35 @@ namespace SysadminsLV.Asn1Editor.API.ViewModel {
         const String master = "123456789012345678901234567890123456789012345678901234567890123456789012345678";
         Double width;
         String text, path;
+        Boolean? dialogResult;
         Boolean isLocked, canCheck,
             base64, base64header, base64req, base64crl, hex, hexaddr, hexascii, hexaddrascii, hexraw;
+        readonly Action<IEnumerable<Byte>> _action;
 
-        public ConverterVM() {
+        public ConverterVM(Action<IEnumerable<Byte>> action) {
+            _action = action;
             base64 = true;
             OnPropertyChanged(nameof(Base64));
-            OpenCommand = new RelayCommand(OpenFile);
-            SaveCommand = new RelayCommand(SaveFile, CanPrintSave);
-            PrintCommand = new RelayCommand(Print, CanPrintSave);
-            ClearCommand = new RelayCommand(ClearText);
-            ValidateCommand = new RelayCommand(ValidateInput);
+            OpenCommand = new RelayCommand(openFile);
+            SaveCommand = new RelayCommand(saveFile, canPrintSave);
+            PrintCommand = new RelayCommand(print, canPrintSave);
+            ClearCommand = new RelayCommand(clearText);
+            ValidateCommand = new RelayCommand(validateInput);
+            CloseCommand = new RelayCommand(close);
             TextBoxWidth = Tools.MeasureString(master, Settings.Default.FontSize, true);
         }
-
-        public ICommand OpenCommand { get; set; }
-        public ICommand SaveCommand { get; set; }
-        public ICommand ClearCommand { get; set; }
-        public ICommand ValidateCommand { get; set; }
-        public ICommand PrintCommand { get; set; }
+        
+        public ICommand OpenCommand { get; }
+        public ICommand SaveCommand { get; }
+        public ICommand ClearCommand { get; }
+        public ICommand ValidateCommand { get; }
+        public ICommand PrintCommand { get; }
+        public ICommand CloseCommand { get; }
 
         public String Text {
             get => text;
             set {
-                text = value.Trim();
+                text = value?.Trim();
                 OnPropertyChanged(nameof(Text));
             }
         }
@@ -61,6 +66,13 @@ namespace SysadminsLV.Asn1Editor.API.ViewModel {
             set {
                 canCheck = value;
                 OnPropertyChanged(nameof(CanCheck));
+            }
+        }
+        public Boolean? DialogResult {
+            get => dialogResult;
+            set {
+                dialogResult = value;
+                OnPropertyChanged(nameof(DialogResult));
             }
         }
         public ObservableList<Byte> RawData { get; } = new ObservableList<Byte> { IsNotifying = true };
@@ -140,7 +152,7 @@ namespace SysadminsLV.Asn1Editor.API.ViewModel {
         }
         #endregion
 
-        void OpenFile(Object obj) {
+        void openFile(Object obj) {
             isLocked = true;
             OpenFileDialog dlg = new OpenFileDialog {
                 FileName = "",
@@ -160,31 +172,31 @@ namespace SysadminsLV.Asn1Editor.API.ViewModel {
             }
             isLocked = false;
         }
-        void SaveFile(Object obj) {
+        void saveFile(Object obj) {
             switch ((String)obj) {
                 case "text":
                     if (String.IsNullOrEmpty(Path)) {
-                        if (!GetFilePath()) { return; }
+                        if (!getFilePath()) { return; }
                     }
-                    SaveText();
+                    saveText();
                     break;
                 case "textas":
-                    if (!GetFilePath()) { return; }
-                    SaveText();
+                    if (!getFilePath()) { return; }
+                    saveText();
                     break;
                 case "bin":
                     if (String.IsNullOrEmpty(Path)) {
-                        if (!GetFilePath()) { return; }
+                        if (!getFilePath()) { return; }
                     }
-                    SaveBinary();
+                    saveBinary();
                     break;
                 case "binas":
-                    if (!GetFilePath()) { return; }
-                    SaveBinary();
+                    if (!getFilePath()) { return; }
+                    saveBinary();
                     break;
             }
         }
-        void ValidateInput(Object obj) {
+        void validateInput(Object obj) {
             if (String.IsNullOrEmpty(Text)) {
                 Tools.MsgBox("Warning", "There is nothing to validate.", MessageBoxImage.Warning);
                 return;
@@ -234,34 +246,37 @@ namespace SysadminsLV.Asn1Editor.API.ViewModel {
             }
             RawData.AddRange(HexUtility.AnyToBinary(Text));
             if (obj != null && obj.ToString() == "Decode") {
-                OnPropertyChanged("Decode");
+                _action.Invoke(RawData);
             }
         }
-        void ClearText(Object obj) {
+        void clearText(Object obj) {
             Text = String.Empty;
             RawData.Clear();
             Path = null;
         }
-        void Print(Object obj) {
+        void close(Object Obj) {
+            throw new NotImplementedException();
+        }
+        void print(Object obj) {
             StaticCommands.Print(Text);
         }
-        Boolean CanPrintSave(Object obj) {
+        Boolean canPrintSave(Object obj) {
             return CanCheck = RawData.Count > 0;
         }
-        Boolean GetFilePath() {
+        Boolean getFilePath() {
             String path = Tools.GetSaveFileName();
             if (String.IsNullOrWhiteSpace(path.Trim())) { return false; }
             Path = path;
             return true;
         }
-        void SaveText() {
+        void saveText() {
             try {
                 File.WriteAllText(Path, Text);
             } catch (Exception e) {
                 Tools.MsgBox("Save Error", e.Message);
             }
         }
-        void SaveBinary() {
+        void saveBinary() {
             try {
                 File.WriteAllBytes(Path, RawData.ToArray());
             } catch (Exception e) {

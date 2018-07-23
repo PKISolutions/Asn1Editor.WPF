@@ -1,23 +1,17 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Linq;
 using System.Numerics;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Documents;
 using System.Windows.Media;
-using SysadminsLV.Asn1Editor.API.Interfaces;
 using SysadminsLV.Asn1Editor.API.ModelObjects;
 using SysadminsLV.Asn1Editor.Properties;
-using SysadminsLV.Asn1Editor.Views.Windows;
 using SysadminsLV.Asn1Parser;
-using Unity;
 
 namespace SysadminsLV.Asn1Editor.API.ViewModel {
     static class StaticCommands {
-        static Converter converter;
-        static Boolean converterClosed = true;
 
         public static void UpdateSettingsDecode(Asn1TreeNode rootNode) {
             foreach (Asn1Lite node in rootNode.Flatten()) {
@@ -63,28 +57,6 @@ namespace SysadminsLV.Asn1Editor.API.ViewModel {
             flowDocument.Blocks.Add(paragraph);
             DocumentPaginator paginator = ((IDocumentPaginatorSource)flowDocument).DocumentPaginator;
             printDialog.PrintDocument(paginator, String.Empty);
-        }
-        public static void ShowConverter(Object obj) {
-            if (!converterClosed) {
-                converter.Focus();
-                return;
-            }
-            converterClosed = false;
-            converter = new Converter();
-            converter.Closed += (Sender, Args) => { converterClosed = true; };
-            ((ConverterVM)converter.DataContext).PropertyChanged += OnPropertyChanged;
-            ((ConverterVM)converter.DataContext).SetBytes(App.Container.Resolve<IDataSource>().RawData);
-            converter.Show();
-            converter.Focus();
-        }
-        public static void ClearResources() {
-            if (!converterClosed) { converter.Close(); }
-        }
-
-        static void OnPropertyChanged(Object sender, PropertyChangedEventArgs e) {
-            if (e.PropertyName == "Decode") {
-                App.Container.Resolve<IMainWindowVM>().OpenRaw(((ConverterVM)sender).RawData);
-            }
         }
     }
 }

@@ -24,6 +24,14 @@ namespace SysadminsLV.Asn1Editor.API.Utils {
             };
             return dlg.ShowDialog() == true ? dlg.FileName : String.Empty;
         }
+        public static String GetOpenFileName() {
+            var dlg = new OpenFileDialog {
+                FileName = "",
+                DefaultExt = ".*",
+                Filter = "All files (*.*)|*.*"
+            };
+            return dlg.ShowDialog() == true ? dlg.FileName : String.Empty;
+        }
         public static Double MeasureString(String str, Int32 size, Boolean includeScrollbars) {
             var formattedText = new FormattedText(
                 str,

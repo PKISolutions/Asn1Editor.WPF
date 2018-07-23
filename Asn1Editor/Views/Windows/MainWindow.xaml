@@ -12,7 +12,6 @@
         Title="{Binding Title}"
         Icon="/Views/Images/asnlogo.ico"
         WindowStartupLocation="CenterScreen"
-        Closing="OnClosing"
         Height="600"
         Width="800">
     <Window.InputBindings>
@@ -122,7 +121,7 @@
                               ToolTip="Show or hide hex viewer">
                     <Image Source="/Views/Images/Menu/hexview_16x16.png" Width="16"/>
                 </ToggleButton>
-                <Button Command="{Binding ShowConverterCommand}" ToolTip="Open data converter">
+                <Button Command="{Binding AppCommands.ShowConverterWindow}" ToolTip="Open data converter">
                     <Image Source="/Views/Images/Menu/converter_16x16.png"/>
                 </Button>
             </ToolBar>

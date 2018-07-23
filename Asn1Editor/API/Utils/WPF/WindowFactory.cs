@@ -1,10 +1,16 @@
-﻿using SysadminsLV.Asn1Editor.API.Interfaces;
+﻿using System;
+using System.Collections.Generic;
+using SysadminsLV.Asn1Editor.API.Interfaces;
 using SysadminsLV.Asn1Editor.API.ModelObjects;
+using SysadminsLV.Asn1Editor.API.ViewModel;
 using SysadminsLV.Asn1Editor.Views.Windows;
 using Unity;
 
 namespace SysadminsLV.Asn1Editor.API.Utils.WPF {
     class WindowFactory : WindowFactoryBase, IWindowFactory {
+        static Converter converter;
+        static Boolean   converterClosed = true;
+
         public void ShowSettingsDialog() {
             hwnd = App.Container.Resolve<SettingsWnd>();
             ShowAsDialog();
@@ -21,6 +27,19 @@ namespace SysadminsLV.Asn1Editor.API.Utils.WPF {
         }
         public void ShowNodeTextViewer() {
             hwnd = App.Container.Resolve<TextViewer>();
+            ShowAsWindow(true);
+        }
+        public void ShowConverterWindow(IEnumerable<Byte> data, Action<IEnumerable<Byte>> action) {
+            if (!converterClosed) {
+                converter.Focus();
+                return;
+            }
+            converterClosed = false;
+            hwnd = converter = new Converter();
+            var hwndvm = new ConverterVM(action);
+            hwnd.DataContext = hwndvm;
+            hwndvm.SetBytes(data);
+            hwnd.Closed += (o, e) => { converterClosed = true; };
             ShowAsWindow(true);
         }
     }

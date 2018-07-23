@@ -5,7 +5,6 @@ using System.ComponentModel;
 using System.IO;
 using System.Threading.Tasks;
 using System.Windows.Input;
-using Microsoft.Win32;
 using SysadminsLV.Asn1Editor.API.Interfaces;
 using SysadminsLV.Asn1Editor.API.ModelObjects;
 using SysadminsLV.Asn1Editor.API.Utils;
@@ -15,24 +14,25 @@ using SysadminsLV.WPF.OfficeTheme.Toolkit.Commands;
 
 namespace SysadminsLV.Asn1Editor.API.ViewModel {
     class MainWindowVM : ViewModelBase, IMainWindowVM {
+        readonly IWindowFactory _windowFactory;
         String path;
         Asn1TreeNode selectedNode;
         Boolean hasClipboard, isBusy;
 
-        public MainWindowVM(IAppCommands appCommands, ITreeCommands treeCommands, IDataSource data) {
+        public MainWindowVM(IWindowFactory windowFactory, IAppCommands appCommands, ITreeCommands treeCommands, IDataSource data) {
+            _windowFactory = windowFactory;
             AppCommands = appCommands;
             TreeCommands = treeCommands;
             DataSource = data;
             OpenCommand = new RelayCommand(openFile);
             SaveCommand = new RelayCommand(saveFile, canPrintSave);
-            ShowConverterCommand = new RelayCommand(StaticCommands.ShowConverter);
+            appCommands.ShowConverterWindow = new RelayCommand(showConverter);
             Settings.Default.PropertyChanged += onSettingChange;
         }
 
         public ICommand OpenCommand { get; set; }
         public ICommand SaveCommand { get; set; }
         public ICommand PrintCommand { get; set; }
-        public ICommand ShowConverterCommand { get; set; }
         public ICommand SettingsCommand { get; set; }
 
         public IAppCommands AppCommands { get; }
@@ -74,19 +74,18 @@ namespace SysadminsLV.Asn1Editor.API.ViewModel {
                 OnPropertyChanged(nameof(IsBusy));
             }
         }
+
+        void showConverter(Object o) {
+            _windowFactory.ShowConverterWindow(DataSource.RawData, openRaw);
+        }
         void openFile(Object obj) {
-            OpenFileDialog dlg = new OpenFileDialog {
-                FileName = "",
-                DefaultExt = ".*",
-                Filter = "All files (*.*)|*.*"
-            };
-            Boolean? result = dlg.ShowDialog();
-            if (result != true) { return; }
-            OpenExisting(dlg.FileName);
+            String file = Tools.GetOpenFileName();
+            if (String.IsNullOrWhiteSpace(file)) { return; }
+            OpenExisting(file);
         }
         void saveFile(Object obj) {
-            if (obj != null || String.IsNullOrEmpty(Path)) {
-                if (!getFilePath()) { return; }
+            if ((obj != null || String.IsNullOrEmpty(Path)) && !getFilePath()) {
+                return;
             }
             try {
                 File.WriteAllBytes(Path, DataSource.RawData.ToArray());
@@ -144,9 +143,9 @@ namespace SysadminsLV.Asn1Editor.API.ViewModel {
             decode();
         }
         public void OpenRaw(String base64String) {
-            OpenRaw(Convert.FromBase64String(base64String));
+            openRaw(Convert.FromBase64String(base64String));
         }
-        public void OpenRaw(IEnumerable<Byte> rawBytes) {
+        void openRaw(IEnumerable<Byte> rawBytes) {
             Path = null;
             DataSource.RawData.Clear();
             DataSource.RawData.AddRange(rawBytes);
