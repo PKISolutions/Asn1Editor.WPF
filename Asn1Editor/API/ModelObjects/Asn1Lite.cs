@@ -60,7 +60,7 @@ namespace SysadminsLV.Asn1Editor.API.ModelObjects {
             get => tagName;
             set {
                 tagName = value;
-                if (value.StartsWith("CONTEXT SPECIFIC")) { IsContextSpecific = true; }
+                if (value.StartsWith("CONTEXT_SPECIFIC")) { IsContextSpecific = true; }
                 OnPropertyChanged(nameof(Caption));
             }
         }

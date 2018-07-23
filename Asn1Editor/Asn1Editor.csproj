@@ -176,7 +176,6 @@
     <Compile Include="API\ViewModel\TextViewerVM.cs" />
     <Compile Include="API\ViewModel\TreeViewCommands.cs" />
     <Compile Include="API\ViewModel\ViewModelBase.cs" />
-    <Compile Include="API\Converters\TreeViewLineConverter.cs" />
     <Compile Include="Views\UserControls\HexViewer\IHexAsnNode.cs" />
     <Compile Include="Views\UserControls\HexViewer\TextUtility.cs" />
     <Compile Include="Views\Windows\AboutBox.xaml.cs">
@@ -402,6 +401,10 @@
     <PackageReference Include="Unity">
       <Version>5.8.6</Version>
     </PackageReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="API\ContentEditors\" />
+    <Folder Include="Views\UserControls\ContentEditors\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

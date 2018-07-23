@@ -7,13 +7,10 @@ using System.Numerics;
 using System.Security.Cryptography;
 using System.Security.Cryptography.X509Certificates;
 using System.Text;
-using SysadminsLV.Asn1Editor.API.Interfaces;
-using SysadminsLV.Asn1Editor.API.ModelObjects;
 using SysadminsLV.Asn1Editor.API.ViewModel;
 using SysadminsLV.Asn1Editor.Properties;
 using SysadminsLV.Asn1Parser;
 using SysadminsLV.Asn1Parser.Universal;
-using Unity;
 
 namespace SysadminsLV.Asn1Editor.API.Utils.ASN {
     class AsnDecoder {
@@ -27,44 +24,43 @@ namespace SysadminsLV.Asn1Editor.API.Utils.ASN {
             allowed.AddRange(new Byte[] { 0x3a, 0x3d, 0x3f });
             return allowed;
         }
-        public static String GetEditValue(Asn1Lite asn) {
-            var raw = App.Container.Resolve<IDataSource>().RawData;
+        public static String GetEditValue(Asn1Reader asn) {
             switch (asn.Tag) {
                 case (Byte)Asn1Type.BOOLEAN:
                 case (Byte)Asn1Type.UTCTime:
-                case (Byte)Asn1Type.Generalizedtime:
-                    return asn.ExplicitValue;
+                case (Byte)Asn1Type.GeneralizedTime:
+                    return GetViewValue(asn);
                 case (Byte)Asn1Type.INTEGER:
-                    return new Asn1Integer(raw.Skip(asn.Offset).Take(asn.TagLength).ToArray()).Value.ToString();
+                    return new Asn1Integer(asn.RawData).Value.ToString();
                 case (Byte)Asn1Type.BIT_STRING:
-                    return HexUtility.GetHexEditString(raw.Skip(asn.PayloadStartOffset + 1).Take(asn.PayloadLength - 1).ToArray());
+                    return HexUtility.GetHexEditString(asn.GetPayload().Skip(1).ToArray());
                 case (Byte)Asn1Type.OBJECT_IDENTIFIER:
-                    Oid oid = DecodeObjectIdentifier(raw.Skip(asn.Offset).Take(asn.TagLength).ToArray());
+                    Oid oid = DecodeObjectIdentifier(asn.RawData);
                     return oid.Value;
                 case (Byte)Asn1Type.UTF8String:
-                    return DecodeUTF8String(raw.Skip(asn.Offset).Take(asn.TagLength).ToArray());
+                    return DecodeUTF8String(asn.RawData);
                 case (Byte)Asn1Type.NumericString:
                     //TODO create appropriate decoder
-                    return Encoding.ASCII.GetString(raw.Skip(asn.PayloadStartOffset).ToArray());
+                    return Encoding.ASCII.GetString(asn.GetPayload());
                 case (Byte)Asn1Type.PrintableString:
-                    return DecodePrintableString(raw.Skip(asn.Offset).Take(asn.TagLength).ToArray());
+                    return DecodePrintableString(asn.RawData);
                 // TODO 
                 case (Byte)Asn1Type.TeletexString:
-                    return Encoding.ASCII.GetString(raw.Skip(asn.PayloadStartOffset).ToArray());
+                    return Encoding.ASCII.GetString(asn.GetPayload());
                 case (Byte)Asn1Type.VideotexString:
-                    return Encoding.ASCII.GetString(raw.Skip(asn.PayloadStartOffset).ToArray());
+                    return Encoding.ASCII.GetString(asn.GetPayload());
                 case (Byte)Asn1Type.IA5String:
-                    return DecodeIA5String(raw.Skip(asn.Offset).Take(asn.TagLength).ToArray());
+                    return DecodeIA5String(asn.RawData);
                 case (Byte)Asn1Type.VisibleString:
-                    return DecodeVisibleString(raw.Skip(asn.Offset).Take(asn.TagLength).ToArray());
+                    return DecodeVisibleString(asn.RawData);
                 case (Byte)Asn1Type.UniversalString:
-                    return DecodeUniversalString(raw.Skip(asn.Offset).Take(asn.TagLength).ToArray());
+                    return DecodeUniversalString(asn.RawData);
                 case (Byte)Asn1Type.BMPString:
-                    return DecodeBMPString(raw.Skip(asn.Offset).Take(asn.TagLength).ToArray());
+                    return DecodeBMPString(asn.RawData);
                 default:
                     return (asn.Tag & (Byte)Asn1Type.TAG_MASK) == 6
-                        ? Encoding.UTF8.GetString(raw.Skip(asn.PayloadStartOffset).Take(asn.PayloadLength).ToArray())
-                        : HexUtility.GetHexEditString(raw.Skip(asn.PayloadStartOffset).Take(asn.PayloadLength).ToArray());
+                        ? Encoding.UTF8.GetString(asn.GetPayload())
+                        : HexUtility.GetHexEditString(asn.GetPayload());
             }
         }
         public static String GetViewValue(Asn1Reader asn) {
@@ -86,7 +82,7 @@ namespace SysadminsLV.Asn1Editor.API.Utils.ASN {
                 case (Byte)Asn1Type.UTCTime:
                     return DecodeUtcTime(asn);
                 case (Byte)Asn1Type.BMPString: return DecodeBMPString(asn);
-                case (Byte)Asn1Type.Generalizedtime:
+                case (Byte)Asn1Type.GeneralizedTime:
                     return DecodeGeneralizedTime(asn);
                 default:
                     return (asn.Tag & (Byte)Asn1Type.TAG_MASK) == 6
@@ -96,9 +92,6 @@ namespace SysadminsLV.Asn1Editor.API.Utils.ASN {
         }
 
         #region Data type encoders
-        public static Byte[] EncodeInteger(UInt64 value) {
-            return Asn1Utils.Encode(HexUtility.HexToBinary($"{value:x2}"), (Byte)Asn1Type.INTEGER);
-        }
         public static Byte[] EncodeUTCTime(DateTime time) {
             Char[] chars = (time.ToUniversalTime().ToString("yyMMddHHmmss") + "Z").ToCharArray();
             Byte[] rawData = new Byte[chars.Length];
@@ -109,16 +102,6 @@ namespace SysadminsLV.Asn1Editor.API.Utils.ASN {
             }
             return Asn1Utils.Encode(rawData, (Byte)Asn1Type.UTCTime);
         }
-        public static DateTime DecodeUTCTime(Byte[] rawData) {
-            if (rawData == null) { throw new ArgumentNullException(); }
-            Asn1Reader asn = new Asn1Reader(rawData);
-            if (asn.Tag != (Byte)Asn1Type.UTCTime) { throw new InvalidDataException("Input data is not valid ASN-encoded UTC Time."); }
-            StringBuilder SB = new StringBuilder();
-            foreach (Byte element in asn.GetPayload()) { SB.Append(Convert.ToChar(element)); }
-            try {
-                return DateTime.ParseExact(SB.ToString().Replace("Z", null), "yyMMddHHmmss", null).ToLocalTime();
-            } catch { throw new InvalidDataException("Input data is not valid ASN-encoded UTC Time."); }
-        }
         public static Byte[] EncodeGeneralizedTime(DateTime time) {
             Char[] chars = (time.ToUniversalTime().ToString("yyyyMMddHHmmss") + "Z").ToCharArray();
             Byte[] rawData = new Byte[chars.Length];
@@ -127,19 +110,7 @@ namespace SysadminsLV.Asn1Editor.API.Utils.ASN {
                 rawData[index] = Convert.ToByte(element);
                 index++;
             }
-            return Asn1Utils.Encode(rawData, (Byte)Asn1Type.Generalizedtime);
-        }
-        public static DateTime DecodeGeneralizedTime(Byte[] rawData) {
-            if (rawData == null) { throw new ArgumentNullException(); }
-            Asn1Reader asn = new Asn1Reader(rawData);
-            if (asn.Tag != (Byte)Asn1Type.Generalizedtime) { throw new InvalidDataException("Input data is not valid ASN-encoded GENERALIZED TIME."); }
-            StringBuilder SB = new StringBuilder();
-            foreach (Byte element in asn.GetPayload()) {
-                SB.Append(Convert.ToChar(element));
-            }
-            try {
-                return DateTime.ParseExact(SB.ToString().Replace("Z", null), "yyyyMMddHHmmss", null).ToLocalTime();
-            } catch { throw new InvalidDataException("Input data is not valid ASN-encoded GENERALIZED TIME."); }
+            return Asn1Utils.Encode(rawData, (Byte)Asn1Type.GeneralizedTime);
         }
         public static Byte[] EncodeObjectIdentifier(Oid oid) {
             if (oid == null) { throw new ArgumentNullException(); }
@@ -260,6 +231,10 @@ namespace SysadminsLV.Asn1Editor.API.Utils.ASN {
             return time.Year <= 2049 ? EncodeUTCTime(time) : EncodeGeneralizedTime(time);
         }
 
+        public static Byte[] EncodeHex(Byte tag, String hexString, Byte unusedBits) {
+            Byte[] hexBytes = AsnFormatter.StringToBinary(hexString, EncodingType.Hex);
+            return Asn1Utils.Encode(hexBytes, tag);
+        }
         public static Byte[] EncodeGeneric(Byte tag, String value, Byte unusedBits) {
             switch (tag) {
                 case (Byte)Asn1Type.BOOLEAN:
@@ -275,7 +250,7 @@ namespace SysadminsLV.Asn1Editor.API.Utils.ASN {
                 case (Byte)Asn1Type.NULL:
                     return EncodeNull();
                 case (Byte)Asn1Type.OBJECT_IDENTIFIER:
-                    return EncodeObjectIdentifier(new Oid(value));
+                    return new Asn1ObjectIdentifier(value).RawData;
                 case (Byte)Asn1Type.ENUMERATED:
                     return Asn1Utils.Encode(new[] { Byte.Parse(value) }, tag);
                 case (Byte)Asn1Type.UTF8String:
@@ -290,7 +265,7 @@ namespace SysadminsLV.Asn1Editor.API.Utils.ASN {
                     return EncodeIA5String(value);
                 case (Byte)Asn1Type.UTCTime:
                     return EncodeUTCTime(DateTime.ParseExact(value, "MM/dd/yyyy HH:mm:ss", CultureInfo.InvariantCulture));
-                case (Byte)Asn1Type.Generalizedtime:
+                case (Byte)Asn1Type.GeneralizedTime:
                     return EncodeGeneralizedTime(DateTime.ParseExact(value, "MM/dd/yyyy HH:mm:ss", CultureInfo.InvariantCulture));
                 //case (Byte)ASN1Tags.GraphicString
                 case (Byte)Asn1Type.VisibleString:
@@ -344,7 +319,7 @@ namespace SysadminsLV.Asn1Editor.API.Utils.ASN {
                 EncodingFormat.NOCRLF, asn.PayloadStartOffset, asn.PayloadLength);
         }
         static String DecodeObjectIdentifier(Asn1Reader asn) {
-            Oid oid = Asn1ObjectIdentifier.Decode(asn);
+            Oid oid = new Asn1ObjectIdentifier(asn).Value;
             if (String.IsNullOrEmpty(oid.FriendlyName) && MainWindowVM.OIDs.ContainsKey(oid.Value)) {
                 oid.FriendlyName = MainWindowVM.OIDs[oid.Value];
             }
@@ -359,11 +334,11 @@ namespace SysadminsLV.Asn1Editor.API.Utils.ASN {
             return Encoding.ASCII.GetString(asn.RawData, asn.PayloadStartOffset, asn.PayloadLength);
         }
         static String DecodeUtcTime(Asn1Reader asn) {
-            DateTime dt = Asn1UtcTime.Decode(asn);
+            DateTime dt = new Asn1UtcTime(asn).Value;
             return dt.ToString("dd.MM.yyyy hh:mm:ss");
         }
         static String DecodeGeneralizedTime(Asn1Reader asn) {
-            DateTime dt = Asn1GeneralizedTime.Decode(asn);
+            DateTime dt = new Asn1GeneralizedTime(asn).Value;
             return dt.ToString("dd.MM.yyyy hh:mm:ss");
         }
         static String DecodeBMPString(Asn1Reader asn) {

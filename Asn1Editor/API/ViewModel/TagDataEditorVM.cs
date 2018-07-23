@@ -68,7 +68,7 @@ namespace SysadminsLV.Asn1Editor.API.ViewModel {
                 OnPropertyChanged(nameof(Tag));
             }
         }
-        public String TagName => Asn1Utils.GetTagName(Tag);
+        public String TagName => Asn1Reader.GetTagName(Tag);
         public Byte UnusedBits {
             get => unusedBits;
             set {
@@ -76,7 +76,7 @@ namespace SysadminsLV.Asn1Editor.API.ViewModel {
                 OnPropertyChanged(nameof(UnusedBits));
             }
         }
-        public Boolean UnusedBitsVisible => Tag == (Byte) Asn1Type.BIT_STRING;
+        public Boolean UnusedBitsVisible => Tag == (Byte)Asn1Type.BIT_STRING;
         public Boolean IsReadOnly {
             get => isReadonly;
             set {
@@ -209,7 +209,9 @@ namespace SysadminsLV.Asn1Editor.API.ViewModel {
         Byte[] validateValue() {
             Byte[] binValue = null;
             try {
-                binValue = AsnDecoder.EncodeGeneric(Tag, TagValue, UnusedBits);
+                binValue = RbHex
+                    ? AsnDecoder.EncodeHex(Tag, TagValue, UnusedBits)
+                    : AsnDecoder.EncodeGeneric(Tag, TagValue, UnusedBits);
             } catch (Exception e) {
                 Tools.MsgBox("Error", e.Message);
             }
@@ -223,13 +225,14 @@ namespace SysadminsLV.Asn1Editor.API.ViewModel {
             _data.RawData.InsertRange(Node.Offset, newBytes);
         }
         void editText() {
-            TagValue = AsnDecoder.GetEditValue(Node);
+            if (Node == null) { return; }
+            TagValue = AsnDecoder.GetEditValue(new Asn1Reader(_data.RawData.Skip(Node.Offset).Take(Node.TagLength).ToArray()));
         }
         void editHex() {
-            TagValue = HexUtility
-                .BinaryToHex(_data.RawData
-                    .Skip(Node.PayloadStartOffset)
-                    .Take(Node.PayloadLength)
+            if (Node == null) { return; }
+            TagValue = HexUtility.BinaryToHex(_data.RawData
+                .Skip(Node.PayloadStartOffset)
+                .Take(Node.PayloadLength)
                 .ToArray());
         }
         void copyValues() {
