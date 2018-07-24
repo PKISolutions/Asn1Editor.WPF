@@ -12,7 +12,7 @@
         cmd:DialogCloser.DialogResult="{Binding DialogResult}"
         Title="Binary Converter"
         SizeToContent="Width"
-        ResizeMode="CanMinimize"
+        ResizeMode="CanResize"
         WindowStartupLocation="CenterOwner"
         Height="500">
     <Window.InputBindings>
@@ -103,19 +103,8 @@
                 <TextBlock Text="Size: "><Run Text="{Binding RawData.Count, Mode=OneWay}"/><Run Text=" bytes"/></TextBlock>
             </StatusBarItem>
         </StatusBar>
-        <TextBox Name="txt"
-                 DockPanel.Dock="Left"
-                 UndoLimit="10"
-                 Width="{Binding TextBoxWidth}"
-                 Text="{Binding Text, UpdateSourceTrigger=PropertyChanged}"
-                 behaviors:CaretBehavior.ObserveCaret="True"
-                 FontFamily="Consolas"
-                 FontSize="{Binding Path=FontSize, Source={x:Static properties:Settings.Default}}"
-                 TextWrapping="Wrap"
-                 AcceptsReturn="True"
-                 VerticalScrollBarVisibility="Visible"
-                 HorizontalScrollBarVisibility="Disabled"/>
-        <StackPanel Background="{StaticResource PanelBackgroundBrush}">
+        <StackPanel DockPanel.Dock="Right"
+                    Background="{StaticResource PanelBackgroundBrush}">
             <Button Content="Validate"
                     Command="{Binding ValidateCommand}"
                     Margin="5,5,5,0"/>
@@ -127,31 +116,42 @@
                 <RadioButton FontSize="{Binding Path=FontSize, Source={x:Static properties:Settings.Default}}"
                          Content="Base64"
                          IsChecked="{Binding Base64}"/>
-            <RadioButton FontSize="{Binding Path=FontSize, Source={x:Static properties:Settings.Default}}"
+                <RadioButton FontSize="{Binding Path=FontSize, Source={x:Static properties:Settings.Default}}"
                          Content="Base64 with certificate header"
                          IsChecked="{Binding Base64Header}"/>
-            <RadioButton FontSize="{Binding Path=FontSize, Source={x:Static properties:Settings.Default}}"
+                <RadioButton FontSize="{Binding Path=FontSize, Source={x:Static properties:Settings.Default}}"
                          Content="Base64 with request header"
                          IsChecked="{Binding Base64Req}"/>
-            <RadioButton FontSize="{Binding Path=FontSize, Source={x:Static properties:Settings.Default}}"
+                <RadioButton FontSize="{Binding Path=FontSize, Source={x:Static properties:Settings.Default}}"
                          Content="Base64 with CRL header"
                          IsChecked="{Binding Base64Crl}"/>
-            <RadioButton FontSize="{Binding Path=FontSize, Source={x:Static properties:Settings.Default}}"
+                <RadioButton FontSize="{Binding Path=FontSize, Source={x:Static properties:Settings.Default}}"
                          Content="Hex"
                          IsChecked="{Binding Hex}"/>
-            <RadioButton FontSize="{Binding Path=FontSize, Source={x:Static properties:Settings.Default}}"
+                <RadioButton FontSize="{Binding Path=FontSize, Source={x:Static properties:Settings.Default}}"
                          Content="Hex with address"
                          IsChecked="{Binding HexAddr}"/>
-            <RadioButton FontSize="{Binding Path=FontSize, Source={x:Static properties:Settings.Default}}"
+                <RadioButton FontSize="{Binding Path=FontSize, Source={x:Static properties:Settings.Default}}"
                          Content="Hex with ASCII"
                          IsChecked="{Binding HexAscii}"/>
-            <RadioButton FontSize="{Binding Path=FontSize, Source={x:Static properties:Settings.Default}}"
+                <RadioButton FontSize="{Binding Path=FontSize, Source={x:Static properties:Settings.Default}}"
                          Content="Hex with address and ASCII"
                          IsChecked="{Binding HexAddrAscii}"/>
-            <RadioButton FontSize="{Binding Path=FontSize, Source={x:Static properties:Settings.Default}}"
+                <RadioButton FontSize="{Binding Path=FontSize, Source={x:Static properties:Settings.Default}}"
                          Content="Hex raw"
                          IsChecked="{Binding HexRaw}"/>
+            </StackPanel>
         </StackPanel>
-        </StackPanel>
+        <TextBox Name="txt"
+                 UndoLimit="10"
+                 MinWidth="{Binding TextBoxWidth}"
+                 Text="{Binding Text, UpdateSourceTrigger=PropertyChanged}"
+                 behaviors:CaretBehavior.ObserveCaret="True"
+                 FontFamily="Consolas"
+                 FontSize="{Binding Path=FontSize, Source={x:Static properties:Settings.Default}}"
+                 TextWrapping="Wrap"
+                 AcceptsReturn="True"
+                 VerticalScrollBarVisibility="Visible"
+                 HorizontalScrollBarVisibility="Disabled"/>
     </DockPanel>
 </Window>
