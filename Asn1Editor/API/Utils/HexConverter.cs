@@ -12,12 +12,10 @@ namespace SysadminsLV.Asn1Editor.API.Utils {
             return AsnFormatter.BinaryToString(rawData.ToArray(), EncodingType.Hex, 0, startOffset, endOffset - startOffset);
         }
         public static String GetHexUString(Byte[] rawData) {
-            if (rawData == null || rawData.Length == 0) { return String.Empty; }
-            return AsnFormatter.BinaryToString(rawData).ToUpper();
+            return AsnFormatter.BinaryToString(rawData);
         }
         public static String GetHexEditString(Byte[] rawData) {
-            if (rawData == null || rawData.Length == 0) { return String.Empty; }
-            return AsnFormatter.BinaryToString(rawData, EncodingType.Hex).ToUpper();
+            return AsnFormatter.BinaryToString(rawData, EncodingType.Hex);
         }
         public static String BinaryToHex(Byte[] rawData) {
             return AsnFormatter.BinaryToString(rawData, EncodingType.Hex, EncodingFormat.NOCR);
