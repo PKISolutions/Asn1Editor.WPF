@@ -18,6 +18,18 @@ namespace SysadminsLV.Asn1Editor.Views.UserControls {
 
         void TreeViewDoubleClick(Object sender, MouseButtonEventArgs e) {
             if (tree.SelectedItem == null) { return; }
+
+            DependencyObject dep = (DependencyObject)e.OriginalSource;
+            while ((dep != null) && !(dep is TextBlock))
+            {
+                dep = VisualTreeHelper.GetParent(dep);
+            }
+            // We have only TextBlock elements in our "GridView"
+            if (dep == null || !(dep is TextBlock))
+            {
+                return;
+            }
+
             TagDataEditor dlg = new TagDataEditor(((Asn1TreeNode)tree.SelectedItem).Value);
             dlg.ShowDialog();
         }
