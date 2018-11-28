@@ -9,7 +9,7 @@
         <XmlDataProvider x:Key="AboutProvider" XPath="ApplicationInfo" IsAsynchronous="False" IsInitialLoadEnabled="True">
             <x:XData>
                 <ApplicationInfo xmlns="">
-                    <Link Uri="https://pscmdlethelpeditor.codeplex.com/">More Info</Link>
+                    <Link Uri="https://www.sysadmins.lv/projects/asn1editor/default.aspx">More Info</Link>
                 </ApplicationInfo>
             </x:XData>
         </XmlDataProvider>

@@ -91,7 +91,7 @@
                 <DataTrigger Binding="{Binding Value.TagName}" Value="UTCTime">
                     <Setter Property="Source" Value="/Views/Images/AsnEditor/DateTime.png"/>
                 </DataTrigger>
-                <DataTrigger Binding="{Binding Value.TagName}" Value="Generalizedtime">
+                <DataTrigger Binding="{Binding Value.TagName}" Value="GeneralizedTime">
                     <Setter Property="Source" Value="/Views/Images/AsnEditor/DateTime.png"/>
                 </DataTrigger>
                 <DataTrigger Binding="{Binding Value.TagName}" Value="SEQUENCE">

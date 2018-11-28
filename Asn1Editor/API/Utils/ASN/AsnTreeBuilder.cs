@@ -30,7 +30,7 @@ namespace SysadminsLV.Asn1Editor.API.Utils.ASN {
             } while (root.MoveNextCurrentLevel());
             root.Reset();
             foreach (Asn1TreeNode node in tree.Children.Where(node => node.Value.IsContainer)) {
-                root.MoveToPoisition(node.Value.Offset);
+                root.MoveToPosition(node.Value.Offset);
                 buildTree(root, node);
             }
         }
