@@ -220,6 +220,10 @@
 1.2.840.113556.4.3, microsoftExcel
 1.2.840.113556.4.4, titledWithOID
 1.2.840.113556.4.5, microsoftPowerPoint
+1.3.6.1.5.5.7.48.1.1, Basic OCSP Response
+1.3.6.1.5.5.7.48.1.2, OCSP Nonce
+1.3.6.1.5.5.7.48.1.3, OCSP CRL Reference
+1.3.6.1.5.5.7.48.1.5, OCSP No Revocation Checking
 1.3.133.16.840.9.84, x9-84
 1.3.133.16.840.9.84.0, x9-84-Module
 1.3.133.16.840.9.84.0.1, x9-84-Biometrics
