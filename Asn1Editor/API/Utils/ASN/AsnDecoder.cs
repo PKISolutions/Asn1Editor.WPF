@@ -212,7 +212,7 @@ namespace SysadminsLV.Asn1Editor.API.Utils.ASN {
 
             if (MainWindowVM.OIDs.ContainsKey(oid.Value))
             {
-                return MainWindowVM.OIDs[oid.Value]; //todo: This seems not to be thread safe
+                return $"{MainWindowVM.OIDs[oid.Value]} ({oid.Value})"; //todo: This seems not to be thread safe
             }
 
             if (!String.IsNullOrWhiteSpace(oid.FriendlyName))
