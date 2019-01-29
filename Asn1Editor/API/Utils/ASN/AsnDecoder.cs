@@ -209,12 +209,18 @@ namespace SysadminsLV.Asn1Editor.API.Utils.ASN {
         }
         static String DecodeObjectIdentifier(Asn1Reader asn) {
             Oid oid = new Asn1ObjectIdentifier(asn).Value;
-            if (String.IsNullOrEmpty(oid.FriendlyName) && MainWindowVM.OIDs.ContainsKey(oid.Value)) {
-                oid.FriendlyName = MainWindowVM.OIDs[oid.Value];
+
+            if (MainWindowVM.OIDs.ContainsKey(oid.Value))
+            {
+                return MainWindowVM.OIDs[oid.Value]; //todo: This seems not to be thread safe
             }
-            return String.IsNullOrEmpty(oid.FriendlyName)
-                ? oid.Value
-                : $"{oid.FriendlyName} ({oid.Value})";
+
+            if (!String.IsNullOrWhiteSpace(oid.FriendlyName))
+            {
+                return $"{oid.FriendlyName} ({oid.Value})";
+            }
+
+            return oid.Value;
         }
         static String DecodeUTF8String(Asn1Reader asn) {
             return Encoding.UTF8.GetString(asn.RawData, asn.PayloadStartOffset, asn.PayloadLength);
