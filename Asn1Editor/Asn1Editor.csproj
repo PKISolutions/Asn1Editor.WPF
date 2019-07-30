@@ -399,7 +399,7 @@
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Unity">
-      <Version>5.8.6</Version>
+      <Version>5.11.1</Version>
     </PackageReference>
   </ItemGroup>
   <ItemGroup>
