@@ -4,7 +4,8 @@
     Title="{Binding RelativeSource={RelativeSource Self}, Mode=OneTime, Path=ProductTitle}" 
     x:Uid="idAboutBox"
     Style="{StaticResource AboutDialogStyle}"
-    WindowStartupLocation="CenterOwner" x:ClassModifier="internal">
+    WindowStartupLocation="CenterOwner"
+    x:ClassModifier="internal">
     <Window.Resources>
         <XmlDataProvider x:Key="AboutProvider" XPath="ApplicationInfo" IsAsynchronous="False" IsInitialLoadEnabled="True">
             <x:XData>
@@ -54,15 +55,35 @@
         </DockPanel>
         <StackPanel x:Uid="displayArea" Style="{StaticResource DisplayAreaStyle}" 
                     DataContext="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Window}}, Mode=OneTime}">
-            <Label x:Name="productName" x:Uid="productName" 
-                   Content="{Binding Mode=OneTime, Path=Product}" />
-            <StackPanel x:Uid="versionArea" Orientation="Horizontal">
-                <Label x:Name="versionLabel" x:Uid="VersionLabel" Content="Version - " />
-                <Label x:Name="version" x:Uid="version" Content="{Binding Mode=OneTime, Path=Version}" />
-            </StackPanel>
-            <Label x:Name="copyright" x:Uid="copyright" Content="{Binding Mode=OneTime, Path=Copyright}"  />
-            <Label x:Name="company" x:Uid="company" Content="{Binding Mode=OneTime, Path=Company}" />
-            <Label x:Name="reserved" x:Uid="reserved" Content="All Rights Reserved." />
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+                <StackPanel>
+                    <TextBlock x:Name="productName" x:Uid="productName" 
+                           Text="{Binding Mode=OneTime, Path=Product}" />
+                    <StackPanel x:Uid="versionArea" Orientation="Horizontal">
+                        <TextBlock x:Name="versionLabel" x:Uid="VersionLabel" Text="Version - " />
+                        <TextBlock x:Name="version" x:Uid="version" Text="{Binding Mode=OneTime, Path=Version}" />
+                    </StackPanel>
+                    <TextBlock x:Name="copyright" x:Uid="copyright" Text="{Binding Mode=OneTime, Path=Copyright}"  />
+                    <TextBlock>
+                        <Hyperlink x:Name="company"
+                                   x:Uid="company"
+                                   NavigateUri="https://www.pkisolutions.com"
+                                   RequestNavigate="Company_OnRequestNavigate">
+                            <TextBlock Text="{Binding Mode=OneTime, Path=Company}"/>
+                        </Hyperlink>
+                    </TextBlock>
+                        <TextBlock x:Name="reserved" x:Uid="reserved" Text="All Rights Reserved." />
+                </StackPanel>
+                <Image Grid.Column="1"
+                       Source="/Views/Images/pkisolutions_logo_small.png" Width="120"
+                       Height="74"
+                       VerticalAlignment="Center"/>
+            </Grid>
+            
             <Label x:Name="info" x:Uid="info" Style="{StaticResource ParagraphSeparator}" 
                    Content="Product details:" />
             <TextBox x:Name="description" x:Uid="description" Text="{Binding Mode=OneTime, Path=Description}"

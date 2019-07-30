@@ -7,12 +7,12 @@ using System.Windows;
 // General Information about an assembly is controlled through the following 
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("Asn1Editor")]
-[assembly: AssemblyDescription("ASN.1 .NET-based WPF data viewer and editor")]
+[assembly: AssemblyTitle("ASN.1 Editor")]
+[assembly: AssemblyDescription("WPF-based ASN.1 encoded data viewer and editor")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("Sysadmins LV")]
-[assembly: AssemblyProduct("Asn1Editor")]
-[assembly: AssemblyCopyright("Copyright © Sysadmins LV  2014 - 2018")]
+[assembly: AssemblyCompany("PKI Solutions Inc.")]
+[assembly: AssemblyProduct("ASN.1 Editor")]
+[assembly: AssemblyCopyright("Copyright © PKI Solutions Inc.  2014 - 2019")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
@@ -51,6 +51,6 @@ using System.Windows;
 // You can specify all the values or you can default the Build and Revision Numbers 
 // by using the '*' as shown below:
 // [assembly: AssemblyVersion("1.0.*")]
-[assembly: AssemblyVersion("1.3.11.3")]
-[assembly: AssemblyFileVersion("1.3.11.3")]
+[assembly: AssemblyVersion("1.3.11.4")]
+[assembly: AssemblyFileVersion("1.3.11.4")]
 [assembly: GuidAttribute("2b21970c-0f72-4a53-909e-23148c2f7540")]

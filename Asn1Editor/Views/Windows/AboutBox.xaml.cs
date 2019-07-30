@@ -180,5 +180,9 @@ namespace SysadminsLV.Asn1Editor.Views.Windows {
         void OkButton_OnClick(Object Sender, RoutedEventArgs E) {
             Close();
         }
+        void Company_OnRequestNavigate(Object sender, RequestNavigateEventArgs e) {
+            Process.Start(new ProcessStartInfo(e.Uri.AbsoluteUri));
+            e.Handled = true;
+        }
     }
 }

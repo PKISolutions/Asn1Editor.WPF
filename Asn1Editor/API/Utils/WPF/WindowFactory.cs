@@ -9,7 +9,7 @@ using Unity;
 namespace SysadminsLV.Asn1Editor.API.Utils.WPF {
     class WindowFactory : WindowFactoryBase, IWindowFactory {
         static Converter converter;
-        static Boolean   converterClosed = true;
+        static Boolean converterClosed = true;
 
         public void ShowSettingsDialog() {
             hwnd = App.Container.Resolve<SettingsWnd>();
@@ -23,7 +23,7 @@ namespace SysadminsLV.Asn1Editor.API.Utils.WPF {
             hwnd = App.Container.Resolve<TagDataEditor>();
             ((ITagDataEditorVM)hwnd.DataContext).SetBinding(editMode);
             ShowAsDialog();
-            return ((ITagDataEditorVM) hwnd.DataContext).Node;
+            return ((ITagDataEditorVM)hwnd.DataContext).Node;
         }
         public void ShowNodeTextViewer() {
             hwnd = App.Container.Resolve<TextViewer>();

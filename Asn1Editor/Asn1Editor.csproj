@@ -181,6 +181,9 @@
     <Compile Include="Views\Windows\AboutBox.xaml.cs">
       <DependentUpon>AboutBox.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Views\Windows\LicenseWindow.xaml.cs">
+      <DependentUpon>LicenseWindow.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\Windows\SettingsWnd.xaml.cs">
       <DependentUpon>SettingsWnd.xaml</DependentUpon>
     </Compile>
@@ -205,6 +208,10 @@
     <Page Include="Views\Windows\AboutBox.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Views\Windows\LicenseWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\Windows\SettingsWnd.xaml">
       <SubType>Designer</SubType>
@@ -394,6 +401,7 @@
     </None>
   </ItemGroup>
   <ItemGroup>
+    <Resource Include="Views\Images\pkisolutions_logo_small.png" />
     <Content Include="_ExternalReferences\SysadminsLV.Asn1Parser.dll" />
     <Content Include="_ExternalReferences\Wpf.OfficeTheme.dll" />
   </ItemGroup>
