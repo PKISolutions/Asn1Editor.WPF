@@ -5,8 +5,8 @@
 0.4.0.1862.1.5, QcPDS
 0.4.0.1862.1.6, QcType
 0.4.0.1862.1.6.1, esign
-0.4.0.1862.1.6.1, eseal
-0.4.0.1862.1.6.1, web
+0.4.0.1862.1.6.2, eseal
+0.4.0.1862.1.6.3, web
 0.4.0.19495.1, RoleOfPsp
 0.4.0.19495.1.1, PSP_AS
 0.4.0.19495.1.2, PSP_PI
@@ -460,6 +460,7 @@
 1.3.6.1.4.1.311.88.2.2, szOID_CAPICOM_DOCUMENT_DESCRIPTION
 1.3.6.1.4.1.311.88.3, szOID_CAPICOM_ENCRYPTED_DATA
 1.3.6.1.4.1.311.88.3.1, szOID_CAPICOM_ENCRYPTED_CONTENT
+1.3.6.1.4.1.11129.2.4.2, signedCertificateTimestampList
 1.3.6.1.5.5.7, pkix
 1.3.6.1.5.5.7.1, privateExtension
 1.3.6.1.5.5.7.1.1, authorityInfoAccess
