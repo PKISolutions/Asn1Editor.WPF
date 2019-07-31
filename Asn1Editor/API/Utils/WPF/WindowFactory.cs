@@ -11,11 +11,15 @@ namespace SysadminsLV.Asn1Editor.API.Utils.WPF {
         static Converter converter;
         static Boolean converterClosed = true;
 
+        public void ShowLicenseDialog() {
+            hwnd = App.Container.Resolve<LicenseWindow>();
+            ShowAsDialog();
+        }
         public void ShowSettingsDialog() {
             hwnd = App.Container.Resolve<SettingsWnd>();
             ShowAsDialog();
         }
-        public void ShowAboutdialog() {
+        public void ShowAboutDialog() {
             hwnd = App.Container.Resolve<AboutBox>();
             ShowAsDialog();
         }

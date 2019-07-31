@@ -5,8 +5,9 @@ using SysadminsLV.Asn1Editor.API.Utils;
 
 namespace SysadminsLV.Asn1Editor.API.Interfaces {
     interface IWindowFactory {
+        void ShowLicenseDialog();
         void ShowSettingsDialog();
-        void ShowAboutdialog();
+        void ShowAboutDialog();
         Asn1Lite ShowNodeContentEditor(NodeEditMode editMode);
         void ShowNodeTextViewer();
         void ShowConverterWindow(IEnumerable<Byte> data, Action<IEnumerable<Byte>> action);

@@ -113,6 +113,11 @@
                         <Image Source="/Views/Images/Menu/info_16x16.png"/>
                     </MenuItem.Icon>
                 </MenuItem>
+                <MenuItem Header="License" Command="{Binding AppCommands.ShowLicenseCommand}">
+                    <!--<MenuItem.Icon>
+                        <Image Source="/Views/Images/Menu/info_16x16.png"/>
+                    </MenuItem.Icon>-->
+                </MenuItem>
             </MenuItem>
         </Menu>
         <ToolBarTray DockPanel.Dock="Top" IsLocked="True">

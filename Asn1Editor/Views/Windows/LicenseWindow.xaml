@@ -3,20 +3,28 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:behaviors="clr-namespace:SysadminsLV.WPF.OfficeTheme.Toolkit.Behaviors;assembly=Wpf.OfficeTheme"
+        DataContext="{Binding RelativeSource={RelativeSource Self}}"
         mc:Ignorable="d"
-        Title="License" Height="450" Width="800">
+        Title="License"
+        ShowInTaskbar="False"
+        ResizeMode="NoResize"
+        Background="{StaticResource PanelBackgroundBrush}"
+        WindowStartupLocation="CenterOwner"
+        Height="480"
+        Width="640">
+    <Window.InputBindings>
+        <KeyBinding Key="Escape" Command="{Binding CloseCommand}"/>
+    </Window.InputBindings>
     <DockPanel>
-        <DockPanel DockPanel.Dock="Bottom" Margin="0,5,0,0" Background="{StaticResource PanelHeaderBackground}">
-            <Button Content="Close" Click="CloseClick" HorizontalAlignment="Right" Width="60" Margin="5"/>
-        </DockPanel>
-        <RichTextBox>
-            <RichTextBox.Document>
-                <FlowDocument>
-                    <Paragraph>
-                        <Run></Run>
-                    </Paragraph>
-                </FlowDocument>
-            </RichTextBox.Document>
-        </RichTextBox>
+        <StackPanel DockPanel.Dock="Bottom"
+                    Background="{StaticResource PanelHeaderBackground}">
+            <Button Content="Close"
+                    Width="70"
+                    HorizontalAlignment="Right"
+                    Margin="10" 
+                    Command="{Binding CloseCommand}"/>
+        </StackPanel>
+        <WebBrowser behaviors:BrowserBehavior.Html="{Binding Html}"/>
     </DockPanel>
 </Window>
