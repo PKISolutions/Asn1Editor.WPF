@@ -130,6 +130,14 @@
 1.2.840.113549.1.7.8, encryptedPrivateKeyInfo
 1.2.840.113549.1.9, pkcs-9
 1.2.840.113549.1.9.1, emailAddress
+1.2.840.113549.1.9.2, unstructuredName
+1.2.840.113549.1.9.3, contentType
+1.2.840.113549.1.9.4, messageDigest
+1.2.840.113549.1.9.5, signingTime
+1.2.840.113549.1.9.6, countersignature
+1.2.840.113549.1.9.7, challengePassword
+1.2.840.113549.1.9.8, unstructuredAddress
+1.2.840.113549.1.9.9, extendedCertificateAttributes
 1.2.840.113549.1.9.10, issuerAndSerialNumber
 1.2.840.113549.1.9.11, passwordCheck
 1.2.840.113549.1.9.12, publicKey
@@ -148,12 +156,13 @@
 1.2.840.113549.1.9.16.0.2, id-mod-ess
 1.2.840.113549.1.9.16.1, id-ct
 1.2.840.113549.1.9.16.1.1, id-ct-receipt
+1.2.840.113549.1.9.16.1.4, Timestamp Token
 1.2.840.113549.1.9.16.2, id-aa
 1.2.840.113549.1.9.16.2.1, id-aa-receiptRequest
 1.2.840.113549.1.9.16.2.2, id-aa-securityLabel
 1.2.840.113549.1.9.16.2.3, id-aa-mlExpandHistory
 1.2.840.113549.1.9.16.2.4, id-aa-contentHint
-1.2.840.113549.1.9.2, unstructuredName
+1.2.840.113549.1.9.16.2.47, Signing certificate V2
 1.2.840.113549.1.9.20, friendlyName
 1.2.840.113549.1.9.21, localKeyID
 1.2.840.113549.1.9.22, certTypes
@@ -161,13 +170,6 @@
 1.2.840.113549.1.9.22.2, sdsiCertificate
 1.2.840.113549.1.9.23, crlTypes
 1.2.840.113549.1.9.23.1, x509Crl
-1.2.840.113549.1.9.3, contentType
-1.2.840.113549.1.9.4, messageDigest
-1.2.840.113549.1.9.5, signingTime
-1.2.840.113549.1.9.6, countersignature
-1.2.840.113549.1.9.7, challengePassword
-1.2.840.113549.1.9.8, unstructuredAddress
-1.2.840.113549.1.9.9, extendedCertificateAttributes
 1.2.840.113549.2, digestAlgorithm
 1.2.840.113549.2.2, md2
 1.2.840.113549.2.4, md4
@@ -383,6 +385,7 @@
 1.3.6.1.4.1.311.2.2.3, szOID_TRUSTED_SERVER_AUTH_CA_LIST
 1.3.6.1.4.1.311.3, Time Stamping
 1.3.6.1.4.1.311.3.2.1, SPC_TIME_STAMP_REQUEST_OBJID
+1.3.6.1.4.1.311.3.3.1, RFC3161 Counter Signature
 1.3.6.1.4.1.311.4, Permissions
 1.3.6.1.4.1.311.10.3.1, certTrustListSigning
 1.3.6.1.4.1.311.10.3.2, timeStampSigning
@@ -453,21 +456,23 @@
 1.3.6.1.4.1.311.40, Fonts
 1.3.6.1.4.1.311.41, Microsoft Licensing and Registration
 1.3.6.1.4.1.311.42, Microsoft Corporate PKI (ITG)
+1.3.6.1.4.1.311.60.2.1.3, Country
+1.3.6.1.4.1.311.60.2.1.2, State or province
 1.3.6.1.4.1.311.88, CAPICOM
-1.3.6.1.4.1.311.88.1, szOID_CAPICOM_VERSION
-1.3.6.1.4.1.311.88.2, szOID_CAPICOM_ATTRIBUTE
-1.3.6.1.4.1.311.88.2.1, szOID_CAPICOM_DOCUMENT_NAME
-1.3.6.1.4.1.311.88.2.2, szOID_CAPICOM_DOCUMENT_DESCRIPTION
-1.3.6.1.4.1.311.88.3, szOID_CAPICOM_ENCRYPTED_DATA
-1.3.6.1.4.1.311.88.3.1, szOID_CAPICOM_ENCRYPTED_CONTENT
-1.3.6.1.4.1.11129.2.4.2, signedCertificateTimestampList
+1.3.6.1.4.1.311.88.1, CAPICOM Version
+1.3.6.1.4.1.311.88.2, CAPICOM Attribute
+1.3.6.1.4.1.311.88.2.1, CAPICOM Document Name
+1.3.6.1.4.1.311.88.2.2, CAPICOM Document Description
+1.3.6.1.4.1.311.88.3, CAPICOM Encrypted Data
+1.3.6.1.4.1.311.88.3.1, CAPICOM Encrypted Content
+1.3.6.1.4.1.11129.2.4.2, Signed Certificate Timestamp List
 1.3.6.1.5.5.7, pkix
 1.3.6.1.5.5.7.1, privateExtension
 1.3.6.1.5.5.7.1.1, authorityInfoAccess
 1.3.6.1.5.5.7.12.2, CMC Data
 1.3.6.1.5.5.7.2, policyQualifierIds
-1.3.6.1.5.5.7.2.1, cps
-1.3.6.1.5.5.7.2.2, unotice
+1.3.6.1.5.5.7.2.1, CPS
+1.3.6.1.5.5.7.2.2, User Notice
 1.3.6.1.5.5.7.3, keyPurpose
 1.3.6.1.5.5.7.3.1, serverAuth
 1.3.6.1.5.5.7.3.2, clientAuth
@@ -538,6 +543,7 @@
 2.16.840.1.113733.1.7.1.1, Verisign certificatePolicy
 2.16.840.1.113733.1.7.1.1.1, Unknown Verisign policy qualifier
 2.16.840.1.113733.1.7.1.1.2, Unknown Verisign policy qualifier
+2.16.840.1.113733.1.7.23.3, Class 3 Certificate Policy
 2.23.133, TCPA
 2.23.133.1, tcpa_specVersion
 2.23.133.2, tcpa_attribute
