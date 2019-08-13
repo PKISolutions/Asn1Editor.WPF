@@ -7,13 +7,6 @@
     WindowStartupLocation="CenterOwner"
     x:ClassModifier="internal">
     <Window.Resources>
-        <XmlDataProvider x:Key="AboutProvider" XPath="ApplicationInfo" IsAsynchronous="False" IsInitialLoadEnabled="True">
-            <x:XData>
-                <ApplicationInfo xmlns="">
-                    <Link Uri="https://www.sysadmins.lv/projects/asn1editor/default.aspx">More Info</Link>
-                </ApplicationInfo>
-            </x:XData>
-        </XmlDataProvider>
         <!--<Image x:Key="AboutLogo" Height="96" Width="96" Source="../UI/Images/logo.png" />-->
         
         <Style x:Key="DisplayAreaStyle" TargetType="{x:Type StackPanel}">
