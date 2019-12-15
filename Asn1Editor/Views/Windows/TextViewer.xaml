@@ -37,12 +37,25 @@
                     <Image Source="/Views/Images/Menu/paste_16x16.png"/>
                 </Button>
             </ToolBar>
+            <ToolBar>
+                <TextBlock Text="Render Style:" VerticalAlignment="Center"/>
+                <RadioButton GroupName="RenderType"
+                             Content="Certutil"
+                             IsChecked="{Binding CertutilViewChecked}"
+                             Margin="3,0,0,0"
+                             Style="{StaticResource {x:Type RadioButton}}"/>
+                <RadioButton GroupName="RenderType"
+                             Content="OpenSSL"
+                             IsChecked="{Binding OpenSSLViewChecked}"
+                             Margin="3,0,0,0"
+                             Style="{StaticResource {x:Type RadioButton}}"/>
+            </ToolBar>
         </ToolBarTray>
         <StatusBar DockPanel.Dock="Bottom">
             <StatusBarItem>
                 <TextBlock Text="Line width (characters): "/>
             </StatusBarItem>
-            <StatusBarItem>
+            <StatusBarItem IsEnabled="{Binding OpenSSLViewChecked}">
                 <TextBox Text="{Binding CurrentLength, UpdateSourceTrigger=PropertyChanged}"
                          Width="{Binding TextBoxWidth}"
                          Background="White"
@@ -53,12 +66,12 @@
                          FontSize="{Binding Path=FontSize, Source={x:Static properties:Settings.Default}}"
                          MaxLength="3"/>
             </StatusBarItem>
-            <StatusBarItem>
+            <StatusBarItem IsEnabled="{Binding OpenSSLViewChecked}">
                 <Button Content="Apply" Command="{Binding ApplyCommand}" MinWidth="50"/>
             </StatusBarItem>
             <Separator/>
             <StatusBarItem HorizontalAlignment="Right">
-                <Button Content="Close" Click="OnCloseClick" MinWidth="70" Margin="0,0,5,0"/>
+                <Button Content="Close" Command="{Binding CloseCommand}" MinWidth="70" Margin="0,0,5,0"/>
             </StatusBarItem>
         </StatusBar>
         <TextBox Text="{Binding Text}"

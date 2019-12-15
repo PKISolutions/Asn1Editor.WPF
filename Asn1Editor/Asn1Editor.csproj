@@ -146,7 +146,11 @@
     <Compile Include="API\Interfaces\ITagDataEditor.cs" />
     <Compile Include="API\Interfaces\ITagDataEditorVM.cs" />
     <Compile Include="API\Interfaces\ITreeViewVM.cs" />
+    <Compile Include="API\Utils\CertutilRenderer.cs" />
+    <Compile Include="API\Utils\ITextRenderer.cs" />
     <Compile Include="API\Utils\NodeEditMode.cs" />
+    <Compile Include="API\Utils\OpenSSLRenderer.cs" />
+    <Compile Include="API\ViewModel\ClosableWindowVM.cs" />
     <Compile Include="API\ViewModel\TreeViewVM.cs" />
     <Compile Include="Views\UserControls\HexViewer\IBinarySource.cs" />
     <Compile Include="API\Interfaces\IDataSource.cs" />

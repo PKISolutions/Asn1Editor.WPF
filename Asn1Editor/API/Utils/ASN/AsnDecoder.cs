@@ -56,6 +56,7 @@ namespace SysadminsLV.Asn1Editor.API.Utils.ASN {
                 case (Byte)Asn1Type.OBJECT_IDENTIFIER:
                     return DecodeObjectIdentifier(asn);
                 case (Byte)Asn1Type.UTF8String:
+                case (Byte)Asn1Type.VisibleString:
                     return Encoding.UTF8.GetString(asn.GetPayload());
                 // we do not care on encoding enforcement when viewing data
                 case (Byte)Asn1Type.NumericString:

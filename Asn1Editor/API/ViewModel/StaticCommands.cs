@@ -14,20 +14,20 @@ namespace SysadminsLV.Asn1Editor.API.ViewModel {
     static class StaticCommands {
 
         public static void UpdateSettingsDecode(Asn1TreeNode rootNode) {
-            foreach (Asn1Lite node in rootNode.Flatten()) {
-                node.UpdateView();
+            foreach (Asn1TreeNode node in rootNode.Flatten()) {
+                node.Value.UpdateView();
             }
         }
         public static void UpdateSettingsInteger(Asn1TreeNode rootNode, IList<Byte> rawData) {
             if (Settings.Default.IntAsInt) {
-                foreach (Asn1Lite node in rootNode.Flatten().Where(x => x.Tag == (Byte)Asn1Type.INTEGER)) {
-                    Byte[] raw = rawData.Skip(node.PayloadStartOffset).Take(node.PayloadLength).ToArray();
-                    node.ExplicitValue = new BigInteger(raw.Reverse().ToArray()).ToString();
+                foreach (Asn1TreeNode node in rootNode.Flatten().Where(x => x.Value.Tag == (Byte)Asn1Type.INTEGER)) {
+                    Byte[] raw = rawData.Skip(node.Value.PayloadStartOffset).Take(node.Value.PayloadLength).ToArray();
+                    node.Value.ExplicitValue = new BigInteger(raw.Reverse().ToArray()).ToString();
                 }
             } else {
-                foreach (Asn1Lite node in rootNode.Flatten().Where(x => x.Tag == (Byte)Asn1Type.INTEGER)) {
-                    Byte[] raw = rawData.Skip(node.PayloadStartOffset).Take(node.PayloadLength).ToArray();
-                    node.ExplicitValue = AsnFormatter.BinaryToString(
+                foreach (Asn1TreeNode node in rootNode.Flatten().Where(x => x.Value.Tag == (Byte)Asn1Type.INTEGER)) {
+                    Byte[] raw = rawData.Skip(node.Value.PayloadStartOffset).Take(node.Value.PayloadLength).ToArray();
+                    node.Value.ExplicitValue = AsnFormatter.BinaryToString(
                         raw,
                         EncodingType.HexRaw,
                         EncodingFormat.NOCRLF

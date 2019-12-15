@@ -21,6 +21,9 @@ namespace SysadminsLV.Asn1Editor.API.ModelObjects {
 
         public Asn1TreeNode this[Int32 index] => Children[index];
         public String Path { get; set; }
+        /// <summary>
+        /// Gets the index of current node in parent's children collection.
+        /// </summary>
         public Int32 MyIndex { get; set; }
         public Asn1TreeNode Parent { get; private set; }
         public Asn1Lite Value { get; }
@@ -79,8 +82,8 @@ namespace SysadminsLV.Asn1Editor.API.ModelObjects {
                 Value.IsContainer = false;
             }
         }
-        public IEnumerable<Asn1Lite> Flatten() {
-            return new[] { Value }.Union(Children.SelectMany(x => x.Flatten()));
+        public IEnumerable<Asn1TreeNode> Flatten() {
+            return new[] { this }.Union(Children.SelectMany(x => x.Flatten()));
         }
 
         void notifySizeChanged(Asn1TreeNode source, Int32 difference) {
