@@ -190,6 +190,9 @@ namespace SysadminsLV.Asn1Editor.API.Utils.ASN {
                     EncodingFormat.NOCRLF, asn.PayloadStartOffset, asn.PayloadLength);
         }
         static String DecodeBitString(Asn1Reader asn) {
+            if (asn.PayloadLength == 1) {
+                return $"Unused bits: {asn.RawData[asn.PayloadStartOffset]} : NULL";
+            }
             return String.Format(
                 "Unused bits: {0} : {1}",
                 asn.RawData[asn.PayloadStartOffset],
