@@ -16,6 +16,7 @@
         Height="600"
         Width="800">
     <Window.InputBindings>
+        <KeyBinding Modifiers="Ctrl" Key="N" Command="{Binding NewCommand}"/>
         <KeyBinding Modifiers="Ctrl" Key="S" Command="{Binding SaveCommand}"/>
         <KeyBinding Modifiers="Ctrl" Key="O" Command="{Binding OpenCommand}"/>
         <KeyBinding Modifiers="Ctrl" Key="P" Command="{Binding PrintCommand}"/>
@@ -23,17 +24,22 @@
     <DockPanel>
         <Menu VerticalAlignment="Top" DockPanel.Dock="Top" MinHeight="25">
             <MenuItem Header="File">
-                <MenuItem Header="Open" Command="{Binding OpenCommand}" InputGestureText="Ctrl + O">
+                <MenuItem Header="_New" Command="{Binding NewCommand}" InputGestureText="Ctrl + N">
+                    <MenuItem.Icon>
+                        <Image Source="/Views/Images/Menu/new_16x16.png"/>
+                    </MenuItem.Icon>
+                </MenuItem>
+                <MenuItem Header="_Open" Command="{Binding OpenCommand}" InputGestureText="Ctrl + O">
                     <MenuItem.Icon>
                         <Image Source="/Views/Images/Menu/open_16x16.png"/>
                     </MenuItem.Icon>
                 </MenuItem>
-                <MenuItem Header="Save" Command="{Binding SaveCommand}" InputGestureText="Ctrl + S">
+                <MenuItem Header="_Save" Command="{Binding SaveCommand}" InputGestureText="Ctrl + S">
                     <MenuItem.Icon>
                         <Image Source="/Views/Images/Menu/save_16x16.png"/>
                     </MenuItem.Icon>
                 </MenuItem>
-                <MenuItem Header="Save As..." Command="{Binding SaveCommand}" CommandParameter="1"/>
+                <MenuItem Header="Save _As..." Command="{Binding SaveCommand}" CommandParameter="1"/>
                 <MenuItem Header="_Exit" Click="CloseClick" InputGestureText="Alt + F4"/>
             </MenuItem>
             <MenuItem Header="_View">
@@ -156,6 +162,9 @@
                 </Button>
             </ToolBar>
             <ToolBar>
+                <Button Command="{Binding NewCommand}">
+                    <Image Source="/Views/Images/Menu/new_16x16.png"/>
+                </Button>
                 <Button Command="{Binding OpenCommand}">
                     <Image Source="/Views/Images/Menu/open_16x16.png"/>
                 </Button>

@@ -29,6 +29,7 @@ namespace SysadminsLV.Asn1Editor.API.ViewModel {
             AppCommands = appCommands;
             TreeCommands = treeCommands;
             DataSource = data;
+            NewCommand = new RelayCommand(newFile);
             OpenCommand = new RelayCommand(openFile);
             SaveCommand = new RelayCommand(saveFile, canPrintSave);
             appCommands.ShowConverterWindow = new RelayCommand(showConverter);
@@ -40,6 +41,7 @@ namespace SysadminsLV.Asn1Editor.API.ViewModel {
             }
         }
 
+        public ICommand NewCommand { get; set; }
         public ICommand OpenCommand { get; set; }
         public ICommand SaveCommand { get; set; }
         public ICommand PrintCommand { get; set; }
@@ -88,6 +90,13 @@ namespace SysadminsLV.Asn1Editor.API.ViewModel {
 
         void showConverter(Object o) {
             _windowFactory.ShowConverterWindow(DataSource.RawData, openRaw);
+        }
+        void newFile(Object o) {
+            DataSource.Tree.Clear();
+            DataSource.SelectedNode = null;
+            DataSource.RawData.Clear();
+            Path = String.Empty;
+            OnPropertyChanged(nameof(Title));
         }
         void openFile(Object obj) {
             String file = Tools.GetOpenFileName();
