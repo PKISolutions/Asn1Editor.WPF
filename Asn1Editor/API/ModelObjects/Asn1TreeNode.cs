@@ -32,6 +32,7 @@ namespace SysadminsLV.Asn1Editor.API.ModelObjects {
         /// Gets the index of current node in parent's children collection.
         /// </summary>
         public Int32 MyIndex { get; set; }
+        public Boolean IsRoot => Parent == null;
         public Asn1TreeNode Parent { get; private set; }
         public Asn1Lite Value { get; }
         public ObservableCollection<Asn1TreeNode> Children { get; } = new ObservableCollection<Asn1TreeNode>();
@@ -39,7 +40,6 @@ namespace SysadminsLV.Asn1Editor.API.ModelObjects {
         public void InsertChildNode(Asn1TreeNode nodeToInsert, Asn1TreeNode caller, NodeAddOption option) {
             Int32 indexToInsert, newOffset;
             nodeToInsert.Parent = this;
-            nodeToInsert.Value.IsRoot = false;
             //Int32 headerLength = nodeToInsert.Value.HeaderLength;
             switch (option) {
                 case NodeAddOption.Before:
@@ -85,7 +85,7 @@ namespace SysadminsLV.Asn1Editor.API.ModelObjects {
             for (Int32 childIndex = node.MyIndex; childIndex < Children.Count; childIndex++) {
                 updatePath(this[childIndex], Path, childIndex);
             }
-            if (Children.Count == 0 && !Value.IsRoot) {
+            if (Children.Count == 0 && !IsRoot) {
                 Value.IsContainer = false;
             }
         }

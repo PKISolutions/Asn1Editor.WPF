@@ -59,6 +59,9 @@ namespace SysadminsLV.Asn1Editor.API.ModelObjects {
             get => tag;
             set {
                 tag = value;
+                if ((tag & (Byte)Asn1Class.CONTEXT_SPECIFIC) > 0) {
+                    IsContextSpecific = true;
+                }
                 OnPropertyChanged(nameof(Tag));
             }
         }
@@ -106,7 +109,7 @@ namespace SysadminsLV.Asn1Editor.API.ModelObjects {
         }
         public Int32 TagLength => HeaderLength + PayloadLength;
         public Boolean IsContainer { get; set; }
-        public Boolean IsRoot { get; set; }
+        public Boolean IsContextSpecific { get; set; }
         public Boolean InvalidData {
             get => invalidData;
             set {

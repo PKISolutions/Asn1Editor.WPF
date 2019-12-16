@@ -103,7 +103,7 @@
                 <DataTrigger Binding="{Binding Value.IsContextSpecific}" Value="True">
                     <Setter Property="Source" Value="/Views/Images/AsnEditor/CONTEXT_SPECIFIC.png"/>
                 </DataTrigger>
-                <DataTrigger Binding="{Binding Value.IsRoot}" Value="True">
+                <DataTrigger Binding="{Binding IsRoot}" Value="True">
                     <Setter Property="Source" Value="/Views/Images/AsnEditor/Root.png"/>
                 </DataTrigger>
             </Style.Triggers>

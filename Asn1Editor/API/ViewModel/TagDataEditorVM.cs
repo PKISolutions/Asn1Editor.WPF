@@ -181,12 +181,11 @@ namespace SysadminsLV.Asn1Editor.API.ViewModel {
                 node = new Asn1Lite(asn);
             }
             // if it is not root node, update offset, depth and mark it non-root
-            if (_data.SelectedNode == null) {
-                node.IsRoot = true;
-            } else {
+            if (_data.SelectedNode != null) {
                 node.Offset = _data.SelectedNode.Value.Offset + _data.SelectedNode.Value.TagLength;
                 node.Depth += _data.SelectedNode.Value.Depth;
             }
+
             Node = node;
             updateNewNodeBinarySource(asn.RawData);
             DialogResult = true;
