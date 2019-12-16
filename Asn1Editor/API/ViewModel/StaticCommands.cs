@@ -12,7 +12,6 @@ using SysadminsLV.Asn1Parser;
 
 namespace SysadminsLV.Asn1Editor.API.ViewModel {
     static class StaticCommands {
-
         public static void UpdateSettingsDecode(Asn1TreeNode rootNode) {
             foreach (Asn1TreeNode node in rootNode.Flatten()) {
                 node.Value.UpdateView();

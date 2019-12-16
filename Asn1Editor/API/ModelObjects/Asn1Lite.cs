@@ -11,7 +11,7 @@ namespace SysadminsLV.Asn1Editor.API.ModelObjects {
         Boolean invalidData;
         Int32 offset, offsetChange;
         Int32 payloadLength, deepness;
-        String tagName, explicitValue, treePath;
+        String header, toolTip, tagName, explicitValue, treePath;
 
         public Asn1Lite(Asn1Reader asn) {
             initialize(asn);
@@ -39,6 +39,20 @@ namespace SysadminsLV.Asn1Editor.API.ModelObjects {
                 return IsContainer
                     ? $"({Offset}, {PayloadLength}) {TagName}{value2.TrimEnd()}"
                     : $"({Offset}, {PayloadLength}) {TagName}{value.TrimEnd()}";
+            }
+        }
+        public String Header {
+            get => header;
+            set {
+                header = value;
+                OnPropertyChanged(nameof(Header));
+            }
+        }
+        public String ToolTip {
+            get => toolTip;
+            set {
+                toolTip = value;
+                OnPropertyChanged(nameof(ToolTip));
             }
         }
         public Byte Tag {

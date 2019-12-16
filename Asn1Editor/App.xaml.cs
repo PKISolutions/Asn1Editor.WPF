@@ -97,6 +97,8 @@ namespace SysadminsLV.Asn1Editor {
             Container.RegisterType<ITextViewerVM, TextViewerVM>();
             Container.RegisterType<ITreeViewVM, TreeViewVM>();
             Container.RegisterType<ITagDataEditorVM, TagDataEditorVM>();
+
+            Container.RegisterInstance(new NodeViewOptions());
         }
 
     }

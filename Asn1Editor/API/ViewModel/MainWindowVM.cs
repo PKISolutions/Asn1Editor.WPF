@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.IO;
+using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Input;
 using SysadminsLV.Asn1Editor.API.Interfaces;
@@ -19,7 +20,13 @@ namespace SysadminsLV.Asn1Editor.API.ViewModel {
         Asn1TreeNode selectedNode;
         Boolean hasClipboard, isBusy;
 
-        public MainWindowVM(IWindowFactory windowFactory, IAppCommands appCommands, ITreeCommands treeCommands, IDataSource data) {
+        public MainWindowVM(
+            IWindowFactory windowFactory,
+            IAppCommands appCommands,
+            ITreeCommands treeCommands,
+            IDataSource data,
+            NodeViewOptions viewOptions) {
+
             _windowFactory = windowFactory;
             AppCommands = appCommands;
             TreeCommands = treeCommands;
@@ -28,6 +35,13 @@ namespace SysadminsLV.Asn1Editor.API.ViewModel {
             SaveCommand = new RelayCommand(saveFile, canPrintSave);
             appCommands.ShowConverterWindow = new RelayCommand(showConverter);
             Settings.Default.PropertyChanged += onSettingChange;
+            NodeViewOptions = viewOptions;
+            NodeViewOptions.PropertyChanged += onNodeViewOptionsChanged;
+        }
+        void onNodeViewOptionsChanged(Object sender, PropertyChangedEventArgs e) {
+            if (Tree.Any()) {
+                Tree[0].UpdateNodeView(NodeViewOptions);
+            }
         }
 
         public ICommand OpenCommand { get; set; }
@@ -41,6 +55,7 @@ namespace SysadminsLV.Asn1Editor.API.ViewModel {
         public IDataSource DataSource { get; }
         public static Dictionary<String, String> OIDs { get; } = new Dictionary<String, String>();
         public ObservableCollection<Asn1TreeNode> Tree => DataSource.Tree;
+        public NodeViewOptions NodeViewOptions { get; }
 
         public String Path {
             get => path;
@@ -101,6 +116,7 @@ namespace SysadminsLV.Asn1Editor.API.ViewModel {
                     Asn1TreeNode rootNode = await AsnTreeBuilder.BuildTree(DataSource.RawData.ToArray());
                     Tree.Add(rootNode);
                     DataSource.FinishBinaryUpdate();
+                    rootNode.UpdateNodeView(NodeViewOptions);
                 } catch (Exception e) {
                     Tools.MsgBox("Error", e.Message);
                 }

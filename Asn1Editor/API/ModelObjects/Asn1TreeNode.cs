@@ -3,13 +3,19 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Linq;
+using System.Text;
 using SysadminsLV.Asn1Editor.API.Interfaces;
+using SysadminsLV.Asn1Editor.Properties;
 using SysadminsLV.Asn1Parser;
 using Unity;
 
 namespace SysadminsLV.Asn1Editor.API.ModelObjects {
     public class Asn1TreeNode {
+        readonly IDataSource _dataSource;
+
         public Asn1TreeNode(Asn1Lite value) {
+            _dataSource = App.Container.Resolve<IDataSource>();
+
             Value = value;
             Path = value.Path;
             String[] tokens = Path.Split(new[] { '/' }, StringSplitOptions.RemoveEmptyEntries);
@@ -86,6 +92,79 @@ namespace SysadminsLV.Asn1Editor.API.ModelObjects {
             return new[] { this }.Union(Children.SelectMany(x => x.Flatten()));
         }
 
+        public void UpdateNodeView(NodeViewOptions options) {
+           updateNodeHeader(this, options); 
+        }
+
+        void updateNodeHeader(Asn1TreeNode node, NodeViewOptions options) {
+            var outerList = new List<String>();
+            var innerList = new List<String>();
+            if (options.ShowNodePath) {
+                outerList.Add($"({node.Path})");
+            }
+            if (options.ShowTagNumber) {
+                innerList.Add(options.ShowInHex ? $"T:{node.Value.Tag:x2}" : $"T:{node.Value.Tag}");
+            }
+            if (options.ShowNodeOffset) {
+                innerList.Add(options.ShowInHex ? $"O:{node.Value.Offset:x4}" : $"O:{node.Value.Offset}");
+            }
+            if (options.ShowNodeLength) {
+                innerList.Add(options.ShowInHex ? $"L:{node.Value.PayloadLength:x4}" : $"L:{node.Value.PayloadLength}");
+            }
+            if (innerList.Count > 0) {
+                outerList.Add("(" + String.Join(", ", innerList) + ")");
+            }
+            outerList.Add(node.Value.TagName);
+            if (options.ShowContent) {
+                if (!String.IsNullOrEmpty(node.Value.ExplicitValue)) {
+                    outerList.Add(":");
+                    outerList.Add(node.Value.ExplicitValue);
+                }
+
+            }
+            node.Value.Header = String.Join(" ", outerList);
+            node.Value.ToolTip = writeToolTip(node);
+            foreach (Asn1TreeNode child in node.Children) {
+                updateNodeHeader(child, options);
+            }
+        }
+        String writeToolTip(Asn1TreeNode node) {
+            var sb = new StringBuilder();
+            sb.AppendFormat(
+                Resources.TagEditorHeaderTemp,
+                node.Value.Tag,
+                node.Value.TagName,
+                node.Value.Offset,
+                node.Value.TagLength,
+                node.Value.Deepness,
+                node.Value.Path);
+            sb.AppendLine();
+            if (!node.Value.IsContainer) {
+                sb.Append("Value:");
+                if (node.Value.PayloadLength == 0) {
+                    sb.AppendLine(" NULL");
+                } else {
+                    sb.AppendLine();
+                    Int32 skip = node.Value.PayloadStartOffset;
+                    Int32 take = node.Value.PayloadLength;
+                    Boolean writeUnusedBits = false;
+                    if (node.Value.Tag == (Byte)Asn1Type.BIT_STRING) {
+                        skip++;
+                        take--;
+                        writeUnusedBits = true;
+                    }
+                    if (writeUnusedBits) {
+                        sb.AppendLine($"Unused Bits: {node.Value.UnusedBits}");
+                    }
+                    Byte[] binData = _dataSource.RawData.Skip(skip).Take(take).ToArray();
+                    sb.Append(binData.Length == 0
+                        ? "EMPTY"
+                        : AsnFormatter.BinaryToString(binData, EncodingType.Hex).TrimEnd());
+                }
+            }
+            return sb.ToString();
+        }
+
         void notifySizeChanged(Asn1TreeNode source, Int32 difference) {
             Asn1TreeNode t = this;
             do {
@@ -135,6 +214,7 @@ namespace SysadminsLV.Asn1Editor.API.ModelObjects {
             }
         }
 
+        #region Equals
         protected Boolean Equals(Asn1TreeNode other) {
             return String.Equals(Path, other.Path);
         }
@@ -146,5 +226,6 @@ namespace SysadminsLV.Asn1Editor.API.ModelObjects {
             if (ReferenceEquals(this, obj)) { return true; }
             return obj.GetType() == GetType() && Equals((Asn1TreeNode)obj);
         }
+        #endregion
     }
 }

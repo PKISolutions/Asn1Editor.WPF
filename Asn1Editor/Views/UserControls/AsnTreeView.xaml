@@ -141,13 +141,18 @@
                                VerticalAlignment="Center"
                                Height="16"
                                Width="16"/>
-                        <TextBlock Text="{Binding Value.Caption, Converter={StaticResource Trimmer}}"
-                                   ToolTip="{Binding Value.Caption}"
+                        <TextBlock Text="{Binding Value.Header, Converter={StaticResource Trimmer}}"
                                    TextWrapping="NoWrap"
                                    Margin="5,0"
                                    FontFamily="Consolas"
                                    Foreground="Black"
-                                   FontSize="{Binding Path=FontSize, Source={x:Static properties:Settings.Default}}"/>
+                                   FontSize="{Binding Path=FontSize, Source={x:Static properties:Settings.Default}}">
+                            <TextBlock.ToolTip>
+                                <TextBlock Text="{Binding Value.ToolTip}"
+                                           FontFamily="Consolas"
+                                           FontSize="{Binding Path=FontSize, Source={x:Static properties:Settings.Default}}"/>
+                            </TextBlock.ToolTip>
+                        </TextBlock>
                     </StackPanel>
                 </HierarchicalDataTemplate>
             </TreeView.ItemTemplate>

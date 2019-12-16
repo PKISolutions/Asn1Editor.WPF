@@ -146,6 +146,7 @@
     <Compile Include="API\Interfaces\ITagDataEditor.cs" />
     <Compile Include="API\Interfaces\ITagDataEditorVM.cs" />
     <Compile Include="API\Interfaces\ITreeViewVM.cs" />
+    <Compile Include="API\ModelObjects\NodeViewOptions.cs" />
     <Compile Include="API\Utils\CertutilRenderer.cs" />
     <Compile Include="API\Utils\ITextRenderer.cs" />
     <Compile Include="API\Utils\NodeEditMode.cs" />

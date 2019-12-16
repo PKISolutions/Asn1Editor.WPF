@@ -35,6 +35,26 @@
                 <MenuItem Header="Save As..." Command="{Binding SaveCommand}" CommandParameter="1"/>
                 <MenuItem Header="_Exit" Click="CloseClick" InputGestureText="Alt + F4"/>
             </MenuItem>
+            <MenuItem Header="_View">
+                <MenuItem Header="Show node offset"
+                          IsCheckable="True"
+                          IsChecked="{Binding NodeViewOptions.ShowNodeOffset}"/>
+                <MenuItem Header="Show node length"
+                          IsCheckable="True"
+                          IsChecked="{Binding NodeViewOptions.ShowNodeLength}"/>
+                <MenuItem Header="Show tag number"
+                          IsCheckable="True"
+                          IsChecked="{Binding NodeViewOptions.ShowTagNumber}"/>
+                <MenuItem Header="Show node path"
+                          IsCheckable="True"
+                          IsChecked="{Binding NodeViewOptions.ShowNodePath}"/>
+                <MenuItem Header="Show in hex"
+                          IsCheckable="True"
+                          IsChecked="{Binding NodeViewOptions.ShowInHex}"/>
+                <MenuItem Header="Show content"
+                          IsCheckable="True"
+                          IsChecked="{Binding NodeViewOptions.ShowContent}"/>
+            </MenuItem>
             <MenuItem Header="Edit">
                 <MenuItem Header="Edit node..."
                           Command="{Binding TreeCommands.EditNodeCommand}">

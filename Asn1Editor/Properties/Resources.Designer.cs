@@ -92,7 +92,7 @@ namespace SysadminsLV.Asn1Editor.Properties {
         ///   Looks up a localized string similar to Tag    : {0} (0x{0:X2}) : {1}
         ///Offset : {2} (0x{2:X2})
         ///Length : {3} (0x{3:X2})
-        ///Deepth : {4}
+        ///Depth  : {4}
         ///Path   : {5}
         ///.
         /// </summary>
