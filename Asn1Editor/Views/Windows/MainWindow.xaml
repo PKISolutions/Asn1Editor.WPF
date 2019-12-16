@@ -162,13 +162,13 @@
                 </Button>
             </ToolBar>
             <ToolBar>
-                <Button Command="{Binding NewCommand}">
+                <Button Command="{Binding NewCommand}" ToolTip="New file">
                     <Image Source="/Views/Images/Menu/new_16x16.png"/>
                 </Button>
-                <Button Command="{Binding OpenCommand}">
+                <Button Command="{Binding OpenCommand}" ToolTip="Open file">
                     <Image Source="/Views/Images/Menu/open_16x16.png"/>
                 </Button>
-                <Button Command="{Binding SaveCommand}">
+                <Button Command="{Binding SaveCommand}" ToolTip="Save file">
                     <Image Source="/Views/Images/Menu/save_16x16.png"/>
                 </Button>
             </ToolBar>
