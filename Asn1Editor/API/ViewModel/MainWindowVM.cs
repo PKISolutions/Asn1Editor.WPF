@@ -23,8 +23,7 @@ namespace SysadminsLV.Asn1Editor.API.ViewModel {
             IWindowFactory windowFactory,
             IAppCommands appCommands,
             ITreeCommands treeCommands,
-            IDataSource data,
-            NodeViewOptions viewOptions) {
+            IDataSource data) {
 
             _windowFactory = windowFactory;
             AppCommands = appCommands;
@@ -33,7 +32,6 @@ namespace SysadminsLV.Asn1Editor.API.ViewModel {
             OpenCommand = new RelayCommand(openFile);
             SaveCommand = new RelayCommand(saveFile, canPrintSave);
             appCommands.ShowConverterWindow = new RelayCommand(showConverter);
-            NodeViewOptions = viewOptions;
             NodeViewOptions.PropertyChanged += onNodeViewOptionsChanged;
         }
         void onNodeViewOptionsChanged(Object sender, PropertyChangedEventArgs e) {
@@ -53,7 +51,7 @@ namespace SysadminsLV.Asn1Editor.API.ViewModel {
         public IDataSource DataSource { get; }
         public static Dictionary<String, String> OIDs { get; } = new Dictionary<String, String>();
         public ObservableCollection<Asn1TreeNode> Tree => DataSource.Tree;
-        public NodeViewOptions NodeViewOptions { get; }
+        public NodeViewOptions NodeViewOptions => DataSource.NodeViewOptions;
 
         public String Path {
             get => path;
