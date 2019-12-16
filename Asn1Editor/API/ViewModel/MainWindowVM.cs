@@ -114,7 +114,6 @@ namespace SysadminsLV.Asn1Editor.API.ViewModel {
                     Asn1TreeNode rootNode = await AsnTreeBuilder.BuildTree(DataSource.RawData.ToArray());
                     Tree.Add(rootNode);
                     DataSource.FinishBinaryUpdate();
-                    rootNode.UpdateNodeView(NodeViewOptions);
                 } catch (Exception e) {
                     Tools.MsgBox("Error", e.Message);
                 }

@@ -10,6 +10,10 @@ namespace SysadminsLV.Asn1Editor.API.ModelObjects {
         Asn1TreeNode selectedNode;
         Boolean hasClipboard;
 
+        public DataSource(NodeViewOptions viewOptions) {
+            NodeViewOptions = viewOptions;
+        }
+
         protected void OnCollectionChanged(NotifyCollectionChangedEventArgs e) {
             if (RawData.IsNotifying && CollectionChanged != null) {
                 try {
@@ -34,9 +38,13 @@ namespace SysadminsLV.Asn1Editor.API.ModelObjects {
                 OnPropertyChanged(nameof(SelectedNode));
             }
         }
+        public NodeViewOptions NodeViewOptions { get; }
         public ObservableCollection<Asn1TreeNode> Tree { get; } = new ObservableCollection<Asn1TreeNode>();
         public void FinishBinaryUpdate() {
             OnCollectionChanged(new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Reset));
+            if (Tree.Count > 0) {
+                Tree[0].UpdateNodeView(NodeViewOptions);
+            }
         }
         public ObservableList<Byte> RawData { get; } = new ObservableList<Byte> { IsNotifying = true };
 
