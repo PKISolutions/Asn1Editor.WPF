@@ -177,8 +177,8 @@ namespace SysadminsLV.Asn1Editor.API.ModelObjects {
                     }
                 }
                 Byte[] newLenBytes = Asn1Utils.GetLengthBytes(t.Value.PayloadLength + difference);
-                App.Container.Resolve<IDataSource>().RawData.RemoveRange(t.Value.Offset + 1, t.Value.HeaderLength - 1);
-                App.Container.Resolve<IDataSource>().RawData.InsertRange(t.Value.Offset + 1, newLenBytes);
+                _dataSource.RawData.RemoveRange(t.Value.Offset + 1, t.Value.HeaderLength - 1);
+                _dataSource.RawData.InsertRange(t.Value.Offset + 1, newLenBytes);
                 // check if extra length byte is added. If so, add this byte to difference variable
                 Int32 diff = newLenBytes.Length - (t.Value.HeaderLength - 1);
                 if (diff != 0) {
