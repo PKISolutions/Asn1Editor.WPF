@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Linq;
+using System.Numerics;
 using System.Text;
 using SysadminsLV.Asn1Editor.API.Interfaces;
 using SysadminsLV.Asn1Editor.Properties;
@@ -97,6 +98,9 @@ namespace SysadminsLV.Asn1Editor.API.ModelObjects {
         }
 
         void updateNodeHeader(Asn1TreeNode node, NodeViewOptions options) {
+            if (node.Value.Tag == (Byte)Asn1Type.INTEGER) {
+                updateIntValue(node.Value, options.IntegerAsInteger);
+            }
             var outerList = new List<String>();
             var innerList = new List<String>();
             if (options.ShowNodePath) {
@@ -127,6 +131,20 @@ namespace SysadminsLV.Asn1Editor.API.ModelObjects {
             foreach (Asn1TreeNode child in node.Children) {
                 updateNodeHeader(child, options);
             }
+        }
+        void updateIntValue(Asn1Lite node, Boolean forceInteger) {
+            if (forceInteger) {
+                Byte[] raw = _dataSource.RawData.Skip(node.PayloadStartOffset).Take(node.PayloadLength).ToArray();
+                node.ExplicitValue = new BigInteger(raw.Reverse().ToArray()).ToString();
+            } else {
+                Byte[] raw = _dataSource.RawData.Skip(node.PayloadStartOffset).Take(node.PayloadLength).ToArray();
+                node.ExplicitValue = AsnFormatter.BinaryToString(
+                    raw,
+                    EncodingType.HexRaw,
+                    EncodingFormat.NOCRLF
+                );
+            }
+            
         }
         String writeToolTip(Asn1TreeNode node) {
             var sb = new StringBuilder();

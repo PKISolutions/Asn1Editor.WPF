@@ -1,9 +1,11 @@
 ﻿using System;
 using SysadminsLV.Asn1Editor.API.ViewModel;
+using SysadminsLV.Asn1Editor.Properties;
 
 namespace SysadminsLV.Asn1Editor.API.ModelObjects {
     public class NodeViewOptions : ViewModelBase {
-        Boolean showTagNumber, showNodeOffset = true, showNodeLength = true, showInHex, showContent = true, showNodePath;
+        Boolean showTagNumber, showNodeOffset = true, showNodeLength = true, showInHex, showContent = true, showNodePath, intAsInt;
+        Int32 fontSize = 12;
 
         public Boolean ShowTagNumber {
             get => showTagNumber;
@@ -63,6 +65,27 @@ namespace SysadminsLV.Asn1Editor.API.ModelObjects {
                 }
                 showNodePath = value;
                 OnPropertyChanged(nameof(ShowNodePath));
+            }
+        }
+        public Boolean IntegerAsInteger {
+            get => intAsInt;
+            set {
+                if (value == intAsInt) {
+                    return;
+                }
+                intAsInt = value;
+                OnPropertyChanged(nameof(IntegerAsInteger));
+            }
+        }
+        public Int32 FontSize {
+            get => fontSize;
+            set {
+                if (value == fontSize) {
+                    return;
+                }
+                fontSize = value;
+                Settings.Default.FontSize = fontSize;
+                OnPropertyChanged(nameof(FontSize));
             }
         }
     }

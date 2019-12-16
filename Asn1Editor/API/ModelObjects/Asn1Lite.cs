@@ -74,7 +74,6 @@ namespace SysadminsLV.Asn1Editor.API.ModelObjects {
             get => tagName;
             set {
                 tagName = value;
-                if (value.StartsWith("CONTEXT_SPECIFIC")) { IsContextSpecific = true; }
                 OnPropertyChanged(nameof(Caption));
             }
         }
@@ -107,8 +106,6 @@ namespace SysadminsLV.Asn1Editor.API.ModelObjects {
         }
         public Int32 TagLength => HeaderLength + PayloadLength;
         public Boolean IsContainer { get; set; }
-
-        public Boolean IsContextSpecific { get; set; }
         public Boolean IsRoot { get; set; }
         public Boolean InvalidData {
             get => invalidData;
@@ -155,10 +152,7 @@ namespace SysadminsLV.Asn1Editor.API.ModelObjects {
             }
         }
 
-        public void UpdateView() {
-            OnPropertyChanged(nameof(Caption));
-        }
-
+        #region Equals
         public override Boolean Equals(Object obj) {
             if (ReferenceEquals(null, obj)) { return false; }
             if (ReferenceEquals(this, obj)) { return true; }
@@ -172,5 +166,6 @@ namespace SysadminsLV.Asn1Editor.API.ModelObjects {
                 return (offset * 397) ^ tag.GetHashCode();
             }
         }
+        #endregion
     }
 }

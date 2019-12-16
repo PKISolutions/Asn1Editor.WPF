@@ -7,6 +7,7 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:hexViewer="clr-namespace:SysadminsLV.Asn1Editor.Views.UserControls.HexViewer"
         xmlns:clr="clr-namespace:SysadminsLV.Asn1Editor.API.Utils"
+        xmlns:system="clr-namespace:System;assembly=mscorlib"
         mc:Ignorable="d"
         d:DataContext="{d:DesignInstance vm:MainWindowVM}"
         Title="{Binding Title}"
@@ -51,6 +52,10 @@
                 <MenuItem Header="Show in hex"
                           IsCheckable="True"
                           IsChecked="{Binding NodeViewOptions.ShowInHex}"/>
+                <Separator/>
+                <MenuItem Header="Decode Integer as integer"
+                          IsCheckable="True"
+                          IsChecked="{Binding NodeViewOptions.IntegerAsInteger}"/>
                 <MenuItem Header="Show content"
                           IsCheckable="True"
                           IsChecked="{Binding NodeViewOptions.ShowContent}"/>
@@ -120,13 +125,13 @@
                     </MenuItem.Icon>
                 </MenuItem>
             </MenuItem>
-            <MenuItem Header="_Tools">
+            <!--<MenuItem Header="_Tools">
                 <MenuItem Header="Settings" Command="{Binding AppCommands.ShowSettingsCommand}">
                     <MenuItem.Icon>
                         <Image Source="/Views/Images/Menu/info_16x16.png"/>
                     </MenuItem.Icon>
                 </MenuItem>
-            </MenuItem>
+            </MenuItem>-->
             <MenuItem Header="_Help">
                 <MenuItem Header="About" Command="{Binding AppCommands.ShowAboutCommand}">
                     <MenuItem.Icon>
@@ -197,6 +202,21 @@
                         ToolTip="Delete selected node">
                     <Image Source="/Views/Images/Menu/delete_16x16.png"/>
                 </Button>
+            </ToolBar>
+            <ToolBar>
+                <TextBlock Text="Font size:"
+                           Foreground="Navy"
+                           Margin="2,0"
+                           VerticalAlignment="Center"/>
+                <ComboBox SelectedValue="{Binding NodeViewOptions.FontSize}">
+                    <system:Int32>10</system:Int32>
+                    <system:Int32>11</system:Int32>
+                    <system:Int32>12</system:Int32>
+                    <system:Int32>13</system:Int32>
+                    <system:Int32>14</system:Int32>
+                    <system:Int32>15</system:Int32>
+                    <system:Int32>16</system:Int32>
+                </ComboBox>
             </ToolBar>
         </ToolBarTray>
         <StatusBar Foreground="DarkBlue" VerticalAlignment="Bottom" DockPanel.Dock="Bottom">

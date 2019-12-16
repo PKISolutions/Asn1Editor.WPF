@@ -10,7 +10,6 @@ using SysadminsLV.Asn1Editor.API.Interfaces;
 using SysadminsLV.Asn1Editor.API.ModelObjects;
 using SysadminsLV.Asn1Editor.API.Utils;
 using SysadminsLV.Asn1Editor.API.Utils.ASN;
-using SysadminsLV.Asn1Editor.Properties;
 using SysadminsLV.WPF.OfficeTheme.Toolkit.Commands;
 
 namespace SysadminsLV.Asn1Editor.API.ViewModel {
@@ -34,7 +33,6 @@ namespace SysadminsLV.Asn1Editor.API.ViewModel {
             OpenCommand = new RelayCommand(openFile);
             SaveCommand = new RelayCommand(saveFile, canPrintSave);
             appCommands.ShowConverterWindow = new RelayCommand(showConverter);
-            Settings.Default.PropertyChanged += onSettingChange;
             NodeViewOptions = viewOptions;
             NodeViewOptions.PropertyChanged += onNodeViewOptionsChanged;
         }
@@ -166,18 +164,6 @@ namespace SysadminsLV.Asn1Editor.API.ViewModel {
             DataSource.RawData.Clear();
             DataSource.RawData.AddRange(rawBytes);
             decode();
-        }
-
-        void onSettingChange(Object sender, PropertyChangedEventArgs e) {
-            if (Tree.Count == 0) { return; }
-            switch (e.PropertyName) {
-                case nameof(Settings.IntAsInt):
-                    StaticCommands.UpdateSettingsInteger(Tree[0], DataSource.RawData);
-                    break;
-                case nameof(Settings.DecodePayload):
-                    StaticCommands.UpdateSettingsDecode(Tree[0]);
-                    break;
-            }
         }
     }
 }
