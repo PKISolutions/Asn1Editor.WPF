@@ -123,7 +123,7 @@ namespace SysadminsLV.Asn1Editor.API.Utils {
             }
             var sb = new StringBuilder();
             List<Int32> l = getParents(node);
-            for (Int32 i = _rootNode.Value.Deepness; i < node.Value.Deepness; i++) {
+            for (Int32 i = _rootNode.Value.Depth; i < node.Value.Depth; i++) {
                 sb.Append(l.Contains(i) ? "|  " : "   ");
             }
             return sb.ToString();
@@ -135,7 +135,7 @@ namespace SysadminsLV.Asn1Editor.API.Utils {
 
             while (n.Parent != null) {
                 if (n.MyIndex < n.Parent.Children.Count - 1) {
-                    depths.Add(n.Value.Deepness);
+                    depths.Add(n.Value.Depth);
                 }
                 n = n.Parent;
             }

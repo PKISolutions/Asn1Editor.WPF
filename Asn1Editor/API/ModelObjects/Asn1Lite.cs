@@ -10,17 +10,17 @@ namespace SysadminsLV.Asn1Editor.API.ModelObjects {
         Byte tag, unusedBits;
         Boolean invalidData;
         Int32 offset, offsetChange;
-        Int32 payloadLength, deepness;
+        Int32 payloadLength, depth;
         String header, toolTip, tagName, explicitValue, treePath;
 
         public Asn1Lite(Asn1Reader asn) {
             initialize(asn);
-            Deepness = 0;
+            Depth = 0;
             Path = String.Empty;
         }
         public Asn1Lite(Asn1Reader root, Asn1TreeNode tree, Int32 index) {
             initialize(root);
-            Deepness = tree.Value.Deepness + 1;
+            Depth = tree.Value.Depth + 1;
             Path = $"{tree.Value.Path}/{index}";
             if (Tag == (Byte)Asn1Type.BIT_STRING) {
                 if (root.PayloadLength > 0)
@@ -117,10 +117,10 @@ namespace SysadminsLV.Asn1Editor.API.ModelObjects {
                 OnPropertyChanged(nameof(InvalidData));
             }
         } //TODO
-        public Int32 Deepness {
-            get => deepness;
+        public Int32 Depth {
+            get => depth;
             set {
-                deepness = value;
+                depth = value;
                 OnPropertyChanged(nameof(Caption));
             }
         }

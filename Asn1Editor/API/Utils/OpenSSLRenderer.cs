@@ -24,7 +24,7 @@ namespace SysadminsLV.Asn1Editor.API.Utils {
             
             sb.Append("======+======+=======+" + new String('=', width + 10) + nl);
             foreach (Asn1Lite node in rootNode.Flatten().Select(x => x.Value)) {
-                String padding = new String(' ', (node.Deepness - rootNode.Value.Deepness + 1) * 3);
+                String padding = new String(' ', (node.Depth - rootNode.Value.Depth + 1) * 3);
                 String str = String.Format("{0,6}|{1,6}|{2,7}|{3}{4} : ",
                     node.Offset,
                     node.PayloadLength,

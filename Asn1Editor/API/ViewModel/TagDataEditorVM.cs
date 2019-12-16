@@ -185,7 +185,7 @@ namespace SysadminsLV.Asn1Editor.API.ViewModel {
                 node.IsRoot = true;
             } else {
                 node.Offset = _data.SelectedNode.Value.Offset + _data.SelectedNode.Value.TagLength;
-                node.Deepness += _data.SelectedNode.Value.Deepness;
+                node.Depth += _data.SelectedNode.Value.Depth;
             }
             Node = node;
             updateNewNodeBinarySource(asn.RawData);
@@ -240,7 +240,7 @@ namespace SysadminsLV.Asn1Editor.API.ViewModel {
             Tag = Node.Tag;
             UnusedBits = Node.UnusedBits;
             IsReadOnly = Node.IsContainer || Node.Tag == (Byte)Asn1Type.NULL;
-            TagDetails = String.Format(Resources.TagEditorHeaderTemp, Tag, Node.TagName, Node.Offset, Node.PayloadLength, Node.Deepness, Node.Path);
+            TagDetails = String.Format(Resources.TagEditorHeaderTemp, Tag, Node.TagName, Node.Offset, Node.PayloadLength, Node.Depth, Node.Path);
         }
 
         public void SetBinding(NodeEditMode editMode) {

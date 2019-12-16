@@ -136,7 +136,7 @@ namespace SysadminsLV.Asn1Editor.API.ModelObjects {
                 node.Value.TagName,
                 node.Value.Offset,
                 node.Value.TagLength,
-                node.Value.Deepness,
+                node.Value.Depth,
                 node.Value.Path);
             sb.AppendLine();
             if (!node.Value.IsContainer) {
@@ -208,7 +208,7 @@ namespace SysadminsLV.Asn1Editor.API.ModelObjects {
             source.Value.Path = source.Path = path + "/" + index;
             source.MyIndex = index;
             Int32 deepness = source.Value.Path.Split(new[] { '/' }, StringSplitOptions.RemoveEmptyEntries).Length;
-            source.Value.Deepness = deepness;
+            source.Value.Depth = deepness;
             for (Int32 i = 0; i < source.Children.Count; i++) {
                 updatePath(source.Children[i], source.Path, i);
             }
