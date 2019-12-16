@@ -1,11 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Windows;
 using System.Windows.Threading;
+using System.Xml;
+using System.Xml.Serialization;
 using SysadminsLV.Asn1Editor.API.Interfaces;
 using SysadminsLV.Asn1Editor.API.ModelObjects;
 using SysadminsLV.Asn1Editor.API.Utils;
@@ -19,9 +22,14 @@ namespace SysadminsLV.Asn1Editor {
     /// Interaction logic for App.xaml
     /// </summary>
     public partial class App {
+        readonly String basePath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), @"Sysadmins LV\Asn1Editor");
         static readonly Logger _logger = new Logger();
+        NodeViewOptions options;
+
         public App() {
             Dispatcher.UnhandledException += OnDispatcherUnhandledException;
+            options = readSettings();
+            options.PropertyChanged += onOptionsChanged;
         }
 
         public static IUnityContainer Container { get; private set; }
@@ -97,9 +105,27 @@ namespace SysadminsLV.Asn1Editor {
             Container.RegisterType<ITextViewerVM, TextViewerVM>();
             Container.RegisterType<ITreeViewVM, TreeViewVM>();
             Container.RegisterType<ITagDataEditorVM, TagDataEditorVM>();
-
-            Container.RegisterInstance(new NodeViewOptions());
+            Container.RegisterInstance(options);
         }
-
+        void onOptionsChanged(Object s, PropertyChangedEventArgs e) {
+            using (var sw = new StreamWriter(Path.Combine(basePath, "user.config"), false)) {
+                using (var xw = XmlWriter.Create(sw)) {
+                    new XmlSerializer(typeof(NodeViewOptions)).Serialize(xw, s);
+                }
+            }
+        }
+        NodeViewOptions readSettings() {
+            if (File.Exists(Path.Combine(basePath, "user.config"))) {
+                try {
+                    using (var sr = new StreamReader(Path.Combine(basePath, "user.config"))) {
+                        return (NodeViewOptions) new XmlSerializer(typeof(NodeViewOptions)).Deserialize(sr);
+                    }
+                } catch {
+                    return new NodeViewOptions();
+                }
+            } else {
+                return new NodeViewOptions();
+            }
+        }
     }
 }
