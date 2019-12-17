@@ -37,14 +37,14 @@
         <ToolBarTray DockPanel.Dock="Top" IsLocked="True">
             <ToolBar>
                 <ToggleButton x:Name="HexAddressToggle"
-                                  IsChecked="True"
-                                  ToolTip="Show or hide address panel">
+                              IsChecked="{Binding NodeViewOptions.ShowHexAddrPanel}"
+                              ToolTip="Show or hide address panel">
                     <Image Source="/Views/Images/Menu/AddressEnabled_32x32.png"/>
                 </ToggleButton>
                 <Separator/>
                 <ToggleButton x:Name="AsciiToggle"
-                                  IsChecked="True"
-                                  ToolTip="Show or hide ASCII panel">
+                              IsChecked="{Binding NodeViewOptions.ShowHexAsciiPanel}"
+                              ToolTip="Show or hide ASCII panel">
                     <Image Source="/Views/Images/Menu/AsciiEnabled_32x32.png"/>
                 </ToggleButton>
             </ToolBar>

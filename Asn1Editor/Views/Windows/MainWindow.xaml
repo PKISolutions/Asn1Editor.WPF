@@ -154,6 +154,7 @@
         <ToolBarTray DockPanel.Dock="Top" IsLocked="True">
             <ToolBar>
                 <ToggleButton x:Name="HexViewerToggle"
+                              IsChecked="{Binding NodeViewOptions.ShowHexViewer}"
                               ToolTip="Show or hide hex viewer">
                     <Image Source="/Views/Images/Menu/hexview_16x16.png" Width="16"/>
                 </ToggleButton>
