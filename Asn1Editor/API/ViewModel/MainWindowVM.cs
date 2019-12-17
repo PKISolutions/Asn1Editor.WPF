@@ -5,6 +5,7 @@ using System.ComponentModel;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+using System.Windows;
 using System.Windows.Input;
 using SysadminsLV.Asn1Editor.API.Interfaces;
 using SysadminsLV.Asn1Editor.API.ModelObjects;
@@ -17,7 +18,7 @@ namespace SysadminsLV.Asn1Editor.API.ViewModel {
         readonly IWindowFactory _windowFactory;
         String path;
         Asn1TreeNode selectedNode;
-        Boolean hasClipboard, isBusy;
+        Boolean hasClipboard, isBusy, isModified;
 
         public MainWindowVM(
             IWindowFactory windowFactory,
@@ -34,7 +35,10 @@ namespace SysadminsLV.Asn1Editor.API.ViewModel {
             SaveCommand = new RelayCommand(saveFile, canPrintSave);
             appCommands.ShowConverterWindow = new RelayCommand(showConverter);
             NodeViewOptions.PropertyChanged += onNodeViewOptionsChanged;
+            DataSource.CollectionChanged += (sender, args) => IsModified = true;
+            IsModified = false;
         }
+
         void onNodeViewOptionsChanged(Object sender, PropertyChangedEventArgs e) {
             if (Tree.Any()) {
                 Tree[0].UpdateNodeView(NodeViewOptions);
@@ -63,9 +67,17 @@ namespace SysadminsLV.Asn1Editor.API.ViewModel {
                 OnPropertyChanged(nameof(Title));
             }
         }
+        public Boolean IsModified {
+            get => isModified;
+            set {
+                isModified = value;
+                OnPropertyChanged(nameof(IsModified));
+                OnPropertyChanged(nameof(Title));
+            }
+        }
         public String Title => String.IsNullOrEmpty(Path)
-            ? "ASN.1 Editor"
-            : "ASN.1 Editor - " + new FileInfo(Path).Name;
+            ? "ASN.1 Editor" + (IsModified ? " (Unsaved)" : String.Empty)
+            : $"ASN.1 Editor - '{new FileInfo(Path).Name}'" + (IsModified ? " (Unsaved)" : String.Empty);
         public Boolean HasClipboardData {
             get => hasClipboard;
             set {
@@ -87,31 +99,62 @@ namespace SysadminsLV.Asn1Editor.API.ViewModel {
                 OnPropertyChanged(nameof(IsBusy));
             }
         }
-
         void showConverter(Object o) {
             _windowFactory.ShowConverterWindow(DataSource.RawData, openRaw);
         }
         void newFile(Object o) {
-            DataSource.Tree.Clear();
-            DataSource.SelectedNode = null;
-            DataSource.RawData.Clear();
-            Path = String.Empty;
-            OnPropertyChanged(nameof(Title));
+            if (IsModified && !RequestFileSave()) {
+                return;
+            }
+            reset();
         }
         void openFile(Object obj) {
-            String file = Tools.GetOpenFileName();
+            if (IsModified && !RequestFileSave()) {
+                return;
+            }
+
+            String file = obj == null
+                ? Tools.GetOpenFileName()
+                : obj.ToString();
             if (String.IsNullOrWhiteSpace(file)) { return; }
-            OpenExisting(file);
+            reset();
+            Path = file;
+            decode();
+            OnPropertyChanged(nameof(Title));
         }
         void saveFile(Object obj) {
             if ((obj != null || String.IsNullOrEmpty(Path)) && !getFilePath()) {
                 return;
             }
+            writeFile();
+        }
+        public Boolean RequestFileSave() {
+            MessageBoxResult result = Tools.MsgBox(
+                "Unsaved Data",
+                "Current file was modified. Save changes?",
+                MessageBoxImage.Warning,
+                MessageBoxButton.YesNoCancel);
+            switch (result) {
+                case MessageBoxResult.No:
+                    return true;
+                case MessageBoxResult.Yes:
+                    return writeFile();
+                default:
+                    return false;
+            }
+        }
+        Boolean writeFile() {
+            if (String.IsNullOrEmpty(Path) && !getFilePath()) {
+                return false;
+            }
             try {
                 File.WriteAllBytes(Path, DataSource.RawData.ToArray());
+                IsModified = false;
+                return true;
             } catch (Exception e) {
                 Tools.MsgBox("Save Error", e.Message);
             }
+            return false;
         }
         async void decode() {
             IsBusy = true;
@@ -125,7 +168,15 @@ namespace SysadminsLV.Asn1Editor.API.ViewModel {
                     Tools.MsgBox("Error", e.Message);
                 }
             }
+            IsModified = false;
             IsBusy = false;
+        }
+        void reset() {
+            DataSource.Tree.Clear();
+            DataSource.SelectedNode = null;
+            DataSource.RawData.Clear();
+            Path = String.Empty;
+            IsModified = false;
         }
 
 
@@ -158,6 +209,7 @@ namespace SysadminsLV.Asn1Editor.API.ViewModel {
             decode();
         }
         public void OpenExisting(String filePath) {
+            openFile(filePath);
             Path = filePath;
             DataSource.RawData.Clear();
             decode();
@@ -166,9 +218,7 @@ namespace SysadminsLV.Asn1Editor.API.ViewModel {
             openRaw(Convert.FromBase64String(base64String));
         }
         void openRaw(IEnumerable<Byte> rawBytes) {
-            Path = null;
-            DataSource.RawData.Clear();
-            DataSource.RawData.AddRange(rawBytes);
+            reset();
             decode();
         }
     }
