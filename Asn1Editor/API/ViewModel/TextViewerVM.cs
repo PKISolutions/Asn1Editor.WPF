@@ -9,7 +9,7 @@ using SysadminsLV.Asn1Editor.Properties;
 using SysadminsLV.WPF.OfficeTheme.Toolkit.Commands;
 
 namespace SysadminsLV.Asn1Editor.API.ViewModel {
-    class TextViewerVM : ClosableWindowVM, ITextViewerVM {
+    class TextViewerVM : ViewModelBase, ITextViewerVM {
         readonly Asn1TreeNode rootNode;
         const String master = "123";
         const Int32 minLength = 60;

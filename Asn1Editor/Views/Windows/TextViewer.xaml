@@ -5,10 +5,8 @@
         xmlns:properties="clr-namespace:SysadminsLV.Asn1Editor.Properties"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-        xmlns:cmd="clr-namespace:SysadminsLV.WPF.OfficeTheme.Toolkit.Commands;assembly=Wpf.OfficeTheme"
         mc:Ignorable="d"
         d:DataContext="{d:DesignInstance vm:TextViewerVM}"
-        cmd:DialogCloser.DialogResult="{Binding DialogResult}"
         WindowStartupLocation="CenterOwner"
         Title="TextViewer" Height="600" Width="800">
     <Window.InputBindings>
@@ -71,7 +69,7 @@
             </StatusBarItem>
             <Separator/>
             <StatusBarItem HorizontalAlignment="Right">
-                <Button Content="Close" Command="{Binding CloseCommand}" MinWidth="70" Margin="0,0,5,0"/>
+                <Button Content="Close" Click="Close" MinWidth="70" Margin="0,0,5,0"/>
             </StatusBarItem>
         </StatusBar>
         <TextBox Text="{Binding Text}"
