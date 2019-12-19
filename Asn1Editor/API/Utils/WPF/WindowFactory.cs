@@ -33,7 +33,7 @@ namespace SysadminsLV.Asn1Editor.API.Utils.WPF {
             hwnd = App.Container.Resolve<TextViewer>();
             ShowAsWindow(true);
         }
-        public void ShowConverterWindow(IEnumerable<Byte> data, Action<IEnumerable<Byte>> action) {
+        public void ShowConverterWindow(IEnumerable<Byte> data, Action<Byte[]> action) {
             if (!converterClosed) {
                 converter.Focus();
                 return;

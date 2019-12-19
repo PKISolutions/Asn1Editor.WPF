@@ -18,9 +18,9 @@ namespace SysadminsLV.Asn1Editor.API.ViewModel {
         Boolean? dialogResult;
         Boolean isLocked, canCheck,
             base64, base64header, base64req, base64crl, hex, hexaddr, hexascii, hexaddrascii, hexraw;
-        readonly Action<IEnumerable<Byte>> _action;
+        readonly Action<Byte[]> _action;
 
-        public ConverterVM(Action<IEnumerable<Byte>> action) {
+        public ConverterVM(Action<Byte[]> action) {
             _action = action;
             base64 = true;
             OnPropertyChanged(nameof(Base64));
@@ -246,7 +246,7 @@ namespace SysadminsLV.Asn1Editor.API.ViewModel {
             }
             RawData.AddRange(HexUtility.AnyToBinary(Text));
             if (obj != null && obj.ToString() == "Decode") {
-                _action.Invoke(RawData);
+                _action.Invoke(RawData.ToArray());
             }
         }
         void clearText(Object obj) {
