@@ -58,6 +58,9 @@ namespace SysadminsLV.Asn1Editor.API.ViewModel {
             _windowFactory.ShowNodeTextViewer();
         }
         void editNodeContent(Object o) {
+            if (_data.SelectedNode == null) {
+                return;
+            }
             _windowFactory.ShowNodeContentEditor((NodeEditMode)o);
         }
         void addNewNode(Object o) {

@@ -11,6 +11,7 @@ using SysadminsLV.Asn1Editor.API.Interfaces;
 using SysadminsLV.Asn1Editor.API.ModelObjects;
 using SysadminsLV.Asn1Editor.API.Utils;
 using SysadminsLV.Asn1Editor.API.Utils.ASN;
+using SysadminsLV.Asn1Parser;
 using SysadminsLV.WPF.OfficeTheme.Toolkit.Commands;
 
 namespace SysadminsLV.Asn1Editor.API.ViewModel {
@@ -128,21 +129,6 @@ namespace SysadminsLV.Asn1Editor.API.ViewModel {
             }
             writeFile();
         }
-        public Boolean RequestFileSave() {
-            MessageBoxResult result = Tools.MsgBox(
-                "Unsaved Data",
-                "Current file was modified. Save changes?",
-                MessageBoxImage.Warning,
-                MessageBoxButton.YesNoCancel);
-            switch (result) {
-                case MessageBoxResult.No:
-                    return true;
-                case MessageBoxResult.Yes:
-                    return writeFile();
-                default:
-                    return false;
-            }
-        }
         Boolean writeFile() {
             if (String.IsNullOrEmpty(Path) && !getFilePath()) {
                 return false;
@@ -168,8 +154,22 @@ namespace SysadminsLV.Asn1Editor.API.ViewModel {
                     Tools.MsgBox("Error", e.Message);
                 }
             }
+            
             IsModified = false;
             IsBusy = false;
+        }
+        async Task<Boolean> decodeFile() {
+            if (DataSource.RawData.Count > 0) {
+                return true;
+            }
+            try {
+                DataSource.RawData.AddRange(await FileUtility.FileToBinary(Path));
+                return true;
+            } catch (Exception e) {
+                Tools.MsgBox("Read Error", e.Message);
+                Path = null;
+                return false;
+            }
         }
         void reset() {
             DataSource.Tree.Clear();
@@ -189,17 +189,20 @@ namespace SysadminsLV.Asn1Editor.API.ViewModel {
             Path = p;
             return true;
         }
-        async Task<Boolean> decodeFile() {
-            if (DataSource.RawData.Count > 0) {
-                return true;
-            }
-            try {
-                DataSource.RawData.AddRange(await FileUtility.FileToBinary(Path));
-                return true;
-            } catch (Exception e) {
-                Tools.MsgBox("Read Error", e.Message);
-                Path = null;
-                return false;
+        
+        public Boolean RequestFileSave() {
+            MessageBoxResult result = Tools.MsgBox(
+                "Unsaved Data",
+                "Current file was modified. Save changes?",
+                MessageBoxImage.Warning,
+                MessageBoxButton.YesNoCancel);
+            switch (result) {
+                case MessageBoxResult.No:
+                    return true;
+                case MessageBoxResult.Yes:
+                    return writeFile();
+                default:
+                    return false;
             }
         }
         public void DropFile(String filePath) {
@@ -217,8 +220,11 @@ namespace SysadminsLV.Asn1Editor.API.ViewModel {
         public void OpenRaw(String base64String) {
             openRaw(Convert.FromBase64String(base64String));
         }
-        void openRaw(IEnumerable<Byte> rawBytes) {
+        void openRaw(Byte[] rawBytes) {
+            var asn = new Asn1Reader(rawBytes);
+            asn.BuildOffsetMap();
             reset();
+            DataSource.RawData.AddRange(rawBytes);
             decode();
         }
     }

@@ -10,6 +10,6 @@ namespace SysadminsLV.Asn1Editor.API.Interfaces {
         void ShowAboutDialog();
         Asn1Lite ShowNodeContentEditor(NodeEditMode editMode);
         void ShowNodeTextViewer();
-        void ShowConverterWindow(IEnumerable<Byte> data, Action<IEnumerable<Byte>> action);
+        void ShowConverterWindow(IEnumerable<Byte> data, Action<Byte[]> action);
     }
 }
