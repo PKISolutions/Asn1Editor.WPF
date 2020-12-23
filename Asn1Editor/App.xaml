@@ -8,7 +8,6 @@
                 <ResourceDictionary Source="pack://application:,,,/Wpf.OfficeTheme;component/UI/OfficeTheme.xaml"/>
             </ResourceDictionary.MergedDictionaries>
             <BooleanToVisibilityConverter x:Key="BooleanToVisibility"/>
-            <Style TargetType="{x:Type ctrl:BindableRichTextBox}" BasedOn="{StaticResource {x:Type RichTextBox}}"/>
             <Style x:Key="AboutDialogStyle" TargetType="Window">
                 <Setter Property="Height" Value="Auto" />
                 <Setter Property="Width" Value="500" />

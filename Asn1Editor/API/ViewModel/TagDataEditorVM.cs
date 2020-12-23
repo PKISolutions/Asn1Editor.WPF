@@ -143,8 +143,8 @@ namespace SysadminsLV.Asn1Editor.API.ViewModel {
             };
         }
         void calculateLengths() {
-            TagTextBoxWidth = Tools.MeasureString(masterTag, Settings.Default.FontSize, false);
-            UnusedTextBoxWidth = Tools.MeasureString(masterUnused, Settings.Default.FontSize, false);
+            TagTextBoxWidth = Tools.MeasureStringWidth(masterTag, Settings.Default.FontSize, false);
+            UnusedTextBoxWidth = Tools.MeasureStringWidth(masterUnused, Settings.Default.FontSize, false);
         }
         void submitValues(Object obj) {
             if (Tag == 0) {

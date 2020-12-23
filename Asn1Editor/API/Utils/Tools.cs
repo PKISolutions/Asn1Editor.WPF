@@ -32,7 +32,7 @@ namespace SysadminsLV.Asn1Editor.API.Utils {
             };
             return dlg.ShowDialog() == true ? dlg.FileName : String.Empty;
         }
-        public static Double MeasureString(String str, Int32 size, Boolean includeScrollbars) {
+        public static Double MeasureStringWidth(String str, Int32 size, Boolean includeScrollbars) {
             var formattedText = new FormattedText(
                 str,
                 CultureInfo.CurrentUICulture,

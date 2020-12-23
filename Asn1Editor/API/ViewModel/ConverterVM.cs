@@ -30,7 +30,7 @@ namespace SysadminsLV.Asn1Editor.API.ViewModel {
             ClearCommand = new RelayCommand(clearText);
             ValidateCommand = new RelayCommand(validateInput);
             CloseCommand = new RelayCommand(close);
-            TextBoxWidth = Tools.MeasureString(master, Settings.Default.FontSize, true);
+            TextBoxWidth = Tools.MeasureStringWidth(master, Settings.Default.FontSize, true);
         }
         
         public ICommand OpenCommand { get; }

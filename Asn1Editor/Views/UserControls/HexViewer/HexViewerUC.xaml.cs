@@ -3,10 +3,13 @@ using System.Collections.Specialized;
 using System.Linq;
 using System.Text;
 using System.Windows;
+using System.Windows.Controls;
+using System.Windows.Controls.Primitives;
 using System.Windows.Documents;
 using SysadminsLV.Asn1Editor.API.Utils;
 using SysadminsLV.Asn1Editor.Properties;
 using SysadminsLV.Asn1Parser;
+using SysadminsLV.WPF.OfficeTheme.Controls;
 
 namespace SysadminsLV.Asn1Editor.Views.UserControls.HexViewer {
     /// <summary>
@@ -17,6 +20,9 @@ namespace SysadminsLV.Asn1Editor.Views.UserControls.HexViewer {
         const String masterHex = "123456789012345678901234567890123456789012345678";
         const String masterAscii = "1234567890123456";
 
+        readonly BindableRichTextBox[] panes;
+
+        Boolean scrollLocked;
         TextRange[] ranges;
         public HexViewerUC() {
             InitializeComponent();
@@ -27,6 +33,8 @@ namespace SysadminsLV.Asn1Editor.Views.UserControls.HexViewer {
                     calculateWidths();
                 }
             };
+
+            panes = new[] { HexAddressPane, HexRawPane, HexAsciiPane };
         }
         public static readonly DependencyProperty DataSourceProperty = DependencyProperty.Register(
             nameof(DataSource),
@@ -61,8 +69,10 @@ namespace SysadminsLV.Asn1Editor.Views.UserControls.HexViewer {
             }
             var treeNode = (IHexAsnNode)e.NewValue;
             TextUtility.ResetColors(ctrl.ranges);
-            ctrl.ranges = TextUtility.GetTextPointers(treeNode, ctrl.HexRawPane, ctrl.Scroller);
+            ctrl.ranges = TextUtility.GetSelectionPointers(treeNode, ctrl.HexRawPane);
             TextUtility.Colorize(ctrl.ranges);
+            ctrl.HexRawPane.CaretPosition = ctrl.ranges[0].Start;
+            ctrl.scrollPanes(null);
         }
 
         public IBinarySource DataSource {
@@ -75,9 +85,9 @@ namespace SysadminsLV.Asn1Editor.Views.UserControls.HexViewer {
         }
 
         void calculateWidths() {
-            HexAddrHeaderRtb.Width = Tools.MeasureString(masterAddr, Settings.Default.FontSize, false);
-            HexRawHeaderRtb.Width = Tools.MeasureString(masterHex, Settings.Default.FontSize, false);
-            HexAsciiHeaderRtb.Width = Tools.MeasureString(masterAscii, Settings.Default.FontSize, false);
+            HexAddrHeaderRtb.Width = Tools.MeasureStringWidth(masterAddr, Settings.Default.FontSize, false);
+            HexRawHeaderRtb.Width = Tools.MeasureStringWidth(masterHex, Settings.Default.FontSize, false);
+            HexAsciiHeaderRtb.Width = Tools.MeasureStringWidth(masterAscii, Settings.Default.FontSize, false);
         }
         void buildAddress() {
             HexAddressPane.Document = new FlowDocument();
@@ -97,7 +107,7 @@ namespace SysadminsLV.Asn1Editor.Views.UserControls.HexViewer {
             HexAsciiPane.Document = new FlowDocument();
             var asciiParagraph = new Paragraph();
             var SB = new StringBuilder();
-            for (var index = 0; index < DataSource.RawData.Count; index++) {
+            for (Int32 index = 0; index < DataSource.RawData.Count; index++) {
                 Char c = DataSource.RawData[index] < 32 || DataSource.RawData[index] > 126
                     ? '.'
                     : (Char)DataSource.RawData[index];
@@ -108,6 +118,61 @@ namespace SysadminsLV.Asn1Editor.Views.UserControls.HexViewer {
             }
             asciiParagraph.Inlines.Add(new Run(SB + Environment.NewLine));
             HexAsciiPane.Document.Blocks.Add(asciiParagraph);
+        }
+        void onRtbScrollChanged(Object sender, ScrollChangedEventArgs e) {
+            if (scrollLocked) {
+                return;
+            }
+            scrollLocked = true;
+            var scrollViewer = (ScrollViewer)e.OriginalSource;
+            Scroller.Maximum = scrollViewer.ScrollableHeight;
+            Scroller.ViewportSize = scrollViewer.ViewportHeight;
+            Scroller.Value = scrollViewer.VerticalOffset;
+            scrollPanes(scrollViewer.VerticalOffset);
+            scrollLocked = false;
+        }
+        void scrollPanes(Double? newValue) {
+            Double vOffset = newValue ?? HexRawPane.FontSize * HexRawPane.FontFamily.LineSpacing * (HexRawPane.CurrentLine - 1);
+            for (Int32 i = 0; i < panes.Length; i++) {
+                if (i > 0) {
+                    // do not fire re-scroll for the rest of RTBs
+                    scrollLocked = true;
+                }
+                panes[i].ScrollToVerticalOffset(vOffset);
+            }
+            scrollLocked = false;
+        }
+        void onScrollerScroll(Object sender, ScrollEventArgs e) {
+            Double smallStep = 48;
+            const Double bigStep = 256;
+            Double finalValue = e.NewValue;
+
+            switch (e.ScrollEventType) {
+                case ScrollEventType.LargeDecrement:
+                    finalValue = e.NewValue - bigStep < Scroller.Minimum
+                        ? Scroller.Minimum
+                        : e.NewValue - bigStep;
+                    break;
+                case ScrollEventType.LargeIncrement:
+                    finalValue = e.NewValue + bigStep > Scroller.Maximum
+                        ? Scroller.Maximum
+                        : e.NewValue + bigStep;
+                    break;
+                case ScrollEventType.SmallDecrement:
+                    finalValue = e.NewValue - smallStep < Scroller.Minimum
+                        ? Scroller.Minimum
+                        : e.NewValue - smallStep;
+                    break;
+                case ScrollEventType.SmallIncrement:
+                    finalValue = e.NewValue + smallStep > Scroller.Maximum
+                        ? Scroller.Maximum
+                        : e.NewValue + smallStep;
+                    break;
+            }
+
+            Scroller.Value = finalValue;
+            scrollPanes(finalValue);
+            e.Handled = true;
         }
     }
 }

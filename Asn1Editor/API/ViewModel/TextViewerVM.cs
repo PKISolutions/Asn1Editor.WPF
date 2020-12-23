@@ -29,7 +29,7 @@ namespace SysadminsLV.Asn1Editor.API.ViewModel {
             SaveCommand = new RelayCommand(saveFile);
             PrintCommand = new RelayCommand(print);
             ApplyCommand = new RelayCommand(applyNewLength);
-            TextBoxWidth = Tools.MeasureString(master, Settings.Default.FontSize, false);
+            TextBoxWidth = Tools.MeasureStringWidth(master, Settings.Default.FontSize, false);
             CertutilViewChecked = true;
             renderer.RenderText(currentLength);
         }

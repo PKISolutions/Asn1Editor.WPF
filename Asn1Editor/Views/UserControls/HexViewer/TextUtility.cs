@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Windows;
-using System.Windows.Controls;
 using System.Windows.Documents;
 using System.Windows.Media;
 using SysadminsLV.WPF.OfficeTheme.Controls;
@@ -13,19 +12,15 @@ namespace SysadminsLV.Asn1Editor.Views.UserControls.HexViewer {
             Int32 line = (Int32)Math.Floor((Double)offset / 16);
             return (offset - 16 * line) * 3 + 50 * line + 2;
         }
-        static TextRange[] GetRanges(IList<TextPointer> pointers) {
+        public static TextRange[] GetRanges(IList<TextPointer> pointers) {
             TextRange[] ranges = new TextRange[3];
             ranges[0] = new TextRange(pointers[0], pointers[1]);
             ranges[1] = new TextRange(pointers[2], pointers[3]);
             ranges[2] = new TextRange(pointers[4], pointers[5]);
             return ranges;
         }
-        static void ScrollToPosition(TextPointer startPointer, BindableRichTextBox rtb, ScrollViewer scroller) {
-            rtb.CaretPosition = startPointer;
-            scroller.ScrollToVerticalOffset(rtb.FontSize * (rtb.CurrentLine - 1));
-        }
 
-        public static TextRange[] GetTextPointers(IHexAsnNode treeNode, BindableRichTextBox rtb, ScrollViewer scroller) {
+        public static TextRange[] GetSelectionPointers(IHexAsnNode treeNode, BindableRichTextBox rtb) {
             TextPointer[] pointers = new TextPointer[6];
             // tag
             pointers[0] = rtb.Document.ContentStart.GetPositionAtOffset(
@@ -41,14 +36,14 @@ namespace SysadminsLV.Asn1Editor.Views.UserControls.HexViewer {
             pointers[3] = rtb.Document.ContentStart.GetPositionAtOffset(
                 getOffset(treeNode.PayloadStartOffset)
             );
-            //// payload
+            // payload
             pointers[4] = rtb.Document.ContentStart.GetPositionAtOffset(
                 getOffset(treeNode.PayloadStartOffset)
             );
             pointers[5] = rtb.Document.ContentStart.GetPositionAtOffset(
                 getOffset(treeNode.PayloadStartOffset + treeNode.PayloadLength)
             );
-            ScrollToPosition(pointers[0], rtb, scroller);
+
             return GetRanges(pointers);
         }
         public static void Colorize(TextRange[] ranges) {

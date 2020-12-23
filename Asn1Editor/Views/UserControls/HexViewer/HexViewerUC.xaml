@@ -31,6 +31,7 @@
             <Setter Property="FontFamily" Value="Consolas"/>
             <Setter Property="FontSize" Value="{Binding Path=FontSize, Source={x:Static properties:Settings.Default}}"/>
             <Setter Property="IsReadOnlyCaretVisible" Value="True"/>
+            <Setter Property="VerticalScrollBarVisibility" Value="Hidden"/>
         </Style>
     </UserControl.Resources>
     <DockPanel>
@@ -90,27 +91,32 @@
                 </RichTextBox>
             </DockPanel>
         </Border>
-        <ScrollViewer VerticalScrollBarVisibility="Visible" Name="Scroller">
-            <DockPanel>
-                <ctrl:BindableRichTextBox x:Name="HexAddressPane"
-                                              x:FieldModifier="private"
-                                              Style="{StaticResource RtbPaneStyle}"
-                                              Foreground="Blue"
-                                              Visibility="{Binding ElementName=HexAddressToggle, Path=IsChecked, Converter={StaticResource BooleanToVisibility}}"
-                                              Width="{Binding ElementName=HexAddrHeaderRtb, Path=Width}"/>
-                <ctrl:BindableRichTextBox x:Name="HexRawPane"
-                                              x:FieldModifier="private"
-                                              Style="{StaticResource RtbPaneStyle}"
-                                              Foreground="Gray"
-                                              ObserveCaret="True"
-                                              Width="{Binding ElementName=HexRawHeaderRtb, Path=Width}"/>
-                <ctrl:BindableRichTextBox x:Name="HexAsciiPane"
-                                              x:FieldModifier="private"
-                                              Style="{StaticResource RtbPaneStyle}"
-                                              Foreground="Green"
-                                              Visibility="{Binding ElementName=AsciiToggle, Path=IsChecked, Converter={StaticResource BooleanToVisibility}}"
-                                              Width="{Binding ElementName=HexAsciiHeaderRtb, Path=Width}"/>
-            </DockPanel>
-        </ScrollViewer>
+        <DockPanel>
+            <ScrollBar x:Name="Scroller"
+                       DockPanel.Dock="Right"
+                       Visibility="Visible"
+                       Scroll="onScrollerScroll"/>
+            <ctrl:BindableRichTextBox  x:Name="HexAddressPane"
+                                       x:FieldModifier="private"
+                                       Style="{StaticResource RtbPaneStyle}"
+                                       Foreground="Gray"
+                                       Visibility="{Binding ElementName=HexAddressToggle, Path=IsChecked, Converter={StaticResource BooleanToVisibility}}"
+                                       Width="{Binding ElementName=HexAddrHeaderRtb, Path=Width}"
+                                       ScrollViewer.ScrollChanged="onRtbScrollChanged"/>
+            <ctrl:BindableRichTextBox x:Name="HexRawPane"
+                                      x:FieldModifier="private"
+                                      Style="{StaticResource RtbPaneStyle}"
+                                      Foreground="Gray"
+                                      ObserveCaret="True"
+                                      Width="{Binding ElementName=HexRawHeaderRtb, Path=Width}"
+                                      ScrollViewer.ScrollChanged="onRtbScrollChanged"/>
+            <ctrl:BindableRichTextBox x:Name="HexAsciiPane"
+                                      x:FieldModifier="private"
+                                      Style="{StaticResource RtbPaneStyle}"
+                                      Foreground="Green"
+                                      Visibility="{Binding ElementName=AsciiToggle, Path=IsChecked, Converter={StaticResource BooleanToVisibility}}"
+                                      Width="{Binding ElementName=HexAsciiHeaderRtb, Path=Width}"
+                                      ScrollViewer.ScrollChanged="onRtbScrollChanged"/>
+        </DockPanel>
     </DockPanel>
 </UserControl>
