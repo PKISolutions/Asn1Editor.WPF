@@ -290,6 +290,8 @@
                             AllowDrop="True"
                             DoubleClickCommand="{Binding TreeCommands.EditNodeCommand}"
                             DoubleClickCommandParameter="{x:Static clr:NodeEditMode.Text}"
+                            FileDropCommand="{Binding DropFileCommand}"
+                            MaxTextLength="{Binding NodeViewOptions.MaxTreeTextLength}"
                             FontFamily="Consolas"
                             FontSize="{Binding NodeViewOptions.FontSize}"
                             BorderBrush="{StaticResource NormalBorderBrush}"

@@ -3,7 +3,6 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
-using SysadminsLV.Asn1Editor.API.ViewModel;
 using SysadminsLV.WPF.OfficeTheme.Toolkit.Commands;
 
 namespace SysadminsLV.Asn1Editor.Views.UserControls {
@@ -28,6 +27,21 @@ namespace SysadminsLV.Asn1Editor.Views.UserControls {
         public ICommand ExpandAllCommand {
             get => (ICommand)GetValue(ExpandAllCommandProperty);
             private set => SetValue(ExpandAllCommandProperty, value);
+        }
+
+        #endregion
+
+        #region FileDropCommand
+
+        public static readonly DependencyProperty FileDropCommandProperty = DependencyProperty.Register(
+            nameof(FileDropCommand),
+            typeof(ICommand),
+            typeof(AsnTreeView),
+            new PropertyMetadata(default(ICommand)));
+
+        public ICommand FileDropCommand {
+            get => (ICommand)GetValue(FileDropCommandProperty);
+            set => SetValue(FileDropCommandProperty, value);
         }
 
         #endregion
@@ -77,6 +91,21 @@ namespace SysadminsLV.Asn1Editor.Views.UserControls {
 
         #endregion
 
+        #region MaxTextLength
+
+        public static readonly DependencyProperty MaxTextLengthProperty = DependencyProperty.Register(
+            nameof(MaxTextLength),
+            typeof(Int32),
+            typeof(AsnTreeView),
+            new PropertyMetadata(default(Int32)));
+
+        public Int32 MaxTextLength {
+            get => (Int32)GetValue(MaxTextLengthProperty);
+            set => SetValue(MaxTextLengthProperty, value);
+        }
+
+        #endregion
+
         void OnTreeViewDoubleClick(Object sender, MouseButtonEventArgs e) {
             DoubleClickCommand.Execute(DoubleClickCommandParameter);
         }
@@ -91,10 +120,15 @@ namespace SysadminsLV.Asn1Editor.Views.UserControls {
             if (e.NewValue == null) { return; }
             SelectedItem = e.NewValue;
         }
-        void Tree_OnDrop(Object sender, DragEventArgs e) {
+        void onTreeFileDrop(Object sender, DragEventArgs e) {
+            if (!AllowDrop) {
+                e.Handled = true;
+                return;
+            }
             String[] file = (String[])e.Data.GetData(DataFormats.FileDrop, true);
-            if (file != null) {
-                ((MainWindowVM)DataContext).DropFile(file[0]);
+            if (FileDropCommand != null && file?.Length > 0) {
+                FileDropCommand.Execute(file[0]);
+                e.Handled = true;
             }
         }
         void expandAll(Object o) {

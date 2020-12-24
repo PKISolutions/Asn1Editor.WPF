@@ -55,6 +55,7 @@
     <Compile Include="AsnHexViewer.xaml.cs">
       <DependentUpon>AsnHexViewer.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Helpers\TextBlockTrimConverter.cs" />
     <Compile Include="IHexAsnNode.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Helpers\TextUtility.cs" />

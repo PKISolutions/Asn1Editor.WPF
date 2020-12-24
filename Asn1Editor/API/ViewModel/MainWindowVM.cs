@@ -34,6 +34,7 @@ namespace SysadminsLV.Asn1Editor.API.ViewModel {
             NewCommand = new RelayCommand(newFile);
             OpenCommand = new RelayCommand(openFile);
             SaveCommand = new RelayCommand(saveFile, canPrintSave);
+            DropFileCommand = new RelayCommand(dropFile);
             appCommands.ShowConverterWindow = new RelayCommand(showConverter);
             NodeViewOptions.PropertyChanged += onNodeViewOptionsChanged;
             DataSource.CollectionChanged += (sender, args) => IsModified = true;
@@ -51,6 +52,7 @@ namespace SysadminsLV.Asn1Editor.API.ViewModel {
         public ICommand SaveCommand { get; set; }
         public ICommand PrintCommand { get; set; }
         public ICommand SettingsCommand { get; set; }
+        public ICommand DropFileCommand { get; }
 
         public IAppCommands AppCommands { get; }
         public ITreeCommands TreeCommands { get; }
@@ -204,6 +206,18 @@ namespace SysadminsLV.Asn1Editor.API.ViewModel {
                 default:
                     return false;
             }
+        }
+
+        void dropFile(Object o) {
+            if (!(o is String file)) {
+                return;
+            }
+
+            if (!File.Exists(file)) { return; }
+            Path = file;
+            DataSource.RawData.Clear();
+            decode();
+
         }
         public void DropFile(String filePath) {
             if (!File.Exists(filePath)) { return; }

@@ -8,6 +8,7 @@ namespace SysadminsLV.Asn1Editor.API.ModelObjects {
         Boolean showTagNumber, showNodeOffset = true, showNodeLength = true, showInHex, showContent = true, showNodePath, intAsInt,
             showHexViewer, showHexAddrPanel = true, showHexAsciiPanel = true;
         Int32 fontSize = 12;
+        Int32 maxStringLength = 150;
 
         [XmlElement("showTagNum")]
         public Boolean ShowTagNumber {
@@ -128,6 +129,17 @@ namespace SysadminsLV.Asn1Editor.API.ModelObjects {
                 }
                 fontSize = value;
                 OnPropertyChanged(nameof(FontSize));
+            }
+        }
+        [XmlElement("maxTreeTextLength")]
+        public Int32 MaxTreeTextLength {
+            get => maxStringLength;
+            set {
+                if (value == maxStringLength) {
+                    return;
+                }
+                maxStringLength = value;
+                OnPropertyChanged(nameof(MaxTreeTextLength));
             }
         }
     }

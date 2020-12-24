@@ -5,15 +5,15 @@
           xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
           xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
           xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-          xmlns:converters="clr-namespace:SysadminsLV.Asn1Editor.API.Converters"
-          Drop="Tree_OnDrop"
+          xmlns:helpers="clr-namespace:Asn1Editor.Wpf.Controls.Helpers;assembly=Asn1Editor.Wpf.Controls"
+          Drop="onTreeFileDrop"
           SelectedItemChanged="OnTreeViewSelectedItemChanged"
           MouseDoubleClick="OnTreeViewDoubleClick"
           MouseRightButtonDown="OnPreviewMouseRightButtonDown"
           mc:Ignorable="d"
           d:DesignHeight="300" d:DesignWidth="300">
     <TreeView.Resources>
-        <converters:TextBlockTrimConverter x:Key="Trimmer"/>
+        <helpers:TextBlockTrimConverter x:Key="Trimmer"/>
         <Style TargetType="Image">
             <Style.Setters>
                 <Setter Property="SnapsToDevicePixels" Value="True"/>
@@ -117,10 +117,15 @@
                        VerticalAlignment="Center"
                        Height="16"
                        Width="16"/>
-                <TextBlock Text="{Binding Value.Header, Converter={StaticResource Trimmer}}"
-                           Foreground="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type TreeView}}, Path=Foreground}"
+                <TextBlock Foreground="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type TreeView}}, Path=Foreground}"
                            TextWrapping="NoWrap"
                            Margin="5,0">
+                    <TextBlock.Text>
+                        <MultiBinding Converter="{StaticResource Trimmer}">
+                            <Binding Path="Value.Header" UpdateSourceTrigger="PropertyChanged"/>
+                            <Binding RelativeSource="{RelativeSource FindAncestor, AncestorType={x:Type TreeView}}" Path="MaxTextLength"/>
+                        </MultiBinding>
+                    </TextBlock.Text>
                     <TextBlock.ToolTip>
                         <TextBlock Text="{Binding Value.ToolTip}"/>
                     </TextBlock.ToolTip>
