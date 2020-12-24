@@ -1,7 +1,6 @@
 ﻿<Application x:Class="SysadminsLV.Asn1Editor.App"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:ctrl="clr-namespace:SysadminsLV.WPF.OfficeTheme.Controls;assembly=Wpf.OfficeTheme">
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
     <Application.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
@@ -15,6 +14,13 @@
                 <Setter Property="ResizeMode" Value="NoResize" />
                 <Setter Property="WindowStyle" Value="SingleBorderWindow" />
                 <Setter Property="SizeToContent" Value="Height" />
+            </Style>
+            <Style x:Key="TvStyle" TargetType="TreeView">
+                <Style.Triggers>
+                    <DataTrigger Binding="{Binding IsBusy}" Value="True">
+                        <Setter Property="Opacity" Value="0.3"/>
+                    </DataTrigger>
+                </Style.Triggers>
             </Style>
         </ResourceDictionary>
     </Application.Resources>

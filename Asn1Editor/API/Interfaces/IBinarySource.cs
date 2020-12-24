@@ -2,7 +2,7 @@
 using System.Collections.Specialized;
 using SysadminsLV.WPF.OfficeTheme.Toolkit.CLR;
 
-namespace Asn1Editor.Wpf.Controls {
+namespace SysadminsLV.Asn1Editor.API.Interfaces {
     public interface IBinarySource : INotifyCollectionChanged {
         ObservableList<Byte> RawData { get; }
     }

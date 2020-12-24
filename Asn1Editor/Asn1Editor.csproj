@@ -141,6 +141,7 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="API\Interfaces\IAppCommands.cs" />
+    <Compile Include="API\Interfaces\IBinarySource.cs" />
     <Compile Include="API\Interfaces\ITagDataEditor.cs" />
     <Compile Include="API\Interfaces\ITagDataEditorVM.cs" />
     <Compile Include="API\Interfaces\ITreeViewVM.cs" />

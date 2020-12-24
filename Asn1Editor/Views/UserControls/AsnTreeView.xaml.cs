@@ -17,13 +17,22 @@ namespace SysadminsLV.Asn1Editor.Views.UserControls {
             ExpandAllCommand = new RelayCommand(expandAll);
         }
 
+        #region ExpandAllCommand
+
         public static readonly DependencyProperty ExpandAllCommandProperty = DependencyProperty.Register(
-            nameof(ExpandAllCommand), typeof(ICommand), typeof(AsnTreeView), new PropertyMetadata(default(ICommand)));
+            nameof(ExpandAllCommand),
+            typeof(ICommand),
+            typeof(AsnTreeView),
+            new PropertyMetadata(default(ICommand)));
 
         public ICommand ExpandAllCommand {
             get => (ICommand)GetValue(ExpandAllCommandProperty);
             private set => SetValue(ExpandAllCommandProperty, value);
         }
+
+        #endregion
+
+        #region DoubleClickCommand
 
         public static readonly DependencyProperty DoubleClickCommandProperty = DependencyProperty.Register(
             nameof(DoubleClickCommand),
@@ -36,6 +45,10 @@ namespace SysadminsLV.Asn1Editor.Views.UserControls {
             set => SetValue(DoubleClickCommandProperty, value);
         }
 
+        #endregion
+
+        #region DoubleClickCommandParameter
+
         public static readonly DependencyProperty DoubleClickCommandParameterProperty = DependencyProperty.Register(
             nameof(DoubleClickCommandParameter),
             typeof(Object),
@@ -47,6 +60,10 @@ namespace SysadminsLV.Asn1Editor.Views.UserControls {
             set => SetValue(DoubleClickCommandParameterProperty, value);
         }
 
+        #endregion
+
+        #region SelectedItem
+
         public static readonly DependencyProperty SelectedItemProperty = DependencyProperty.Register(
             nameof(SelectedItem),
             typeof(Object),
@@ -57,6 +74,8 @@ namespace SysadminsLV.Asn1Editor.Views.UserControls {
             get => GetValue(SelectedItemProperty);
             set => SetValue(SelectedItemProperty, value);
         }
+
+        #endregion
 
         void OnTreeViewDoubleClick(Object sender, MouseButtonEventArgs e) {
             DoubleClickCommand.Execute(DoubleClickCommandParameter);

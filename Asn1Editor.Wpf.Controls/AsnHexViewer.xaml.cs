@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.Linq;
 using System.Text;
@@ -28,7 +29,6 @@ namespace Asn1Editor.Wpf.Controls {
             FontSizeProperty.OverrideMetadata(typeof(AsnHexViewer), new FrameworkPropertyMetadata(OnFontSizeChanged));
             ranges = new TextRange[3];
             calculateWidths();
-
             panes = new[] { HexAddressPane, HexRawPane, HexAsciiPane };
         }
 
@@ -72,19 +72,19 @@ namespace Asn1Editor.Wpf.Controls {
 
         public static readonly DependencyProperty DataSourceProperty = DependencyProperty.Register(
             nameof(DataSource),
-            typeof(IBinarySource),
+            typeof(IList<Byte>),
             typeof(AsnHexViewer),
             new FrameworkPropertyMetadata(OnDataSourcePropertyChanged));
-        public IBinarySource DataSource {
-            get => (IBinarySource)GetValue(DataSourceProperty);
+        public IList<Byte> DataSource {
+            get => (IList<Byte>)GetValue(DataSourceProperty);
             set => SetValue(DataSourceProperty, value);
         }
         static void OnDataSourcePropertyChanged(DependencyObject source, DependencyPropertyChangedEventArgs e) {
-            if (e.OldValue != null) {
-                ((IBinarySource)e.OldValue).CollectionChanged -= ((AsnHexViewer)source).OnCollectionChanged;
+            if (e.OldValue != null && e.OldValue is INotifyCollectionChanged oldValue) {
+                oldValue.CollectionChanged -= ((AsnHexViewer)source).OnCollectionChanged;
             }
-            if (e.NewValue != null) {
-                ((IBinarySource)e.NewValue).CollectionChanged += ((AsnHexViewer)source).OnCollectionChanged;
+            if (e.NewValue != null && e.NewValue is INotifyCollectionChanged newValue) { 
+                newValue.CollectionChanged += ((AsnHexViewer)source).OnCollectionChanged;
             }
         }
         void OnCollectionChanged(Object o, NotifyCollectionChangedEventArgs e) {
@@ -133,7 +133,7 @@ namespace Asn1Editor.Wpf.Controls {
         void buildAddress() {
             HexAddressPane.Document = new FlowDocument();
             var addressParagraph = new Paragraph();
-            foreach (Int32 row in Enumerable.Range(0, (Int32)Math.Ceiling((Double)DataSource.RawData.Count / 16))) {
+            foreach (Int32 row in Enumerable.Range(0, (Int32)Math.Ceiling((Double)DataSource.Count / 16))) {
                 addressParagraph.Inlines.Add(new Run($"{row * 16:X8}" + Environment.NewLine));
             }
             HexAddressPane.Document.Blocks.Add(addressParagraph);
@@ -141,17 +141,17 @@ namespace Asn1Editor.Wpf.Controls {
         void buildHex() {
             HexRawPane.Document = new FlowDocument();
             var hexParagraph = new Paragraph();
-            hexParagraph.Inlines.Add(new Run(AsnFormatter.BinaryToString(DataSource.RawData.ToArray(), EncodingType.Hex).ToUpper()));
+            hexParagraph.Inlines.Add(new Run(AsnFormatter.BinaryToString(DataSource.ToArray(), EncodingType.Hex).ToUpper()));
             HexRawPane.Document.Blocks.Add(hexParagraph);
         }
         void buildAscii() {
             HexAsciiPane.Document = new FlowDocument();
             var asciiParagraph = new Paragraph();
             var SB = new StringBuilder();
-            for (Int32 index = 0; index < DataSource.RawData.Count; index++) {
-                Char c = DataSource.RawData[index] < 32 || DataSource.RawData[index] > 126
+            for (Int32 index = 0; index < DataSource.Count; index++) {
+                Char c = DataSource[index] < 32 || DataSource[index] > 126
                     ? '.'
-                    : (Char)DataSource.RawData[index];
+                    : (Char)DataSource[index];
                 if (index != 0 && index % 16 == 0) {
                     SB.Append(Environment.NewLine);
                 }
