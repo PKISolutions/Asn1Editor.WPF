@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace SysadminsLV.Asn1Editor.Views.UserControls.HexViewer {
+namespace Asn1Editor.Wpf.Controls {
     public interface IHexAsnNode {
         Int32 Offset { get; }
         Int32 PayloadStartOffset { get; }

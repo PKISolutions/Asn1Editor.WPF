@@ -1,13 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Windows;
 using System.Windows.Documents;
 using System.Windows.Media;
 using SysadminsLV.WPF.OfficeTheme.Controls;
 
-namespace SysadminsLV.Asn1Editor.Views.UserControls.HexViewer {
-    static class TextUtility {
+namespace Asn1Editor.Wpf.Controls {
+    public static class TextUtility {
         static Int32 getOffset(Int32 offset) {
             Int32 line = (Int32)Math.Floor((Double)offset / 16);
             return (offset - 16 * line) * 3 + 50 * line + 2;
@@ -58,6 +59,18 @@ namespace SysadminsLV.Asn1Editor.Views.UserControls.HexViewer {
             foreach (TextRange range in ranges.Where(range => range != null)) {
                 range.ClearAllProperties();
             }
+        }
+        public static Double MeasureStringWidth(String str, Double size, Boolean includeScrollbars) {
+            var formattedText = new FormattedText(
+                str,
+                CultureInfo.CurrentUICulture,
+                FlowDirection.LeftToRight,
+                new Typeface(new FontFamily("Consolas"), FontStyles.Normal, FontWeights.Normal, FontStretches.Normal),
+                size,
+                Brushes.Black);
+            return includeScrollbars
+                ? formattedText.Width + SystemParameters.VerticalScrollBarWidth + 12
+                : formattedText.Width + 12;
         }
     }
 }

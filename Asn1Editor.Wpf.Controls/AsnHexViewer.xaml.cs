@@ -6,16 +6,14 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
 using System.Windows.Documents;
-using SysadminsLV.Asn1Editor.API.Utils;
-using SysadminsLV.Asn1Editor.Properties;
 using SysadminsLV.Asn1Parser;
 using SysadminsLV.WPF.OfficeTheme.Controls;
 
-namespace SysadminsLV.Asn1Editor.Views.UserControls.HexViewer {
+namespace Asn1Editor.Wpf.Controls {
     /// <summary>
     /// Interaction logic for HexViewerUC.xaml
     /// </summary>
-    partial class HexViewerUC {
+    partial class AsnHexViewer {
         const String masterAddr = "12345678";
         const String masterHex = "123456789012345678901234567890123456789012345678";
         const String masterAscii = "1234567890123456";
@@ -24,29 +22,68 @@ namespace SysadminsLV.Asn1Editor.Views.UserControls.HexViewer {
 
         Boolean scrollLocked;
         TextRange[] ranges;
-        public HexViewerUC() {
+        public AsnHexViewer() {
             InitializeComponent();
+            FontSizeProperty.OverrideMetadata(typeof(AsnHexViewer), new FrameworkPropertyMetadata(OnFontSizeChanged));
             ranges = new TextRange[3];
             calculateWidths();
-            Settings.Default.PropertyChanged += (Sender, Args) => {
-                if (Args.PropertyName == nameof(Settings.FontSize)) {
-                    calculateWidths();
-                }
-            };
 
             panes = new[] { HexAddressPane, HexRawPane, HexAsciiPane };
         }
+
+
+        static void OnFontSizeChanged(DependencyObject d, DependencyPropertyChangedEventArgs e) {
+            ((AsnHexViewer)d).calculateWidths();
+        }
+
+
+        #region ShowAddressPane
+
+        public static readonly DependencyProperty ShowAddressPaneProperty = DependencyProperty.Register(
+            nameof(ShowAddressPane),
+            typeof(Boolean),
+            typeof(AsnHexViewer),
+            new PropertyMetadata(default(Boolean)));
+
+        public Boolean ShowAddressPane {
+            get => (Boolean)GetValue(ShowAddressPaneProperty);
+            set => SetValue(ShowAddressPaneProperty, value);
+        }
+
+        #endregion
+
+        #region ShowAsciiPane
+
+        public static readonly DependencyProperty ShowAsciiPaneProperty = DependencyProperty.Register(
+            nameof(ShowAsciiPane),
+            typeof(Boolean),
+            typeof(AsnHexViewer),
+            new PropertyMetadata(default(Boolean)));
+
+        public Boolean ShowAsciiPane {
+            get => (Boolean)GetValue(ShowAsciiPaneProperty);
+            set => SetValue(ShowAsciiPaneProperty, value);
+        }
+
+        #endregion
+
+        #region DataSource
+
         public static readonly DependencyProperty DataSourceProperty = DependencyProperty.Register(
             nameof(DataSource),
             typeof(IBinarySource),
-            typeof(HexViewerUC),
+            typeof(AsnHexViewer),
             new FrameworkPropertyMetadata(OnDataSourcePropertyChanged));
+        public IBinarySource DataSource {
+            get => (IBinarySource)GetValue(DataSourceProperty);
+            set => SetValue(DataSourceProperty, value);
+        }
         static void OnDataSourcePropertyChanged(DependencyObject source, DependencyPropertyChangedEventArgs e) {
             if (e.OldValue != null) {
-                ((IBinarySource)e.OldValue).CollectionChanged -= ((HexViewerUC)source).OnCollectionChanged;
+                ((IBinarySource)e.OldValue).CollectionChanged -= ((AsnHexViewer)source).OnCollectionChanged;
             }
             if (e.NewValue != null) {
-                ((IBinarySource)e.NewValue).CollectionChanged += ((HexViewerUC)source).OnCollectionChanged;
+                ((IBinarySource)e.NewValue).CollectionChanged += ((AsnHexViewer)source).OnCollectionChanged;
             }
         }
         void OnCollectionChanged(Object o, NotifyCollectionChangedEventArgs e) {
@@ -56,13 +93,17 @@ namespace SysadminsLV.Asn1Editor.Views.UserControls.HexViewer {
             buildAscii();
         }
 
+        #endregion
+
+        #region SelectedNode
+
         public static readonly DependencyProperty SelectedNodeProperty = DependencyProperty.Register(
             nameof(SelectedNode),
             typeof(IHexAsnNode),
-            typeof(HexViewerUC),
+            typeof(AsnHexViewer),
             new FrameworkPropertyMetadata(OnSelectedNodePropertyChanged));
         static void OnSelectedNodePropertyChanged(DependencyObject sender, DependencyPropertyChangedEventArgs e) {
-            var ctrl = (HexViewerUC)sender;
+            var ctrl = (AsnHexViewer)sender;
             if (e.NewValue == null) {
                 TextUtility.ResetColors(ctrl.ranges);
                 return;
@@ -75,19 +116,18 @@ namespace SysadminsLV.Asn1Editor.Views.UserControls.HexViewer {
             ctrl.scrollPanes(null);
         }
 
-        public IBinarySource DataSource {
-            get => (IBinarySource)GetValue(DataSourceProperty);
-            set => SetValue(DataSourceProperty, value);
-        }
+
         public IHexAsnNode SelectedNode {
             get => (IHexAsnNode)GetValue(SelectedNodeProperty);
             set => SetValue(SelectedNodeProperty, value);
         }
 
+        #endregion
+
         void calculateWidths() {
-            HexAddrHeaderRtb.Width = Tools.MeasureStringWidth(masterAddr, Settings.Default.FontSize, false);
-            HexRawHeaderRtb.Width = Tools.MeasureStringWidth(masterHex, Settings.Default.FontSize, false);
-            HexAsciiHeaderRtb.Width = Tools.MeasureStringWidth(masterAscii, Settings.Default.FontSize, false);
+            HexAddrHeaderRtb.Width = TextUtility.MeasureStringWidth(masterAddr, FontSize, false);
+            HexRawHeaderRtb.Width = TextUtility.MeasureStringWidth(masterHex, FontSize, false);
+            HexAsciiHeaderRtb.Width = TextUtility.MeasureStringWidth(masterAscii, FontSize, false);
         }
         void buildAddress() {
             HexAddressPane.Document = new FlowDocument();

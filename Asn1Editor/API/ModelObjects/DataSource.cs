@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
-using SysadminsLV.Asn1Editor.API.Generic;
 using SysadminsLV.Asn1Editor.API.Interfaces;
 using SysadminsLV.Asn1Editor.API.ViewModel;
+using SysadminsLV.WPF.OfficeTheme.Toolkit.CLR;
 
 namespace SysadminsLV.Asn1Editor.API.ModelObjects {
     class DataSource : ViewModelBase, IDataSource {
@@ -46,7 +46,7 @@ namespace SysadminsLV.Asn1Editor.API.ModelObjects {
                 Tree[0].UpdateNodeView(NodeViewOptions);
             }
         }
-        public ObservableList<Byte> RawData { get; } = new ObservableList<Byte> { IsNotifying = true };
+        public ObservableList<Byte> RawData { get; } = new ObservableList<Byte>(true, false);
 
         public event NotifyCollectionChangedEventHandler CollectionChanged;
     }

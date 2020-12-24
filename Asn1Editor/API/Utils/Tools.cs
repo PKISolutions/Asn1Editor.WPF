@@ -1,7 +1,5 @@
 ﻿using System;
-using System.Globalization;
 using System.Windows;
-using System.Windows.Media;
 using Microsoft.Win32;
 
 namespace SysadminsLV.Asn1Editor.API.Utils {
@@ -31,18 +29,6 @@ namespace SysadminsLV.Asn1Editor.API.Utils {
                 Filter = "All files (*.*)|*.*"
             };
             return dlg.ShowDialog() == true ? dlg.FileName : String.Empty;
-        }
-        public static Double MeasureStringWidth(String str, Int32 size, Boolean includeScrollbars) {
-            var formattedText = new FormattedText(
-                str,
-                CultureInfo.CurrentUICulture,
-                FlowDirection.LeftToRight,
-                new Typeface(new FontFamily("Consolas"), FontStyles.Normal, FontWeights.Normal, FontStretches.Normal),
-                size,
-                Brushes.Black);
-            return includeScrollbars
-                ? formattedText.Width + SystemParameters.VerticalScrollBarWidth + 12
-                : formattedText.Width + 12;
         }
     }
 }

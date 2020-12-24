@@ -1,8 +1,8 @@
 ﻿using System;
+using Asn1Editor.Wpf.Controls;
 using SysadminsLV.Asn1Editor.API.Utils.ASN;
 using SysadminsLV.Asn1Editor.API.ViewModel;
 using SysadminsLV.Asn1Editor.Properties;
-using SysadminsLV.Asn1Editor.Views.UserControls.HexViewer;
 using SysadminsLV.Asn1Parser;
 
 namespace SysadminsLV.Asn1Editor.API.ModelObjects {

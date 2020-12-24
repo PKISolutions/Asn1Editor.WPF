@@ -2,6 +2,7 @@
 using System.Globalization;
 using System.IO;
 using System.Windows.Input;
+using Asn1Editor.Wpf.Controls;
 using SysadminsLV.Asn1Editor.API.Interfaces;
 using SysadminsLV.Asn1Editor.API.ModelObjects;
 using SysadminsLV.Asn1Editor.API.Utils;
@@ -29,7 +30,7 @@ namespace SysadminsLV.Asn1Editor.API.ViewModel {
             SaveCommand = new RelayCommand(saveFile);
             PrintCommand = new RelayCommand(print);
             ApplyCommand = new RelayCommand(applyNewLength);
-            TextBoxWidth = Tools.MeasureStringWidth(master, Settings.Default.FontSize, false);
+            TextBoxWidth = TextUtility.MeasureStringWidth(master, Settings.Default.FontSize, false);
             CertutilViewChecked = true;
             renderer.RenderText(currentLength);
         }

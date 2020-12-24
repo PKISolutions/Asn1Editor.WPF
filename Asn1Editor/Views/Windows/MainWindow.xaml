@@ -5,9 +5,9 @@
         xmlns:uc="clr-namespace:SysadminsLV.Asn1Editor.Views.UserControls"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-        xmlns:hexViewer="clr-namespace:SysadminsLV.Asn1Editor.Views.UserControls.HexViewer"
         xmlns:clr="clr-namespace:SysadminsLV.Asn1Editor.API.Utils"
         xmlns:system="clr-namespace:System;assembly=mscorlib"
+        xmlns:controls="clr-namespace:Asn1Editor.Wpf.Controls;assembly=Asn1Editor.Wpf.Controls"
         mc:Ignorable="d"
         d:DataContext="{d:DesignInstance vm:MainWindowVM}"
         Title="{Binding Title}"
@@ -261,9 +261,28 @@
                 </TextBlock>
             </StatusBarItem>
         </StatusBar>
-        <hexViewer:HexViewerUC DataSource="{Binding DataSource}"
-                               Visibility="{Binding ElementName=HexViewerToggle, Path=IsChecked, Converter={StaticResource BooleanToVisibility}}"
-                               SelectedNode="{Binding DataSource.SelectedNode.Value, Mode=OneWay}"/>
+        <DockPanel Visibility="{Binding ElementName=HexViewerToggle, Path=IsChecked, Converter={StaticResource BooleanToVisibility}}">
+            <ToolBarTray DockPanel.Dock="Top" IsLocked="True">
+                <ToolBar>
+                    <ToggleButton x:Name="HexAddressToggle"
+                                  IsChecked="{Binding NodeViewOptions.ShowHexAddrPanel}"
+                                  ToolTip="Show or hide address panel">
+                        <Image Source="/Views/Images/Menu/AddressEnabled_32x32.png"/>
+                    </ToggleButton>
+                    <Separator/>
+                    <ToggleButton x:Name="AsciiToggle"
+                                  IsChecked="{Binding NodeViewOptions.ShowHexAsciiPanel}"
+                                  ToolTip="Show or hide ASCII panel">
+                        <Image Source="/Views/Images/Menu/AsciiEnabled_32x32.png"/>
+                    </ToggleButton>
+                </ToolBar>
+            </ToolBarTray>
+            <controls:AsnHexViewer DataSource="{Binding DataSource, Mode=OneWay}"
+                                   SelectedNode="{Binding DataSource.SelectedNode.Value, Mode=OneWay}"
+                                   FontSize="{Binding NodeViewOptions.FontSize}"
+                                   ShowAddressPane="{Binding ElementName=HexAddressToggle, Path=IsChecked}"
+                                   ShowAsciiPane="{Binding ElementName=AsciiToggle, Path=IsChecked}"/>
+        </DockPanel>
         <uc:AsnTreeView DoubleClickCommand="{Binding TreeCommands.EditNodeCommand}"
                         DoubleClickCommandParameter="{x:Static clr:NodeEditMode.Text}"
                         SelectedItem="{Binding DataSource.SelectedNode, Mode=OneWayToSource}">

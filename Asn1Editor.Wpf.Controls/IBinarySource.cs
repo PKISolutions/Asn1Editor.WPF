@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Collections.Specialized;
-using SysadminsLV.Asn1Editor.API.Generic;
+using SysadminsLV.WPF.OfficeTheme.Toolkit.CLR;
 
-namespace SysadminsLV.Asn1Editor.Views.UserControls.HexViewer {
+namespace Asn1Editor.Wpf.Controls {
     public interface IBinarySource : INotifyCollectionChanged {
         ObservableList<Byte> RawData { get; }
     }

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Windows.Input;
+using Asn1Editor.Wpf.Controls;
 using SysadminsLV.Asn1Editor.API.Interfaces;
 using SysadminsLV.Asn1Editor.API.ModelObjects;
 using SysadminsLV.Asn1Editor.API.Utils;
@@ -143,8 +144,8 @@ namespace SysadminsLV.Asn1Editor.API.ViewModel {
             };
         }
         void calculateLengths() {
-            TagTextBoxWidth = Tools.MeasureStringWidth(masterTag, Settings.Default.FontSize, false);
-            UnusedTextBoxWidth = Tools.MeasureStringWidth(masterUnused, Settings.Default.FontSize, false);
+            TagTextBoxWidth = TextUtility.MeasureStringWidth(masterTag, Settings.Default.FontSize, false);
+            UnusedTextBoxWidth = TextUtility.MeasureStringWidth(masterUnused, Settings.Default.FontSize, false);
         }
         void submitValues(Object obj) {
             if (Tag == 0) {

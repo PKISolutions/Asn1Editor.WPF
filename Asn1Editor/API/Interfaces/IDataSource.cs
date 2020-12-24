@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.ObjectModel;
+using Asn1Editor.Wpf.Controls;
 using SysadminsLV.Asn1Editor.API.ModelObjects;
-using SysadminsLV.Asn1Editor.Views.UserControls.HexViewer;
 
 namespace SysadminsLV.Asn1Editor.API.Interfaces {
     public interface IDataSource : IBinarySource {
