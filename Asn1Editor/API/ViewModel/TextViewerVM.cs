@@ -3,6 +3,7 @@ using System.Globalization;
 using System.IO;
 using System.Windows.Input;
 using Asn1Editor.Wpf.Controls;
+using Asn1Editor.Wpf.Controls.Helpers;
 using SysadminsLV.Asn1Editor.API.Interfaces;
 using SysadminsLV.Asn1Editor.API.ModelObjects;
 using SysadminsLV.Asn1Editor.API.Utils;

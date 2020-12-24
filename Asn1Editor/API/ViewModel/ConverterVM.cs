@@ -4,6 +4,7 @@ using System.IO;
 using System.Windows;
 using System.Windows.Input;
 using Asn1Editor.Wpf.Controls;
+using Asn1Editor.Wpf.Controls.Helpers;
 using Microsoft.Win32;
 using SysadminsLV.Asn1Editor.API.Utils;
 using SysadminsLV.Asn1Editor.Properties;

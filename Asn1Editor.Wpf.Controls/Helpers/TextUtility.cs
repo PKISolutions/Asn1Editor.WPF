@@ -7,7 +7,7 @@ using System.Windows.Documents;
 using System.Windows.Media;
 using SysadminsLV.WPF.OfficeTheme.Controls;
 
-namespace Asn1Editor.Wpf.Controls {
+namespace Asn1Editor.Wpf.Controls.Helpers {
     public static class TextUtility {
         static Int32 getOffset(Int32 offset) {
             Int32 line = (Int32)Math.Floor((Double)offset / 16);

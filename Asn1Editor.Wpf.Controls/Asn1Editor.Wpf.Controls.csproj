@@ -58,11 +58,9 @@
     <Compile Include="IBinarySource.cs" />
     <Compile Include="IHexAsnNode.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="TextUtility.cs" />
+    <Compile Include="Helpers\TextUtility.cs" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Helpers\" />
-  </ItemGroup>
+  <ItemGroup />
   <ItemGroup>
     <Page Include="AsnHexViewer.xaml">
       <Generator>MSBuild:Compile</Generator>

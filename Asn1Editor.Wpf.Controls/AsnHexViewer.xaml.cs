@@ -6,6 +6,7 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
 using System.Windows.Documents;
+using Asn1Editor.Wpf.Controls.Helpers;
 using SysadminsLV.Asn1Parser;
 using SysadminsLV.WPF.OfficeTheme.Controls;
 
