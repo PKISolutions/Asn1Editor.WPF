@@ -127,7 +127,8 @@
                         </MultiBinding>
                     </TextBlock.Text>
                     <TextBlock.ToolTip>
-                        <TextBlock Text="{Binding Value.ToolTip}"/>
+                        <TextBlock FontFamily="Consolas"
+                                   Text="{Binding Value.ToolTip}"/>
                     </TextBlock.ToolTip>
                     </TextBlock>
             </StackPanel>

@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.ObjectModel;
-using Asn1Editor.Wpf.Controls;
 using SysadminsLV.Asn1Editor.API.ModelObjects;
 
 namespace SysadminsLV.Asn1Editor.API.Interfaces {

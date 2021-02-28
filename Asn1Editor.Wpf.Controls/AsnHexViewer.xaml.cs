@@ -88,10 +88,7 @@ namespace Asn1Editor.Wpf.Controls {
             }
         }
         void OnCollectionChanged(Object o, NotifyCollectionChangedEventArgs e) {
-            if (DataSource == null) { return; }
-            buildAddress();
-            buildHex();
-            buildAscii();
+            RefreshView();
         }
 
         #endregion
@@ -214,6 +211,16 @@ namespace Asn1Editor.Wpf.Controls {
             Scroller.Value = finalValue;
             scrollPanes(finalValue);
             e.Handled = true;
+        }
+
+        public void RefreshView() {
+            if (DataSource == null) {
+                return;
+            }
+
+            buildAddress();
+            buildHex();
+            buildAscii();
         }
     }
 }

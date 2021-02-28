@@ -80,14 +80,7 @@ namespace SysadminsLV.Asn1Editor.API.Utils {
             Asn1Lite value = node.Value;
             line.Clear();
 
-            Byte[] binValue = getTagBinaryValue(node.Value);
-            String strValue = AsnFormatter.BinaryToString(binValue, _noAsciiTags.Contains(value.Tag)
-                ? EncodingType.Hex
-                : EncodingType.HexAscii).TrimEnd();
-            var lines = strValue.Split(new[] { nl }, StringSplitOptions.RemoveEmptyEntries).ToList();
-            if (node.Value.Tag == (Byte)Asn1Type.BIT_STRING) {
-                lines.Insert(0, $"{node.Value.UnusedBits:x2} ; UNUSED BITS");
-            }
+            var lines = getHexTable(node);
             String padLeftContent = String.Empty;
             if (node.Parent != null) {
                 padLeftContent = node.MyIndex < node.Parent.Children.Count - 1 ? "|  " : "   ";
@@ -111,6 +104,27 @@ namespace SysadminsLV.Asn1Editor.API.Utils {
                 line.AppendLine($"   ; \"{value.ExplicitValue}\"");
             }
             _sb.Append(line);
+        }
+        List<String> getHexTable(Asn1TreeNode node) {
+            Asn1Lite value = node.Value;
+
+            Byte[] binValue = getTagBinaryValue(node.Value);
+            Byte? highByte = null;
+            if (node.Value.Tag == (Byte)Asn1Type.INTEGER && binValue[0] == 0) {
+                highByte = 0;
+                binValue = binValue.Skip(1).ToArray();
+            }
+            String strValue = AsnFormatter.BinaryToString(binValue, _noAsciiTags.Contains(value.Tag)
+                ? EncodingType.Hex
+                : EncodingType.HexAscii).TrimEnd();
+            List<String> lines = strValue.Split(new[] { nl }, StringSplitOptions.RemoveEmptyEntries).ToList();
+            if (node.Value.Tag == (Byte)Asn1Type.BIT_STRING) {
+                lines.Insert(0, $"{node.Value.UnusedBits:x2} ; UNUSED BITS");
+            } else if (highByte.HasValue) {
+                lines.Insert(0, $"{highByte.Value:x2}");
+            }
+
+            return lines;
         }
         Byte[] getTagBinaryValue(Asn1Lite node) {
             Int32 skip = node.Tag == (Byte)Asn1Type.BIT_STRING ? node.PayloadStartOffset + 1 : node.PayloadStartOffset;

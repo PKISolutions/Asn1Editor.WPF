@@ -11,11 +11,17 @@ using SysadminsLV.Asn1Parser;
 using Unity;
 
 namespace SysadminsLV.Asn1Editor.API.ModelObjects {
-    public class Asn1TreeNode {
+    public class Asn1TreeNode : INotifyPropertyChanged {
         readonly IDataSource _dataSource;
+        readonly IList<Asn1Lite> _children = new ObservableCollection<Asn1Lite>();
+
+        Byte tag, unusedBits;
+        Int32 offset, offsetChange;
+        Int32 payloadLength, depth;
 
         public Asn1TreeNode(Asn1Lite value) {
             _dataSource = App.Container.Resolve<IDataSource>();
+            setNodeValues(value);
 
             Value = value;
             Path = value.Path;
@@ -27,15 +33,26 @@ namespace SysadminsLV.Asn1Editor.API.ModelObjects {
         }
 
         public Asn1TreeNode this[Int32 index] => Children[index];
-        public String Path { get; set; }
+        /// <summary>
+        /// Gets or sets the indexed path to the node in form: /0/1/4/3/..., where values represent zero-based index of the node in subtree.
+        /// </summary>
+        public String Path { get; private set; }
         /// <summary>
         /// Gets the index of current node in parent's children collection.
         /// </summary>
-        public Int32 MyIndex { get; set; }
+        public Int32 MyIndex { get; private set; }
+        /// <summary>
+        /// Gets the value that indicates whether the current node is root node. Root node is a node with no parent.
+        /// </summary>
         public Boolean IsRoot => Parent == null;
-        public Asn1TreeNode Parent { get; private set; }
+        /// <summary>
+        /// Gets or sets a tree node value.
+        /// </summary>
         public Asn1Lite Value { get; }
-        public ObservableCollection<Asn1TreeNode> Children { get; } = new ObservableCollection<Asn1TreeNode>();
+        /// <summary>
+        /// Gets a collection of child nodes.
+        /// </summary>
+        public IList<Asn1TreeNode> Children { get; } = new ObservableCollection<Asn1TreeNode>();
 
         public void InsertChildNode(Asn1TreeNode nodeToInsert, Asn1TreeNode caller, NodeAddOption option) {
             Int32 indexToInsert, newOffset;
@@ -83,7 +100,7 @@ namespace SysadminsLV.Asn1Editor.API.ModelObjects {
             Children.RemoveAt(node.MyIndex);
             // update path only below removed node
             for (Int32 childIndex = node.MyIndex; childIndex < Children.Count; childIndex++) {
-                updatePath(this[childIndex], Path, childIndex);
+                updatePath(Children[childIndex], Path, childIndex);
             }
             if (Children.Count == 0 && !IsRoot) {
                 Value.IsContainer = false;
@@ -94,7 +111,7 @@ namespace SysadminsLV.Asn1Editor.API.ModelObjects {
         }
 
         public void UpdateNodeView(NodeViewOptions options) {
-           updateNodeHeader(this, options); 
+            updateNodeHeader(this, options);
         }
 
         void updateNodeHeader(Asn1TreeNode node, NodeViewOptions options) {
@@ -144,7 +161,7 @@ namespace SysadminsLV.Asn1Editor.API.ModelObjects {
                     EncodingFormat.NOCRLF
                 );
             }
-            
+
         }
         String writeToolTip(Asn1TreeNode node) {
             var sb = new StringBuilder();
@@ -244,6 +261,109 @@ namespace SysadminsLV.Asn1Editor.API.ModelObjects {
             if (ReferenceEquals(this, obj)) { return true; }
             return obj.GetType() == GetType() && Equals((Asn1TreeNode)obj);
         }
+        #endregion
+
+        #region V2 properties
+        // value-specific properties
+        public Byte Tag {
+            get => tag;
+            private set {
+                tag = value;
+                if ((tag & (Byte)Asn1Class.CONTEXT_SPECIFIC) > 0) {
+                    IsContextSpecific = true;
+                }
+                OnPropertyChanged(nameof(Tag));
+            }
+        }
+        public String TagName { get; private set; }
+        public Int32 Offset { get; private set; }
+        public Int32 PayloadStartOffset { get; private set; }
+        public Int32 HeaderLength => PayloadStartOffset - Offset;
+        public Int32 PayloadLength { get; private set; }
+        public Int32 TagLength => HeaderLength + PayloadLength;
+        public Boolean IsContainer { get; set; }
+        public Boolean IsContextSpecific { get; set; }
+
+        // tree-specific properties
+        public Int32 Depth { get; private set; }
+        public Asn1TreeNode Parent { get; private set; }
+        public Asn1TreeNode NextSibling {
+            get {
+                // there is no siblings for root node
+                if (IsRoot) {
+                    return null;
+                }
+
+                // this node is last element in parent node. No next sibling.
+                return MyIndex + 1 > Parent.Children.Count
+                    ? null
+                    : Parent.Children[MyIndex + 1];
+            }
+        }
+        public Asn1TreeNode PreviousSibling {
+            get {
+                // there is no siblings for root node
+                if (IsRoot) {
+                    return null;
+                }
+
+                // this node is first element in parent node. No previous sibling.
+                return MyIndex == 0
+                    ? null
+                    : Parent.Children[MyIndex - 1];
+            }
+        }
+
+        #endregion
+
+        #region V2 methods
+
+        public void AppendNode(Asn1TreeNode node) {
+
+        }
+        public void AppendNodes(IEnumerable<Asn1TreeNode> collection) {
+
+        }
+        public void InsertNode(Int32 index, Asn1TreeNode node) {
+
+        }
+        public void RemoveNode(Asn1TreeNode node) {
+
+        }
+        public void RemoveSelf() {
+
+        }
+        public void Clear() {
+
+        }
+        public Asn1TreeNode Clone() {
+            return null;
+        }
+
+        #endregion
+
+        #region private methods
+
+        void setNodeValues(Asn1Lite asn) {
+            Offset = asn.Offset;
+            Tag = asn.Tag;
+            TagName = asn.TagName;
+            PayloadLength = asn.PayloadLength;
+            PayloadStartOffset = asn.PayloadStartOffset;
+            IsContainer = asn.IsContainer;
+            Depth = 0;
+            Path = String.Empty;
+        }
+
+        #endregion
+
+        #region INotifyPropertyChanged
+
+        public event PropertyChangedEventHandler PropertyChanged;
+        protected void OnPropertyChanged(String propertyName = null) {
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+        }
+
         #endregion
     }
 }
