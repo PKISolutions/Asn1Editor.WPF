@@ -18,13 +18,23 @@
     </Window.InputBindings>
     <DockPanel>
         <StackPanel DockPanel.Dock="Bottom"
-                    Background="{StaticResource PanelHeaderBackground}">
+                    Background="{StaticResource PanelBackgroundBrush}">
+            <Border BorderBrush="{StaticResource PanelBorderBrush}"
+                    BorderThickness="0,1,0,0"/>
             <Button Content="Close"
                     Width="70"
                     HorizontalAlignment="Right"
                     Margin="10" 
                     Command="{Binding CloseCommand}"/>
         </StackPanel>
-        <WebBrowser behaviors:BrowserBehavior.Html="{Binding Html}"/>
+        <FlowDocumentScrollViewer x:Name="rtb">
+            <FlowDocument Background="White">
+                <Paragraph FontWeight="Bold"
+                           TextAlignment="Center"
+                           FontSize="24">
+                    End User License Agreement file was not found.
+                </Paragraph>
+            </FlowDocument>
+        </FlowDocumentScrollViewer>
     </DockPanel>
 </Window>
