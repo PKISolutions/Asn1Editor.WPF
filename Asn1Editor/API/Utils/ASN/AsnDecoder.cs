@@ -15,7 +15,7 @@ namespace SysadminsLV.Asn1Editor.API.Utils.ASN {
         public static String GetEditValue(Asn1Reader asn) {
             switch (asn.Tag) {
                 case (Byte)Asn1Type.INTEGER:
-                    return new Asn1Integer(asn.RawData).Value.ToString();
+                    return new Asn1Integer(asn.GetTagRawData()).Value.ToString();
                 case (Byte)Asn1Type.BIT_STRING:
                     return HexUtility.GetHexEditString(new Asn1BitString(asn).Value);
                 case (Byte)Asn1Type.OBJECT_IDENTIFIER:
@@ -186,19 +186,19 @@ namespace SysadminsLV.Asn1Editor.API.Utils.ASN {
             return Settings.Default.IntAsInt
                 ? new BigInteger(asn.GetPayload().Reverse().ToArray()).ToString()
                 : AsnFormatter.BinaryToString(
-                    asn.RawData,
+                    asn.GetRawData(),
                     EncodingType.HexRaw,
                     EncodingFormat.NOCRLF, asn.PayloadStartOffset, asn.PayloadLength);
         }
         static String DecodeBitString(Asn1Reader asn) {
             if (asn.PayloadLength == 1) {
-                return $"Unused bits: {asn.RawData[asn.PayloadStartOffset]} : NULL";
+                return $"Unused bits: {asn[asn.PayloadStartOffset]} : NULL";
             }
             return String.Format(
                 "Unused bits: {0} : {1}",
-                asn.RawData[asn.PayloadStartOffset],
+                asn[asn.PayloadStartOffset],
                 AsnFormatter.BinaryToString(
-                    asn.RawData,
+                    asn.GetRawData(),
                     EncodingType.HexRaw,
                     EncodingFormat.NOCRLF,
                     asn.PayloadStartOffset + 1,
@@ -207,7 +207,7 @@ namespace SysadminsLV.Asn1Editor.API.Utils.ASN {
         }
         static String DecodeOctetString(Asn1Reader asn) {
             return AsnFormatter.BinaryToString(
-                asn.RawData,
+                asn.GetRawData(),
                 EncodingType.HexRaw,
                 EncodingFormat.NOCRLF, asn.PayloadStartOffset, asn.PayloadLength);
         }
@@ -223,7 +223,7 @@ namespace SysadminsLV.Asn1Editor.API.Utils.ASN {
             return oid.Value;
         }
         static String DecodeUTF8String(Asn1Reader asn) {
-            return Encoding.UTF8.GetString(asn.RawData, asn.PayloadStartOffset, asn.PayloadLength);
+            return Encoding.UTF8.GetString(asn.GetRawData(), asn.PayloadStartOffset, asn.PayloadLength);
         }
         static String DecodeUtcTime(Asn1Reader asn) {
             DateTime dt = new Asn1UtcTime(asn).Value;

@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Windows.Input;
-using Asn1Editor.Wpf.Controls;
 using Asn1Editor.Wpf.Controls.Helpers;
 using SysadminsLV.Asn1Editor.API.Interfaces;
 using SysadminsLV.Asn1Editor.API.ModelObjects;
@@ -189,7 +188,7 @@ namespace SysadminsLV.Asn1Editor.API.ViewModel {
             }
 
             Node = node;
-            updateNewNodeBinarySource(asn.RawData);
+            updateNewNodeBinarySource(asn.GetRawData());
             DialogResult = true;
         }
         void saveEditChanges() {

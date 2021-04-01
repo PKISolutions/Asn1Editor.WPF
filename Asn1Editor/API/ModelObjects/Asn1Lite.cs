@@ -24,7 +24,7 @@ namespace SysadminsLV.Asn1Editor.API.ModelObjects {
             Path = $"{tree.Value.Path}/{index}";
             if (Tag == (Byte)Asn1Type.BIT_STRING) {
                 if (root.PayloadLength > 0) {
-                    UnusedBits = root.RawData[root.PayloadStartOffset];
+                    UnusedBits = root[root.PayloadStartOffset];
                 }
             }
         }
