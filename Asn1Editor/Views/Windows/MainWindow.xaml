@@ -68,7 +68,8 @@
             </MenuItem>
             <MenuItem Header="Edit">
                 <MenuItem Header="Edit node..."
-                          Command="{Binding TreeCommands.EditNodeCommand}">
+                          Command="{Binding TreeCommands.EditNodeCommand}"
+                          CommandParameter="{x:Static clr:NodeEditMode.Text}">
                     <MenuItem.Icon>
                         <Image Source="/Views/Images/Menu/edit_16x16.png" Width="16"/>
                     </MenuItem.Icon>
@@ -175,6 +176,7 @@
             </ToolBar>
             <ToolBar>
                 <Button Command="{Binding TreeCommands.EditNodeCommand}"
+                        CommandParameter="{x:Static clr:NodeEditMode.Text}"
                         ToolTip="Edit selected node">
                     <Image Source="/Views/Images/Menu/edit_16x16.png" Width="16"/>
                 </Button>
