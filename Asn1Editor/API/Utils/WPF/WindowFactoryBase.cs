@@ -7,16 +7,11 @@ namespace SysadminsLV.Asn1Editor.API.Utils.WPF {
         void setParent(Boolean mainWindowAsParent = false) {
             WindowCollection windows = Application.Current.Windows;
             Window parent = null;
-            if (windows.Count > 0) {
-                if (mainWindowAsParent) {
-                    parent = windows[0];
-                } else {
-#if DEBUG
-                    parent = windows[windows.Count - 3];
-#else
-                    parent = windows[windows.Count - 2];
-#endif
-                }
+            if (windows.Count > 0)
+            {
+                parent = mainWindowAsParent 
+                    ? windows[0] 
+                    : windows[windows.Count - 2];
             }
             hwnd.Owner = parent;
         }
