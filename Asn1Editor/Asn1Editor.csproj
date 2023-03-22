@@ -7,6 +7,7 @@
     <ProjectGuid>{6338C8ED-B646-470E-8A68-7ED4B05AC02E}</ProjectGuid>
     <OutputType>WinExe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
+    <LangVersion>latest</LangVersion>
     <RootNamespace>SysadminsLV.Asn1Editor</RootNamespace>
     <AssemblyName>Asn1Editor</AssemblyName>
     <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
@@ -115,10 +116,6 @@
     <Reference Include="PresentationFramework.Aero, Version=4.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <Private>True</Private>
-    </Reference>
-    <Reference Include="SysadminsLV.Asn1Parser, Version=1.2.3.8, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>_ExternalReferences\SysadminsLV.Asn1Parser.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Numerics" />
@@ -399,10 +396,12 @@
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Views\Images\pkisolutions_logo_small.png" />
-    <Content Include="_ExternalReferences\SysadminsLV.Asn1Parser.dll" />
     <Content Include="_ExternalReferences\Wpf.OfficeTheme.dll" />
   </ItemGroup>
   <ItemGroup>
+    <PackageReference Include="SysadminsLV.Asn1Parser">
+      <Version>1.2.11</Version>
+    </PackageReference>
     <PackageReference Include="Unity">
       <Version>5.11.1</Version>
     </PackageReference>

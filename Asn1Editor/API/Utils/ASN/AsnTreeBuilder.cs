@@ -9,14 +9,14 @@ namespace SysadminsLV.Asn1Editor.API.Utils.ASN {
     public static class AsnTreeBuilder {
         public static Task<Asn1TreeNode> BuildTree(Byte[] rawData) {
             return Task.Factory.StartNew(() => {
-                Asn1Reader asn = new Asn1Reader(rawData);
+                var asn = new Asn1Reader(rawData);
                 asn.BuildOffsetMap();
-                Asn1Lite root = new Asn1Lite(asn);
-                Asn1TreeNode parent = new Asn1TreeNode(root);
+                var root = new Asn1Lite(asn);
+                var parent = new Asn1TreeNode(root);
                 if (asn.NextOffset == 0) {
                     return parent;
                 }
-                List<Asn1TreeNode> list = new List<Asn1TreeNode> { parent };
+                var list = new List<Asn1TreeNode> { parent };
                 buildTree(asn, parent);
                 return list[0];
             });
@@ -27,10 +27,10 @@ namespace SysadminsLV.Asn1Editor.API.Utils.ASN {
             do {
                 tree.AddChild(new Asn1Lite(root, tree, index));
                 index++;
-            } while (root.MoveNextCurrentLevel());
+            } while (root.MoveNextSibling());
             root.Reset();
             foreach (Asn1TreeNode node in tree.Children.Where(node => node.Value.IsContainer && node.Value.PayloadLength > 0)) {
-                root.MoveToPosition(node.Value.Offset);
+                root.Seek(node.Value.Offset);
                 buildTree(root, node);
             }
         }

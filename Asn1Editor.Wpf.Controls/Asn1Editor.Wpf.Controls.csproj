@@ -35,8 +35,8 @@
     <Reference Include="PresentationCore" />
     <Reference Include="PresentationFramework" />
     <Reference Include="PresentationFramework.Aero" />
-    <Reference Include="SysadminsLV.Asn1Parser">
-      <HintPath>..\Asn1Editor\_ExternalReferences\SysadminsLV.Asn1Parser.dll</HintPath>
+    <Reference Include="SysadminsLV.Asn1Parser, Version=1.2.11.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\SysadminsLV.Asn1Parser.1.2.11\lib\net472\SysadminsLV.Asn1Parser.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
@@ -73,6 +73,9 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

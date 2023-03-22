@@ -135,44 +135,44 @@ namespace SysadminsLV.Asn1Editor.API.Utils.ASN {
         public static Byte[] EncodeGeneric(Byte tag, String value, Byte unusedBits) {
             switch (tag) {
                 case (Byte)Asn1Type.BOOLEAN:
-                    return new Asn1Boolean(Boolean.Parse(value)).RawData;
+                    return new Asn1Boolean(Boolean.Parse(value)).GetRawData();
                 case (Byte)Asn1Type.INTEGER:
-                    return new Asn1Integer(BigInteger.Parse(value)).RawData;
+                    return new Asn1Integer(BigInteger.Parse(value)).GetRawData();
                 case (Byte)Asn1Type.BIT_STRING:
-                    return new Asn1BitString(HexUtility.HexToBinary(value), unusedBits).RawData;
+                    return new Asn1BitString(HexUtility.HexToBinary(value), unusedBits).GetRawData();
                 case (Byte)Asn1Type.OCTET_STRING:
-                    return new Asn1OctetString(HexUtility.HexToBinary(value), false).RawData;
+                    return new Asn1OctetString(HexUtility.HexToBinary(value), false).GetRawData();
                 case (Byte)Asn1Type.NULL:
-                    return new Asn1Null().RawData;
+                    return new Asn1Null().GetRawData();
                 case (Byte)Asn1Type.OBJECT_IDENTIFIER:
-                    return new Asn1ObjectIdentifier(value).RawData;
+                    return new Asn1ObjectIdentifier(value).GetRawData();
                 case (Byte)Asn1Type.ENUMERATED:
-                    return new Asn1Enumerated(UInt64.Parse(value)).RawData;
+                    return new Asn1Enumerated(UInt64.Parse(value)).GetRawData();
                 case (Byte)Asn1Type.UTF8String:
-                    return new Asn1UTF8String(value).RawData;
+                    return new Asn1UTF8String(value).GetRawData();
                 case (Byte)Asn1Type.NumericString:
-                    return new Asn1NumericString(value).RawData;
+                    return new Asn1NumericString(value).GetRawData();
                 case (Byte)Asn1Type.TeletexString:
-                    return new Asn1TeletexString(value).RawData;
+                    return new Asn1TeletexString(value).GetRawData();
                 case (Byte)Asn1Type.VideotexString:
                     return Asn1Utils.Encode(Encoding.ASCII.GetBytes(value), tag);
                 case (Byte)Asn1Type.PrintableString:
-                    return new Asn1PrintableString(value).RawData;
+                    return new Asn1PrintableString(value).GetRawData();
                 case (Byte)Asn1Type.IA5String:
-                    return new Asn1IA5String(value).RawData;
+                    return new Asn1IA5String(value).GetRawData();
                 case (Byte)Asn1Type.UTCTime:
                     return EncodeUTCTime(DateTime.ParseExact(value, "MM/dd/yyyy HH:mm:ss", CultureInfo.InvariantCulture));
                 case (Byte)Asn1Type.GeneralizedTime:
                     return EncodeGeneralizedTime(DateTime.ParseExact(value, "MM/dd/yyyy HH:mm:ss", CultureInfo.InvariantCulture));
                 //case (Byte)ASN1Tags.GraphicString
                 case (Byte)Asn1Type.VisibleString:
-                    return new Asn1VisibleString(value).RawData;
+                    return new Asn1VisibleString(value).GetRawData();
                 case (Byte)Asn1Type.GeneralString:
                     return Asn1Utils.Encode(Encoding.UTF8.GetBytes(value), tag);
                 case (Byte)Asn1Type.UniversalString:
-                    return new Asn1UniversalString(value).RawData;
+                    return new Asn1UniversalString(value).GetRawData();
                 case (Byte)Asn1Type.BMPString:
-                    return new Asn1BMPString(value).RawData;
+                    return new Asn1BMPString(value).GetRawData();
                 default:
                     if ((tag & (Byte)Asn1Type.TAG_MASK) == 6) {
                         return Asn1Utils.Encode(Encoding.UTF8.GetBytes(value), tag);
