@@ -1,6 +1,7 @@
 ﻿<Application x:Class="SysadminsLV.Asn1Editor.App"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:controls="clr-namespace:SysadminsLV.WPF.OfficeTheme.Controls;assembly=Wpf.OfficeTheme">
     <Application.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
@@ -22,6 +23,10 @@
                     </DataTrigger>
                 </Style.Triggers>
             </Style>
+            <Style TargetType="RichTextBox" BasedOn="{StaticResource {x:Type RichTextBox}}">
+                <Setter Property="Padding" Value="0"/>
+            </Style>
+            <Style TargetType="controls:BindableRichTextBox" BasedOn="{StaticResource {x:Type RichTextBox}}"/>
         </ResourceDictionary>
     </Application.Resources>
 </Application>
