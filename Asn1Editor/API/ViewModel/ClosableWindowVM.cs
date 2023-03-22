@@ -2,22 +2,22 @@
 using System.Windows.Input;
 using SysadminsLV.WPF.OfficeTheme.Toolkit.Commands;
 
-namespace SysadminsLV.Asn1Editor.API.ViewModel {
-    public abstract class ClosableWindowVM : ViewModelBase {
-        Boolean? dialogResult;
+namespace SysadminsLV.Asn1Editor.API.ViewModel; 
 
-        protected ClosableWindowVM() {
-            CloseCommand = new RelayCommand(o => { DialogResult = true; });
-        }
+public abstract class ClosableWindowVM : ViewModelBase {
+    Boolean? dialogResult;
 
-        public ICommand CloseCommand { get; }
+    protected ClosableWindowVM() {
+        CloseCommand = new RelayCommand(o => { DialogResult = true; });
+    }
 
-        public Boolean? DialogResult {
-            get => dialogResult;
-            set {
-                dialogResult = value;
-                OnPropertyChanged(nameof(DialogResult));
-            }
+    public ICommand CloseCommand { get; }
+
+    public Boolean? DialogResult {
+        get => dialogResult;
+        set {
+            dialogResult = value;
+            OnPropertyChanged(nameof(DialogResult));
         }
     }
 }

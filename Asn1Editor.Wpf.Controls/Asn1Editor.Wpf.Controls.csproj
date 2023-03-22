@@ -6,6 +6,7 @@
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProjectGuid>{90DA0E35-1652-498B-BE73-1953A64FECBE}</ProjectGuid>
     <OutputType>Library</OutputType>
+    <LangVersion>latest</LangVersion>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>Asn1Editor.Wpf.Controls</RootNamespace>
     <AssemblyName>Asn1Editor.Wpf.Controls</AssemblyName>
