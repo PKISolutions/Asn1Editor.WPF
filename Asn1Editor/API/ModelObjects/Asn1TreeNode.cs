@@ -10,15 +10,14 @@ using SysadminsLV.Asn1Editor.Properties;
 using SysadminsLV.Asn1Parser;
 using Unity;
 
-namespace SysadminsLV.Asn1Editor.API.ModelObjects; 
+namespace SysadminsLV.Asn1Editor.API.ModelObjects;
 
 public class Asn1TreeNode : INotifyPropertyChanged {
     readonly IDataSource _dataSource;
     readonly IList<Asn1Lite> _children = new ObservableCollection<Asn1Lite>();
 
     Byte tag, unusedBits;
-    Int32 offset, offsetChange;
-    Int32 payloadLength, depth;
+    Int32 offset, offsetChange, payloadLength, depth;
 
     public Asn1TreeNode(Asn1Lite value) {
         _dataSource = App.Container.Resolve<IDataSource>();
@@ -236,8 +235,9 @@ public class Asn1TreeNode : INotifyPropertyChanged {
         }
     }
     void valuePropertyChanged(Object sender, PropertyChangedEventArgs e) {
-        if (e.PropertyName == nameof(Asn1Lite.OffsetChange) && Parent != null && Value.OffsetChange != 0)
+        if (e.PropertyName == nameof(Asn1Lite.OffsetChange) && Parent != null && Value.OffsetChange != 0) {
             Parent.notifySizeChanged(this, Value.OffsetChange);
+        }
     }
 
     static void updatePath(Asn1TreeNode source, String path, Int32 index) {

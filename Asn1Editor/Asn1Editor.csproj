@@ -264,6 +264,9 @@
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
+    <None Include="..\.editorconfig">
+      <Link>.editorconfig</Link>
+    </None>
     <None Include="EULA.rtf">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
