@@ -406,7 +406,7 @@
       <Version>1.2.11</Version>
     </PackageReference>
     <PackageReference Include="Unity">
-      <Version>5.11.1</Version>
+      <Version>5.11.10</Version>
     </PackageReference>
   </ItemGroup>
   <ItemGroup>
