@@ -217,7 +217,7 @@
             </ToolBar>
             <ToolBar>
                 <TextBlock Text="Font size:"
-                           Foreground="Navy"
+                           Foreground="{StaticResource TabItem.FgBrush}"
                            Margin="2,0"
                            VerticalAlignment="Center"/>
                 <ComboBox SelectedValue="{Binding NodeViewOptions.FontSize}">
@@ -256,10 +256,16 @@
                     <Run Text="{Binding Path}"/>
                 </TextBlock>
             </StatusBarItem>
-            <StatusBarItem HorizontalAlignment="Right">
+            <Separator/>
+            <StatusBarItem>
                 <TextBlock Text="Size: ">
                     <Run Text="{Binding DataSource.RawData.Count, Mode=OneWay}"/>
                     <Run Text="bytes"/>
+                </TextBlock>
+            </StatusBarItem>
+            <StatusBarItem HorizontalAlignment="Right">
+                <TextBlock Text="Version: ">
+                    <Run Text="{Binding GlobalData.AppVersion}"/>
                 </TextBlock>
             </StatusBarItem>
         </StatusBar>
@@ -296,7 +302,7 @@
                             MaxTextLength="{Binding NodeViewOptions.MaxTreeTextLength}"
                             FontFamily="Consolas"
                             FontSize="{Binding NodeViewOptions.FontSize}"
-                            BorderBrush="{StaticResource NormalBorderBrush}"
+                            BorderBrush="{StaticResource PanelBorderBrush}"
                             BorderThickness="1"
                             VirtualizingStackPanel.IsVirtualizing="True"
                             SelectedItem="{Binding DataSource.SelectedNode, Mode=OneWayToSource}"
@@ -376,6 +382,5 @@
             </uc:AsnTreeView>
             <uc:BusyIndicator Visibility="{Binding Converter={StaticResource BooleanToVisibility}, Path=IsBusy}"/>
         </Grid>
-        
     </DockPanel>
 </Window>

@@ -148,6 +148,7 @@
     <Compile Include="API\Utils\NodeEditMode.cs" />
     <Compile Include="API\Utils\OpenSSLRenderer.cs" />
     <Compile Include="API\ViewModel\ClosableWindowVM.cs" />
+    <Compile Include="API\ViewModel\GlobalData.cs" />
     <Compile Include="API\ViewModel\TreeViewVM.cs" />
     <Compile Include="API\Interfaces\IDataSource.cs" />
     <Compile Include="API\Interfaces\IMainWindowVM.cs" />

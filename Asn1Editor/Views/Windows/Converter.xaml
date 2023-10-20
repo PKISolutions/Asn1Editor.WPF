@@ -10,6 +10,7 @@
         mc:Ignorable="d"
         d:DataContext="{d:DesignInstance vm:ConverterVM}"
         cmd:DialogCloser.DialogResult="{Binding DialogResult}"
+        Background="{StaticResource PanelBackgroundBrush}"
         Title="Binary Converter"
         SizeToContent="Width"
         ResizeMode="CanResize"
@@ -103,8 +104,7 @@
                 <TextBlock Text="Size: "><Run Text="{Binding RawData.Count, Mode=OneWay}"/><Run Text=" bytes"/></TextBlock>
             </StatusBarItem>
         </StatusBar>
-        <StackPanel DockPanel.Dock="Right"
-                    Background="{StaticResource PanelBackgroundBrush}">
+        <StackPanel DockPanel.Dock="Right">
             <Button Content="Validate"
                     Command="{Binding ValidateCommand}"
                     Margin="5,5,5,0"/>

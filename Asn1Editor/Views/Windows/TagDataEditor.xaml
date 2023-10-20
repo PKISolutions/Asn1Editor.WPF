@@ -29,8 +29,9 @@
     </Window.Resources>
     <DockPanel>
         <HeaderedContentControl DockPanel.Dock="Top"
-                                Header="Tag details">
-            <TextBox BorderBrush="{StaticResource NormalBorderBrush}"
+                                Header="Tag details"
+                                BorderThickness="0">
+            <TextBox BorderThickness="0"
                      Text="{Binding TagDetails}"
                      FontFamily="Consolas"
                      FontSize="{Binding Path=FontSize, Source={x:Static properties:Settings.Default}}"
@@ -83,7 +84,8 @@
                 </StackPanel>
             </StatusBarItem>
         </StatusBar>
-        <HeaderedContentControl Header="Explicit Value">
+        <HeaderedContentControl Header="Explicit Value"
+                                BorderThickness="0,1,0,0">
             <DockPanel>
                 <StackPanel DockPanel.Dock="Top"
                             Orientation="Horizontal"
@@ -99,7 +101,12 @@
                                  IsChecked="{Binding RbHex}"
                                  GroupName="mode"/>
                 </StackPanel>
+                <Border DockPanel.Dock="Top"
+                        BorderBrush="{StaticResource PanelBorderBrush}"
+                        BorderThickness="0,1,0,0"
+                        Visibility="{Binding IsEditable, Converter={StaticResource BooleanToVisibility}}"/>
                 <TextBox Text="{Binding TagValue}"
+                         BorderThickness="0"
                          IsReadOnly="{Binding IsReadOnly}"
                          AcceptsReturn="True"
                          FontFamily="Consolas"

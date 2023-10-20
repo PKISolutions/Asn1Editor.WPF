@@ -36,7 +36,9 @@
                 </Button>
             </ToolBar>
             <ToolBar>
-                <TextBlock Text="Render Style:" VerticalAlignment="Center"/>
+                <TextBlock Text="Render Style:"
+                           Foreground="{StaticResource TabItem.FgBrush}"
+                           VerticalAlignment="Center"/>
                 <RadioButton GroupName="RenderType"
                              Content="Certutil"
                              IsChecked="{Binding CertutilViewChecked}"

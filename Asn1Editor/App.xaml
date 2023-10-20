@@ -8,6 +8,8 @@
                 <ResourceDictionary Source="pack://application:,,,/Wpf.OfficeTheme;component/UI/OfficeTheme.xaml"/>
             </ResourceDictionary.MergedDictionaries>
             <BooleanToVisibilityConverter x:Key="BooleanToVisibility"/>
+
+            <SolidColorBrush x:Key="LightBorderBrush" Color="#f2f8ff"/>
             <Style x:Key="AboutDialogStyle" TargetType="Window">
                 <Setter Property="Height" Value="Auto" />
                 <Setter Property="Width" Value="500" />
