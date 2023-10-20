@@ -5,7 +5,7 @@ using System.Windows.Input;
 using System.Windows.Media;
 using SysadminsLV.WPF.OfficeTheme.Toolkit.Commands;
 
-namespace SysadminsLV.Asn1Editor.Views.UserControls; 
+namespace SysadminsLV.Asn1Editor.Views.UserControls;
 
 /// <summary>
 /// Interaction logic for AsnTreeView.xaml
@@ -79,13 +79,13 @@ public partial class AsnTreeView {
 
     #region SelectedItem
 
-    public static readonly DependencyProperty SelectedItemProperty = DependencyProperty.Register(
+    public new static readonly DependencyProperty SelectedItemProperty = DependencyProperty.Register(
         nameof(SelectedItem),
         typeof(Object),
         typeof(AsnTreeView),
         new PropertyMetadata(default(Object)));
 
-    public Object SelectedItem {
+    public new Object SelectedItem {
         get => GetValue(SelectedItemProperty);
         set => SetValue(SelectedItemProperty, value);
     }
