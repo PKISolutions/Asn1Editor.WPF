@@ -14,7 +14,7 @@ using SysadminsLV.Asn1Editor.API.Utils.ASN;
 using SysadminsLV.Asn1Parser;
 using SysadminsLV.WPF.OfficeTheme.Toolkit.Commands;
 
-namespace SysadminsLV.Asn1Editor.API.ViewModel; 
+namespace SysadminsLV.Asn1Editor.API.ViewModel;
 
 class MainWindowVM : ViewModelBase, IMainWindowVM {
     readonly IWindowFactory _windowFactory;
@@ -27,8 +27,8 @@ class MainWindowVM : ViewModelBase, IMainWindowVM {
         IAppCommands appCommands,
         ITreeCommands treeCommands,
         IDataSource data) {
-
         _windowFactory = windowFactory;
+        GlobalData = new GlobalData();
         AppCommands = appCommands;
         TreeCommands = treeCommands;
         DataSource = data;
@@ -58,6 +58,7 @@ class MainWindowVM : ViewModelBase, IMainWindowVM {
     public IAppCommands AppCommands { get; }
     public ITreeCommands TreeCommands { get; }
 
+    public GlobalData GlobalData { get; }
     public IDataSource DataSource { get; }
     public static Dictionary<String, String> OIDs { get; } = new Dictionary<String, String>();
     public ObservableCollection<Asn1TreeNode> Tree => DataSource.Tree;

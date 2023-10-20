@@ -12,7 +12,7 @@
         Width="300"
         Height="Auto">
     <StackPanel>
-        <GroupBox Header="UI settings" DockPanel.Dock="Top" Margin="5" Foreground="Navy">
+        <GroupBox Header="UI settings" DockPanel.Dock="Top" Margin="5" Foreground="{StaticResource TabItem.FgBrush}">
             <Grid Margin="0,5,0,0">
                 <Grid.RowDefinitions>
                     <RowDefinition/>
