@@ -12,10 +12,10 @@
         cmd:DialogCloser.DialogResult="{Binding DialogResult}"
         Background="{StaticResource PanelBackgroundBrush}"
         Title="Binary Converter"
-        SizeToContent="Width"
         ResizeMode="CanResize"
         WindowStartupLocation="CenterOwner"
-        Height="500">
+        Height="500"
+        Width="750">
     <Window.InputBindings>
         <KeyBinding Modifiers="Ctrl" Key="S" Command="{Binding SaveCommand}"/>
         <KeyBinding Modifiers="Ctrl" Key="O" Command="{Binding OpenCommand}"/>
@@ -86,6 +86,40 @@
                     <Image Source="../Images/Menu/paste_16x16.png"/>
                 </Button>
             </ToolBar>
+            <ToolBar>
+                <TextBlock Text="Encoding: "
+                           Foreground="Navy"
+                           VerticalAlignment="Center"
+                           Margin="3,0,0,0"/>
+                <ComboBox ItemsSource="{Binding EncodingListView}"
+                          SelectedItem="{Binding SelectedEncoding}"
+                          DisplayMemberPath="DisplayName"
+                          MinWidth="170">
+                    <ComboBox.GroupStyle>
+                        <GroupStyle>
+                            <GroupStyle.HeaderTemplate>
+                                <DataTemplate>
+                                    <Border BorderThickness="0,1"
+                                            BorderBrush="{StaticResource Panel.Border.LightBrush}"
+                                            Background="{StaticResource PanelBackgroundBrush}">
+                                        <TextBlock Text="{Binding Path=Name}"
+                                                   Margin="5"
+                                                   FontWeight="Bold"
+                                                   Foreground="{StaticResource Panel.FgBrush}"/>
+                                    </Border>
+                                </DataTemplate>
+                            </GroupStyle.HeaderTemplate>
+                            
+                        </GroupStyle>
+                    </ComboBox.GroupStyle>
+                </ComboBox>
+                <Separator/>
+                <Button Content="Validate"
+                        Command="{Binding ValidateCommand}"></Button>
+                <Button Content="Validate &amp; Decode"
+                        Command="{Binding ValidateCommand}"
+                        CommandParameter="Decode"></Button>
+            </ToolBar>
         </ToolBarTray>
         <StatusBar DockPanel.Dock="Bottom">
             <StatusBarItem>
@@ -142,7 +176,9 @@
                          IsChecked="{Binding HexRaw}"/>
             </StackPanel>
         </StackPanel>
+        <!-- actual width is around 550 -->
         <TextBox Name="txt"
+                 BorderThickness="0"
                  UndoLimit="10"
                  MinWidth="{Binding TextBoxWidth}"
                  Text="{Binding Text, UpdateSourceTrigger=PropertyChanged}"
