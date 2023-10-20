@@ -1,16 +1,15 @@
 ﻿using System.Reflection;
-using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 
 // General Information about an assembly is controlled through the following
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
 [assembly: AssemblyTitle("Asn1Editor.Wpf.Controls")]
-[assembly: AssemblyDescription("")]
+[assembly: AssemblyDescription("Contains reusable ASN.1 editor WPF controls")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("")]
-[assembly: AssemblyProduct("Asn1Editor.Wpf.Controls")]
-[assembly: AssemblyCopyright("Copyright ©  2020")]
+[assembly: AssemblyCompany("PKI Solutions LLC")]
+[assembly: AssemblyProduct("ASN.1 Editor")]
+[assembly: AssemblyCopyright("Copyright © PKI Solutions Inc.  2014 - 2023")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
@@ -32,5 +31,5 @@ using System.Runtime.InteropServices;
 // You can specify all the values or you can default the Build and Revision Numbers
 // by using the '*' as shown below:
 // [assembly: AssemblyVersion("1.0.*")]
-[assembly: AssemblyVersion("1.0.0.0")]
-[assembly: AssemblyFileVersion("1.0.0.0")]
+[assembly: AssemblyVersion("23.10.20.0")]
+[assembly: AssemblyFileVersion("23.10.20.0")]

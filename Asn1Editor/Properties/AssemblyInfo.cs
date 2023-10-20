@@ -1,6 +1,4 @@
 ﻿using System.Reflection;
-using System.Resources;
-using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using System.Windows;
 
@@ -10,9 +8,9 @@ using System.Windows;
 [assembly: AssemblyTitle("ASN.1 Editor")]
 [assembly: AssemblyDescription("WPF-based ASN.1 encoded data viewer and editor")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("PKI Solutions Inc.")]
+[assembly: AssemblyCompany("PKI Solutions LLC")]
 [assembly: AssemblyProduct("ASN.1 Editor")]
-[assembly: AssemblyCopyright("Copyright © PKI Solutions Inc.  2014 - 2021")]
+[assembly: AssemblyCopyright("Copyright © PKI Solutions Inc.  2014 - 2023")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
@@ -32,12 +30,12 @@ using System.Windows;
 
 
 [assembly: ThemeInfo(
-	ResourceDictionaryLocation.None, //where theme specific resource dictionaries are located
-	//(used if a resource is not found in the page, 
-	// or application resource dictionaries)
-	ResourceDictionaryLocation.SourceAssembly //where the generic resource dictionary is located
-	//(used if a resource is not found in the page, 
-	// app, or any theme specific resource dictionaries)
+    ResourceDictionaryLocation.None, //where theme specific resource dictionaries are located
+                                     //(used if a resource is not found in the page, 
+                                     // or application resource dictionaries)
+    ResourceDictionaryLocation.SourceAssembly //where the generic resource dictionary is located
+                                              //(used if a resource is not found in the page, 
+                                              // app, or any theme specific resource dictionaries)
 )]
 
 
@@ -51,6 +49,6 @@ using System.Windows;
 // You can specify all the values or you can default the Build and Revision Numbers 
 // by using the '*' as shown below:
 // [assembly: AssemblyVersion("1.0.*")]
-[assembly: AssemblyVersion("2020.12.24.1")]
-[assembly: AssemblyFileVersion("2020.12.24.1")]
+[assembly: AssemblyVersion("23.10.20")]
+[assembly: AssemblyFileVersion("23.10.20")]
 [assembly: GuidAttribute("2b21970c-0f72-4a53-909e-23148c2f7540")]
