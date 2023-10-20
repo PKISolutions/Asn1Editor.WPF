@@ -22,7 +22,7 @@
         <KeyBinding Modifiers="Ctrl" Key="P" Command="{Binding PrintCommand}"/>
     </Window.InputBindings>
     <DockPanel>
-        <Menu VerticalAlignment="Top" DockPanel.Dock="Top" MinHeight="25">
+        <Menu DockPanel.Dock="Top" MinHeight="25">
             <MenuItem Header="File">
                 <MenuItem Header="_New" Command="{Binding NewCommand}" InputGestureText="Ctrl + N">
                     <MenuItem.Icon>
@@ -231,7 +231,7 @@
                 </ComboBox>
             </ToolBar>
         </ToolBarTray>
-        <StatusBar Foreground="DarkBlue" VerticalAlignment="Bottom" DockPanel.Dock="Bottom">
+        <StatusBar DockPanel.Dock="Bottom">
             <StatusBarItem>
                 <TextBlock Text="Tag: ">
                     <Run Text="{Binding DataSource.SelectedNode.Value.Tag}"/>
