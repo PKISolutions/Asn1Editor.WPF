@@ -36,8 +36,8 @@
     <Reference Include="PresentationCore" />
     <Reference Include="PresentationFramework" />
     <Reference Include="PresentationFramework.Aero" />
-    <Reference Include="SysadminsLV.Asn1Parser, Version=1.2.11.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\SysadminsLV.Asn1Parser.1.2.11\lib\net472\SysadminsLV.Asn1Parser.dll</HintPath>
+    <Reference Include="SysadminsLV.Asn1Parser, Version=1.2.12.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\SysadminsLV.Asn1Parser.1.2.12\lib\net472\SysadminsLV.Asn1Parser.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
@@ -62,15 +62,14 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Helpers\TextUtility.cs" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <None Include="packages.config" />
+  </ItemGroup>
   <ItemGroup>
     <Page Include="AsnHexViewer.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="packages.config" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
