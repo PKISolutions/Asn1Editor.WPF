@@ -9,7 +9,7 @@
              BorderThickness="1"
              BorderBrush="#add1ff"
              d:DataContext="{d:DesignInstance controls:AsnHexViewer}"
-             d:DesignHeight="300" d:DesignWidth="580">
+             d:DesignHeight="50" d:DesignWidth="50">
     <UserControl.Resources>
         <Style x:Key="RtbHeaderStyle" TargetType="RichTextBox" BasedOn="{StaticResource {x:Type RichTextBox}}">
             <Setter Property="BorderThickness" Value="0"/>
@@ -22,7 +22,7 @@
             <Setter Property="IsUndoEnabled" Value="False"/>
         </Style>
         <Style x:Key="RtbPaneStyle" TargetType="ctrl:BindableRichTextBox" BasedOn="{StaticResource {x:Type ctrl:BindableRichTextBox}}">
-            <Setter Property="BorderBrush" Value="{StaticResource NormalBorderBrush}"/>
+            <Setter Property="BorderBrush" Value="{StaticResource Panel.Border.LightBrush}"/>
             <Setter Property="BorderThickness" Value="0,0,1,0"/>
             <Setter Property="IsReadOnly" Value="True"/>
             <Setter Property="IsUndoEnabled" Value="False"/>

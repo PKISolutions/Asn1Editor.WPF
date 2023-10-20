@@ -37,7 +37,7 @@
             </ToolBar>
             <ToolBar>
                 <TextBlock Text="Render Style:"
-                           Foreground="{StaticResource TabItem.FgBrush}"
+                           Foreground="{StaticResource Panel.FgBrush}"
                            VerticalAlignment="Center"/>
                 <RadioButton GroupName="RenderType"
                              Content="Certutil"
