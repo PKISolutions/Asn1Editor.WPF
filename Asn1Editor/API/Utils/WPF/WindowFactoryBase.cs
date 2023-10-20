@@ -13,15 +13,15 @@ namespace SysadminsLV.Asn1Editor.API.Utils.WPF {
                     ? windows[0] 
                     : windows[windows.Count - 2];
             }
-            hwnd.Owner = parent;
         }
-        protected void ShowAsWindow(Boolean mainWindowAsParent = false) {
-            setParent(mainWindowAsParent);
-            hwnd.Show();
-        }
-        protected void ShowAsDialog() {
-            setParent();
-            hwnd.ShowDialog();
-        }
+        hwnd.Owner = parent;
+    }
+    protected void ShowAsWindow(Boolean mainWindowAsParent = false) {
+        setParent(mainWindowAsParent);
+        hwnd.Show();
+    }
+    protected void ShowAsDialog() {
+        setParent();
+        hwnd.ShowDialog();
     }
 }

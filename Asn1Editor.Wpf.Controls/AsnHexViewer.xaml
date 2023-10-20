@@ -1,15 +1,14 @@
-﻿<UserControl x:Class="SysadminsLV.Asn1Editor.Views.UserControls.HexViewer.HexViewerUC"
+﻿<UserControl x:Class="Asn1Editor.Wpf.Controls.AsnHexViewer"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-             xmlns:vm="clr-namespace:SysadminsLV.Asn1Editor.API.ViewModel"
-             xmlns:properties="clr-namespace:SysadminsLV.Asn1Editor.Properties"
              xmlns:ctrl="clr-namespace:SysadminsLV.WPF.OfficeTheme.Controls;assembly=Wpf.OfficeTheme"
+             xmlns:controls="clr-namespace:Asn1Editor.Wpf.Controls"
              mc:Ignorable="d"
              BorderThickness="1"
              BorderBrush="#add1ff"
-             d:DataContext="{d:DesignInstance vm:MainWindowVM}"
+             d:DataContext="{d:DesignInstance controls:AsnHexViewer}"
              d:DesignHeight="300" d:DesignWidth="580">
     <UserControl.Resources>
         <Style x:Key="RtbHeaderStyle" TargetType="RichTextBox" BasedOn="{StaticResource {x:Type RichTextBox}}">
@@ -18,7 +17,6 @@
             <Setter Property="Foreground" Value="Navy"/>
             <Setter Property="IsEnabled" Value="False"/>
             <Setter Property="FontFamily" Value="Consolas"/>
-            <Setter Property="FontSize" Value="{Binding Path=FontSize, Source={x:Static properties:Settings.Default}}"/>
             <Setter Property="FontWeight" Value="Bold"/>
             <Setter Property="ContextMenu" Value="{x:Null}"/>
             <Setter Property="IsUndoEnabled" Value="False"/>
@@ -29,34 +27,19 @@
             <Setter Property="IsReadOnly" Value="True"/>
             <Setter Property="IsUndoEnabled" Value="False"/>
             <Setter Property="FontFamily" Value="Consolas"/>
-            <Setter Property="FontSize" Value="{Binding Path=FontSize, Source={x:Static properties:Settings.Default}}"/>
             <Setter Property="IsReadOnlyCaretVisible" Value="True"/>
+            <Setter Property="VerticalScrollBarVisibility" Value="Hidden"/>
         </Style>
     </UserControl.Resources>
     <DockPanel>
-        <ToolBarTray DockPanel.Dock="Top" IsLocked="True">
-            <ToolBar>
-                <ToggleButton x:Name="HexAddressToggle"
-                              IsChecked="{Binding NodeViewOptions.ShowHexAddrPanel}"
-                              ToolTip="Show or hide address panel">
-                    <Image Source="/Views/Images/Menu/AddressEnabled_32x32.png"/>
-                </ToggleButton>
-                <Separator/>
-                <ToggleButton x:Name="AsciiToggle"
-                              IsChecked="{Binding NodeViewOptions.ShowHexAsciiPanel}"
-                              ToolTip="Show or hide ASCII panel">
-                    <Image Source="/Views/Images/Menu/AsciiEnabled_32x32.png"/>
-                </ToggleButton>
-            </ToolBar>
-        </ToolBarTray>
         <Border DockPanel.Dock="Top" BorderThickness="1" BorderBrush="#FF6F9CD8" Height="1"/>
         <Border DockPanel.Dock="Top" BorderThickness="1" BorderBrush="#F1F7FE" Height="1"/>
         <Border DockPanel.Dock="Top" BorderThickness="0,0,0,1" BorderBrush="#FFACD0FE">
-            <DockPanel Background="#D5E7FE">
+            <DockPanel>
                 <RichTextBox x:Name="HexAddrHeaderRtb"
                              x:FieldModifier="private"
                              Style="{StaticResource RtbHeaderStyle}"
-                             Visibility="{Binding ElementName=HexAddressToggle, Path=IsChecked, Converter={StaticResource BooleanToVisibility}}">
+                             Visibility="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type UserControl}}, Path=ShowAddressPane, Converter={StaticResource BooleanToVisibility}}">
                     <RichTextBox.Document>
                         <FlowDocument>
                             <Paragraph>
@@ -79,7 +62,7 @@
                 <RichTextBox x:Name="HexAsciiHeaderRtb"
                              x:FieldModifier="private"
                              Style="{StaticResource RtbHeaderStyle}"
-                             Visibility="{Binding ElementName=AsciiToggle, Path=IsChecked, Converter={StaticResource BooleanToVisibility}}">
+                             Visibility="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type UserControl}}, Path=ShowAsciiPane, Converter={StaticResource BooleanToVisibility}}">
                     <RichTextBox.Document>
                         <FlowDocument>
                             <Paragraph>
@@ -90,27 +73,32 @@
                 </RichTextBox>
             </DockPanel>
         </Border>
-        <ScrollViewer VerticalScrollBarVisibility="Visible" Name="Scroller">
-            <DockPanel>
-                <ctrl:BindableRichTextBox x:Name="HexAddressPane"
-                                              x:FieldModifier="private"
-                                              Style="{StaticResource RtbPaneStyle}"
-                                              Foreground="Blue"
-                                              Visibility="{Binding ElementName=HexAddressToggle, Path=IsChecked, Converter={StaticResource BooleanToVisibility}}"
-                                              Width="{Binding ElementName=HexAddrHeaderRtb, Path=Width}"/>
-                <ctrl:BindableRichTextBox x:Name="HexRawPane"
-                                              x:FieldModifier="private"
-                                              Style="{StaticResource RtbPaneStyle}"
-                                              Foreground="Gray"
-                                              ObserveCaret="True"
-                                              Width="{Binding ElementName=HexRawHeaderRtb, Path=Width}"/>
-                <ctrl:BindableRichTextBox x:Name="HexAsciiPane"
-                                              x:FieldModifier="private"
-                                              Style="{StaticResource RtbPaneStyle}"
-                                              Foreground="Green"
-                                              Visibility="{Binding ElementName=AsciiToggle, Path=IsChecked, Converter={StaticResource BooleanToVisibility}}"
-                                              Width="{Binding ElementName=HexAsciiHeaderRtb, Path=Width}"/>
-            </DockPanel>
-        </ScrollViewer>
+        <DockPanel>
+            <ScrollBar x:Name="Scroller"
+                       DockPanel.Dock="Right"
+                       Visibility="Visible"
+                       Scroll="onScrollerScroll"/>
+            <ctrl:BindableRichTextBox  x:Name="HexAddressPane"
+                                       x:FieldModifier="private"
+                                       Style="{StaticResource RtbPaneStyle}"
+                                       Foreground="Gray"
+                                       Visibility="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type UserControl}}, Path=ShowAddressPane, Converter={StaticResource BooleanToVisibility}}"
+                                       Width="{Binding ElementName=HexAddrHeaderRtb, Path=Width}"
+                                       ScrollViewer.ScrollChanged="onRtbScrollChanged"/>
+            <ctrl:BindableRichTextBox x:Name="HexRawPane"
+                                      x:FieldModifier="private"
+                                      Style="{StaticResource RtbPaneStyle}"
+                                      Foreground="Gray"
+                                      ObserveCaret="True"
+                                      Width="{Binding ElementName=HexRawHeaderRtb, Path=Width}"
+                                      ScrollViewer.ScrollChanged="onRtbScrollChanged"/>
+            <ctrl:BindableRichTextBox x:Name="HexAsciiPane"
+                                      x:FieldModifier="private"
+                                      Style="{StaticResource RtbPaneStyle}"
+                                      Foreground="Green"
+                                      Visibility="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type UserControl}}, Path=ShowAsciiPane, Converter={StaticResource BooleanToVisibility}}"
+                                      Width="{Binding ElementName=HexAsciiHeaderRtb, Path=Width}"
+                                      ScrollViewer.ScrollChanged="onRtbScrollChanged"/>
+        </DockPanel>
     </DockPanel>
 </UserControl>

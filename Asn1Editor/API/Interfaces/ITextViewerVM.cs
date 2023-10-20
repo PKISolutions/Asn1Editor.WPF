@@ -1,3 +1,3 @@
-﻿namespace SysadminsLV.Asn1Editor.API.Interfaces {
-    public interface ITextViewerVM { }
-}
+﻿namespace SysadminsLV.Asn1Editor.API.Interfaces; 
+
+public interface ITextViewerVM { }

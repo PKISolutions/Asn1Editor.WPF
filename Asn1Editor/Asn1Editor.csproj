@@ -7,9 +7,10 @@
     <ProjectGuid>{6338C8ED-B646-470E-8A68-7ED4B05AC02E}</ProjectGuid>
     <OutputType>WinExe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
+    <LangVersion>latest</LangVersion>
     <RootNamespace>SysadminsLV.Asn1Editor</RootNamespace>
     <AssemblyName>Asn1Editor</AssemblyName>
-    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <ProjectTypeGuids>{60dc8134-eba5-43b8-bcc9-bb4bc16c2548};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
     <WarningLevel>4</WarningLevel>
@@ -116,10 +117,6 @@
       <SpecificVersion>False</SpecificVersion>
       <Private>True</Private>
     </Reference>
-    <Reference Include="SysadminsLV.Asn1Parser, Version=1.2.3.8, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>_ExternalReferences\SysadminsLV.Asn1Parser.dll</HintPath>
-    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Numerics" />
     <Reference Include="System.Xml" />
@@ -140,9 +137,8 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Compile Include="API\Generic\ObservableList.cs" />
-    <Compile Include="API\Generic\IObservableList.cs" />
     <Compile Include="API\Interfaces\IAppCommands.cs" />
+    <Compile Include="API\Interfaces\IBinarySource.cs" />
     <Compile Include="API\Interfaces\ITagDataEditor.cs" />
     <Compile Include="API\Interfaces\ITagDataEditorVM.cs" />
     <Compile Include="API\Interfaces\ITreeViewVM.cs" />
@@ -153,7 +149,6 @@
     <Compile Include="API\Utils\OpenSSLRenderer.cs" />
     <Compile Include="API\ViewModel\ClosableWindowVM.cs" />
     <Compile Include="API\ViewModel\TreeViewVM.cs" />
-    <Compile Include="Views\UserControls\HexViewer\IBinarySource.cs" />
     <Compile Include="API\Interfaces\IDataSource.cs" />
     <Compile Include="API\Interfaces\IMainWindowVM.cs" />
     <Compile Include="API\Interfaces\ITextViewerVM.cs" />
@@ -181,8 +176,6 @@
     <Compile Include="API\ViewModel\TextViewerVM.cs" />
     <Compile Include="API\ViewModel\TreeViewCommands.cs" />
     <Compile Include="API\ViewModel\ViewModelBase.cs" />
-    <Compile Include="Views\UserControls\HexViewer\IHexAsnNode.cs" />
-    <Compile Include="Views\UserControls\HexViewer\TextUtility.cs" />
     <Compile Include="Views\Windows\AboutBox.xaml.cs">
       <DependentUpon>AboutBox.xaml</DependentUpon>
     </Compile>
@@ -197,9 +190,6 @@
     </Compile>
     <Compile Include="Views\UserControls\BusyIndicator.xaml.cs">
       <DependentUpon>BusyIndicator.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Views\UserControls\HexViewer\HexViewerUC.xaml.cs">
-      <DependentUpon>HexViewerUC.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\Windows\Converter.xaml.cs">
       <DependentUpon>Converter.xaml</DependentUpon>
@@ -247,10 +237,6 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Views\UserControls\HexViewer\HexViewerUC.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
     <Page Include="Views\Windows\TagDataEditor.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -278,6 +264,9 @@
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
+    <None Include="..\.editorconfig">
+      <Link>.editorconfig</Link>
+    </None>
     <None Include="EULA.rtf">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
@@ -410,17 +399,24 @@
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Views\Images\pkisolutions_logo_small.png" />
-    <Content Include="_ExternalReferences\SysadminsLV.Asn1Parser.dll" />
     <Content Include="_ExternalReferences\Wpf.OfficeTheme.dll" />
   </ItemGroup>
   <ItemGroup>
+    <PackageReference Include="SysadminsLV.Asn1Parser">
+      <Version>1.2.11</Version>
+    </PackageReference>
     <PackageReference Include="Unity">
-      <Version>5.11.1</Version>
+      <Version>5.11.10</Version>
     </PackageReference>
   </ItemGroup>
   <ItemGroup>
     <Folder Include="API\ContentEditors\" />
-    <Folder Include="Views\UserControls\ContentEditors\" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Asn1Editor.Wpf.Controls\Asn1Editor.Wpf.Controls.csproj">
+      <Project>{90da0e35-1652-498b-be73-1953a64fecbe}</Project>
+      <Name>Asn1Editor.Wpf.Controls</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
