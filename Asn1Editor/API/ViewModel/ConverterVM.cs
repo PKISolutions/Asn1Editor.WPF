@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.IO;
 using System.Linq;
@@ -17,7 +18,7 @@ namespace SysadminsLV.Asn1Editor.API.ViewModel;
 
 class ConverterVM : ViewModelBase {
     readonly String master = new String('0', 78);
-    readonly List<EncodingTypeEntry> _encodingTypes = new();
+    public ObservableCollection<EncodingTypeEntry> _encodingTypes { get; } = new();
     Double width;
     String text, path;
     Boolean? dialogResult;
@@ -202,10 +203,10 @@ class ConverterVM : ViewModelBase {
         _encodingTypes.Add(new EncodingTypeEntry(EncodingType.PemPkcs8Inf, "PEM - PKCS#8 Unencrypted", EncodingGroup.PEM));
         _encodingTypes.Add(new EncodingTypeEntry(EncodingType.PemSSLSessionParams, "PEM - SSL Session Parameters", EncodingGroup.PEM));
         _encodingTypes.Add(new EncodingTypeEntry(EncodingType.Hex, "Hex", EncodingGroup.Hexadecimal));
-        _encodingTypes.Add(new EncodingTypeEntry(EncodingType.Hex, "Hex - with address", EncodingGroup.Hexadecimal));
-        _encodingTypes.Add(new EncodingTypeEntry(EncodingType.Hex, "Hex - with ASCII", EncodingGroup.Hexadecimal));
-        _encodingTypes.Add(new EncodingTypeEntry(EncodingType.Hex, "Hex - with address and ASCII", EncodingGroup.Hexadecimal));
-        _encodingTypes.Add(new EncodingTypeEntry(EncodingType.Hex, "Hex - raw", EncodingGroup.Hexadecimal));
+        _encodingTypes.Add(new EncodingTypeEntry(EncodingType.HexAddress, "Hex - with address", EncodingGroup.Hexadecimal));
+        _encodingTypes.Add(new EncodingTypeEntry(EncodingType.HexAscii, "Hex - with ASCII", EncodingGroup.Hexadecimal));
+        _encodingTypes.Add(new EncodingTypeEntry(EncodingType.HexAsciiAddress, "Hex - with address and ASCII", EncodingGroup.Hexadecimal));
+        _encodingTypes.Add(new EncodingTypeEntry(EncodingType.HexRaw, "Hex - raw", EncodingGroup.Hexadecimal));
     }
 
     void openFile(Object obj) {

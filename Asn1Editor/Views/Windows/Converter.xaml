@@ -146,7 +146,17 @@
                     Command="{Binding ValidateCommand}"
                     CommandParameter="Decode"
                     Margin="5,0,5,5"/>
-            <StackPanel DockPanel.Dock="Left" Margin="5" IsEnabled="{Binding CanCheck}">
+            <ItemsControl ItemsSource="{Binding _encodingTypes}"
+                          Margin="5">
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate>
+                        <RadioButton GroupName="Encoding"
+                                     Content="{Binding DisplayName}"
+                                     IsChecked="{Binding IsChecked}"/>
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+            </ItemsControl>
+            <!--<StackPanel DockPanel.Dock="Left" Margin="5" IsEnabled="{Binding CanCheck}">
                 <RadioButton FontSize="{Binding Path=FontSize, Source={x:Static properties:Settings.Default}}"
                          Content="Base64"
                          IsChecked="{Binding Base64}"/>
@@ -174,7 +184,7 @@
                 <RadioButton FontSize="{Binding Path=FontSize, Source={x:Static properties:Settings.Default}}"
                          Content="Hex raw"
                          IsChecked="{Binding HexRaw}"/>
-            </StackPanel>
+            </StackPanel>-->
         </StackPanel>
         <!-- actual width is around 550 -->
         <TextBox Name="txt"
