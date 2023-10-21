@@ -9,7 +9,6 @@
         xmlns:cmd="clr-namespace:SysadminsLV.WPF.OfficeTheme.Toolkit.Commands;assembly=Wpf.OfficeTheme"
         mc:Ignorable="d"
         d:DataContext="{d:DesignInstance vm:ConverterVM}"
-        cmd:DialogCloser.DialogResult="{Binding DialogResult}"
         Background="{StaticResource PanelBackgroundBrush}"
         Title="Binary Converter"
         ResizeMode="CanResize"
@@ -20,7 +19,6 @@
         <KeyBinding Modifiers="Ctrl" Key="S" Command="{Binding SaveCommand}"/>
         <KeyBinding Modifiers="Ctrl" Key="O" Command="{Binding OpenCommand}"/>
         <KeyBinding Modifiers="Ctrl" Key="P" Command="{Binding PrintCommand}"/>
-        <KeyBinding Key="Escape" Command="{Binding CloseCommand}"/>
     </Window.InputBindings>
     <DockPanel>
         <Menu DockPanel.Dock="Top">

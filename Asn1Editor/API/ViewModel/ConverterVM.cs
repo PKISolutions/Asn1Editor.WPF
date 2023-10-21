@@ -20,7 +20,6 @@ class ConverterVM : AsyncViewModel {
     readonly String master = new String('0', 78);
     Double width;
     String text, path;
-    Boolean? dialogResult;
     EncodingTypeEntry? selectedEncoding;
     Boolean canCheck;
     readonly Action<Byte[]> _action;
@@ -32,7 +31,6 @@ class ConverterVM : AsyncViewModel {
         PrintCommand = new RelayCommand(print, canPrintSave);
         ClearCommand = new RelayCommand(clearText);
         ValidateCommand = new RelayCommand(validateInput);
-        CloseCommand = new RelayCommand(close);
         //TextBoxWidth = TextUtility.MeasureStringWidth(master, Settings.Default.FontSize, true);
         initialize();
         EncodingTypesView = CollectionViewSource.GetDefaultView(EncodingTypes);
@@ -44,7 +42,6 @@ class ConverterVM : AsyncViewModel {
     public ICommand ClearCommand { get; }
     public ICommand ValidateCommand { get; }
     public ICommand PrintCommand { get; }
-    public ICommand CloseCommand { get; }
 
     public String Text {
         get => text;
@@ -85,13 +82,6 @@ class ConverterVM : AsyncViewModel {
                 Text = AsnFormatter.BinaryToString(RawData.ToArray(), selectedEncoding.EncodingType);
             }
             OnPropertyChanged(nameof(SelectedEncoding));
-        }
-    }
-    public Boolean? DialogResult {
-        get => dialogResult;
-        set {
-            dialogResult = value;
-            OnPropertyChanged(nameof(DialogResult));
         }
     }
     public ObservableList<Byte> RawData { get; } = new(true, false);
@@ -204,9 +194,6 @@ class ConverterVM : AsyncViewModel {
         Text = String.Empty;
         RawData.Clear();
         Path = null;
-    }
-    void close(Object o) {
-        DialogResult = true;
     }
     void print(Object obj) {
         StaticCommands.Print(Text);
