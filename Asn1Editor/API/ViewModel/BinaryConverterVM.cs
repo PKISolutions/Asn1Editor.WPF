@@ -7,7 +7,6 @@ using System.Linq;
 using System.Windows;
 using System.Windows.Data;
 using System.Windows.Input;
-using Microsoft.Win32;
 using SysadminsLV.Asn1Editor.API.ModelObjects;
 using SysadminsLV.Asn1Editor.API.Utils;
 using SysadminsLV.Asn1Parser;
@@ -128,16 +127,9 @@ class BinaryConverterVM : AsyncViewModel {
     }
 
     void openFile(Object obj) {
-        var dlg = new OpenFileDialog {
-            FileName = "",
-            DefaultExt = ".*",
-            Filter = "All files (*.*)|*.*"
-        };
-        Boolean? result = dlg.ShowDialog();
-        if (result != true) {
+        if (!getOpenFilePath()) {
             return;
         }
-        Path = dlg.FileName;
         RawData.Clear();
         IsBusy = true;
         try {
@@ -153,22 +145,22 @@ class BinaryConverterVM : AsyncViewModel {
         switch ((String)obj) {
             case "text":
                 if (String.IsNullOrEmpty(Path)) {
-                    if (!getFilePath()) { return; }
+                    if (!getSaveFilePath()) { return; }
                 }
                 saveText();
                 break;
             case "textas":
-                if (!getFilePath()) { return; }
+                if (!getSaveFilePath()) { return; }
                 saveText();
                 break;
             case "bin":
                 if (String.IsNullOrEmpty(Path)) {
-                    if (!getFilePath()) { return; }
+                    if (!getSaveFilePath()) { return; }
                 }
                 saveBinary();
                 break;
             case "binas":
-                if (!getFilePath()) { return; }
+                if (!getSaveFilePath()) { return; }
                 saveBinary();
                 break;
         }
@@ -201,12 +193,22 @@ class BinaryConverterVM : AsyncViewModel {
     Boolean canPrintSave(Object obj) {
         return CanCheck = RawData.Count > 0;
     }
-    Boolean getFilePath() {
+    Boolean getSaveFilePath() {
         String saveFilePath = Tools.GetSaveFileName();
         if (String.IsNullOrWhiteSpace(saveFilePath.Trim())) {
             return false;
         }
         Path = saveFilePath;
+
+        return true;
+    }
+    Boolean getOpenFilePath() {
+        String openFilePath = Tools.GetOpenFileName();
+        if (String.IsNullOrWhiteSpace(openFilePath.Trim())) {
+            return false;
+        }
+        Path = openFilePath;
+
         return true;
     }
     void saveText() {
