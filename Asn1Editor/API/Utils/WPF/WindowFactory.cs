@@ -9,8 +9,8 @@ using Unity;
 namespace SysadminsLV.Asn1Editor.API.Utils.WPF;
 
 class WindowFactory : WindowFactoryBase, IWindowFactory {
-    static BinaryConverterWindow converter;
-    static Boolean converterClosed = true;
+    static BinaryConverterWindow binConverterWindow;
+    static Boolean binConverterWindowClosed = true;
 
     public void ShowLicenseDialog() {
         hwnd = App.Container.Resolve<LicenseWindow>();
@@ -35,16 +35,16 @@ class WindowFactory : WindowFactoryBase, IWindowFactory {
         ShowAsWindow(true);
     }
     public void ShowConverterWindow(IEnumerable<Byte> data, Action<Byte[]> action) {
-        if (!converterClosed) {
-            converter.Focus();
+        if (!binConverterWindowClosed) {
+            binConverterWindow.Focus();
             return;
         }
-        converterClosed = false;
-        hwnd = converter = new BinaryConverterWindow();
-        var hwndvm = new BinaryConverterVM(action);
-        hwnd.DataContext = hwndvm;
-        hwndvm.SetBytes(data);
-        hwnd.Closed += (o, e) => { converterClosed = true; };
+        binConverterWindowClosed = false;
+        hwnd = binConverterWindow = new BinaryConverterWindow();
+        var binConverterVM = new BinaryConverterVM(action);
+        hwnd.DataContext = binConverterVM;
+        binConverterVM.SetBytes(data);
+        hwnd.Closed += (o, e) => { binConverterWindowClosed = true; };
         ShowAsWindow(true);
     }
 }
