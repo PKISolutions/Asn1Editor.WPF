@@ -11,7 +11,7 @@ using Asn1Editor.Wpf.Controls.Helpers;
 using SysadminsLV.Asn1Parser;
 using SysadminsLV.WPF.OfficeTheme.Controls;
 
-namespace Asn1Editor.Wpf.Controls; 
+namespace Asn1Editor.Wpf.Controls;
 
 /// <summary>
 /// Interaction logic for HexViewerUC.xaml
@@ -21,13 +21,16 @@ partial class AsnHexViewer {
     const String masterHex = "123456789012345678901234567890123456789012345678";
     const String masterAscii = "1234567890123456";
 
+    static AsnHexViewer() {
+        FontSizeProperty.OverrideMetadata(typeof(AsnHexViewer), new FrameworkPropertyMetadata(OnFontSizeChanged));
+    }
+
     readonly BindableRichTextBox[] panes;
 
     Boolean scrollLocked;
     TextRange[] ranges;
     public AsnHexViewer() {
         InitializeComponent();
-        FontSizeProperty.OverrideMetadata(typeof(AsnHexViewer), new FrameworkPropertyMetadata(OnFontSizeChanged));
         ranges = new TextRange[3];
         calculateWidths();
         panes = new[] { HexAddressPane, HexRawPane, HexAsciiPane };
