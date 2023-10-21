@@ -6,10 +6,10 @@ using SysadminsLV.Asn1Editor.API.ViewModel;
 using SysadminsLV.Asn1Editor.Views.Windows;
 using Unity;
 
-namespace SysadminsLV.Asn1Editor.API.Utils.WPF; 
+namespace SysadminsLV.Asn1Editor.API.Utils.WPF;
 
 class WindowFactory : WindowFactoryBase, IWindowFactory {
-    static Converter converter;
+    static BinaryConverterWindow converter;
     static Boolean converterClosed = true;
 
     public void ShowLicenseDialog() {
@@ -40,8 +40,8 @@ class WindowFactory : WindowFactoryBase, IWindowFactory {
             return;
         }
         converterClosed = false;
-        hwnd = converter = new Converter();
-        var hwndvm = new ConverterVM(action);
+        hwnd = converter = new BinaryConverterWindow();
+        var hwndvm = new BinaryConverterVM(action);
         hwnd.DataContext = hwndvm;
         hwndvm.SetBytes(data);
         hwnd.Closed += (o, e) => { converterClosed = true; };

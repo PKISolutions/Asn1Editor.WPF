@@ -16,7 +16,7 @@ using SysadminsLV.WPF.OfficeTheme.Toolkit.Commands;
 
 namespace SysadminsLV.Asn1Editor.API.ViewModel;
 
-class ConverterVM : AsyncViewModel {
+class BinaryConverterVM : AsyncViewModel {
     readonly String master = new String('0', 78);
     Double width;
     String text, path;
@@ -24,7 +24,7 @@ class ConverterVM : AsyncViewModel {
     Boolean canCheck;
     readonly Action<Byte[]> _action;
 
-    public ConverterVM(Action<Byte[]> action) {
+    public BinaryConverterVM(Action<Byte[]> action) {
         _action = action;
         OpenCommand = new RelayCommand(openFile);
         SaveCommand = new RelayCommand(saveFile, canPrintSave);

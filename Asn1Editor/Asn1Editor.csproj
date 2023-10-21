@@ -173,7 +173,7 @@
     <Compile Include="API\Utils\WPF\WindowFactory.cs" />
     <Compile Include="API\Utils\WPF\WindowFactoryBase.cs" />
     <Compile Include="API\ViewModel\AppCommands.cs" />
-    <Compile Include="API\ViewModel\ConverterVM.cs" />
+    <Compile Include="API\ViewModel\BinaryConverterVM.cs" />
     <Compile Include="API\ViewModel\StaticCommands.cs" />
     <Compile Include="API\ViewModel\TagDataEditorVM.cs" />
     <Compile Include="API\ViewModel\TextViewerVM.cs" />
@@ -194,8 +194,8 @@
     <Compile Include="Views\UserControls\BusyIndicator.xaml.cs">
       <DependentUpon>BusyIndicator.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Views\Windows\Converter.xaml.cs">
-      <DependentUpon>Converter.xaml</DependentUpon>
+    <Compile Include="Views\Windows\BinaryConverterWindow.xaml.cs">
+      <DependentUpon>BinaryConverterWindow.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\Windows\TagDataEditor.xaml.cs">
       <DependentUpon>TagDataEditor.xaml</DependentUpon>
@@ -219,7 +219,7 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Views\Windows\Converter.xaml">
+    <Page Include="Views\Windows\BinaryConverterWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
