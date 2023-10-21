@@ -15,11 +15,12 @@
         ResizeMode="CanResize"
         WindowStartupLocation="CenterOwner"
         Height="500"
-        Width="750">
+        Width="650">
     <Window.InputBindings>
         <KeyBinding Modifiers="Ctrl" Key="S" Command="{Binding SaveCommand}"/>
         <KeyBinding Modifiers="Ctrl" Key="O" Command="{Binding OpenCommand}"/>
         <KeyBinding Modifiers="Ctrl" Key="P" Command="{Binding PrintCommand}"/>
+        <KeyBinding Key="Escape" Command="{Binding CloseCommand}"/>
     </Window.InputBindings>
     <DockPanel>
         <Menu DockPanel.Dock="Top">
@@ -91,7 +92,7 @@
                            Foreground="Navy"
                            VerticalAlignment="Center"
                            Margin="3,0,0,0"/>
-                <ComboBox ItemsSource="{Binding EncodingListView}"
+                <ComboBox ItemsSource="{Binding EncodingTypesView}"
                           SelectedItem="{Binding SelectedEncoding}"
                           DisplayMemberPath="DisplayName"
                           MinWidth="170">
@@ -116,6 +117,7 @@
                 <Separator/>
                 <Button Content="Validate"
                         Command="{Binding ValidateCommand}"></Button>
+                <Separator/>
                 <Button Content="Validate &amp; Decode"
                         Command="{Binding ValidateCommand}"
                         CommandParameter="Decode"></Button>
@@ -138,55 +140,7 @@
                 <TextBlock Text="Size: "><Run Text="{Binding RawData.Count, Mode=OneWay}"/><Run Text=" bytes"/></TextBlock>
             </StatusBarItem>
         </StatusBar>
-        <StackPanel DockPanel.Dock="Right">
-            <Button Content="Validate"
-                    Command="{Binding ValidateCommand}"
-                    Margin="5,5,5,0"/>
-            <Button Content="Validate &amp; Decode"
-                    Command="{Binding ValidateCommand}"
-                    CommandParameter="Decode"
-                    Margin="5,0,5,5"/>
-            <ItemsControl ItemsSource="{Binding _encodingTypes}"
-                          Margin="5">
-                <ItemsControl.ItemTemplate>
-                    <DataTemplate>
-                        <RadioButton GroupName="Encoding"
-                                     Content="{Binding DisplayName}"
-                                     IsChecked="{Binding IsChecked}"/>
-                    </DataTemplate>
-                </ItemsControl.ItemTemplate>
-            </ItemsControl>
-            <!--<StackPanel DockPanel.Dock="Left" Margin="5" IsEnabled="{Binding CanCheck}">
-                <RadioButton FontSize="{Binding Path=FontSize, Source={x:Static properties:Settings.Default}}"
-                         Content="Base64"
-                         IsChecked="{Binding Base64}"/>
-                <RadioButton FontSize="{Binding Path=FontSize, Source={x:Static properties:Settings.Default}}"
-                         Content="Base64 with certificate header"
-                         IsChecked="{Binding Base64Header}"/>
-                <RadioButton FontSize="{Binding Path=FontSize, Source={x:Static properties:Settings.Default}}"
-                         Content="Base64 with request header"
-                         IsChecked="{Binding Base64Req}"/>
-                <RadioButton FontSize="{Binding Path=FontSize, Source={x:Static properties:Settings.Default}}"
-                         Content="Base64 with CRL header"
-                         IsChecked="{Binding Base64Crl}"/>
-                <RadioButton FontSize="{Binding Path=FontSize, Source={x:Static properties:Settings.Default}}"
-                         Content="Hex"
-                         IsChecked="{Binding Hex}"/>
-                <RadioButton FontSize="{Binding Path=FontSize, Source={x:Static properties:Settings.Default}}"
-                         Content="Hex with address"
-                         IsChecked="{Binding HexAddr}"/>
-                <RadioButton FontSize="{Binding Path=FontSize, Source={x:Static properties:Settings.Default}}"
-                         Content="Hex with ASCII"
-                         IsChecked="{Binding HexAscii}"/>
-                <RadioButton FontSize="{Binding Path=FontSize, Source={x:Static properties:Settings.Default}}"
-                         Content="Hex with address and ASCII"
-                         IsChecked="{Binding HexAddrAscii}"/>
-                <RadioButton FontSize="{Binding Path=FontSize, Source={x:Static properties:Settings.Default}}"
-                         Content="Hex raw"
-                         IsChecked="{Binding HexRaw}"/>
-            </StackPanel>-->
-        </StackPanel>
-        <!-- actual width is around 550 -->
+        <!-- actual minimal width is around 550 -->
         <TextBox Name="txt"
                  BorderThickness="0"
                  UndoLimit="10"
@@ -197,7 +151,7 @@
                  FontSize="{Binding Path=FontSize, Source={x:Static properties:Settings.Default}}"
                  TextWrapping="Wrap"
                  AcceptsReturn="True"
-                 VerticalScrollBarVisibility="Visible"
+                 VerticalScrollBarVisibility="Auto"
                  HorizontalScrollBarVisibility="Disabled"/>
     </DockPanel>
 </Window>

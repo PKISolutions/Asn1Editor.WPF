@@ -16,21 +16,17 @@ using SysadminsLV.WPF.OfficeTheme.Toolkit.Commands;
 
 namespace SysadminsLV.Asn1Editor.API.ViewModel;
 
-class ConverterVM : ViewModelBase {
+class ConverterVM : AsyncViewModel {
     readonly String master = new String('0', 78);
-    public ObservableCollection<EncodingTypeEntry> _encodingTypes { get; } = new();
     Double width;
     String text, path;
     Boolean? dialogResult;
     EncodingTypeEntry? selectedEncoding;
-    Boolean isLocked, canCheck,
-        base64, base64header, base64req, base64crl, hex, hexaddr, hexascii, hexaddrascii, hexraw;
+    Boolean canCheck;
     readonly Action<Byte[]> _action;
 
     public ConverterVM(Action<Byte[]> action) {
         _action = action;
-        base64 = true;
-        OnPropertyChanged(nameof(Base64));
         OpenCommand = new RelayCommand(openFile);
         SaveCommand = new RelayCommand(saveFile, canPrintSave);
         PrintCommand = new RelayCommand(print, canPrintSave);
@@ -39,8 +35,8 @@ class ConverterVM : ViewModelBase {
         CloseCommand = new RelayCommand(close);
         //TextBoxWidth = TextUtility.MeasureStringWidth(master, Settings.Default.FontSize, true);
         initialize();
-        EncodingListView = CollectionViewSource.GetDefaultView(_encodingTypes);
-        EncodingListView.GroupDescriptions.Add(new PropertyGroupDescription(nameof(EncodingTypeEntry.EncodingGroup)));
+        EncodingTypesView = CollectionViewSource.GetDefaultView(EncodingTypes);
+        EncodingTypesView.GroupDescriptions.Add(new PropertyGroupDescription(nameof(EncodingTypeEntry.EncodingGroup)));
     }
 
     public ICommand OpenCommand { get; }
@@ -99,135 +95,69 @@ class ConverterVM : ViewModelBase {
         }
     }
     public ObservableList<Byte> RawData { get; } = new(true, false);
-    public ICollectionView EncodingListView { get; }
-    //public ObservableCollection<EncodingTypeEntry> EncodingTypes { get; } = new();
-
-    #region Radiobuttons
-    public Boolean Base64 {
-        get => base64;
-        set {
-            base64 = value;
-            if (base64) { Text = AsnFormatter.BinaryToString(RawData.ToArray(), EncodingType.Base64); }
-            OnPropertyChanged(nameof(Base64));
-        }
-    }
-    public Boolean Base64Header {
-        get => base64header;
-        set {
-            base64header = value;
-            if (base64header) { Text = AsnFormatter.BinaryToString(RawData.ToArray(), EncodingType.Base64Header); }
-            OnPropertyChanged(nameof(Base64Header));
-        }
-    }
-    public Boolean Base64Req {
-        get => base64req;
-        set {
-            base64req = value;
-            if (base64req) { Text = AsnFormatter.BinaryToString(RawData.ToArray(), EncodingType.Base64RequestHeader); }
-            OnPropertyChanged(nameof(Base64Req));
-        }
-    }
-    public Boolean Base64Crl {
-        get => base64crl;
-        set {
-            base64crl = value;
-            if (base64crl) { Text = AsnFormatter.BinaryToString(RawData.ToArray(), EncodingType.Base64CrlHeader); }
-            OnPropertyChanged(nameof(Base64Crl));
-        }
-    }
-    public Boolean Hex {
-        get => hex;
-        set {
-            hex = value;
-            if (hex) { Text = AsnFormatter.BinaryToString(RawData.ToArray(), EncodingType.Hex); }
-            OnPropertyChanged(nameof(Hex));
-        }
-    }
-    public Boolean HexAddr {
-        get => hexaddr;
-        set {
-            hexaddr = value;
-            if (hexaddr) { Text = AsnFormatter.BinaryToString(RawData.ToArray(), EncodingType.HexAddress); }
-            OnPropertyChanged(nameof(HexAddr));
-        }
-    }
-    public Boolean HexAscii {
-        get => hexascii;
-        set {
-            hexascii = value;
-            if (hexascii) { Text = AsnFormatter.BinaryToString(RawData.ToArray(), EncodingType.HexAscii); }
-            OnPropertyChanged(nameof(HexAscii));
-        }
-    }
-    public Boolean HexAddrAscii {
-        get => hexaddrascii;
-        set {
-            hexaddrascii = value;
-            if (hexaddrascii) { Text = AsnFormatter.BinaryToString(RawData.ToArray(), EncodingType.HexAsciiAddress); }
-            OnPropertyChanged(nameof(HexAddrAscii));
-        }
-    }
-    public Boolean HexRaw {
-        get => hexraw;
-        set {
-            hexraw = value;
-            if (hexraw) { Text = AsnFormatter.BinaryToString(RawData.ToArray()); }
-            OnPropertyChanged(nameof(HexRaw));
-        }
-    }
-    #endregion
+    // we use this for combobox ItemsSource binding
+    public ICollectionView EncodingTypesView { get; }
+    // This is observable and public just in case if a list of radiobuttons is necessary,
+    // so ItemsControl.ItemsSource can bind to a list of checkboxes
+    public ObservableCollection<EncodingTypeEntry> EncodingTypes { get; } = new();
 
     void initialize() {
-        _encodingTypes.Add(new EncodingTypeEntry(EncodingType.Base64, "Base64", EncodingGroup.PEM));
-        _encodingTypes.Add(new EncodingTypeEntry(EncodingType.PemCert, "PEM - Certificate", EncodingGroup.PEM));
-        _encodingTypes.Add(new EncodingTypeEntry(EncodingType.PemTrustedCert, "PEM - Trusted Certificate", EncodingGroup.PEM));
-        _encodingTypes.Add(new EncodingTypeEntry(EncodingType.PemNewReq, "PEM - New Request", EncodingGroup.PEM));
-        _encodingTypes.Add(new EncodingTypeEntry(EncodingType.PemReq, "PEM - Request", EncodingGroup.PEM));
-        _encodingTypes.Add(new EncodingTypeEntry(EncodingType.PemEvpPrivateKey, "PEM - EVP Private Key", EncodingGroup.PEM));
-        _encodingTypes.Add(new EncodingTypeEntry(EncodingType.PemPublicKey, "PEM - Public Key", EncodingGroup.PEM));
-        _encodingTypes.Add(new EncodingTypeEntry(EncodingType.PemRsaPrivateKey, "PEM - RSA Private Key", EncodingGroup.PEM));
-        _encodingTypes.Add(new EncodingTypeEntry(EncodingType.PemRsaPublicKey, "PEM - RSA Public Key", EncodingGroup.PEM));
-        _encodingTypes.Add(new EncodingTypeEntry(EncodingType.PemDsaPrivateKey, "PEM - DSA Private Key", EncodingGroup.PEM));
-        _encodingTypes.Add(new EncodingTypeEntry(EncodingType.PemDsaPublicKey, "PEM - DSA Public Key", EncodingGroup.PEM));
-        _encodingTypes.Add(new EncodingTypeEntry(EncodingType.PemDsaParams, "PEM - DSA Parameters", EncodingGroup.PEM));
-        _encodingTypes.Add(new EncodingTypeEntry(EncodingType.PemECPrivateKey, "PEM - ECDSA Private Key", EncodingGroup.PEM));
-        _encodingTypes.Add(new EncodingTypeEntry(EncodingType.PemECDsaPublicKey, "PEM - ECDSA Public Key", EncodingGroup.PEM));
-        _encodingTypes.Add(new EncodingTypeEntry(EncodingType.PemECParams, "PEM - EC Parameters", EncodingGroup.PEM));
-        _encodingTypes.Add(new EncodingTypeEntry(EncodingType.PemDHParams, "PEM - DH Parameters", EncodingGroup.PEM));
-        _encodingTypes.Add(new EncodingTypeEntry(EncodingType.PemDHXParams, "PEM - DHX Parameters", EncodingGroup.PEM));
-        _encodingTypes.Add(new EncodingTypeEntry(EncodingType.PemParams, "PEM - Parameters", EncodingGroup.PEM));
-        _encodingTypes.Add(new EncodingTypeEntry(EncodingType.PemPkcs7, "PEM - PKCS#7", EncodingGroup.PEM));
-        _encodingTypes.Add(new EncodingTypeEntry(EncodingType.PemPkcs7Signed, "PEM - PKCS#7 Signed", EncodingGroup.PEM));
-        _encodingTypes.Add(new EncodingTypeEntry(EncodingType.PemCms, "PEM - CMS", EncodingGroup.PEM));
-        _encodingTypes.Add(new EncodingTypeEntry(EncodingType.PemPkcs8Encrypted, "PEM - PKCS#8 Encrypted", EncodingGroup.PEM));
-        _encodingTypes.Add(new EncodingTypeEntry(EncodingType.PemPkcs8Inf, "PEM - PKCS#8 Unencrypted", EncodingGroup.PEM));
-        _encodingTypes.Add(new EncodingTypeEntry(EncodingType.PemSSLSessionParams, "PEM - SSL Session Parameters", EncodingGroup.PEM));
-        _encodingTypes.Add(new EncodingTypeEntry(EncodingType.Hex, "Hex", EncodingGroup.Hexadecimal));
-        _encodingTypes.Add(new EncodingTypeEntry(EncodingType.HexAddress, "Hex - with address", EncodingGroup.Hexadecimal));
-        _encodingTypes.Add(new EncodingTypeEntry(EncodingType.HexAscii, "Hex - with ASCII", EncodingGroup.Hexadecimal));
-        _encodingTypes.Add(new EncodingTypeEntry(EncodingType.HexAsciiAddress, "Hex - with address and ASCII", EncodingGroup.Hexadecimal));
-        _encodingTypes.Add(new EncodingTypeEntry(EncodingType.HexRaw, "Hex - raw", EncodingGroup.Hexadecimal));
+        addEncodingToTheList(EncodingType.Base64, "Base64", EncodingGroup.PEM);
+        addEncodingToTheList(EncodingType.PemCert, "PEM - Certificate", EncodingGroup.PEM);
+        addEncodingToTheList(EncodingType.PemTrustedCert, "PEM - Trusted Certificate", EncodingGroup.PEM);
+        addEncodingToTheList(EncodingType.PemNewReq, "PEM - New Request", EncodingGroup.PEM);
+        addEncodingToTheList(EncodingType.PemReq, "PEM - Request", EncodingGroup.PEM);
+        addEncodingToTheList(EncodingType.Base64CrlHeader, "PEM - X.509 CRL", EncodingGroup.PEM);
+        addEncodingToTheList(EncodingType.PemEvpPrivateKey, "PEM - EVP Private Key", EncodingGroup.PEM);
+        addEncodingToTheList(EncodingType.PemPublicKey, "PEM - Public Key", EncodingGroup.PEM);
+        addEncodingToTheList(EncodingType.PemRsaPrivateKey, "PEM - RSA Private Key", EncodingGroup.PEM);
+        addEncodingToTheList(EncodingType.PemRsaPublicKey, "PEM - RSA Public Key", EncodingGroup.PEM);
+        addEncodingToTheList(EncodingType.PemDsaPrivateKey, "PEM - DSA Private Key", EncodingGroup.PEM);
+        addEncodingToTheList(EncodingType.PemDsaPublicKey, "PEM - DSA Public Key", EncodingGroup.PEM);
+        addEncodingToTheList(EncodingType.PemDsaParams, "PEM - DSA Parameters", EncodingGroup.PEM);
+        addEncodingToTheList(EncodingType.PemECPrivateKey, "PEM - ECDSA Private Key", EncodingGroup.PEM);
+        addEncodingToTheList(EncodingType.PemECDsaPublicKey, "PEM - ECDSA Public Key", EncodingGroup.PEM);
+        addEncodingToTheList(EncodingType.PemECParams, "PEM - EC Parameters", EncodingGroup.PEM);
+        addEncodingToTheList(EncodingType.PemDHParams, "PEM - DH Parameters", EncodingGroup.PEM);
+        addEncodingToTheList(EncodingType.PemDHXParams, "PEM - DHX Parameters", EncodingGroup.PEM);
+        addEncodingToTheList(EncodingType.PemParams, "PEM - Parameters", EncodingGroup.PEM);
+        addEncodingToTheList(EncodingType.PemPkcs7, "PEM - PKCS#7", EncodingGroup.PEM);
+        addEncodingToTheList(EncodingType.PemPkcs7Signed, "PEM - PKCS#7 Signed", EncodingGroup.PEM);
+        addEncodingToTheList(EncodingType.PemCms, "PEM - CMS", EncodingGroup.PEM);
+        addEncodingToTheList(EncodingType.PemPkcs8Encrypted, "PEM - PKCS#8 Encrypted", EncodingGroup.PEM);
+        addEncodingToTheList(EncodingType.PemPkcs8Inf, "PEM - PKCS#8 Unencrypted", EncodingGroup.PEM);
+        addEncodingToTheList(EncodingType.PemSSLSessionParams, "PEM - SSL Session Parameters", EncodingGroup.PEM);
+        addEncodingToTheList(EncodingType.Hex, "Hex", EncodingGroup.Hexadecimal);
+        addEncodingToTheList(EncodingType.HexAddress, "Hex - with address", EncodingGroup.Hexadecimal);
+        addEncodingToTheList(EncodingType.HexAscii, "Hex - with ASCII", EncodingGroup.Hexadecimal);
+        addEncodingToTheList(EncodingType.HexAsciiAddress, "Hex - with address and ASCII", EncodingGroup.Hexadecimal);
+        addEncodingToTheList(EncodingType.HexRaw, "Hex - raw", EncodingGroup.Hexadecimal);
+    }
+    void addEncodingToTheList(EncodingType encoding, String displayName, EncodingGroup encodingGroup) {
+        EncodingTypes.Add(new EncodingTypeEntry(encoding, displayName, encodingGroup));
     }
 
     void openFile(Object obj) {
-        isLocked = true;
         var dlg = new OpenFileDialog {
             FileName = "",
             DefaultExt = ".*",
             Filter = "All files (*.*)|*.*"
         };
         Boolean? result = dlg.ShowDialog();
-        if (result != true) { return; }
+        if (result != true) {
+            return;
+        }
         Path = dlg.FileName;
         RawData.Clear();
+        IsBusy = true;
         try {
-            RawData.AddRange(FileUtility.FileToBinary(path).Result);
-            RadioChanged("base64");
+            RawData.AddRange(FileUtility.FileToBinary(path).GetAwaiter().GetResult());
+            formatToSelectedEncoding();
         } catch (Exception e) {
             Tools.MsgBox("Read Error", e.Message);
             Path = null;
         }
-        isLocked = false;
+        IsBusy = false;
     }
     void saveFile(Object obj) {
         switch ((String)obj) {
@@ -260,52 +190,11 @@ class ConverterVM : ViewModelBase {
         }
         EncodingType encoding = AsnFormatter.TestInputString(Text);
         RawData.Clear();
-        selectedEncoding = _encodingTypes.FirstOrDefault(x => x.EncodingType == encoding);
+        selectedEncoding = EncodingTypes.FirstOrDefault(x => x.EncodingType == encoding);
         OnPropertyChanged(nameof(SelectedEncoding));
         if (SelectedEncoding == null) {
             Tools.MsgBox("Error", "Input text cannot be validated.");
         }
-        //switch (encoding) {
-        //    case EncodingType.Base64:
-        //        base64 = true;
-        //        OnPropertyChanged(nameof(Base64));
-        //        break;
-        //    case EncodingType.Base64Header:
-        //        base64header = true;
-        //        OnPropertyChanged(nameof(Base64Header));
-        //        break;
-        //    case EncodingType.Base64RequestHeader:
-        //        base64req = true;
-        //        OnPropertyChanged(nameof(Base64Req));
-        //        break;
-        //    case EncodingType.Base64CrlHeader:
-        //        base64crl = true;
-        //        OnPropertyChanged(nameof(Base64Crl));
-        //        break;
-        //    case EncodingType.Hex:
-        //        hex = true;
-        //        OnPropertyChanged(nameof(Hex));
-        //        break;
-        //    case EncodingType.HexAddress:
-        //        hexaddr = true;
-        //        OnPropertyChanged(nameof(HexAddr));
-        //        break;
-        //    case EncodingType.HexAscii:
-        //        hexascii = true;
-        //        OnPropertyChanged(nameof(HexAscii));
-        //        break;
-        //    case EncodingType.HexAsciiAddress:
-        //        hexaddrascii = true;
-        //        OnPropertyChanged(nameof(HexAddrAscii));
-        //        break;
-        //    case EncodingType.HexRaw:
-        //        hexraw = true;
-        //        OnPropertyChanged(nameof(HexRaw));
-        //        break;
-        //    default:
-        //        Tools.MsgBox("Error", "Input text cannot be validated.");
-        //        return;
-        //}
         RawData.AddRange(HexUtility.AnyToBinary(Text));
         if (obj != null && obj.ToString() == "Decode") {
             _action.Invoke(RawData.ToArray());
@@ -316,8 +205,8 @@ class ConverterVM : ViewModelBase {
         RawData.Clear();
         Path = null;
     }
-    void close(Object Obj) {
-        throw new NotImplementedException();
+    void close(Object o) {
+        DialogResult = true;
     }
     void print(Object obj) {
         StaticCommands.Print(Text);
@@ -326,9 +215,11 @@ class ConverterVM : ViewModelBase {
         return CanCheck = RawData.Count > 0;
     }
     Boolean getFilePath() {
-        String path = Tools.GetSaveFileName();
-        if (String.IsNullOrWhiteSpace(path.Trim())) { return false; }
-        Path = path;
+        String saveFilePath = Tools.GetSaveFileName();
+        if (String.IsNullOrWhiteSpace(saveFilePath.Trim())) {
+            return false;
+        }
+        Path = saveFilePath;
         return true;
     }
     void saveText() {
@@ -346,47 +237,17 @@ class ConverterVM : ViewModelBase {
         }
     }
 
-    public void RadioChanged(String tag) {
+    void formatToSelectedEncoding() {
         if (RawData.Count == 0) {
             return;
         }
-
-        SelectedEncoding = _encodingTypes[0];
-        //switch (tag.ToLower()) {
-        //    case "base64":
-        //        Text = AsnFormatter.BinaryToString(RawData.ToArray(), EncodingType.Base64);
-        //        Base64 = true;
-        //        break;
-        //    case "base64header":
-        //        Text = AsnFormatter.BinaryToString(RawData.ToArray(), EncodingType.Base64Header);
-        //        break;
-        //    case "base64reqheader":
-        //        Text = AsnFormatter.BinaryToString(RawData.ToArray(), EncodingType.Base64RequestHeader);
-        //        break;
-        //    case "base64crlheader":
-        //        Text = AsnFormatter.BinaryToString(RawData.ToArray(), EncodingType.Base64CrlHeader);
-        //        break;
-        //    case "hex":
-        //        Text = AsnFormatter.BinaryToString(RawData.ToArray(), EncodingType.Hex);
-        //        break;
-        //    case "hexaddr":
-        //        Text = AsnFormatter.BinaryToString(RawData.ToArray(), EncodingType.HexAddress);
-        //        break;
-        //    case "hexascii":
-        //        Text = AsnFormatter.BinaryToString(RawData.ToArray(), EncodingType.HexAscii);
-        //        break;
-        //    case "hexaddrascii":
-        //        Text = AsnFormatter.BinaryToString(RawData.ToArray(), EncodingType.HexAsciiAddress);
-        //        break;
-        //    case "hexraw":
-        //        Text = AsnFormatter.BinaryToString(RawData.ToArray());
-        //        break;
-        //}
+        
+        SelectedEncoding = EncodingTypes[0];
     }
     public void SetBytes(IEnumerable<Byte> rawData) {
         if (rawData == null) { return; }
         RawData.Clear();
         RawData.AddRange(rawData);
-        RadioChanged("base64");
+        formatToSelectedEncoding();
     }
 }
