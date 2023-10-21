@@ -35,7 +35,7 @@
                 <MenuItem Header="Save As..." Command="{Binding SaveCommand}" CommandParameter="textas"/>
                 <MenuItem Header="Save binary copy" Command="{Binding SaveCommand}" CommandParameter="bin"/>
                 <MenuItem Header="Save binary copy as..." Command="{Binding SaveCommand}" CommandParameter="binas"/>
-                <MenuItem Header="_Exit" Command="{Binding CloseCommand}" InputGestureText="Alt + F4"/>
+                <MenuItem Header="_Exit" Click="onCloseClick" InputGestureText="Alt + F4"/>
             </MenuItem>
             <MenuItem Header="Edit">
                 <MenuItem Header="Cut" Command="ApplicationCommands.Cut" InputGestureText="Ctrl + X">
