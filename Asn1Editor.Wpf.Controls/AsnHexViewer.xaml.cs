@@ -90,6 +90,7 @@ partial class AsnHexViewer {
         if (e.NewValue != null && e.NewValue is INotifyCollectionChanged newValue) { 
             newValue.CollectionChanged += ((AsnHexViewer)source).OnCollectionChanged;
         }
+        ((AsnHexViewer)source).RefreshView();
     }
     void OnCollectionChanged(Object o, NotifyCollectionChangedEventArgs e) {
         RefreshView();

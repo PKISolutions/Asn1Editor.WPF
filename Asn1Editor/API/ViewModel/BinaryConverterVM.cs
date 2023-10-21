@@ -4,6 +4,7 @@ using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.IO;
 using System.Linq;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Data;
 using System.Windows.Input;
@@ -21,9 +22,9 @@ class BinaryConverterVM : AsyncViewModel {
     String text, path;
     EncodingTypeEntry? selectedEncoding;
     Boolean canCheck;
-    readonly Action<Byte[]> _action;
+    readonly Func<Byte[], Task> _action;
 
-    public BinaryConverterVM(Action<Byte[]> action) {
+    public BinaryConverterVM(Func<Byte[], Task> action) {
         _action = action;
         OpenCommand = new RelayCommand(openFile);
         SaveCommand = new RelayCommand(saveFile, canPrintSave);
@@ -165,7 +166,7 @@ class BinaryConverterVM : AsyncViewModel {
                 break;
         }
     }
-    void validateInput(Object obj) {
+    async void validateInput(Object obj) {
         if (String.IsNullOrEmpty(Text)) {
             Tools.MsgBox("Warning", "There is nothing to validate.", MessageBoxImage.Warning);
             return;
@@ -179,7 +180,7 @@ class BinaryConverterVM : AsyncViewModel {
         }
         RawData.AddRange(HexUtility.AnyToBinary(Text));
         if (obj != null && obj.ToString() == "Decode") {
-            _action.Invoke(RawData.ToArray());
+            await _action(RawData.ToArray());
         }
     }
     void clearText(Object obj) {

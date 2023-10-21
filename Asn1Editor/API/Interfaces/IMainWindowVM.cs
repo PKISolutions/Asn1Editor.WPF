@@ -1,11 +1,12 @@
 ﻿using System;
+using System.Threading.Tasks;
 
-namespace SysadminsLV.Asn1Editor.API.Interfaces; 
+namespace SysadminsLV.Asn1Editor.API.Interfaces;
 
 public interface IMainWindowVM {
     Boolean IsModified { get; }
     Boolean RequestFileSave();
-    void DropFile(String filePath);
-    void OpenExisting(String filePath);
-    void OpenRaw(String base64String);
+    Task DropFileAsync(String filePath);
+    Task OpenExistingAsync(String filePath);
+    Task OpenRawAsync(String base64String);
 }

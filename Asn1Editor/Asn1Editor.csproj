@@ -148,6 +148,7 @@
     <Compile Include="API\Utils\ITextRenderer.cs" />
     <Compile Include="API\Utils\NodeEditMode.cs" />
     <Compile Include="API\Utils\OpenSSLRenderer.cs" />
+    <Compile Include="API\ViewModel\Asn1DocumentVM.cs" />
     <Compile Include="API\ViewModel\AsyncViewModel.cs" />
     <Compile Include="API\ViewModel\ClosableWindowVM.cs" />
     <Compile Include="API\ViewModel\GlobalData.cs" />

@@ -4,14 +4,15 @@ using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.IO;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
 using SysadminsLV.Asn1Editor.API.Interfaces;
 using SysadminsLV.Asn1Editor.API.ModelObjects;
 using SysadminsLV.Asn1Editor.API.Utils;
-using SysadminsLV.Asn1Editor.API.Utils.ASN;
 using SysadminsLV.Asn1Parser;
+using SysadminsLV.WPF.OfficeTheme.Controls;
 using SysadminsLV.WPF.OfficeTheme.Toolkit.Commands;
 
 namespace SysadminsLV.Asn1Editor.API.ViewModel;
@@ -20,56 +21,70 @@ class MainWindowVM : ViewModelBase, IMainWindowVM {
     readonly IWindowFactory _windowFactory;
     String path;
     Asn1TreeNode selectedNode;
+    Asn1DocumentVM selectedTab;
     Boolean hasClipboard, isBusy, isModified;
 
     public MainWindowVM(
         IWindowFactory windowFactory,
         IAppCommands appCommands,
         ITreeCommands treeCommands,
-        IDataSource data) {
+        NodeViewOptions nodeViewOptions) {
         _windowFactory = windowFactory;
         GlobalData = new GlobalData();
         AppCommands = appCommands;
         TreeCommands = treeCommands;
-        DataSource = data;
-        NewCommand = new RelayCommand(newFile);
-        OpenCommand = new RelayCommand(openFile);
-        SaveCommand = new RelayCommand(saveFile, canPrintSave);
-        DropFileCommand = new RelayCommand(dropFile);
-        appCommands.ShowConverterWindow = new RelayCommand(showConverter);
+        NodeViewOptions = nodeViewOptions;
         NodeViewOptions.PropertyChanged += onNodeViewOptionsChanged;
-        DataSource.CollectionChanged += (sender, args) => IsModified = true;
+        NewCommand = new RelayCommand(newTab);
+        CloseTabCommand = new RelayCommand(closeTab, canCloseTab);
+        OpenCommand = new AsyncCommand(openFileAsync);
+        SaveCommand = new RelayCommand(saveFile, canPrintSave);
+        DropFileCommand = new AsyncCommand(dropFileAsync);
+        appCommands.ShowConverterWindow = new RelayCommand(showConverter);
+        //DataSource.CollectionChanged += (sender, args) => IsModified = true;
         IsModified = false;
+        Tabs.Add(new Asn1DocumentVM(NodeViewOptions));
+        SelectedTab = Tabs[0];
     }
 
     void onNodeViewOptionsChanged(Object sender, PropertyChangedEventArgs e) {
-        if (Tree.Any()) {
-            Tree[0].UpdateNodeView(NodeViewOptions);
+        foreach (Asn1DocumentVM tab in Tabs) {
+            if (tab.Tree.Any()) {
+                Tree[0].UpdateNodeView(NodeViewOptions);
+            }
         }
     }
 
     public ICommand NewCommand { get; set; }
-    public ICommand OpenCommand { get; set; }
+    public ICommand CloseTabCommand { get; set; }
+    public IAsyncCommand OpenCommand { get; set; }
     public ICommand SaveCommand { get; set; }
     public ICommand PrintCommand { get; set; }
     public ICommand SettingsCommand { get; set; }
-    public ICommand DropFileCommand { get; }
+    public IAsyncCommand DropFileCommand { get; }
 
     public IAppCommands AppCommands { get; }
     public ITreeCommands TreeCommands { get; }
 
     public GlobalData GlobalData { get; }
-    public IDataSource DataSource { get; }
-    public static Dictionary<String, String> OIDs { get; } = new Dictionary<String, String>();
-    public ObservableCollection<Asn1TreeNode> Tree => DataSource.Tree;
-    public NodeViewOptions NodeViewOptions => DataSource.NodeViewOptions;
+    //public IDataSource DataSource { get; }
+    public static Dictionary<String, String> OIDs { get; } = new();
+    public ObservableCollection<Asn1TreeNode> Tree { get; } = new();
+    public NodeViewOptions NodeViewOptions { get; }
+    public ObservableCollection<Asn1DocumentVM> Tabs { get; } = new();
+    public Asn1DocumentVM SelectedTab {
+        get => selectedTab;
+        set {
+            selectedTab = value;
+            OnPropertyChanged(nameof(SelectedTab));
+        }
+    }
 
     public String Path {
         get => path;
         set {
             path = value;
             OnPropertyChanged(nameof(Path));
-            OnPropertyChanged(nameof(Title));
         }
     }
     public Boolean IsModified {
@@ -77,12 +92,8 @@ class MainWindowVM : ViewModelBase, IMainWindowVM {
         set {
             isModified = value;
             OnPropertyChanged(nameof(IsModified));
-            OnPropertyChanged(nameof(Title));
         }
     }
-    public String Title => String.IsNullOrEmpty(Path)
-        ? "ASN.1 Editor" + (IsModified ? " (Unsaved)" : String.Empty)
-        : $"ASN.1 Editor - '{new FileInfo(Path).Name}'" + (IsModified ? " (Unsaved)" : String.Empty);
     public Boolean HasClipboardData {
         get => hasClipboard;
         set {
@@ -105,27 +116,53 @@ class MainWindowVM : ViewModelBase, IMainWindowVM {
         }
     }
     void showConverter(Object o) {
-        _windowFactory.ShowConverterWindow(DataSource.RawData, openRaw);
+        _windowFactory.ShowConverterWindow(SelectedTab.DataSource.RawData, openRawAsync);
     }
-    void newFile(Object o) {
-        if (IsModified && !RequestFileSave()) {
-            return;
-        }
-        reset();
+    void newTab(Object o) {
+        var tab = new Asn1DocumentVM(NodeViewOptions);
+        addTabToList(tab);
+        //if (IsModified && !RequestFileSave()) {
+        //    return;
+        //}
+        //reset();
     }
-    void openFile(Object obj) {
-        if (IsModified && !RequestFileSave()) {
-            return;
+    void addTabToList(Asn1DocumentVM tab, Boolean focus = true) {
+        Tabs.Add(tab);
+        if (focus) {
+            SelectedTab = tab;
         }
+    }
+    void closeTab(Object o) {
+        // TODO: need to eliminate explicit reference to UI elements
+        if (o is ClosableTabItem tabItem) {
+            Tabs.Remove((Asn1DocumentVM)tabItem.Content);
+        }
+    }
+    Boolean canCloseTab(Object o) {
+        // TODO: need to eliminate explicit reference to UI elements
+        return o is ClosableTabItem;
+    }
 
-        String file = obj == null
-            ? Tools.GetOpenFileName()
-            : obj.ToString();
-        if (String.IsNullOrWhiteSpace(file)) { return; }
-        reset();
-        Path = file;
-        decode();
-        OnPropertyChanged(nameof(Title));
+    Task openFileAsync(Object obj, CancellationToken token = default) {
+        if (IsModified && !RequestFileSave()) {
+            return Task.CompletedTask;
+        }
+        String filePath = null;
+        Boolean useDefaultTab = false;
+        if (obj == null) {
+            filePath = Tools.GetOpenFileName();
+        } else {
+            filePath = obj.ToString();
+            useDefaultTab = true;
+        }
+        if (String.IsNullOrWhiteSpace(filePath)) {
+            return Task.CompletedTask;
+        }
+        return createTabFromFile(filePath);
+        //reset();
+        //Path = file;
+        //decode();
+        //OnPropertyChanged(nameof(Title));
     }
     void saveFile(Object obj) {
         if ((obj != null || String.IsNullOrEmpty(Path)) && !getFilePath()) {
@@ -138,7 +175,7 @@ class MainWindowVM : ViewModelBase, IMainWindowVM {
             return false;
         }
         try {
-            File.WriteAllBytes(Path, DataSource.RawData.ToArray());
+            File.WriteAllBytes(Path, SelectedTab.DataSource.RawData.ToArray());
             IsModified = false;
             return true;
         } catch (Exception e) {
@@ -146,46 +183,65 @@ class MainWindowVM : ViewModelBase, IMainWindowVM {
         }
         return false;
     }
+    async Task createTabFromFile(String file, Boolean useDefaultTab = false) {
+        Asn1DocumentVM tab;
+        if (useDefaultTab && Tabs.Any()) {
+            tab = Tabs[0];
+        } else {
+            tab = new Asn1DocumentVM(NodeViewOptions) {
+                Path = file
+            };
+        }
+        try {
+            IEnumerable<Byte> bytes = await FileUtility.FileToBinary(file);
+            await tab.Decode(bytes);
+        } catch (Exception ex) {
+            Tools.MsgBox("Read Error", ex.Message);
+            return;
+        }
+        addTabToList(tab);
+    }
     async void decode() {
         IsBusy = true;
         if (await decodeFile()) {
             Tree.Clear();
             try {
-                Asn1TreeNode rootNode = await AsnTreeBuilder.BuildTree(DataSource.RawData.ToArray());
-                Tree.Add(rootNode);
-                DataSource.FinishBinaryUpdate();
+                //Asn1TreeNode rootNode = await AsnTreeBuilder.BuildTree(DataSource.RawData.ToArray());
+                //Tree.Add(rootNode);
+                //DataSource.FinishBinaryUpdate();
             } catch (Exception e) {
                 Tools.MsgBox("Error", e.Message);
             }
         }
-            
+
         IsModified = false;
         IsBusy = false;
     }
     async Task<Boolean> decodeFile() {
-        if (DataSource.RawData.Count > 0) {
-            return true;
-        }
-        try {
-            DataSource.RawData.AddRange(await FileUtility.FileToBinary(Path));
-            return true;
-        } catch (Exception e) {
-            Tools.MsgBox("Read Error", e.Message);
-            Path = null;
-            return false;
-        }
+        //if (DataSource.RawData.Count > 0) {
+        //    return true;
+        //}
+        //try {
+        //    DataSource.RawData.AddRange(await FileUtility.FileToBinary(Path));
+        //    return true;
+        //} catch (Exception e) {
+        //    Tools.MsgBox("Read Error", e.Message);
+        //    Path = null;
+        //    return false;
+        //}
+        return false;
     }
     void reset() {
-        DataSource.Tree.Clear();
-        DataSource.SelectedNode = null;
-        DataSource.RawData.Clear();
+        SelectedTab.DataSource.Tree.Clear();
+        SelectedTab.DataSource.SelectedNode = null;
+        SelectedTab.DataSource.RawData.Clear();
         Path = String.Empty;
         IsModified = false;
     }
 
 
     Boolean canPrintSave(Object obj) {
-        return DataSource.RawData.Count > 0;
+        return SelectedTab?.DataSource.RawData.Count > 0;
     }
     Boolean getFilePath() {
         String p = Tools.GetSaveFileName();
@@ -193,7 +249,7 @@ class MainWindowVM : ViewModelBase, IMainWindowVM {
         Path = p;
         return true;
     }
-        
+
     public Boolean RequestFileSave() {
         MessageBoxResult result = Tools.MsgBox(
             "Unsaved Data",
@@ -210,37 +266,34 @@ class MainWindowVM : ViewModelBase, IMainWindowVM {
         }
     }
 
-    void dropFile(Object o) {
-        if (!(o is String file)) {
-            return;
+    Task dropFileAsync(Object o, CancellationToken token = default) {
+        if (!(o is String filePath)) {
+            return Task.CompletedTask;
         }
 
-        if (!File.Exists(file)) { return; }
-        Path = file;
-        DataSource.RawData.Clear();
-        decode();
+        if (!File.Exists(filePath)) {
+            return Task.CompletedTask;
+        }
 
+        return createTabFromFile(filePath);
     }
-    public void DropFile(String filePath) {
-        if (!File.Exists(filePath)) { return; }
-        Path = filePath;
-        DataSource.RawData.Clear();
-        decode();
+    public Task DropFileAsync(String filePath) {
+        if (!File.Exists(filePath)) {
+            return Task.CompletedTask;
+        }
+        
+        return createTabFromFile(filePath);
     }
-    public void OpenExisting(String filePath) {
-        openFile(filePath);
-        Path = filePath;
-        DataSource.RawData.Clear();
-        decode();
+    public Task OpenExistingAsync(String filePath) {
+        return openFileAsync(filePath);
     }
-    public void OpenRaw(String base64String) {
-        openRaw(Convert.FromBase64String(base64String));
+    public Task OpenRawAsync(String base64String) {
+        return openRawAsync(Convert.FromBase64String(base64String));
     }
-    void openRaw(Byte[] rawBytes) {
+    async Task openRawAsync(Byte[] rawBytes) {
         var asn = new Asn1Reader(rawBytes);
         asn.BuildOffsetMap();
         reset();
-        DataSource.RawData.AddRange(rawBytes);
-        decode();
+        await Tabs[0].Decode(rawBytes);
     }
 }
