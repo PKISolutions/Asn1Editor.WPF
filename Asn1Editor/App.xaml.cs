@@ -102,7 +102,9 @@ public partial class App {
         Container.RegisterSingleton<IDataSource, DataSource>();
         Container.RegisterType<ITagDataEditor, TagDataEditor>();
         // view models
-        Container.RegisterSingleton<IMainWindowVM, MainWindowVM>();
+        Container.RegisterSingleton<MainWindowVM>();
+        Container.RegisterType<IMainWindowVM, MainWindowVM>();
+        Container.RegisterType<IHasSelectedTab, MainWindowVM>();
         Container.RegisterType<ITextViewerVM, TextViewerVM>();
         Container.RegisterType<ITreeViewVM, TreeViewVM>();
         Container.RegisterType<ITagDataEditorVM, TagDataEditorVM>();

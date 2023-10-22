@@ -8,7 +8,8 @@ using SysadminsLV.Asn1Editor.API.ModelObjects;
 using SysadminsLV.Asn1Editor.API.Utils.ASN;
 
 namespace SysadminsLV.Asn1Editor.API.ViewModel;
-class Asn1DocumentVM : AsyncViewModel {
+
+public class Asn1DocumentVM : AsyncViewModel {
     String path, fileName;
     Asn1TreeNode selectedNode;
     Boolean hasClipboard, isModified;

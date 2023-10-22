@@ -17,7 +17,7 @@ using SysadminsLV.WPF.OfficeTheme.Toolkit.Commands;
 
 namespace SysadminsLV.Asn1Editor.API.ViewModel;
 
-class MainWindowVM : ViewModelBase, IMainWindowVM {
+class MainWindowVM : ViewModelBase, IMainWindowVM, IHasSelectedTab {
     readonly IWindowFactory _windowFactory;
     String path;
     Asn1TreeNode selectedNode;
