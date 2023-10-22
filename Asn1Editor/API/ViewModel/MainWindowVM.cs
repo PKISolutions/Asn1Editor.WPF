@@ -41,7 +41,7 @@ class MainWindowVM : ViewModelBase, IMainWindowVM, IHasSelectedTab {
         appCommands.ShowConverterWindow = new RelayCommand(showConverter);
         //DataSource.CollectionChanged += (sender, args) => IsModified = true;
         IsModified = false;
-        Tabs.Add(new Asn1DocumentVM(NodeViewOptions));
+        Tabs.Add(new Asn1DocumentVM(NodeViewOptions, TreeCommands));
         SelectedTab = Tabs[0];
     }
 
@@ -109,7 +109,7 @@ class MainWindowVM : ViewModelBase, IMainWindowVM, IHasSelectedTab {
         _windowFactory.ShowConverterWindow(SelectedTab.DataSource.RawData, openRawAsync);
     }
     void newTab(Object o) {
-        var tab = new Asn1DocumentVM(NodeViewOptions);
+        var tab = new Asn1DocumentVM(NodeViewOptions, TreeCommands);
         addTabToList(tab);
     }
     void addTabToList(Asn1DocumentVM tab, Boolean focus = true) {
@@ -170,7 +170,7 @@ class MainWindowVM : ViewModelBase, IMainWindowVM, IHasSelectedTab {
         if (useDefaultTab && Tabs.Any()) {
             tab = Tabs[0];
         } else {
-            tab = new Asn1DocumentVM(NodeViewOptions) {
+            tab = new Asn1DocumentVM(NodeViewOptions, TreeCommands) {
                 Path = file
             };
         }

@@ -21,13 +21,13 @@ class TreeViewCommands : ITreeCommands {
     public TreeViewCommands(IWindowFactory windowFactory, IHasSelectedTab appTabs) {
         _windowFactory = windowFactory;
         _tabs = appTabs;
-        SaveNodeCommand = new RelayCommand(saveBinaryNode, canExecuteTreeCommands);
-        ShowNodeTextViewer = new RelayCommand(showNodeTextViewer, canExecuteTreeCommands);
-        EditNodeCommand = new RelayCommand(editNodeContent, canExecuteTreeCommands);
+        SaveNodeCommand = new RelayCommand(saveBinaryNode, ensureNodeSelected);
+        ShowNodeTextViewer = new RelayCommand(showNodeTextViewer, ensureNodeSelected);
+        EditNodeCommand = new RelayCommand(editNodeContent, ensureNodeSelected);
         AddNewNodeCommand = new RelayCommand(addNewNode, canAddNewNode);
-        DeleteNodeCommand = new RelayCommand(removeNode, canExecuteTreeCommands);
-        CutNodeCommand = new RelayCommand(cutNode, canCut);
-        CopyNodeCommand = new RelayCommand(copyNode, canExecuteTreeCommands);
+        DeleteNodeCommand = new RelayCommand(removeNode, ensureNodeSelected);
+        CutNodeCommand = new RelayCommand(cutNode, canCutNode);
+        CopyNodeCommand = new RelayCommand(copyNode, ensureNodeSelected);
         PasteBeforeCommand = new RelayCommand(pasteBefore, canPasteBeforeAfter);
         PasteAfterCommand = new RelayCommand(pasteAfter, canPasteBeforeAfter);
         PasteLastCommand = new RelayCommand(pasteLast, canPasteLast);
@@ -148,19 +148,19 @@ class TreeViewCommands : ITreeCommands {
         data.FinishBinaryUpdate();
     }
 
-    Boolean canExecuteTreeCommands(Object o) {
-        return isTabSelected(out _);
+    Boolean ensureNodeSelected(Object o) {
+        return isTabSelected(out IDataSource data) && data.SelectedNode != null;
     }
     Boolean canAddNewNode(Object o) {
         return isTabSelected(out IDataSource data)
                && (data.Tree.Count == 0 || (data.SelectedNode != null && !_excludedTags.Contains(data.SelectedNode.Value.Tag)));
     }
-    Boolean canCut(Object o) {
+    Boolean canCutNode(Object o) {
         return isTabSelected(out IDataSource data)
                && data.SelectedNode is { Parent: not null };
     }
     Boolean canPasteBeforeAfter(Object o) {
-        return isTabSelected(out IDataSource data) && data.HasClipboardData && canCut(null);
+        return isTabSelected(out IDataSource data) && data.HasClipboardData && canCutNode(null);
     }
     Boolean canPasteLast(Object o) {
         return isTabSelected(out IDataSource data) && data.HasClipboardData &&

@@ -13,12 +13,14 @@ public class Asn1DocumentVM : AsyncViewModel {
     String path, fileName;
     Boolean hasClipboard, isModified;
 
-    public Asn1DocumentVM(NodeViewOptions nodeViewOptions) {
+    public Asn1DocumentVM(NodeViewOptions nodeViewOptions, ITreeCommands treeCommands) {
         DataSource = new DataSource(nodeViewOptions);
         DataSource.CollectionChanged += (_, _) => IsModified = true;
+        TreeCommands = treeCommands;
     }
 
     public IDataSource DataSource { get; }
+    public ITreeCommands TreeCommands { get; }
     public NodeViewOptions NodeViewOptions => DataSource.NodeViewOptions;
     public ObservableCollection<Asn1TreeNode> Tree => DataSource.Tree;
 
