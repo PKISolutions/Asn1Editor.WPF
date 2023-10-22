@@ -142,7 +142,7 @@ class MainWindowVM : ViewModelBase, IMainWindowVM {
         String filePath;
         Boolean useDefaultTab = false;
         if (obj == null) {
-            filePath = Tools.GetOpenFileName();
+            Tools.TryGetOpenFileName(out filePath);
         } else {
             filePath = obj.ToString();
             useDefaultTab = true;
@@ -195,9 +195,10 @@ class MainWindowVM : ViewModelBase, IMainWindowVM {
         return SelectedTab?.DataSource.RawData.Count > 0;
     }
     Boolean getFilePath() {
-        String p = Tools.GetSaveFileName();
-        if (String.IsNullOrWhiteSpace(p.Trim())) { return false; }
-        Path = p;
+        if (!Tools.TryGetSaveFileName(out String filePath)) {
+            return false;
+        }
+        Path = filePath;
         return true;
     }
 

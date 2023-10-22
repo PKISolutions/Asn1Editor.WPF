@@ -195,8 +195,7 @@ class BinaryConverterVM : AsyncViewModel {
         return CanCheck = RawData.Count > 0;
     }
     Boolean getSaveFilePath() {
-        String saveFilePath = Tools.GetSaveFileName();
-        if (String.IsNullOrWhiteSpace(saveFilePath.Trim())) {
+        if (!Tools.TryGetSaveFileName(out String saveFilePath)) {
             return false;
         }
         Path = saveFilePath;
@@ -204,11 +203,10 @@ class BinaryConverterVM : AsyncViewModel {
         return true;
     }
     Boolean getOpenFilePath() {
-        String openFilePath = Tools.GetOpenFileName();
-        if (String.IsNullOrWhiteSpace(openFilePath.Trim())) {
+        if (!Tools.TryGetOpenFileName(out String filePath)) {
             return false;
         }
-        Path = openFilePath;
+        Path = filePath;
 
         return true;
     }

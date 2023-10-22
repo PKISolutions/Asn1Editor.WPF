@@ -9,7 +9,7 @@ using SysadminsLV.Asn1Editor.API.ModelObjects;
 using SysadminsLV.Asn1Editor.API.Utils;
 using SysadminsLV.WPF.OfficeTheme.Toolkit.Commands;
 
-namespace SysadminsLV.Asn1Editor.API.ViewModel; 
+namespace SysadminsLV.Asn1Editor.API.ViewModel;
 
 class TreeViewCommands : ITreeCommands {
     readonly IWindowFactory _windowFactory;
@@ -45,12 +45,11 @@ class TreeViewCommands : ITreeCommands {
     public ICommand PasteLastCommand { get; }
 
     void saveBinaryNode(Object o) {
-        var file = Tools.GetSaveFileName();
-        if (String.IsNullOrWhiteSpace(file)) {
+        if (!Tools.TryGetSaveFileName(out String filePath)) {
             return;
         }
         try {
-            File.WriteAllBytes(file, _data.RawData.Skip(_data.SelectedNode.Value.Offset).Take(_data.SelectedNode.Value.TagLength).ToArray());
+            File.WriteAllBytes(filePath, _data.RawData.Skip(_data.SelectedNode.Value.Offset).Take(_data.SelectedNode.Value.TagLength).ToArray());
         } catch (Exception e) {
             Tools.MsgBox("Save Error", e.Message);
         }
