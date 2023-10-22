@@ -25,8 +25,8 @@ class TextViewerVM : ViewModelBase, ITextViewerVM {
     String currentLengthStr = "80";
     Double width;
 
-    public TextViewerVM(IDataSource data) {
-        rootNode = data.SelectedNode;
+    public TextViewerVM(IHasSelectedTab appTabs) {
+        rootNode = appTabs.SelectedTab.DataSource.SelectedNode;
         CurrentLength = defaultLength.ToString(CultureInfo.InvariantCulture);
         SaveCommand = new RelayCommand(saveFile);
         PrintCommand = new RelayCommand(print);
