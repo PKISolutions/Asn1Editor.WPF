@@ -21,6 +21,7 @@
         <KeyBinding Modifiers="Ctrl" Key="S" Command="{Binding SaveCommand}"/>
         <KeyBinding Modifiers="Ctrl" Key="O" Command="{Binding OpenCommand}"/>
         <KeyBinding Modifiers="Ctrl" Key="P" Command="{Binding PrintCommand}"/>
+        <KeyBinding Modifiers="Control+Shift" Key="S" Command="{Binding SaveCommand}" CommandParameter="2"/>
     </Window.InputBindings>
     <DockPanel>
         <Menu DockPanel.Dock="Top">
@@ -40,7 +41,13 @@
                         <Image Source="/Views/Images/Menu/save_16x16.png"/>
                     </MenuItem.Icon>
                 </MenuItem>
+                <MenuItem Header="Save A_ll" Command="{Binding SaveCommand}" InputGestureText="Ctrl + Shift + S">
+                    <MenuItem.Icon>
+                        <Image Source="/Views/Images/Menu/saveall_16x16.png" Width="16"/>
+                    </MenuItem.Icon>
+                </MenuItem>
                 <MenuItem Header="Save _As..." Command="{Binding SaveCommand}" CommandParameter="1"/>
+                <Separator/>
                 <MenuItem Header="_Exit" Click="CloseClick" InputGestureText="Alt + F4"/>
             </MenuItem>
             <MenuItem Header="_View">
@@ -173,6 +180,10 @@
                 </Button>
                 <Button Command="{Binding SaveCommand}" ToolTip="Save file">
                     <Image Source="/Views/Images/Menu/save_16x16.png"/>
+                </Button>
+                <Button Command="{Binding SaveCommand}" ToolTip="Save all files"
+                        CommandParameter="2">
+                    <Image Source="/Views/Images/Menu/saveall_16x16.png" Width="16"/>
                 </Button>
             </ToolBar>
             <ToolBar>
