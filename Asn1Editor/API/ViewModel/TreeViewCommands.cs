@@ -18,7 +18,7 @@ class TreeViewCommands : ITreeCommands {
         new Byte[] { 0, 1, 2, 5, 6, 9, 10, 13 }
     );
 
-    public TreeViewCommands(IWindowFactory windowFactory, IDataSource data) {
+    public TreeViewCommands(IWindowFactory windowFactory, IDataSource data, IHasSelectedTab appTabs) {
         _windowFactory = windowFactory;
         _data = data;
         SaveNodeCommand = new RelayCommand(saveBinaryNode, canExecuteTreeCommands);

@@ -20,19 +20,17 @@ namespace SysadminsLV.Asn1Editor.API.ViewModel;
 class MainWindowVM : ViewModelBase, IMainWindowVM, IHasSelectedTab {
     readonly IWindowFactory _windowFactory;
     String path;
-    Asn1TreeNode selectedNode;
     Asn1DocumentVM selectedTab;
     Boolean hasClipboard, isBusy, isModified;
 
     public MainWindowVM(
         IWindowFactory windowFactory,
         IAppCommands appCommands,
-        ITreeCommands treeCommands,
         NodeViewOptions nodeViewOptions) {
         _windowFactory = windowFactory;
         GlobalData = new GlobalData();
         AppCommands = appCommands;
-        TreeCommands = treeCommands;
+        TreeCommands = new TreeViewCommands(windowFactory, null, this);
         NodeViewOptions = nodeViewOptions;
         NodeViewOptions.PropertyChanged += onNodeViewOptionsChanged;
         NewCommand = new RelayCommand(newTab);
