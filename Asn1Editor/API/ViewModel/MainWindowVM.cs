@@ -50,7 +50,7 @@ class MainWindowVM : ViewModelBase, IMainWindowVM {
     void onNodeViewOptionsChanged(Object sender, PropertyChangedEventArgs e) {
         foreach (Asn1DocumentVM tab in Tabs) {
             if (tab.Tree.Any()) {
-                Tree[0].UpdateNodeView(NodeViewOptions);
+                tab.Tree[0].UpdateNodeView(NodeViewOptions);
             }
         }
     }
@@ -69,7 +69,6 @@ class MainWindowVM : ViewModelBase, IMainWindowVM {
     public GlobalData GlobalData { get; }
     //public IDataSource DataSource { get; }
     public static Dictionary<String, String> OIDs { get; } = new();
-    public ObservableCollection<Asn1TreeNode> Tree { get; } = new();
     public NodeViewOptions NodeViewOptions { get; }
     public ObservableCollection<Asn1DocumentVM> Tabs { get; } = new();
     public Asn1DocumentVM SelectedTab {
@@ -99,13 +98,6 @@ class MainWindowVM : ViewModelBase, IMainWindowVM {
         set {
             hasClipboard = value;
             OnPropertyChanged(nameof(HasClipboardData));
-        }
-    }
-    public Asn1TreeNode SelectedTreeNode {
-        get => selectedNode;
-        set {
-            selectedNode = value;
-            OnPropertyChanged(nameof(SelectedTreeNode));
         }
     }
     public Boolean IsBusy {
@@ -147,7 +139,7 @@ class MainWindowVM : ViewModelBase, IMainWindowVM {
         if (IsModified && !RequestFileSave()) {
             return Task.CompletedTask;
         }
-        String filePath = null;
+        String filePath;
         Boolean useDefaultTab = false;
         if (obj == null) {
             filePath = Tools.GetOpenFileName();
@@ -158,11 +150,7 @@ class MainWindowVM : ViewModelBase, IMainWindowVM {
         if (String.IsNullOrWhiteSpace(filePath)) {
             return Task.CompletedTask;
         }
-        return createTabFromFile(filePath);
-        //reset();
-        //Path = file;
-        //decode();
-        //OnPropertyChanged(nameof(Title));
+        return createTabFromFile(filePath, useDefaultTab);
     }
     void saveFile(Object obj) {
         if ((obj != null || String.IsNullOrEmpty(Path)) && !getFilePath()) {
@@ -201,43 +189,6 @@ class MainWindowVM : ViewModelBase, IMainWindowVM {
         }
         addTabToList(tab);
     }
-    async void decode() {
-        IsBusy = true;
-        if (await decodeFile()) {
-            Tree.Clear();
-            try {
-                //Asn1TreeNode rootNode = await AsnTreeBuilder.BuildTree(DataSource.RawData.ToArray());
-                //Tree.Add(rootNode);
-                //DataSource.FinishBinaryUpdate();
-            } catch (Exception e) {
-                Tools.MsgBox("Error", e.Message);
-            }
-        }
-
-        IsModified = false;
-        IsBusy = false;
-    }
-    async Task<Boolean> decodeFile() {
-        //if (DataSource.RawData.Count > 0) {
-        //    return true;
-        //}
-        //try {
-        //    DataSource.RawData.AddRange(await FileUtility.FileToBinary(Path));
-        //    return true;
-        //} catch (Exception e) {
-        //    Tools.MsgBox("Read Error", e.Message);
-        //    Path = null;
-        //    return false;
-        //}
-        return false;
-    }
-    void reset() {
-        SelectedTab.DataSource.Tree.Clear();
-        SelectedTab.DataSource.SelectedNode = null;
-        SelectedTab.DataSource.RawData.Clear();
-        Path = String.Empty;
-        IsModified = false;
-    }
 
 
     Boolean canPrintSave(Object obj) {
@@ -267,7 +218,7 @@ class MainWindowVM : ViewModelBase, IMainWindowVM {
     }
 
     Task dropFileAsync(Object o, CancellationToken token = default) {
-        if (!(o is String filePath)) {
+        if (o is not String filePath) {
             return Task.CompletedTask;
         }
 
@@ -293,7 +244,7 @@ class MainWindowVM : ViewModelBase, IMainWindowVM {
     async Task openRawAsync(Byte[] rawBytes) {
         var asn = new Asn1Reader(rawBytes);
         asn.BuildOffsetMap();
-        reset();
+        Tabs[0].Reset();
         await Tabs[0].Decode(rawBytes);
     }
 }

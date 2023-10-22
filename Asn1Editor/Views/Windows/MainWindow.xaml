@@ -310,10 +310,10 @@
                         </DockPanel>
                         <Grid>
                             <uc:AsnTreeView ItemsSource="{Binding Tree}"
-                                            AllowDrop="True"
                                             DoubleClickCommand="{Binding TreeCommands.EditNodeCommand}"
                                             DoubleClickCommandParameter="{x:Static clr:NodeEditMode.Text}"
-                                            FileDropCommand="{Binding DropFileCommand}"
+                                            AllowDrop="True"
+                                            FileDropCommand="{Binding DataContext.DropFileCommand, RelativeSource={RelativeSource AncestorType=Window}}"
                                             MaxTextLength="{Binding NodeViewOptions.MaxTreeTextLength}"
                                             FontFamily="Consolas"
                                             FontSize="{Binding NodeViewOptions.FontSize}"

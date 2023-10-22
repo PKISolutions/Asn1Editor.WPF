@@ -38,9 +38,9 @@ class Asn1DocumentVM : AsyncViewModel {
             path = value;
             if (path != null) {
                 fileName = new FileInfo(path).Name;
-                OnPropertyChanged(nameof(Header));
             }
             OnPropertyChanged(nameof(Path));
+            OnPropertyChanged(nameof(Header));
         }
     }
     public Boolean IsModified {
@@ -66,6 +66,13 @@ class Asn1DocumentVM : AsyncViewModel {
         }
     }
 
+    void decodeFile(IEnumerable<Byte> bytes) {
+        if (DataSource.RawData.Count > 0) {
+            return;
+        }
+        DataSource.RawData.AddRange(bytes);
+    }
+
     public async Task Decode(IEnumerable<Byte> bytes) {
         IsBusy = true;
 
@@ -76,10 +83,11 @@ class Asn1DocumentVM : AsyncViewModel {
 
         IsBusy = false;
     }
-    void decodeFile(IEnumerable<Byte> bytes) {
-        if (DataSource.RawData.Count > 0) {
-            return;
-        }
-        DataSource.RawData.AddRange(bytes);
+    public void Reset() {
+        DataSource.Tree.Clear();
+        DataSource.SelectedNode = null;
+        DataSource.RawData.Clear();
+        Path = String.Empty;
+        IsModified = false;
     }
 }
