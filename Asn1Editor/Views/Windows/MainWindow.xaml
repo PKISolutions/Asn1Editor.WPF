@@ -23,8 +23,8 @@
         <KeyBinding Modifiers="Ctrl" Key="P" Command="{Binding PrintCommand}"/>
     </Window.InputBindings>
     <DockPanel>
-        <Menu DockPanel.Dock="Top" MinHeight="25">
-            <MenuItem Header="File">
+        <Menu DockPanel.Dock="Top">
+            <MenuItem Header="_File">
                 <MenuItem Header="_New" Command="{Binding NewCommand}" InputGestureText="Ctrl + N">
                     <MenuItem.Icon>
                         <Image Source="/Views/Images/Menu/new_16x16.png"/>
@@ -67,7 +67,7 @@
                           IsCheckable="True"
                           IsChecked="{Binding NodeViewOptions.ShowContent}"/>
             </MenuItem>
-            <MenuItem Header="Edit">
+            <MenuItem Header="_Edit">
                 <MenuItem Header="Edit node..."
                           Command="{Binding TreeCommands.EditNodeCommand}"
                           CommandParameter="{x:Static clr:NodeEditMode.Text}">
