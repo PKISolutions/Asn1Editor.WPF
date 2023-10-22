@@ -70,7 +70,7 @@ class TreeViewCommands : ITreeCommands {
         isTabSelected(out IDataSource data); // granted to be non-null
         if (data.Tree.Count == 0) {
             // add new root node
-            var node = new Asn1TreeNode(nodeValue);
+            var node = new Asn1TreeNode(nodeValue, data);
             data.Tree.Add(node);
             data.FinishBinaryUpdate();
         } else {
@@ -114,7 +114,7 @@ class TreeViewCommands : ITreeCommands {
     }
     async void pasteBefore(Object o) {
         isTabSelected(out IDataSource data); // granted to be non-null
-        Asn1TreeNode childNode = await ClipboardManager.GetClipboardDataAsync();
+        Asn1TreeNode childNode = await ClipboardManager.GetClipboardDataAsync(data);
         data.RawData.InsertRange(data.SelectedNode.Value.Offset, ClipboardManager.GetClipboardBytes());
         data.SelectedNode.Parent.InsertChildNode(
             childNode,
@@ -125,7 +125,7 @@ class TreeViewCommands : ITreeCommands {
     }
     async void pasteAfter(Object o) {
         isTabSelected(out IDataSource data); // granted to be non-null
-        Asn1TreeNode childNode = await ClipboardManager.GetClipboardDataAsync();
+        Asn1TreeNode childNode = await ClipboardManager.GetClipboardDataAsync(data);
         Int32 newOffset = data.SelectedNode.Value.Offset + data.SelectedNode.Value.TagLength;
         data.RawData.InsertRange(newOffset, ClipboardManager.GetClipboardBytes());
         data.SelectedNode.Parent.InsertChildNode(
@@ -137,7 +137,7 @@ class TreeViewCommands : ITreeCommands {
     }
     async void pasteLast(Object o) {
         isTabSelected(out IDataSource data); // granted to be non-null
-        Asn1TreeNode childNode = await ClipboardManager.GetClipboardDataAsync();
+        Asn1TreeNode childNode = await ClipboardManager.GetClipboardDataAsync(data);
         Int32 newOffset = data.SelectedNode.Value.Offset + data.SelectedNode.Value.TagLength;
         data.RawData.InsertRange(newOffset, ClipboardManager.GetClipboardBytes());
         data.SelectedNode.InsertChildNode(
