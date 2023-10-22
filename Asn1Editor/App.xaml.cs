@@ -106,7 +106,6 @@ public partial class App {
         Container.RegisterType<IMainWindowVM, MainWindowVM>();
         Container.RegisterType<IHasSelectedTab, MainWindowVM>();
         Container.RegisterType<ITextViewerVM, TextViewerVM>();
-        Container.RegisterType<ITreeViewVM, TreeViewVM>();
         Container.RegisterType<ITagDataEditorVM, TagDataEditorVM>();
         Container.RegisterInstance(_options);
     }

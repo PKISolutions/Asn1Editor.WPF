@@ -142,7 +142,6 @@
     <Compile Include="API\Interfaces\IHasSelectedTab.cs" />
     <Compile Include="API\Interfaces\ITagDataEditor.cs" />
     <Compile Include="API\Interfaces\ITagDataEditorVM.cs" />
-    <Compile Include="API\Interfaces\ITreeViewVM.cs" />
     <Compile Include="API\ModelObjects\EncodingTypeEntry.cs" />
     <Compile Include="API\ModelObjects\NodeViewOptions.cs" />
     <Compile Include="API\Utils\CertutilRenderer.cs" />
@@ -153,7 +152,6 @@
     <Compile Include="API\ViewModel\AsyncViewModel.cs" />
     <Compile Include="API\ViewModel\ClosableWindowVM.cs" />
     <Compile Include="API\ViewModel\GlobalData.cs" />
-    <Compile Include="API\ViewModel\TreeViewVM.cs" />
     <Compile Include="API\Interfaces\IDataSource.cs" />
     <Compile Include="API\Interfaces\IMainWindowVM.cs" />
     <Compile Include="API\Interfaces\ITextViewerVM.cs" />
