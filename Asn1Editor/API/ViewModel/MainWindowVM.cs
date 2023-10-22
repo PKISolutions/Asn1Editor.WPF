@@ -30,7 +30,7 @@ class MainWindowVM : ViewModelBase, IMainWindowVM, IHasSelectedTab {
         _windowFactory = windowFactory;
         GlobalData = new GlobalData();
         AppCommands = appCommands;
-        TreeCommands = new TreeViewCommands(windowFactory, null, this);
+        TreeCommands = new TreeViewCommands(windowFactory, this);
         NodeViewOptions = nodeViewOptions;
         NodeViewOptions.PropertyChanged += onNodeViewOptionsChanged;
         NewCommand = new RelayCommand(newTab);
@@ -111,10 +111,6 @@ class MainWindowVM : ViewModelBase, IMainWindowVM, IHasSelectedTab {
     void newTab(Object o) {
         var tab = new Asn1DocumentVM(NodeViewOptions);
         addTabToList(tab);
-        //if (IsModified && !RequestFileSave()) {
-        //    return;
-        //}
-        //reset();
     }
     void addTabToList(Asn1DocumentVM tab, Boolean focus = true) {
         Tabs.Add(tab);
