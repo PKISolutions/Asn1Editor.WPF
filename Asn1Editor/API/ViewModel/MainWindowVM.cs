@@ -176,7 +176,7 @@ class MainWindowVM : ViewModelBase, IMainWindowVM, IHasSelectedTab {
         }
         try {
             IEnumerable<Byte> bytes = await FileUtility.FileToBinary(file);
-            await tab.Decode(bytes);
+            await tab.Decode(bytes, true);
         } catch (Exception ex) {
             Tools.MsgBox("Read Error", ex.Message);
             return;
@@ -240,6 +240,6 @@ class MainWindowVM : ViewModelBase, IMainWindowVM, IHasSelectedTab {
         var asn = new Asn1Reader(rawBytes);
         asn.BuildOffsetMap();
         Tabs[0].Reset();
-        await Tabs[0].Decode(rawBytes);
+        await Tabs[0].Decode(rawBytes, false);
     }
 }

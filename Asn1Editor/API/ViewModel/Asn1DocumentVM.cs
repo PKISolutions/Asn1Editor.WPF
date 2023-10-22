@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Collections.Specialized;
 using System.IO;
 using System.Threading.Tasks;
 using SysadminsLV.Asn1Editor.API.Interfaces;
@@ -11,12 +12,17 @@ namespace SysadminsLV.Asn1Editor.API.ViewModel;
 
 public class Asn1DocumentVM : AsyncViewModel {
     String path, fileName;
-    Boolean hasClipboard, isModified;
+    Boolean hasClipboard, isModified, suppressModified;
 
     public Asn1DocumentVM(NodeViewOptions nodeViewOptions, ITreeCommands treeCommands) {
         DataSource = new DataSource(nodeViewOptions);
-        DataSource.CollectionChanged += (_, _) => IsModified = true;
+        DataSource.CollectionChanged += onDataSourceCollectionChanged;
         TreeCommands = treeCommands;
+    }
+    void onDataSourceCollectionChanged(Object sender, NotifyCollectionChangedEventArgs args) {
+        if (!suppressModified) {
+            IsModified = true;
+        }
     }
 
     public IDataSource DataSource { get; }
@@ -50,6 +56,7 @@ public class Asn1DocumentVM : AsyncViewModel {
         set {
             isModified = value;
             OnPropertyChanged(nameof(IsModified));
+            OnPropertyChanged(nameof(Header));
         }
     }
 
@@ -68,15 +75,21 @@ public class Asn1DocumentVM : AsyncViewModel {
         DataSource.RawData.AddRange(bytes);
     }
 
-    public async Task Decode(IEnumerable<Byte> bytes) {
+    public async Task Decode(IEnumerable<Byte> bytes, Boolean doNotSetModifiedFlag) {
         IsBusy = true;
+        if (doNotSetModifiedFlag) {
+            suppressModified = true;
+        }
 
-        decodeFile(bytes);
-        Asn1TreeNode rootNode = await AsnTreeBuilder.BuildTree(DataSource);
-        Tree.Add(rootNode);
-        DataSource.FinishBinaryUpdate();
-
-        IsBusy = false;
+        try {
+            decodeFile(bytes);
+            Asn1TreeNode rootNode = await AsnTreeBuilder.BuildTree(DataSource);
+            Tree.Add(rootNode);
+            DataSource.FinishBinaryUpdate();
+        } finally {
+            suppressModified = false;
+            IsBusy = false;
+        }
     }
     public void Reset() {
         DataSource.Tree.Clear();
