@@ -19,9 +19,8 @@ namespace SysadminsLV.Asn1Editor.API.ViewModel;
 
 class MainWindowVM : ViewModelBase, IMainWindowVM, IHasSelectedTab {
     readonly IWindowFactory _windowFactory;
-    String path;
     Asn1DocumentVM selectedTab;
-    Boolean hasClipboard, isBusy, isModified;
+    Boolean hasClipboard;
 
     public MainWindowVM(
         IWindowFactory windowFactory,
@@ -39,8 +38,6 @@ class MainWindowVM : ViewModelBase, IMainWindowVM, IHasSelectedTab {
         SaveCommand = new RelayCommand(saveFile, canPrintSave);
         DropFileCommand = new AsyncCommand(dropFileAsync);
         appCommands.ShowConverterWindow = new RelayCommand(showConverter);
-        //DataSource.CollectionChanged += (sender, args) => IsModified = true;
-        IsModified = false;
         Tabs.Add(new Asn1DocumentVM(NodeViewOptions, TreeCommands));
         SelectedTab = Tabs[0];
     }
@@ -76,33 +73,11 @@ class MainWindowVM : ViewModelBase, IMainWindowVM, IHasSelectedTab {
             OnPropertyChanged(nameof(SelectedTab));
         }
     }
-
-    public String Path {
-        get => path;
-        set {
-            path = value;
-            OnPropertyChanged(nameof(Path));
-        }
-    }
-    public Boolean IsModified {
-        get => isModified;
-        set {
-            isModified = value;
-            OnPropertyChanged(nameof(IsModified));
-        }
-    }
     public Boolean HasClipboardData {
         get => hasClipboard;
         set {
             hasClipboard = value;
             OnPropertyChanged(nameof(HasClipboardData));
-        }
-    }
-    public Boolean IsBusy {
-        get => isBusy;
-        set {
-            isBusy = value;
-            OnPropertyChanged(nameof(IsBusy));
         }
     }
     void showConverter(Object o) {
@@ -121,7 +96,8 @@ class MainWindowVM : ViewModelBase, IMainWindowVM, IHasSelectedTab {
     void closeTab(Object o) {
         // TODO: need to eliminate explicit reference to UI elements
         if (o is ClosableTabItem tabItem) {
-            Tabs.Remove((Asn1DocumentVM)tabItem.Content);
+            var vm = (Asn1DocumentVM)tabItem.Content;
+            Close(vm);
         }
     }
     Boolean canCloseTab(Object o) {
@@ -129,10 +105,8 @@ class MainWindowVM : ViewModelBase, IMainWindowVM, IHasSelectedTab {
         return o is ClosableTabItem;
     }
 
+    #region Read content to tab
     Task openFileAsync(Object obj, CancellationToken token = default) {
-        if (IsModified && !RequestFileSave()) {
-            return Task.CompletedTask;
-        }
         String filePath;
         Boolean useDefaultTab = false;
         if (obj == null) {
@@ -146,25 +120,75 @@ class MainWindowVM : ViewModelBase, IMainWindowVM, IHasSelectedTab {
         }
         return createTabFromFile(filePath, useDefaultTab);
     }
+    #endregion
+
+    #region Write tab to file
+    // 'o' parameter can receive:
+    // null - use current tab with default name
+    // 1    - use current tab with custom name
+    // 2    - save all tabs with default name.
     void saveFile(Object obj) {
-        if ((obj != null || String.IsNullOrEmpty(Path)) && !getFilePath()) {
-            return;
+        if (obj == null) {
+            writeFile(SelectedTab);
+        } else {
+            switch (obj.ToString()) {
+                case "1": {
+                    if (getSaveFilePath(out String filePath)) {
+                        writeFile(SelectedTab, filePath);
+                    }
+
+                    break;
+                }
+                case "2":
+                    // do something with save all tabs
+                    break;
+            }
         }
-        writeFile();
     }
-    Boolean writeFile() {
-        if (String.IsNullOrEmpty(Path) && !getFilePath()) {
+    Boolean canPrintSave(Object obj) {
+        return SelectedTab?.DataSource.RawData.Count > 0;
+    }
+
+    // general method to write arbitrary tab to a file.
+    static Boolean writeFile(Asn1DocumentVM tab, String filePath = null) {
+        // use default path if no custom file path specified
+        filePath ??= tab.Path;
+        // if file path is still null, then it came from "untitled" tab with default file path
+        // so prompt for file to save and abort if cancelled.
+        if (String.IsNullOrEmpty(filePath) && !getSaveFilePath(out filePath)) {
             return false;
         }
         try {
-            File.WriteAllBytes(Path, SelectedTab.DataSource.RawData.ToArray());
-            IsModified = false;
+            File.WriteAllBytes(filePath, tab.DataSource.RawData.ToArray());
+            tab.Path = filePath;
+            tab.IsModified = false;
+
             return true;
         } catch (Exception e) {
             Tools.MsgBox("Save Error", e.Message);
         }
         return false;
     }
+    static Boolean getSaveFilePath(out String saveFilePath) {
+        return Tools.TryGetSaveFileName(out saveFilePath);
+    }
+
+    public Boolean RequestFileSave(Asn1DocumentVM tab) {
+        MessageBoxResult result = Tools.MsgBox(
+            "Unsaved Data",
+            "Current file was modified. Save changes?",
+            MessageBoxImage.Warning,
+            MessageBoxButton.YesNoCancel);
+        switch (result) {
+            case MessageBoxResult.No:
+                return true;
+            case MessageBoxResult.Yes:
+                return writeFile(tab);
+            default:
+                return false;
+        }
+    }
+    #endregion
     async Task createTabFromFile(String file, Boolean useDefaultTab = false) {
         Asn1DocumentVM tab;
         if (useDefaultTab && Tabs.Any()) {
@@ -184,33 +208,15 @@ class MainWindowVM : ViewModelBase, IMainWindowVM, IHasSelectedTab {
         addTabToList(tab);
     }
 
-
-    Boolean canPrintSave(Object obj) {
-        return SelectedTab?.DataSource.RawData.Count > 0;
-    }
-    Boolean getFilePath() {
-        if (!Tools.TryGetSaveFileName(out String filePath)) {
-            return false;
+    public void Close(Asn1DocumentVM tab) {
+        if (!tab.IsModified) {
+            Tabs.Remove(tab);
         }
-        Path = filePath;
-        return true;
-    }
-
-    public Boolean RequestFileSave() {
-        MessageBoxResult result = Tools.MsgBox(
-            "Unsaved Data",
-            "Current file was modified. Save changes?",
-            MessageBoxImage.Warning,
-            MessageBoxButton.YesNoCancel);
-        switch (result) {
-            case MessageBoxResult.No:
-                return true;
-            case MessageBoxResult.Yes:
-                return writeFile();
-            default:
-                return false;
+        if (tab.IsModified && RequestFileSave(tab)) {
+            Tabs.Remove(tab);
         }
     }
+    
 
     Task dropFileAsync(Object o, CancellationToken token = default) {
         if (o is not String filePath) {
@@ -227,7 +233,7 @@ class MainWindowVM : ViewModelBase, IMainWindowVM, IHasSelectedTab {
         if (!File.Exists(filePath)) {
             return Task.CompletedTask;
         }
-        
+
         return createTabFromFile(filePath);
     }
     public Task OpenExistingAsync(String filePath) {

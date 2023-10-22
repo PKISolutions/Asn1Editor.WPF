@@ -3,7 +3,7 @@ using System.ComponentModel;
 using System.Windows;
 using SysadminsLV.Asn1Editor.API.Interfaces;
 
-namespace SysadminsLV.Asn1Editor.Views.Windows; 
+namespace SysadminsLV.Asn1Editor.Views.Windows;
 
 /// <summary>
 /// Interaction logic for MainWindow.xaml
@@ -17,11 +17,11 @@ public partial class MainWindow {
         Closing += onClosing;
     }
     void onClosing(Object sender, CancelEventArgs e) {
-        if (_vm.IsModified) {
-            if (!_vm.RequestFileSave()) {
-                e.Cancel = true;
-            }
-        }
+        //if (_vm.IsModified) {
+        //    if (!_vm.RequestFileSave(TODO)) {
+        //        e.Cancel = true;
+        //    }
+        //}
     }
 
     void CloseClick(Object sender, RoutedEventArgs e) {
