@@ -19,7 +19,6 @@ static class Tools {
         filePath = null;
         var dlg = new SaveFileDialog {
             FileName = "",
-            DefaultExt = ".*",
             Filter = "All files (*.*)|*.*"
         };
         if (dlg.ShowDialog() == true) {
