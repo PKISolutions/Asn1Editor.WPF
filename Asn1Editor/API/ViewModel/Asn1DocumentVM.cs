@@ -11,7 +11,6 @@ namespace SysadminsLV.Asn1Editor.API.ViewModel;
 
 public class Asn1DocumentVM : AsyncViewModel {
     String path, fileName;
-    Asn1TreeNode selectedNode;
     Boolean hasClipboard, isModified;
 
     public Asn1DocumentVM(NodeViewOptions nodeViewOptions) {
@@ -57,13 +56,6 @@ public class Asn1DocumentVM : AsyncViewModel {
         set {
             hasClipboard = value;
             OnPropertyChanged(nameof(HasClipboardData));
-        }
-    }
-    public Asn1TreeNode SelectedTreeNode {
-        get => selectedNode;
-        set {
-            selectedNode = value;
-            OnPropertyChanged(nameof(SelectedTreeNode));
         }
     }
 
