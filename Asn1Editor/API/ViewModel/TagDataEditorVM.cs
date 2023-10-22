@@ -12,7 +12,7 @@ using SysadminsLV.Asn1Editor.Properties;
 using SysadminsLV.Asn1Parser;
 using SysadminsLV.WPF.OfficeTheme.Toolkit.Commands;
 
-namespace SysadminsLV.Asn1Editor.API.ViewModel; 
+namespace SysadminsLV.Asn1Editor.API.ViewModel;
 
 class TagDataEditorVM : ViewModelBase, ITagDataEditorVM {
     readonly IDataSource _data;
@@ -25,8 +25,8 @@ class TagDataEditorVM : ViewModelBase, ITagDataEditorVM {
     Byte unusedBits, tag;
     Double tagTextBoxWidth, unusedTextBoxWidth;
 
-    public TagDataEditorVM(IDataSource data) {
-        _data = data;
+    public TagDataEditorVM(IHasSelectedTab appTabs) {
+        _data = appTabs.SelectedTab.DataSource;
         OkCommand = new RelayCommand(submitValues);
         CloseCommand = new RelayCommand(close);
         initialize();
