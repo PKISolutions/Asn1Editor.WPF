@@ -285,7 +285,7 @@
                                         Style="{StaticResource ScrollableTabControl}">
             <wpfControls:ClosableTabControl.ItemTemplate>
                 <DataTemplate>
-                    <TextBlock x:Name="HeaderTextBlock" Text="{Binding Header}"
+                    <TextBlock Text="{Binding Header}"
                                ToolTip="{Binding Path=ToolTipText}"
                                Tag="{Binding Path=DataContext, RelativeSource={RelativeSource AncestorType=wpfControls:ClosableTabControl}}">
                         <TextBlock.ContextMenu>
@@ -300,14 +300,22 @@
                                 <Separator/>
                                 <MenuItem Header="_Close"
                                           Command="{Binding Path=CloseTabCommand}"
-                                          CommandParameter="{Binding}"
                                           InputGestureText="Ctrl + F4">
+                                    <MenuItem.Icon>
+                                        <Image Source="/Views/Images/Menu/cancel_16x16.png"/>
+                                    </MenuItem.Icon>
                                 </MenuItem>
                                 <MenuItem Header="Close _All"
                                           Command="{Binding Path=CloseTabCommand}">
+                                    <MenuItem.Icon>
+                                        <Image Source="/Views/Images/Menu/cancel_16x16.png"/>
+                                    </MenuItem.Icon>
                                 </MenuItem>
                                 <MenuItem Header="Close All _But This"
                                           Command="{Binding Path=CloseAllButThisTabCommand}">
+                                    <MenuItem.Icon>
+                                        <Image Source="/Views/Images/Menu/cancel_16x16.png"/>
+                                    </MenuItem.Icon>
                                 </MenuItem>
                             </ContextMenu>
                         </TextBlock.ContextMenu>

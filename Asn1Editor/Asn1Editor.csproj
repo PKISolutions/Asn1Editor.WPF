@@ -404,6 +404,7 @@
   <ItemGroup>
     <Resource Include="Views\Images\pkisolutions_logo_small.png" />
     <Resource Include="Views\Images\Menu\saveall_16x16.png" />
+    <Resource Include="Views\Images\Menu\cancel_16x16.png" />
     <Content Include="_ExternalReferences\Wpf.OfficeTheme.dll" />
   </ItemGroup>
   <ItemGroup>
