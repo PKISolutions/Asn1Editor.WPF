@@ -295,6 +295,7 @@ class MainWindowVM : ViewModelBase, IMainWindowVM, IHasSelectedTab {
         asn.BuildOffsetMap();
         var tab = new Asn1DocumentVM(NodeViewOptions, TreeCommands);
         Tabs.Add(tab);
+        SelectedTab = tab;
         return tab.Decode(rawBytes, false);
     }
 }

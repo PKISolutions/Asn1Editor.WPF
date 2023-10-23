@@ -290,7 +290,8 @@
                                Tag="{Binding Path=DataContext, RelativeSource={RelativeSource AncestorType=wpfControls:ClosableTabControl}}"
                                ContextMenuOpening="onTabHeaderContextMenuOpening">
                         <TextBlock.ContextMenu>
-                            <ContextMenu DataContext="{Binding Path=PlacementTarget.Tag, RelativeSource={RelativeSource Self}}">
+                            <ContextMenu DataContext="{Binding Path=PlacementTarget.Tag, RelativeSource={RelativeSource Self}}"
+                                         MaxHeight="200">
                                 <MenuItem Header="_Save"
                                           Command="{Binding SaveCommand}"
                                           InputGestureText="Ctrl + S">
@@ -370,7 +371,7 @@
                                     <KeyBinding Modifiers="Ctrl" Key="X" Command="{Binding TreeCommands.CutNodeCommand}"/>
                                     <KeyBinding Modifiers="Ctrl" Key="C" Command="{Binding TreeCommands.CopyNodeCommand}"/>
                                     <KeyBinding Modifiers="Ctrl" Key="V" Command="{Binding TreeCommands.PasteAfterCommand}"/>
-                                    <KeyBinding Key="Delete" Command="{Binding TreeCommands.DeleteNodeCommand}" CommandParameter="{Binding SelectedTreeNode}"/>
+                                    <KeyBinding Key="Delete" Command="{Binding TreeCommands.DeleteNodeCommand}"/>
                                 </uc:AsnTreeView.InputBindings>
                                 <uc:AsnTreeView.ContextMenu>
                                     <ContextMenu>
