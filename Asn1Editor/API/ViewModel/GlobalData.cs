@@ -7,7 +7,7 @@ class GlobalData {
     public GlobalData() {
         AppVersion = Assembly.GetEntryAssembly().GetName().Version.ToString(3);
     }
-    public String AppVersion { get; set; }
+    public String AppVersion { get; }
     /// <summary>
     /// Represents OID mapping dictionary. Key represents OID value, value represents OID friendly display name.
     /// </summary>
