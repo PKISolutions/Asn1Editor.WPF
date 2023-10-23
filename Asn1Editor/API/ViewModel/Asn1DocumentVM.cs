@@ -12,7 +12,7 @@ namespace SysadminsLV.Asn1Editor.API.ViewModel;
 
 public class Asn1DocumentVM : AsyncViewModel {
     String path, fileName;
-    Boolean hasClipboard, isModified, suppressModified;
+    Boolean isModified, suppressModified;
 
     public Asn1DocumentVM(NodeViewOptions nodeViewOptions, ITreeCommands treeCommands) {
         DataSource = new DataSource(nodeViewOptions);
@@ -42,7 +42,7 @@ public class Asn1DocumentVM : AsyncViewModel {
     }
     public String ToolTipText {
         get {
-            if (!String.IsNullOrEmpty(Path)) {
+            if (!String.IsNullOrWhiteSpace(Path)) {
                 return Path;
             }
 
@@ -67,14 +67,6 @@ public class Asn1DocumentVM : AsyncViewModel {
             isModified = value;
             OnPropertyChanged(nameof(IsModified));
             OnPropertyChanged(nameof(Header));
-        }
-    }
-
-    public Boolean HasClipboardData {
-        get => hasClipboard;
-        set {
-            hasClipboard = value;
-            OnPropertyChanged(nameof(HasClipboardData));
         }
     }
 
