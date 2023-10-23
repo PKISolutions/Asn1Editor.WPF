@@ -280,6 +280,7 @@
                                         SelectedItem="{Binding SelectedTab}"
                                         AddTabCommand="{Binding NewCommand}"
                                         CloseTabCommand="{Binding CloseTabCommand}"
+                                        MenuCommand="{Binding SwitchTabCommand}"
                                         ShowNewTabButton="False"
                                         BorderThickness="0"
                                         Style="{StaticResource ScrollableTabControl}">

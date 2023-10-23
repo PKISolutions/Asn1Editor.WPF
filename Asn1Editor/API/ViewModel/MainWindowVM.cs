@@ -35,6 +35,7 @@ class MainWindowVM : ViewModelBase, IMainWindowVM, IHasSelectedTab {
         CloseTabCommand = new RelayCommand(closeTab, canCloseTab);
         CloseAllTabsCommand = new RelayCommand(closeAllTabs);
         CloseAllButThisTabCommand = new RelayCommand(closeAllButThisTab, canCloseAllButThisTab);
+        SwitchTabCommand = new RelayCommand(switchTab);
         OpenCommand = new AsyncCommand(openFileAsync);
         SaveCommand = new RelayCommand(saveFile, canPrintSave);
         DropFileCommand = new AsyncCommand(dropFileAsync);
@@ -51,14 +52,15 @@ class MainWindowVM : ViewModelBase, IMainWindowVM, IHasSelectedTab {
         }
     }
 
-    public ICommand NewCommand { get; set; }
-    public ICommand CloseTabCommand { get; set; }
-    public ICommand CloseAllTabsCommand { get; set; }
-    public ICommand CloseAllButThisTabCommand { get; set; }
-    public IAsyncCommand OpenCommand { get; set; }
-    public ICommand SaveCommand { get; set; }
-    public ICommand PrintCommand { get; set; }
-    public ICommand SettingsCommand { get; set; }
+    public ICommand NewCommand { get; }
+    public ICommand CloseTabCommand { get; }
+    public ICommand CloseAllTabsCommand { get; }
+    public ICommand CloseAllButThisTabCommand { get; }
+    public ICommand SwitchTabCommand { get; }
+    public IAsyncCommand OpenCommand { get; }
+    public ICommand SaveCommand { get; }
+    public ICommand PrintCommand { get; }
+    public ICommand SettingsCommand { get; }
     public IAsyncCommand DropFileCommand { get; }
 
     public IAppCommands AppCommands { get; }
@@ -74,6 +76,7 @@ class MainWindowVM : ViewModelBase, IMainWindowVM, IHasSelectedTab {
             OnPropertyChanged(nameof(SelectedTab));
         }
     }
+
     void showConverter(Object o) {
         if (SelectedTab == null) {
             _windowFactory.ShowConverterWindow(Array.Empty<Byte>(), openRawAsync);
@@ -88,6 +91,29 @@ class MainWindowVM : ViewModelBase, IMainWindowVM, IHasSelectedTab {
     void addTabToList(Asn1DocumentVM tab, Boolean focus = true) {
         Tabs.Add(tab);
         if (focus) {
+            SelectedTab = tab;
+        }
+    }
+    async Task createTabFromFile(String file, Boolean useDefaultTab = false) {
+        Asn1DocumentVM tab;
+        if (useDefaultTab && Tabs.Any()) {
+            tab = Tabs[0];
+        } else {
+            tab = new Asn1DocumentVM(NodeViewOptions, TreeCommands) {
+                                                                        Path = file
+                                                                    };
+        }
+        try {
+            IEnumerable<Byte> bytes = await FileUtility.FileToBinary(file);
+            await tab.Decode(bytes, true);
+        } catch (Exception ex) {
+            Tools.MsgBox("Read Error", ex.Message);
+            return;
+        }
+        addTabToList(tab);
+    }
+    void switchTab(Object o) {
+        if (o is Asn1DocumentVM tab) {
             SelectedTab = tab;
         }
     }
@@ -176,24 +202,6 @@ class MainWindowVM : ViewModelBase, IMainWindowVM, IHasSelectedTab {
         }
     }
     #endregion
-    async Task createTabFromFile(String file, Boolean useDefaultTab = false) {
-        Asn1DocumentVM tab;
-        if (useDefaultTab && Tabs.Any()) {
-            tab = Tabs[0];
-        } else {
-            tab = new Asn1DocumentVM(NodeViewOptions, TreeCommands) {
-                Path = file
-            };
-        }
-        try {
-            IEnumerable<Byte> bytes = await FileUtility.FileToBinary(file);
-            await tab.Decode(bytes, true);
-        } catch (Exception ex) {
-            Tools.MsgBox("Read Error", ex.Message);
-            return;
-        }
-        addTabToList(tab);
-    }
 
     #region Close Tab(s)
 
