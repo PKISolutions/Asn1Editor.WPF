@@ -173,9 +173,19 @@ class TreeViewCommands : ViewModelBase, ITreeCommands {
         return isTabSelected(out IDataSource _) && HasNodeClipboardData && canCutNode(null);
     }
     Boolean canPasteLast(Object o) {
-        return isTabSelected(out IDataSource data) && HasNodeClipboardData &&
-               !_excludedTags.Contains(data.SelectedNode.Value.Tag) &&
+        Boolean preCondition = isTabSelected(out IDataSource data) && HasNodeClipboardData;
+        if (!preCondition) {
+            return false;
+        }
+
+        if (data.SelectedNode == null) {
+            return false;
+        }
+
+        return !_excludedTags.Contains(data.SelectedNode.Value.Tag) &&
                String.IsNullOrEmpty(data.SelectedNode.Value.ExplicitValue);
+
+        return true;
     }
     Boolean isTabSelected(out IDataSource dataSource) {
         dataSource = null;
