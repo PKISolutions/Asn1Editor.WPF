@@ -277,7 +277,7 @@
             </StatusBarItem>
             <StatusBarItem HorizontalAlignment="Right">
                 <TextBlock Text="Version: ">
-                    <Run Text="{Binding GlobalData.AppVersion}"/>
+                    <Run Text="{Binding GlobalData.AppVersion, Mode=OneTime}"/>
                 </TextBlock>
             </StatusBarItem>
         </StatusBar>
