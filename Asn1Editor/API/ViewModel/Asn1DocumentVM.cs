@@ -40,6 +40,15 @@ public class Asn1DocumentVM : AsyncViewModel {
             return template;
         }
     }
+    public String ToolTipText {
+        get {
+            if (!String.IsNullOrEmpty(Path)) {
+                return Path;
+            }
+
+            return "untitled";
+        }
+    }
     public String Path {
         get => path;
         set {
@@ -49,6 +58,7 @@ public class Asn1DocumentVM : AsyncViewModel {
             }
             OnPropertyChanged(nameof(Path));
             OnPropertyChanged(nameof(Header));
+            OnPropertyChanged(nameof(ToolTipText));
         }
     }
     public Boolean IsModified {

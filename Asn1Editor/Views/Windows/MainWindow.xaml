@@ -265,12 +265,6 @@
             </StatusBarItem>
             <Separator/>
             <StatusBarItem>
-                <TextBlock Text="File: ">
-                    <Run Text="{Binding SelectedTab.Path}"/>
-                </TextBlock>
-            </StatusBarItem>
-            <Separator/>
-            <StatusBarItem>
                 <TextBlock Text="Size: ">
                     <Run Text="{Binding SelectedTab.DataSource.RawData.Count, Mode=OneWay}"/>
                     <Run Text="bytes"/>
@@ -292,7 +286,7 @@
             <wpfControls:ClosableTabControl.ItemTemplate>
                 <DataTemplate>
                     <TextBlock Text="{Binding Header}"
-                               ToolTip="{Binding Path}"/>
+                               ToolTip="{Binding Path=ToolTipText}"/>
                 </DataTemplate>
             </wpfControls:ClosableTabControl.ItemTemplate>
             <wpfControls:ClosableTabControl.ContentTemplate>
