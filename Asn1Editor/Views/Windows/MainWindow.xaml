@@ -287,6 +287,7 @@
                                         AddTabCommand="{Binding NewCommand}"
                                         CloseTabCommand="{Binding CloseTabCommand}"
                                         ShowNewTabButton="False"
+                                        BorderThickness="0"
                                         Style="{StaticResource ScrollableTabControl}">
             <wpfControls:ClosableTabControl.ItemTemplate>
                 <DataTemplate>
