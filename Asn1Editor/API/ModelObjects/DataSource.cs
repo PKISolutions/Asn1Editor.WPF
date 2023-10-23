@@ -5,11 +5,10 @@ using SysadminsLV.Asn1Editor.API.Interfaces;
 using SysadminsLV.Asn1Editor.API.ViewModel;
 using SysadminsLV.WPF.OfficeTheme.Toolkit.CLR;
 
-namespace SysadminsLV.Asn1Editor.API.ModelObjects; 
+namespace SysadminsLV.Asn1Editor.API.ModelObjects;
 
 class DataSource : ViewModelBase, IDataSource {
     Asn1TreeNode selectedNode;
-    Boolean hasClipboard;
 
     public DataSource(NodeViewOptions viewOptions) {
         NodeViewOptions = viewOptions;
@@ -23,13 +22,6 @@ class DataSource : ViewModelBase, IDataSource {
                 var alternativeEventArgs = new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Reset);
                 OnCollectionChanged(alternativeEventArgs);
             }
-        }
-    }
-    public Boolean HasClipboardData {
-        get => hasClipboard;
-        set {
-            hasClipboard = value;
-            OnPropertyChanged(nameof(HasClipboardData));
         }
     }
     public Asn1TreeNode SelectedNode {

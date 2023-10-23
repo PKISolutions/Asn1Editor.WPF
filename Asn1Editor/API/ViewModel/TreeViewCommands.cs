@@ -11,12 +11,14 @@ using SysadminsLV.WPF.OfficeTheme.Toolkit.Commands;
 
 namespace SysadminsLV.Asn1Editor.API.ViewModel;
 
-class TreeViewCommands : ITreeCommands {
+class TreeViewCommands : ViewModelBase, ITreeCommands {
     readonly IWindowFactory _windowFactory;
     readonly IHasSelectedTab _tabs;
     readonly List<Byte> _excludedTags = new(
         new Byte[] { 0, 1, 2, 5, 6, 9, 10, 13 }
     );
+
+    Boolean hasNodeClipboardData;
 
     public TreeViewCommands(IWindowFactory windowFactory, IHasSelectedTab appTabs) {
         _windowFactory = windowFactory;
@@ -43,6 +45,14 @@ class TreeViewCommands : ITreeCommands {
     public ICommand PasteBeforeCommand { get; }
     public ICommand PasteAfterCommand { get; }
     public ICommand PasteLastCommand { get; }
+
+    public Boolean HasNodeClipboardData {
+        get => hasNodeClipboardData;
+        set {
+            hasNodeClipboardData = value;
+            OnPropertyChanged(nameof(HasNodeClipboardData));
+        }
+    }
 
     void saveBinaryNode(Object o) {
         if (!Tools.TryGetSaveFileName(out String filePath)) {
@@ -110,7 +120,7 @@ class TreeViewCommands : ITreeCommands {
                 .Skip(data.SelectedNode.Value.Offset)
                 .Take(data.SelectedNode.Value.TagLength)
         );
-        data.HasClipboardData = true;
+        HasNodeClipboardData = true;
     }
     async void pasteBefore(Object o) {
         isTabSelected(out IDataSource data); // granted to be non-null
@@ -160,10 +170,10 @@ class TreeViewCommands : ITreeCommands {
                && data.SelectedNode is { Parent: not null };
     }
     Boolean canPasteBeforeAfter(Object o) {
-        return isTabSelected(out IDataSource data) && data.HasClipboardData && canCutNode(null);
+        return isTabSelected(out IDataSource _) && HasNodeClipboardData && canCutNode(null);
     }
     Boolean canPasteLast(Object o) {
-        return isTabSelected(out IDataSource data) && data.HasClipboardData &&
+        return isTabSelected(out IDataSource data) && HasNodeClipboardData &&
                !_excludedTags.Contains(data.SelectedNode.Value.Tag) &&
                String.IsNullOrEmpty(data.SelectedNode.Value.ExplicitValue);
     }
