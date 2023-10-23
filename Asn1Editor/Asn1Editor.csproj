@@ -144,6 +144,7 @@
     <Compile Include="API\Interfaces\ITagDataEditorVM.cs" />
     <Compile Include="API\ModelObjects\EncodingTypeEntry.cs" />
     <Compile Include="API\ModelObjects\NodeViewOptions.cs" />
+    <Compile Include="API\OidResolver.cs" />
     <Compile Include="API\Utils\CertutilRenderer.cs" />
     <Compile Include="API\Utils\ITextRenderer.cs" />
     <Compile Include="API\Utils\NodeEditMode.cs" />

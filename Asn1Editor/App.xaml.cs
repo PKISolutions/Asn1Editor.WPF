@@ -9,6 +9,7 @@ using System.Windows;
 using System.Windows.Threading;
 using System.Xml;
 using System.Xml.Serialization;
+using SysadminsLV.Asn1Editor.API;
 using SysadminsLV.Asn1Editor.API.Interfaces;
 using SysadminsLV.Asn1Editor.API.ModelObjects;
 using SysadminsLV.Asn1Editor.API.Utils;
@@ -60,12 +61,15 @@ public partial class App {
         base.OnExit(e);
     }
     void readOids() {
-        var path = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
+        String path = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
         if (!File.Exists(path + @"\OID.txt")) { return; }
         String[] strings = File.ReadAllLines(path + @"\OID.txt");
         foreach (String[] tokens in strings.Select(str => str.Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries))) {
+            if (tokens.Length != 2) {
+                continue;
+            }
             try {
-                MainWindowVM.OIDs.Add(tokens[0], tokens[1].Trim());
+                OidResolver.Add(tokens[0], tokens[1].Trim());
             } catch { }
         }
     }

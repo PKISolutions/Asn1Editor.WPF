@@ -62,8 +62,6 @@ class MainWindowVM : ViewModelBase, IMainWindowVM, IHasSelectedTab {
     public ITreeCommands TreeCommands { get; }
 
     public GlobalData GlobalData { get; }
-    //public IDataSource DataSource { get; }
-    public static Dictionary<String, String> OIDs { get; } = new();
     public NodeViewOptions NodeViewOptions { get; }
     public ObservableCollection<Asn1DocumentVM> Tabs { get; } = new();
     public Asn1DocumentVM SelectedTab {
