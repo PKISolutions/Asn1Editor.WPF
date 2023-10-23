@@ -1,7 +1,9 @@
 ﻿using System;
 using System.ComponentModel;
 using System.Windows;
+using System.Windows.Controls;
 using SysadminsLV.Asn1Editor.API.Interfaces;
+using SysadminsLV.Asn1Editor.API.ViewModel;
 
 namespace SysadminsLV.Asn1Editor.Views.Windows;
 
@@ -22,5 +24,9 @@ public partial class MainWindow {
 
     void onCloseClick(Object sender, RoutedEventArgs e) {
         Close();
+    }
+    void onTabHeaderContextMenuOpening(Object sender, ContextMenuEventArgs e) {
+        var vm = (Asn1DocumentVM)((FrameworkElement)sender).DataContext;
+        e.Handled = _vm.SelectedTab != vm;
     }
 }
