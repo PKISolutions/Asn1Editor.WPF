@@ -53,7 +53,7 @@ public class Asn1DocumentVM : AsyncViewModel {
         get => path;
         set {
             path = value;
-            if (path != null) {
+            if (!String.IsNullOrWhiteSpace(path)) {
                 fileName = new FileInfo(path).Name;
             }
             OnPropertyChanged(nameof(Path));
