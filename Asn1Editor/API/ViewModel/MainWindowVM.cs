@@ -207,6 +207,30 @@ class MainWindowVM : ViewModelBase, IMainWindowVM, IHasSelectedTab {
             Tabs.Remove(tab);
         }
     }
+    Boolean closeTabsWithPreservation(Asn1DocumentVM preservedTab = null) {
+        // loop over a copy of tabs since we are going to update source collection in a loop
+        var tabs = Tabs.ToList();
+        foreach (Asn1DocumentVM tab in tabs) {
+            if (preservedTab != null && Equals(tab, preservedTab)) {
+                continue;
+            }
+            if (!tab.IsModified) {
+                Tabs.Remove(tab);
+
+                continue;
+            }
+            SelectedTab = tab;
+            if (!RequestFileSave(tab)) {
+                return false;
+            }
+            Tabs.Remove(tab);
+        }
+
+        return true;
+    }
+    public Boolean CloseAllTabs() {
+        return closeTabsWithPreservation();
+    }
     
 
     Task dropFileAsync(Object o, CancellationToken token = default) {

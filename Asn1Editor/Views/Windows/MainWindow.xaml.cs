@@ -17,14 +17,10 @@ public partial class MainWindow {
         Closing += onClosing;
     }
     void onClosing(Object sender, CancelEventArgs e) {
-        //if (_vm.IsModified) {
-        //    if (!_vm.RequestFileSave(TODO)) {
-        //        e.Cancel = true;
-        //    }
-        //}
+        e.Cancel = !_vm.CloseAllTabs();
     }
 
-    void CloseClick(Object sender, RoutedEventArgs e) {
+    void onCloseClick(Object sender, RoutedEventArgs e) {
         Close();
     }
 }
