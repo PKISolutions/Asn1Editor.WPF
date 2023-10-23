@@ -75,7 +75,11 @@ class MainWindowVM : ViewModelBase, IMainWindowVM, IHasSelectedTab {
         }
     }
     void showConverter(Object o) {
-        _windowFactory.ShowConverterWindow(SelectedTab.DataSource.RawData, openRawAsync);
+        if (SelectedTab == null) {
+            _windowFactory.ShowConverterWindow(Array.Empty<Byte>(), openRawAsync);
+        } else {
+            _windowFactory.ShowConverterWindow(SelectedTab.DataSource.RawData, openRawAsync);
+        }
     }
     void newTab(Object o) {
         var tab = new Asn1DocumentVM(NodeViewOptions, TreeCommands);
@@ -286,10 +290,11 @@ class MainWindowVM : ViewModelBase, IMainWindowVM, IHasSelectedTab {
     public Task OpenRawAsync(String base64String) {
         return openRawAsync(Convert.FromBase64String(base64String));
     }
-    async Task openRawAsync(Byte[] rawBytes) {
+    Task openRawAsync(Byte[] rawBytes) {
         var asn = new Asn1Reader(rawBytes);
         asn.BuildOffsetMap();
-        Tabs[0].Reset();
-        await Tabs[0].Decode(rawBytes, false);
+        var tab = new Asn1DocumentVM(NodeViewOptions, TreeCommands);
+        Tabs.Add(tab);
+        return tab.Decode(rawBytes, false);
     }
 }
