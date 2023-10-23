@@ -20,7 +20,6 @@ namespace SysadminsLV.Asn1Editor.API.ViewModel;
 class MainWindowVM : ViewModelBase, IMainWindowVM, IHasSelectedTab {
     readonly IWindowFactory _windowFactory;
     Asn1DocumentVM selectedTab;
-    Boolean hasClipboard;
 
     public MainWindowVM(
         IWindowFactory windowFactory,
@@ -69,13 +68,6 @@ class MainWindowVM : ViewModelBase, IMainWindowVM, IHasSelectedTab {
         set {
             selectedTab = value;
             OnPropertyChanged(nameof(SelectedTab));
-        }
-    }
-    public Boolean HasClipboardData {
-        get => hasClipboard;
-        set {
-            hasClipboard = value;
-            OnPropertyChanged(nameof(HasClipboardData));
         }
     }
     void showConverter(Object o) {
