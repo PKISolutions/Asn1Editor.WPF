@@ -35,7 +35,6 @@ class MainWindowVM : ViewModelBase, IMainWindowVM, IHasSelectedTab {
         CloseTabCommand = new RelayCommand(closeTab, canCloseTab);
         CloseAllTabsCommand = new RelayCommand(closeAllTabs);
         CloseAllButThisTabCommand = new RelayCommand(closeAllButThisTab, canCloseAllButThisTab);
-        SwitchTabCommand = new RelayCommand(switchTab);
         OpenCommand = new AsyncCommand(openFileAsync);
         SaveCommand = new RelayCommand(saveFile, canPrintSave);
         DropFileCommand = new AsyncCommand(dropFileAsync);
@@ -56,7 +55,6 @@ class MainWindowVM : ViewModelBase, IMainWindowVM, IHasSelectedTab {
     public ICommand CloseTabCommand { get; }
     public ICommand CloseAllTabsCommand { get; }
     public ICommand CloseAllButThisTabCommand { get; }
-    public ICommand SwitchTabCommand { get; }
     public IAsyncCommand OpenCommand { get; }
     public ICommand SaveCommand { get; }
     public ICommand PrintCommand { get; }
@@ -111,11 +109,6 @@ class MainWindowVM : ViewModelBase, IMainWindowVM, IHasSelectedTab {
             return;
         }
         addTabToList(tab);
-    }
-    void switchTab(Object o) {
-        if (o is Asn1DocumentVM tab) {
-            SelectedTab = tab;
-        }
     }
 
     #region Read content to tab
