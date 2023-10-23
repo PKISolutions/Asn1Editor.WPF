@@ -84,15 +84,16 @@ class MainWindowVM : ViewModelBase, IMainWindowVM, IHasSelectedTab {
         }
     }
     void closeTab(Object o) {
-        // TODO: need to eliminate explicit reference to UI elements
-        if (o is ClosableTabItem tabItem) {
+        if (o == null) {
+            Close(SelectedTab);
+        } else if (o is ClosableTabItem tabItem) { // TODO: need to eliminate explicit reference to UI elements
             var vm = (Asn1DocumentVM)tabItem.Content;
             Close(vm);
         }
     }
     Boolean canCloseTab(Object o) {
         // TODO: need to eliminate explicit reference to UI elements
-        return o is ClosableTabItem;
+        return o is null or ClosableTabItem;
     }
 
     #region Read content to tab

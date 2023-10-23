@@ -21,6 +21,7 @@
         <KeyBinding Modifiers="Ctrl" Key="S" Command="{Binding SaveCommand}"/>
         <KeyBinding Modifiers="Ctrl" Key="O" Command="{Binding OpenCommand}"/>
         <KeyBinding Modifiers="Ctrl" Key="P" Command="{Binding PrintCommand}"/>
+        <KeyBinding Modifiers="Ctrl" Key="F4" Command="{Binding CloseTabCommand}"/>
         <KeyBinding Modifiers="Control+Shift" Key="S" Command="{Binding SaveCommand}" CommandParameter="2"/>
     </Window.InputBindings>
     <DockPanel>
@@ -247,7 +248,7 @@
             <StatusBarItem>
                 <TextBlock Text="Tag: ">
                     <Run Text="{Binding SelectedTab.DataSource.SelectedNode.Value.Tag}"/>
-                    <Run Text="{Binding Path=SelectedTreeNode.Value.Tag, StringFormat=(0x{0:X2})}"/>
+                    <Run Text="{Binding Path=SelectedTab.DataSource.SelectedNode.Value.Tag, StringFormat=(0x{0:X2})}"/>
                 </TextBlock>
             </StatusBarItem>
             <Separator/>
@@ -285,6 +286,7 @@
                                         SelectedItem="{Binding SelectedTab}"
                                         AddTabCommand="{Binding NewCommand}"
                                         CloseTabCommand="{Binding CloseTabCommand}"
+                                        ShowNewTabButton="False"
                                         Style="{StaticResource ScrollableTabControl}">
             <wpfControls:ClosableTabControl.ItemTemplate>
                 <DataTemplate>
