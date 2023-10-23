@@ -12,7 +12,7 @@ namespace SysadminsLV.Asn1Editor.API.ViewModel;
 
 public class Asn1DocumentVM : AsyncViewModel {
     String path, fileName;
-    Boolean isModified, suppressModified;
+    Boolean isModified, suppressModified, isSelected;
 
     public Asn1DocumentVM(NodeViewOptions nodeViewOptions, ITreeCommands treeCommands) {
         DataSource = new DataSource(nodeViewOptions);
@@ -67,6 +67,13 @@ public class Asn1DocumentVM : AsyncViewModel {
             isModified = value;
             OnPropertyChanged(nameof(IsModified));
             OnPropertyChanged(nameof(Header));
+        }
+    }
+    public Boolean IsSelected {
+        get => isSelected;
+        set {
+            isSelected = value;
+            OnPropertyChanged(nameof(IsSelected));
         }
     }
 

@@ -71,6 +71,12 @@ class MainWindowVM : ViewModelBase, IMainWindowVM, IHasSelectedTab {
         get => selectedTab;
         set {
             selectedTab = value;
+            foreach (Asn1DocumentVM tab in Tabs) {
+                tab.IsSelected = false;
+            }
+            if (selectedTab != null) {
+                selectedTab.IsSelected = true;
+            }
             OnPropertyChanged(nameof(SelectedTab));
         }
     }
