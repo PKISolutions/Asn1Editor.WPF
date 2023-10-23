@@ -33,6 +33,8 @@ class MainWindowVM : ViewModelBase, IMainWindowVM, IHasSelectedTab {
         NodeViewOptions.PropertyChanged += onNodeViewOptionsChanged;
         NewCommand = new RelayCommand(newTab);
         CloseTabCommand = new RelayCommand(closeTab, canCloseTab);
+        CloseAllTabsCommand = new RelayCommand(closeAllTabs);
+        CloseAllButThisTabCommand = new RelayCommand(closeAllButThisTab, canCloseAllButThisTab);
         OpenCommand = new AsyncCommand(openFileAsync);
         SaveCommand = new RelayCommand(saveFile, canPrintSave);
         DropFileCommand = new AsyncCommand(dropFileAsync);
@@ -51,6 +53,8 @@ class MainWindowVM : ViewModelBase, IMainWindowVM, IHasSelectedTab {
 
     public ICommand NewCommand { get; set; }
     public ICommand CloseTabCommand { get; set; }
+    public ICommand CloseAllTabsCommand { get; set; }
+    public ICommand CloseAllButThisTabCommand { get; set; }
     public IAsyncCommand OpenCommand { get; set; }
     public ICommand SaveCommand { get; set; }
     public ICommand PrintCommand { get; set; }
@@ -82,18 +86,6 @@ class MainWindowVM : ViewModelBase, IMainWindowVM, IHasSelectedTab {
         if (focus) {
             SelectedTab = tab;
         }
-    }
-    void closeTab(Object o) {
-        if (o == null) {
-            Close(SelectedTab);
-        } else if (o is ClosableTabItem tabItem) { // TODO: need to eliminate explicit reference to UI elements
-            var vm = (Asn1DocumentVM)tabItem.Content;
-            Close(vm);
-        }
-    }
-    Boolean canCloseTab(Object o) {
-        // TODO: need to eliminate explicit reference to UI elements
-        return o is null or ClosableTabItem;
     }
 
     #region Read content to tab
@@ -199,7 +191,43 @@ class MainWindowVM : ViewModelBase, IMainWindowVM, IHasSelectedTab {
         addTabToList(tab);
     }
 
-    public void Close(Asn1DocumentVM tab) {
+    #region Close Tab(s)
+
+    void closeTab(Object o) {
+        if (o == null) {
+            closeTab(SelectedTab);
+        } else if (o is ClosableTabItem tabItem) { // TODO: need to eliminate explicit reference to UI elements
+            var vm = (Asn1DocumentVM)tabItem.Content;
+            closeTab(vm);
+        }
+    }
+    Boolean canCloseTab(Object o) {
+        // TODO: need to eliminate explicit reference to UI elements
+        return o is null or ClosableTabItem;
+    }
+    void closeAllTabs(Object o) {
+        CloseAllTabs();
+    }
+    void closeAllButThisTab(Object o) {
+        if (o == null) {
+            closeTabsWithPreservation(SelectedTab);
+        } else if (o is ClosableTabItem tabItem) { // TODO: need to eliminate explicit reference to UI elements
+            var vm = (Asn1DocumentVM)tabItem.Content;
+            closeTabsWithPreservation(vm);
+        }
+    }
+    Boolean canCloseAllButThisTab(Object o) {
+        if (Tabs.Count == 0) {
+            return false;
+        }
+        if (o == null) {
+            return SelectedTab != null;
+        }
+
+        return true;
+    }
+
+    void closeTab(Asn1DocumentVM tab) {
         if (!tab.IsModified) {
             Tabs.Remove(tab);
         }
@@ -231,7 +259,8 @@ class MainWindowVM : ViewModelBase, IMainWindowVM, IHasSelectedTab {
     public Boolean CloseAllTabs() {
         return closeTabsWithPreservation();
     }
-    
+
+    #endregion
 
     Task dropFileAsync(Object o, CancellationToken token = default) {
         if (o is not String filePath) {

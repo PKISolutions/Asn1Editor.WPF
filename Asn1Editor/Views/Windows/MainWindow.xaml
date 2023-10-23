@@ -49,7 +49,7 @@
                 </MenuItem>
                 <MenuItem Header="Save _As..." Command="{Binding SaveCommand}" CommandParameter="1"/>
                 <Separator/>
-                <MenuItem Header="_Exit" Click="CloseClick" InputGestureText="Alt + F4"/>
+                <MenuItem Header="_Exit" Click="onCloseClick" InputGestureText="Alt + F4"/>
             </MenuItem>
             <MenuItem Header="_View">
                 <MenuItem Header="Show node offset"
@@ -285,8 +285,33 @@
                                         Style="{StaticResource ScrollableTabControl}">
             <wpfControls:ClosableTabControl.ItemTemplate>
                 <DataTemplate>
-                    <TextBlock Text="{Binding Header}"
-                               ToolTip="{Binding Path=ToolTipText}"/>
+                    <TextBlock x:Name="HeaderTextBlock" Text="{Binding Header}"
+                               ToolTip="{Binding Path=ToolTipText}"
+                               Tag="{Binding Path=DataContext, RelativeSource={RelativeSource AncestorType=wpfControls:ClosableTabControl}}">
+                        <TextBlock.ContextMenu>
+                            <ContextMenu DataContext="{Binding Path=PlacementTarget.Tag, RelativeSource={RelativeSource Self}}">
+                                <MenuItem Header="_Save"
+                                          Command="{Binding SaveCommand}"
+                                          InputGestureText="Ctrl + S">
+                                    <MenuItem.Icon>
+                                        <Image Source="/Views/Images/Menu/save_16x16.png"/>
+                                    </MenuItem.Icon>
+                                </MenuItem>
+                                <Separator/>
+                                <MenuItem Header="_Close"
+                                          Command="{Binding Path=CloseTabCommand}"
+                                          CommandParameter="{Binding}"
+                                          InputGestureText="Ctrl + F4">
+                                </MenuItem>
+                                <MenuItem Header="Close _All"
+                                          Command="{Binding Path=CloseTabCommand}">
+                                </MenuItem>
+                                <MenuItem Header="Close All _But This"
+                                          Command="{Binding Path=CloseAllButThisTabCommand}">
+                                </MenuItem>
+                            </ContextMenu>
+                        </TextBlock.ContextMenu>
+                    </TextBlock>
                 </DataTemplate>
             </wpfControls:ClosableTabControl.ItemTemplate>
             <wpfControls:ClosableTabControl.ContentTemplate>
