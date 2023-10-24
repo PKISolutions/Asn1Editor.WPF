@@ -5,23 +5,23 @@ using System.Text;
 using SysadminsLV.Asn1Editor.API.Interfaces;
 using SysadminsLV.Asn1Editor.API.ModelObjects;
 using SysadminsLV.Asn1Parser;
-using Unity;
 
-namespace SysadminsLV.Asn1Editor.API.Utils; 
+namespace SysadminsLV.Asn1Editor.API.Utils;
 
 class CertutilRenderer : ITextRenderer {
     readonly IDataSource _dataSource;
-    readonly StringBuilder _sb = new StringBuilder(), line = new StringBuilder();
+    readonly StringBuilder _sb = new();
+    readonly StringBuilder _line = new();
     readonly String nl = Environment.NewLine;
     readonly Asn1TreeNode _rootNode;
-    readonly List<Byte> _headList = new List<Byte>(4);
-    readonly HashSet<Byte> _noAsciiTags = new HashSet<Byte>(
+    readonly List<Byte> _headList = new(4);
+    readonly HashSet<Byte> _noAsciiTags = new (
         new[] {
                   (Byte)Asn1Type.BOOLEAN,
                   (Byte)Asn1Type.INTEGER,
                   (Byte)Asn1Type.OBJECT_IDENTIFIER,
               });
-    readonly HashSet<Byte> _explicitTextTags = new HashSet<Byte>(
+    readonly HashSet<Byte> _explicitTextTags = new (
         new [] {
                    (Byte)Asn1Type.OBJECT_IDENTIFIER,
                    (Byte)Asn1Type.UTCTime,
@@ -40,7 +40,7 @@ class CertutilRenderer : ITextRenderer {
 
     public CertutilRenderer(Asn1TreeNode node) {
         _rootNode = node;
-        _dataSource = App.Container.Resolve<IDataSource>();
+        _dataSource = node.GetDataSource();
     }
 
     public String RenderText(Int32 textWidth) {
@@ -60,51 +60,51 @@ class CertutilRenderer : ITextRenderer {
 
     void writeTagHeader(Asn1TreeNode node, String leftPadString) {
         Asn1Lite value = node.Value;
-        line.Clear();
+        _line.Clear();
         _headList.Clear();
         _headList.Add(value.Tag);
         _headList.AddRange(Asn1Utils.GetLengthBytes(value.PayloadLength));
         // write tag address
-        line.AppendFormat("{0:x4}: ", value.Offset);
+        _line.AppendFormat("{0:x4}: ", value.Offset);
         // pad from
-        line.Append(leftPadString);
-        line.Append(AsnFormatter.BinaryToString(_headList.ToArray(), EncodingType.Hex, EncodingFormat.NOCRLF));
-        if (line.Length < 48) {
-            Int32 padLeft = 48 - line.Length;
-            line.Append(new String(' ', padLeft));
+        _line.Append(leftPadString);
+        _line.Append(AsnFormatter.BinaryToString(_headList.ToArray(), EncodingType.Hex, EncodingFormat.NOCRLF));
+        if (_line.Length < 48) {
+            Int32 padLeft = 48 - _line.Length;
+            _line.Append(new String(' ', padLeft));
         }
-        line.AppendFormat("; {0} ({1:x} Bytes)", value.TagName, value.PayloadLength);
-        line.Append(nl);
-        _sb.Append(line);
+        _line.AppendFormat("; {0} ({1:x} Bytes)", value.TagName, value.PayloadLength);
+        _line.Append(nl);
+        _sb.Append(_line);
     }
     void writeContent(Asn1TreeNode node, String leftPadString) {
         Asn1Lite value = node.Value;
-        line.Clear();
+        _line.Clear();
 
-        var lines = getHexTable(node);
+        List<String> lines = getHexTable(node);
         String padLeftContent = String.Empty;
         if (node.Parent != null) {
             padLeftContent = node.MyIndex < node.Parent.Children.Count - 1 ? "|  " : "   ";
         }
 
         for (Int32 i = 0; i < lines.Count; i++) {
-            line.AppendFormat("{0:x4}: ", value.PayloadStartOffset + i * 16);
+            _line.AppendFormat("{0:x4}: ", value.PayloadStartOffset + i * 16);
             // shift right nested content
-            line.Append(leftPadString).Append(padLeftContent);
+            _line.Append(leftPadString).Append(padLeftContent);
             if (!_noAsciiTags.Contains(value.Tag)) {
                 Int32 index = lines[i].LastIndexOf("  ", StringComparison.InvariantCulture);
                 if (index >= 0) {
                     lines[i] = lines[i].Insert(index + 1, ";");
                 }
             }
-            line.AppendLine(lines[i]);
+            _line.AppendLine(lines[i]);
         }
         // write decoded content
         if (_explicitTextTags.Contains(value.Tag)) {
-            line.Append(new String(' ', 6)).Append(leftPadString).Append(padLeftContent);
-            line.AppendLine($"   ; \"{value.ExplicitValue}\"");
+            _line.Append(new String(' ', 6)).Append(leftPadString).Append(padLeftContent);
+            _line.AppendLine($"   ; \"{value.ExplicitValue}\"");
         }
-        _sb.Append(line);
+        _sb.Append(_line);
     }
     List<String> getHexTable(Asn1TreeNode node) {
         Asn1Lite value = node.Value;

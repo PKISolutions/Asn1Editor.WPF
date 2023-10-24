@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using SysadminsLV.Asn1Editor.API.Interfaces;
 using SysadminsLV.Asn1Editor.API.ModelObjects;
 using SysadminsLV.Asn1Editor.API.ViewModel;
@@ -34,7 +35,7 @@ class WindowFactory : WindowFactoryBase, IWindowFactory {
         hwnd = App.Container.Resolve<TextViewer>();
         ShowAsWindow(true);
     }
-    public void ShowConverterWindow(IEnumerable<Byte> data, Action<Byte[]> action) {
+    public void ShowConverterWindow(IEnumerable<Byte> data, Func<Byte[], Task> action) {
         if (!binConverterWindowClosed) {
             binConverterWindow.Focus();
             return;

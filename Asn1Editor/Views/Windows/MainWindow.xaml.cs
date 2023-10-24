@@ -1,9 +1,11 @@
 ﻿using System;
 using System.ComponentModel;
 using System.Windows;
+using System.Windows.Controls;
 using SysadminsLV.Asn1Editor.API.Interfaces;
+using SysadminsLV.Asn1Editor.API.ViewModel;
 
-namespace SysadminsLV.Asn1Editor.Views.Windows; 
+namespace SysadminsLV.Asn1Editor.Views.Windows;
 
 /// <summary>
 /// Interaction logic for MainWindow.xaml
@@ -17,14 +19,14 @@ public partial class MainWindow {
         Closing += onClosing;
     }
     void onClosing(Object sender, CancelEventArgs e) {
-        if (_vm.IsModified) {
-            if (!_vm.RequestFileSave()) {
-                e.Cancel = true;
-            }
-        }
+        e.Cancel = !_vm.CloseAllTabs();
     }
 
-    void CloseClick(Object sender, RoutedEventArgs e) {
+    void onCloseClick(Object sender, RoutedEventArgs e) {
         Close();
+    }
+    void onTabHeaderContextMenuOpening(Object sender, ContextMenuEventArgs e) {
+        var vm = (Asn1DocumentVM)((FrameworkElement)sender).DataContext;
+        e.Handled = _vm.SelectedTab != vm;
     }
 }

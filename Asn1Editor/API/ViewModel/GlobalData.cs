@@ -6,5 +6,5 @@ class GlobalData {
     public GlobalData() {
         AppVersion = Assembly.GetEntryAssembly().GetName().Version.ToString(3);
     }
-    public String AppVersion { get; set; }
+    public String AppVersion { get; }
 }

@@ -5,12 +5,11 @@ using System.Linq;
 using System.Numerics;
 using System.Security.Cryptography;
 using System.Text;
-using SysadminsLV.Asn1Editor.API.ViewModel;
 using SysadminsLV.Asn1Editor.Properties;
 using SysadminsLV.Asn1Parser;
 using SysadminsLV.Asn1Parser.Universal;
 
-namespace SysadminsLV.Asn1Editor.API.Utils.ASN; 
+namespace SysadminsLV.Asn1Editor.API.Utils.ASN;
 
 class AsnDecoder {
     public static String GetEditValue(Asn1Reader asn) {
@@ -217,11 +216,11 @@ class AsnDecoder {
         if (!String.IsNullOrWhiteSpace(oid.FriendlyName)) {
             return $"{oid.FriendlyName} ({oid.Value})";
         }
-        if (MainWindowVM.OIDs.ContainsKey(oid.Value))
-        {
-            return $"{MainWindowVM.OIDs[oid.Value]} ({oid.Value})"; //todo: This seems not to be thread safe
+        String friendlyName = OidResolver.ResolveOid(oid.Value);
+        if (friendlyName == null) {
+            return oid.Value;
         }
-        return oid.Value;
+        return $"{friendlyName} ({oid.Value})";
     }
     static String DecodeUTF8String(Asn1Reader asn) {
         return Encoding.UTF8.GetString(asn.GetRawData(), asn.PayloadStartOffset, asn.PayloadLength);

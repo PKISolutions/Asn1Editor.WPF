@@ -9,6 +9,7 @@ using System.Windows;
 using System.Windows.Threading;
 using System.Xml;
 using System.Xml.Serialization;
+using SysadminsLV.Asn1Editor.API;
 using SysadminsLV.Asn1Editor.API.Interfaces;
 using SysadminsLV.Asn1Editor.API.ModelObjects;
 using SysadminsLV.Asn1Editor.API.Utils;
@@ -17,7 +18,7 @@ using SysadminsLV.Asn1Editor.API.ViewModel;
 using SysadminsLV.Asn1Editor.Views.Windows;
 using Unity;
 
-namespace SysadminsLV.Asn1Editor; 
+namespace SysadminsLV.Asn1Editor;
 
 /// <summary>
 /// Interaction logic for App.xaml
@@ -25,12 +26,12 @@ namespace SysadminsLV.Asn1Editor;
 public partial class App {
     readonly String basePath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), @"Sysadmins LV\Asn1Editor");
     static readonly Logger _logger = new Logger();
-    NodeViewOptions options;
+    readonly NodeViewOptions _options;
 
     public App() {
         Dispatcher.UnhandledException += OnDispatcherUnhandledException;
-        options = readSettings();
-        options.PropertyChanged += onOptionsChanged;
+        _options = readSettings();
+        _options.PropertyChanged += onOptionsChanged;
     }
 
     public static IUnityContainer Container { get; private set; }
@@ -60,16 +61,19 @@ public partial class App {
         base.OnExit(e);
     }
     void readOids() {
-        var path = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
+        String path = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
         if (!File.Exists(path + @"\OID.txt")) { return; }
         String[] strings = File.ReadAllLines(path + @"\OID.txt");
         foreach (String[] tokens in strings.Select(str => str.Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries))) {
+            if (tokens.Length != 2) {
+                continue;
+            }
             try {
-                MainWindowVM.OIDs.Add(tokens[0], tokens[1].Trim());
+                OidResolver.Add(tokens[0], tokens[1].Trim());
             } catch { }
         }
     }
-    void parseArguments(IReadOnlyList<String> args) {
+    async void parseArguments(IReadOnlyList<String> args) {
         for (Int32 i = 0; i < args.Count;) {
             switch (args[i].ToLower()) {
                 case "-path":  // open from a file
@@ -77,14 +81,14 @@ public partial class App {
                     if (args.Count <= i) {
                         throw new ArgumentException(args[i]);
                     }
-                    Container.Resolve<IMainWindowVM>().OpenExisting(args[i]);
+                    await Container.Resolve<IMainWindowVM>().OpenExistingAsync(args[i]);
                     return;
                 case "-raw":  // base64 raw string
                     i++;
                     if (args.Count <= i) {
                         throw new ArgumentException(args[i]);
                     }
-                    Container.Resolve<IMainWindowVM>().OpenRaw(args[i]);
+                    await Container.Resolve<IMainWindowVM>().OpenRawAsync(args[i]);
                     return;
                 default:
                     Console.WriteLine($"Unknown parameter '{args[i]}'");
@@ -98,34 +102,30 @@ public partial class App {
 
         Container.RegisterType<IWindowFactory, WindowFactory>();
         Container.RegisterType<IAppCommands, AppCommands>();
-        Container.RegisterType<ITreeCommands, TreeViewCommands>();
-        Container.RegisterSingleton<IDataSource, DataSource>();
         Container.RegisterType<ITagDataEditor, TagDataEditor>();
         // view models
-        Container.RegisterSingleton<IMainWindowVM, MainWindowVM>();
+        Container.RegisterSingleton<MainWindowVM>();
+        Container.RegisterType<IMainWindowVM, MainWindowVM>();
+        Container.RegisterType<IHasSelectedTab, MainWindowVM>();
         Container.RegisterType<ITextViewerVM, TextViewerVM>();
-        Container.RegisterType<ITreeViewVM, TreeViewVM>();
         Container.RegisterType<ITagDataEditorVM, TagDataEditorVM>();
-        Container.RegisterInstance(options);
+        Container.RegisterInstance(_options);
     }
     void onOptionsChanged(Object s, PropertyChangedEventArgs e) {
-        using (var sw = new StreamWriter(Path.Combine(basePath, "user.config"), false)) {
-            using (var xw = XmlWriter.Create(sw)) {
-                new XmlSerializer(typeof(NodeViewOptions)).Serialize(xw, s);
-            }
-        }
+        using var sw = new StreamWriter(Path.Combine(basePath, "user.config"), false);
+        using var xw = XmlWriter.Create(sw);
+        new XmlSerializer(typeof(NodeViewOptions)).Serialize(xw, s);
     }
     NodeViewOptions readSettings() {
         if (File.Exists(Path.Combine(basePath, "user.config"))) {
             try {
-                using (var sr = new StreamReader(Path.Combine(basePath, "user.config"))) {
-                    return (NodeViewOptions) new XmlSerializer(typeof(NodeViewOptions)).Deserialize(sr);
-                }
+                using var sr = new StreamReader(Path.Combine(basePath, "user.config"));
+                return (NodeViewOptions) new XmlSerializer(typeof(NodeViewOptions)).Deserialize(sr);
             } catch {
                 return new NodeViewOptions();
             }
-        } else {
-            return new NodeViewOptions();
         }
+
+        return new NodeViewOptions();
     }
 }

@@ -139,19 +139,20 @@
     </ApplicationDefinition>
     <Compile Include="API\Interfaces\IAppCommands.cs" />
     <Compile Include="API\Interfaces\IBinarySource.cs" />
+    <Compile Include="API\Interfaces\IHasSelectedTab.cs" />
     <Compile Include="API\Interfaces\ITagDataEditor.cs" />
     <Compile Include="API\Interfaces\ITagDataEditorVM.cs" />
-    <Compile Include="API\Interfaces\ITreeViewVM.cs" />
     <Compile Include="API\ModelObjects\EncodingTypeEntry.cs" />
     <Compile Include="API\ModelObjects\NodeViewOptions.cs" />
+    <Compile Include="API\OidResolver.cs" />
     <Compile Include="API\Utils\CertutilRenderer.cs" />
     <Compile Include="API\Utils\ITextRenderer.cs" />
     <Compile Include="API\Utils\NodeEditMode.cs" />
     <Compile Include="API\Utils\OpenSSLRenderer.cs" />
+    <Compile Include="API\ViewModel\Asn1DocumentVM.cs" />
     <Compile Include="API\ViewModel\AsyncViewModel.cs" />
     <Compile Include="API\ViewModel\ClosableWindowVM.cs" />
     <Compile Include="API\ViewModel\GlobalData.cs" />
-    <Compile Include="API\ViewModel\TreeViewVM.cs" />
     <Compile Include="API\Interfaces\IDataSource.cs" />
     <Compile Include="API\Interfaces\IMainWindowVM.cs" />
     <Compile Include="API\Interfaces\ITextViewerVM.cs" />
@@ -402,6 +403,8 @@
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Views\Images\pkisolutions_logo_small.png" />
+    <Resource Include="Views\Images\Menu\saveall_16x16.png" />
+    <Resource Include="Views\Images\Menu\cancel_16x16.png" />
     <Content Include="_ExternalReferences\Wpf.OfficeTheme.dll" />
   </ItemGroup>
   <ItemGroup>

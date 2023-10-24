@@ -9,25 +9,27 @@ using SysadminsLV.Asn1Editor.API.ModelObjects;
 using SysadminsLV.Asn1Editor.API.Utils;
 using SysadminsLV.WPF.OfficeTheme.Toolkit.Commands;
 
-namespace SysadminsLV.Asn1Editor.API.ViewModel; 
+namespace SysadminsLV.Asn1Editor.API.ViewModel;
 
-class TreeViewCommands : ITreeCommands {
+class TreeViewCommands : ViewModelBase, ITreeCommands {
     readonly IWindowFactory _windowFactory;
-    readonly IDataSource _data;
-    readonly List<Byte> _excludedTags = new List<Byte>(
+    readonly IHasSelectedTab _tabs;
+    readonly List<Byte> _excludedTags = new(
         new Byte[] { 0, 1, 2, 5, 6, 9, 10, 13 }
     );
 
-    public TreeViewCommands(IWindowFactory windowFactory, IDataSource data) {
+    Boolean hasNodeClipboardData;
+
+    public TreeViewCommands(IWindowFactory windowFactory, IHasSelectedTab appTabs) {
         _windowFactory = windowFactory;
-        _data = data;
-        SaveNodeCommand = new RelayCommand(saveBinaryNode, canExecuteTreeCommands);
-        ShowNodeTextViewer = new RelayCommand(showNodeTextViewer, canExecuteTreeCommands);
-        EditNodeCommand = new RelayCommand(editNodeContent, canExecuteTreeCommands);
+        _tabs = appTabs;
+        SaveNodeCommand = new RelayCommand(saveBinaryNode, ensureNodeSelected);
+        ShowNodeTextViewer = new RelayCommand(showNodeTextViewer, ensureNodeSelected);
+        EditNodeCommand = new RelayCommand(editNodeContent, ensureNodeSelected);
         AddNewNodeCommand = new RelayCommand(addNewNode, canAddNewNode);
-        DeleteNodeCommand = new RelayCommand(removeNode, canExecuteTreeCommands);
-        CutNodeCommand = new RelayCommand(cutNode, canCut);
-        CopyNodeCommand = new RelayCommand(copyNode, canExecuteTreeCommands);
+        DeleteNodeCommand = new RelayCommand(removeNode, ensureNodeSelected);
+        CutNodeCommand = new RelayCommand(cutNode, canCutNode);
+        CopyNodeCommand = new RelayCommand(copyNode, ensureNodeSelected);
         PasteBeforeCommand = new RelayCommand(pasteBefore, canPasteBeforeAfter);
         PasteAfterCommand = new RelayCommand(pasteAfter, canPasteBeforeAfter);
         PasteLastCommand = new RelayCommand(pasteLast, canPasteLast);
@@ -44,13 +46,21 @@ class TreeViewCommands : ITreeCommands {
     public ICommand PasteAfterCommand { get; }
     public ICommand PasteLastCommand { get; }
 
+    public Boolean HasNodeClipboardData {
+        get => hasNodeClipboardData;
+        set {
+            hasNodeClipboardData = value;
+            OnPropertyChanged(nameof(HasNodeClipboardData));
+        }
+    }
+
     void saveBinaryNode(Object o) {
-        var file = Tools.GetSaveFileName();
-        if (String.IsNullOrWhiteSpace(file)) {
+        if (!Tools.TryGetSaveFileName(out String filePath)) {
             return;
         }
+        isTabSelected(out IDataSource data); // granted to be non-null
         try {
-            File.WriteAllBytes(file, _data.RawData.Skip(_data.SelectedNode.Value.Offset).Take(_data.SelectedNode.Value.TagLength).ToArray());
+            File.WriteAllBytes(filePath, data.RawData.Skip(data.SelectedNode.Value.Offset).Take(data.SelectedNode.Value.TagLength).ToArray());
         } catch (Exception e) {
             Tools.MsgBox("Save Error", e.Message);
         }
@@ -59,102 +69,132 @@ class TreeViewCommands : ITreeCommands {
         _windowFactory.ShowNodeTextViewer();
     }
     void editNodeContent(Object o) {
-        if (_data.SelectedNode == null) {
-            return;
+        isTabSelected(out IDataSource data); // granted to be non-null
+        if (data.SelectedNode != null) {
+            _windowFactory.ShowNodeContentEditor((NodeEditMode)o);
         }
-        _windowFactory.ShowNodeContentEditor((NodeEditMode)o);
     }
     void addNewNode(Object o) {
         Asn1Lite nodeValue = _windowFactory.ShowNodeContentEditor(NodeEditMode.NewNode);
         if (nodeValue == null) { return; }
-        if (_data.Tree.Count == 0) {
+        isTabSelected(out IDataSource data); // granted to be non-null
+        if (data.Tree.Count == 0) {
             // add new root node
-            Asn1TreeNode node = new Asn1TreeNode(nodeValue);
-            _data.Tree.Add(node);
-            _data.FinishBinaryUpdate();
+            var node = new Asn1TreeNode(nodeValue, data);
+            data.Tree.Add(node);
+            data.FinishBinaryUpdate();
         } else {
-            _data.SelectedNode.AddChild(nodeValue, true);
-            _data.FinishBinaryUpdate();
+            data.SelectedNode.AddChild(nodeValue, true);
+            data.FinishBinaryUpdate();
         }
     }
-    void removeNode(Object obj) {
+    void removeNode(Object o) {
+        isTabSelected(out IDataSource data); // granted to be non-null
         MessageBoxResult response = Tools.MsgBox("Delete", "Do you want to delete the node?\nThis action cannot be undone.", MessageBoxImage.Question, MessageBoxButton.YesNo);
         if (response == MessageBoxResult.Yes) {
-            if (_data.SelectedNode.Parent == null) {
-                _data.Tree.Clear();
-                _data.RawData.Clear();
-                _data.SelectedNode = null;
+            if (data.SelectedNode.Parent == null) {
+                data.Tree.Clear();
+                data.RawData.Clear();
+                data.SelectedNode = null;
             } else {
-                _data.RawData.RemoveRange(_data.SelectedNode.Value.Offset, _data.SelectedNode.Value.TagLength);
-                _data.SelectedNode.Parent.RemoveChild(_data.SelectedNode);
+                data.RawData.RemoveRange(data.SelectedNode.Value.Offset, data.SelectedNode.Value.TagLength);
+                data.SelectedNode.Parent.RemoveChild(data.SelectedNode);
             }
-            _data.FinishBinaryUpdate();
+            data.FinishBinaryUpdate();
         }
     }
     void cutNode(Object o) {
-        copyNode(null);
-        _data.RawData.RemoveRange(_data.SelectedNode.Value.Offset, _data.SelectedNode.Value.TagLength);
-        _data.SelectedNode.Parent.RemoveChild(_data.SelectedNode);
-        _data.FinishBinaryUpdate();
+        isTabSelected(out IDataSource data); // granted to be non-null
+        copyNodePrivate(data);
+        data.RawData.RemoveRange(data.SelectedNode.Value.Offset, data.SelectedNode.Value.TagLength);
+        data.SelectedNode.Parent.RemoveChild(data.SelectedNode);
+        data.FinishBinaryUpdate();
     }
     void copyNode(Object o) {
+        isTabSelected(out IDataSource data); // granted to be non-null
+        copyNodePrivate(data);
+    }
+    void copyNodePrivate(IDataSource data) {
         ClipboardManager.SetClipboardData(
-            _data.RawData
-                .Skip(_data.SelectedNode.Value.Offset)
-                .Take(_data.SelectedNode.Value.TagLength)
+        data.RawData
+                .Skip(data.SelectedNode.Value.Offset)
+                .Take(data.SelectedNode.Value.TagLength)
         );
-        _data.HasClipboardData = true;
+        HasNodeClipboardData = true;
     }
     async void pasteBefore(Object o) {
-        Asn1TreeNode childNode = await ClipboardManager.GetClipboardDataAsync();
-        _data.RawData.InsertRange(_data.SelectedNode.Value.Offset, ClipboardManager.GetClipboardBytes());
-        _data.SelectedNode.Parent.InsertChildNode(
+        isTabSelected(out IDataSource data); // granted to be non-null
+        Asn1TreeNode childNode = await ClipboardManager.GetClipboardDataAsync(data);
+        data.RawData.InsertRange(data.SelectedNode.Value.Offset, ClipboardManager.GetClipboardBytes());
+        data.SelectedNode.Parent.InsertChildNode(
             childNode,
-            _data.SelectedNode,
+            data.SelectedNode,
             NodeAddOption.Before
         );
-        _data.FinishBinaryUpdate();
+        data.FinishBinaryUpdate();
     }
     async void pasteAfter(Object o) {
-        Asn1TreeNode childNode = await ClipboardManager.GetClipboardDataAsync();
-        var newOffset = _data.SelectedNode.Value.Offset + _data.SelectedNode.Value.TagLength;
-        _data.RawData.InsertRange(newOffset, ClipboardManager.GetClipboardBytes());
-        _data.SelectedNode.Parent.InsertChildNode(
+        isTabSelected(out IDataSource data); // granted to be non-null
+        Asn1TreeNode childNode = await ClipboardManager.GetClipboardDataAsync(data);
+        Int32 newOffset = data.SelectedNode.Value.Offset + data.SelectedNode.Value.TagLength;
+        data.RawData.InsertRange(newOffset, ClipboardManager.GetClipboardBytes());
+        data.SelectedNode.Parent.InsertChildNode(
             childNode,
-            _data.SelectedNode,
+            data.SelectedNode,
             NodeAddOption.After
         );
-        _data.FinishBinaryUpdate();
+        data.FinishBinaryUpdate();
     }
     async void pasteLast(Object o) {
-        Asn1TreeNode childNode = await ClipboardManager.GetClipboardDataAsync();
-        var newOffset = _data.SelectedNode.Value.Offset + _data.SelectedNode.Value.TagLength;
-        _data.RawData.InsertRange(newOffset, ClipboardManager.GetClipboardBytes());
-        _data.SelectedNode.InsertChildNode(
+        isTabSelected(out IDataSource data); // granted to be non-null
+        Asn1TreeNode childNode = await ClipboardManager.GetClipboardDataAsync(data);
+        Int32 newOffset = data.SelectedNode.Value.Offset + data.SelectedNode.Value.TagLength;
+        data.RawData.InsertRange(newOffset, ClipboardManager.GetClipboardBytes());
+        data.SelectedNode.InsertChildNode(
             childNode,
-            _data.SelectedNode,
+            data.SelectedNode,
             NodeAddOption.Last
         );
-        _data.FinishBinaryUpdate();
+        data.FinishBinaryUpdate();
     }
 
-    Boolean canExecuteTreeCommands(Object o) {
-        return _data.SelectedNode != null;
+    Boolean ensureNodeSelected(Object o) {
+        return isTabSelected(out IDataSource data) && data.SelectedNode != null;
     }
     Boolean canAddNewNode(Object o) {
-        return _data.Tree.Count == 0 ||
-               _data.SelectedNode != null &&
-               !_excludedTags.Contains(_data.SelectedNode.Value.Tag);
+        return isTabSelected(out IDataSource data)
+               && (data.Tree.Count == 0 || (data.SelectedNode != null && !_excludedTags.Contains(data.SelectedNode.Value.Tag)));
     }
-    Boolean canCut(Object o) {
-        return canExecuteTreeCommands(null) && _data.SelectedNode.Parent != null;
+    Boolean canCutNode(Object o) {
+        return isTabSelected(out IDataSource data)
+               && data.SelectedNode is { Parent: not null };
     }
-    Boolean canPasteBeforeAfter(Object obj) {
-        return _data.HasClipboardData && canCut(null);
+    Boolean canPasteBeforeAfter(Object o) {
+        return isTabSelected(out IDataSource _) && HasNodeClipboardData && canCutNode(null);
     }
-    Boolean canPasteLast(Object obj) {
-        return _data.HasClipboardData &&
-               !_excludedTags.Contains(_data.SelectedNode.Value.Tag) &&
-               String.IsNullOrEmpty(_data.SelectedNode.Value.ExplicitValue);
+    Boolean canPasteLast(Object o) {
+        Boolean preCondition = isTabSelected(out IDataSource data) && HasNodeClipboardData;
+        if (!preCondition) {
+            return false;
+        }
+
+        if (data.SelectedNode == null) {
+            return false;
+        }
+
+        return !_excludedTags.Contains(data.SelectedNode.Value.Tag) &&
+               String.IsNullOrEmpty(data.SelectedNode.Value.ExplicitValue);
+
+        return true;
+    }
+    Boolean isTabSelected(out IDataSource dataSource) {
+        dataSource = null;
+        if (_tabs.SelectedTab != null) {
+            dataSource = _tabs.SelectedTab.DataSource;
+
+            return true;
+        }
+
+        return false;
     }
 }

@@ -2,7 +2,6 @@
 using System.Globalization;
 using System.IO;
 using System.Windows.Input;
-using Asn1Editor.Wpf.Controls;
 using Asn1Editor.Wpf.Controls.Helpers;
 using SysadminsLV.Asn1Editor.API.Interfaces;
 using SysadminsLV.Asn1Editor.API.ModelObjects;
@@ -10,7 +9,7 @@ using SysadminsLV.Asn1Editor.API.Utils;
 using SysadminsLV.Asn1Editor.Properties;
 using SysadminsLV.WPF.OfficeTheme.Toolkit.Commands;
 
-namespace SysadminsLV.Asn1Editor.API.ViewModel; 
+namespace SysadminsLV.Asn1Editor.API.ViewModel;
 
 class TextViewerVM : ViewModelBase, ITextViewerVM {
     readonly Asn1TreeNode rootNode;
@@ -26,8 +25,8 @@ class TextViewerVM : ViewModelBase, ITextViewerVM {
     String currentLengthStr = "80";
     Double width;
 
-    public TextViewerVM(IDataSource data) {
-        rootNode = data.SelectedNode;
+    public TextViewerVM(IHasSelectedTab appTabs) {
+        rootNode = appTabs.SelectedTab.DataSource.SelectedNode;
         CurrentLength = defaultLength.ToString(CultureInfo.InvariantCulture);
         SaveCommand = new RelayCommand(saveFile);
         PrintCommand = new RelayCommand(print);
@@ -108,10 +107,11 @@ class TextViewerVM : ViewModelBase, ITextViewerVM {
     }
 
     void saveFile(Object obj) {
-        String path = Tools.GetSaveFileName();
-        if (String.IsNullOrEmpty(path)) { return; }
+        if (!Tools.TryGetSaveFileName(out String filePath)) {
+            return;
+        }
         try {
-            File.WriteAllText(path, Text);
+            File.WriteAllText(filePath, Text);
         } catch (Exception e) {
             Tools.MsgBox("Save Error", e.Message);
         }

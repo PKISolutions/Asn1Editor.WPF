@@ -8,7 +8,6 @@ using System.Text;
 using SysadminsLV.Asn1Editor.API.Interfaces;
 using SysadminsLV.Asn1Editor.Properties;
 using SysadminsLV.Asn1Parser;
-using Unity;
 
 namespace SysadminsLV.Asn1Editor.API.ModelObjects;
 
@@ -19,8 +18,8 @@ public class Asn1TreeNode : INotifyPropertyChanged {
     Byte tag, unusedBits;
     Int32 offset, offsetChange, payloadLength, depth;
 
-    public Asn1TreeNode(Asn1Lite value) {
-        _dataSource = App.Container.Resolve<IDataSource>();
+    public Asn1TreeNode(Asn1Lite value, IDataSource dataSource) {
+        _dataSource = dataSource;
         setNodeValues(value);
 
         Value = value;
@@ -87,7 +86,7 @@ public class Asn1TreeNode : INotifyPropertyChanged {
         }
     }
     public void AddChild(Asn1Lite value, Boolean forcePathUpdate = false) {
-        var node = new Asn1TreeNode(value) { Parent = this };
+        var node = new Asn1TreeNode(value, _dataSource) { Parent = this };
         Children.Add(node);
         if (forcePathUpdate) {
             notifySizeChanged(node, node.Value.TagLength);
@@ -108,6 +107,9 @@ public class Asn1TreeNode : INotifyPropertyChanged {
     }
     public IEnumerable<Asn1TreeNode> Flatten() {
         return new[] { this }.Union(Children.SelectMany(x => x.Flatten()));
+    }
+    public IDataSource GetDataSource() {
+        return _dataSource;
     }
 
     public void UpdateNodeView(NodeViewOptions options) {
