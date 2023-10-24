@@ -108,6 +108,9 @@ public class Asn1TreeNode : INotifyPropertyChanged {
     public IEnumerable<Asn1TreeNode> Flatten() {
         return new[] { this }.Union(Children.SelectMany(x => x.Flatten()));
     }
+    public IDataSource GetDataSource() {
+        return _dataSource;
+    }
 
     public void UpdateNodeView(NodeViewOptions options) {
         updateNodeHeader(this, options);
