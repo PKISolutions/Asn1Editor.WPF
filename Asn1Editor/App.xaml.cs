@@ -17,6 +17,7 @@ using SysadminsLV.Asn1Editor.API.Utils.WPF;
 using SysadminsLV.Asn1Editor.API.ViewModel;
 using SysadminsLV.Asn1Editor.Views.Windows;
 using Unity;
+using Path = System.IO.Path;
 
 namespace SysadminsLV.Asn1Editor;
 
@@ -24,8 +25,8 @@ namespace SysadminsLV.Asn1Editor;
 /// Interaction logic for App.xaml
 /// </summary>
 public partial class App {
-    readonly String basePath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), @"Sysadmins LV\Asn1Editor");
-    static readonly Logger _logger = new Logger();
+    readonly String _basePath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), @"Sysadmins LV\Asn1Editor");
+    static readonly Logger _logger = new();
     readonly NodeViewOptions _options;
 
     public App() {
@@ -61,9 +62,18 @@ public partial class App {
         base.OnExit(e);
     }
     void readOids() {
-        String path = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
-        if (!File.Exists(path + @"\OID.txt")) { return; }
-        String[] strings = File.ReadAllLines(path + @"\OID.txt");
+        const String oidFileName = "OID.txt";
+        String appPath = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
+        foreach (String oidFolderLocation in new[] { appPath, _basePath }) {
+            String filePath = Path.Combine(oidFolderLocation, oidFileName);
+            readOidMapFromFile(filePath);
+        }
+    }
+    static void readOidMapFromFile(String filePath) {
+        if (!File.Exists(filePath)) {
+            return;
+        }
+        String[] strings = File.ReadAllLines(filePath);
         foreach (String[] tokens in strings.Select(str => str.Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries))) {
             if (tokens.Length != 2) {
                 continue;
@@ -112,14 +122,14 @@ public partial class App {
         Container.RegisterInstance(_options);
     }
     void onOptionsChanged(Object s, PropertyChangedEventArgs e) {
-        using var sw = new StreamWriter(Path.Combine(basePath, "user.config"), false);
+        using var sw = new StreamWriter(Path.Combine(_basePath, "user.config"), false);
         using var xw = XmlWriter.Create(sw);
         new XmlSerializer(typeof(NodeViewOptions)).Serialize(xw, s);
     }
     NodeViewOptions readSettings() {
-        if (File.Exists(Path.Combine(basePath, "user.config"))) {
+        if (File.Exists(Path.Combine(_basePath, "user.config"))) {
             try {
-                using var sr = new StreamReader(Path.Combine(basePath, "user.config"));
+                using var sr = new StreamReader(Path.Combine(_basePath, "user.config"));
                 return (NodeViewOptions) new XmlSerializer(typeof(NodeViewOptions)).Deserialize(sr);
             } catch {
                 return new NodeViewOptions();
