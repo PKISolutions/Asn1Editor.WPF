@@ -102,7 +102,6 @@ public partial class App {
 
         Container.RegisterType<IWindowFactory, WindowFactory>();
         Container.RegisterType<IAppCommands, AppCommands>();
-        Container.RegisterSingleton<IDataSource, DataSource>();
         Container.RegisterType<ITagDataEditor, TagDataEditor>();
         // view models
         Container.RegisterSingleton<MainWindowVM>();
