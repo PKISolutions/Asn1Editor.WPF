@@ -304,39 +304,19 @@
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Views\Images\AsnEditor\CONTEXT_SPECIFIC.png" />
-  </ItemGroup>
-  <ItemGroup>
     <Resource Include="Views\Images\AsnEditor\OCTET_STRING.png" />
     <Resource Include="Views\Images\AsnEditor\SEQUENCE.png" />
-  </ItemGroup>
-  <ItemGroup>
     <Resource Include="Views\Images\AsnEditor\BOOLEAN.png" />
     <Resource Include="Views\Images\AsnEditor\External.png" />
     <Resource Include="Views\Images\AsnEditor\SET.png" />
-  </ItemGroup>
-  <ItemGroup>
     <Resource Include="Views\Images\AsnEditor\OBJECT_IDENTIFIER.png" />
-  </ItemGroup>
-  <ItemGroup>
     <Resource Include="Views\Images\AsnEditor\DateTime.png" />
-  </ItemGroup>
-  <ItemGroup>
     <Resource Include="Views\Images\AsnEditor\Root.png" />
-  </ItemGroup>
-  <ItemGroup>
     <Resource Include="Views\Images\AsnEditor\BIT_STRING.png" />
     <Resource Include="Views\Images\AsnEditor\NULL.png" />
-  </ItemGroup>
-  <ItemGroup>
     <Resource Include="Views\Images\AsnEditor\String.png" />
-  </ItemGroup>
-  <ItemGroup>
     <Resource Include="Views\Images\AsnEditor\ENUMERATED.png" />
-  </ItemGroup>
-  <ItemGroup>
     <Resource Include="Views\Images\Menu\ascii_16x16.png" />
-  </ItemGroup>
-  <ItemGroup>
     <Resource Include="Views\Images\Menu\copy_16x16.png" />
     <Resource Include="Views\Images\Menu\cut_16x16.png" />
     <Resource Include="Views\Images\Menu\help_16x16.png" />
@@ -350,9 +330,28 @@
     <Resource Include="Views\Images\Menu\save_16x16.png" />
     <Resource Include="Views\Images\Menu\settings_16x16.png" />
     <Resource Include="Views\Images\Menu\undo_16x16.png" />
-  </ItemGroup>
-  <ItemGroup>
     <Resource Include="Views\Images\Menu\eraser_16x16.png" />
+    <Resource Include="Views\Images\Menu\AddressEnabled_32x32.png" />
+    <Resource Include="Views\Images\Menu\AsciiEnabled_32x32.png" />
+    <Resource Include="Views\Images\Menu\HexFull_32x32.png" />
+    <Resource Include="Views\Images\Menu\insertafter_16x16.png" />
+    <Resource Include="Views\Images\Menu\insertbefore_16x16.png" />
+    <Resource Include="Views\Images\Menu\insertlast_16x16.png" />
+    <Resource Include="Views\Images\Menu\newnode_16x16.png" />
+    <Resource Include="Views\Images\Menu\newnode_32x32.png" />
+    <Resource Include="Views\Images\Menu\delete_16x16.png" />
+    <Resource Include="Views\Images\Menu\edit_16x16.png" />
+    <Resource Include="Views\Images\Menu\hexview_16x16.png" />
+    <Resource Include="Views\Images\Menu\converter_16x16.png" />
+    <Resource Include="Views\Images\Menu\viewtext_16x16.png" />
+    <Resource Include="Views\Images\asnlogo.ico" />
+    <Resource Include="asnlogo.ico" />
+    <Resource Include="Views\Images\AsnEditor\REAL.png" />
+    <Resource Include="Views\Images\AsnEditor\Integer.png" />
+    <Resource Include="Views\Images\pkisolutions_logo_small.png" />
+    <Resource Include="Views\Images\Menu\saveall_16x16.png" />
+    <Resource Include="Views\Images\Menu\cancel_16x16.png" />
+    <Resource Include="Views\Images\oid.ico" />
   </ItemGroup>
   <ItemGroup>
     <BootstrapperPackage Include=".NETFramework,Version=v4.0,Profile=Client">
@@ -377,54 +376,11 @@
     </BootstrapperPackage>
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="Views\Images\Menu\AddressEnabled_32x32.png" />
-    <Resource Include="Views\Images\Menu\AsciiEnabled_32x32.png" />
-    <Resource Include="Views\Images\Menu\HexFull_32x32.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="Views\Images\Menu\insertafter_16x16.png" />
-    <Resource Include="Views\Images\Menu\insertbefore_16x16.png" />
-    <Resource Include="Views\Images\Menu\insertlast_16x16.png" />
-    <Resource Include="Views\Images\Menu\newnode_16x16.png" />
-    <Resource Include="Views\Images\Menu\newnode_32x32.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="Views\Images\Menu\delete_16x16.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="Views\Images\Menu\edit_16x16.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="Views\Images\Menu\hexview_16x16.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="Views\Images\Menu\converter_16x16.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="Views\Images\Menu\viewtext_16x16.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="Views\Images\asnlogo.ico" />
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="asnlogo.ico" />
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="Views\Images\AsnEditor\REAL.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="Views\Images\AsnEditor\Integer.png" />
-  </ItemGroup>
-  <ItemGroup>
     <None Include="OID.txt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="Views\Images\pkisolutions_logo_small.png" />
-    <Resource Include="Views\Images\Menu\saveall_16x16.png" />
-    <Resource Include="Views\Images\Menu\cancel_16x16.png" />
-    <Resource Include="Views\Images\oid.ico" />
     <Content Include="_ExternalReferences\Wpf.OfficeTheme.dll" />
   </ItemGroup>
   <ItemGroup>
