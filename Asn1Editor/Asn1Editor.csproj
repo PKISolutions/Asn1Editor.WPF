@@ -137,13 +137,17 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="API\Converters\IntegerToEnumConverter.cs" />
     <Compile Include="API\Interfaces\IAppCommands.cs" />
     <Compile Include="API\Interfaces\IBinarySource.cs" />
     <Compile Include="API\Interfaces\IHasSelectedTab.cs" />
+    <Compile Include="API\Abstractions\IOidEditorVM.cs" />
     <Compile Include="API\Interfaces\ITagDataEditor.cs" />
     <Compile Include="API\Interfaces\ITagDataEditorVM.cs" />
     <Compile Include="API\ModelObjects\EncodingTypeEntry.cs" />
     <Compile Include="API\ModelObjects\NodeViewOptions.cs" />
+    <Compile Include="API\ModelObjects\OidDto.cs" />
+    <Compile Include="API\ModelObjects\OidSearchScope.cs" />
     <Compile Include="API\OidResolver.cs" />
     <Compile Include="API\Utils\CertutilRenderer.cs" />
     <Compile Include="API\Utils\ITextRenderer.cs" />
@@ -175,16 +179,23 @@
     <Compile Include="API\Utils\WPF\WindowFactoryBase.cs" />
     <Compile Include="API\ViewModel\AppCommands.cs" />
     <Compile Include="API\ViewModel\BinaryConverterVM.cs" />
+    <Compile Include="API\ViewModel\OidEditorVM.cs" />
     <Compile Include="API\ViewModel\StaticCommands.cs" />
     <Compile Include="API\ViewModel\TagDataEditorVM.cs" />
     <Compile Include="API\ViewModel\TextViewerVM.cs" />
     <Compile Include="API\ViewModel\TreeViewCommands.cs" />
     <Compile Include="API\ViewModel\ViewModelBase.cs" />
+    <Compile Include="Views\UserControls\OidEditorUC.xaml.cs">
+      <DependentUpon>OidEditorUC.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\Windows\AboutBox.xaml.cs">
       <DependentUpon>AboutBox.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\Windows\LicenseWindow.xaml.cs">
       <DependentUpon>LicenseWindow.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Windows\OidLookupEditorWindow.xaml.cs">
+      <DependentUpon>OidLookupEditorWindow.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\Windows\SettingsWnd.xaml.cs">
       <DependentUpon>SettingsWnd.xaml</DependentUpon>
@@ -204,11 +215,19 @@
     <Compile Include="Views\Windows\TextViewer.xaml.cs">
       <DependentUpon>TextViewer.xaml</DependentUpon>
     </Compile>
+    <Page Include="Views\UserControls\OidEditorUC.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Views\Windows\AboutBox.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
     <Page Include="Views\Windows\LicenseWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\Windows\OidLookupEditorWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -405,6 +424,7 @@
     <Resource Include="Views\Images\pkisolutions_logo_small.png" />
     <Resource Include="Views\Images\Menu\saveall_16x16.png" />
     <Resource Include="Views\Images\Menu\cancel_16x16.png" />
+    <Resource Include="Views\Images\oid.ico" />
     <Content Include="_ExternalReferences\Wpf.OfficeTheme.dll" />
   </ItemGroup>
   <ItemGroup>

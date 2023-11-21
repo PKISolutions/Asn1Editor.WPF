@@ -13,4 +13,5 @@ interface IWindowFactory {
     Asn1Lite ShowNodeContentEditor(NodeEditMode editMode);
     void ShowNodeTextViewer();
     void ShowConverterWindow(IEnumerable<Byte> data, Func<Byte[], Task> action);
+    void ShowOidEditor();
 }

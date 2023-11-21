@@ -171,6 +171,8 @@
                 <Button Command="{Binding AppCommands.ShowConverterWindow, Mode=OneTime}" ToolTip="Open data converter">
                     <Image Source="/Views/Images/Menu/converter_16x16.png"/>
                 </Button>
+                <Button Command="{Binding AppCommands.ShowOidEditor, Mode=OneTime}"
+                        Content="OID"/>
             </ToolBar>
             <ToolBar>
                 <Button Command="{Binding NewCommand}" ToolTip="New file">

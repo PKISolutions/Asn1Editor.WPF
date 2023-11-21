@@ -48,4 +48,8 @@ class WindowFactory : WindowFactoryBase, IWindowFactory {
         hwnd.Closed += (o, e) => { binConverterWindowClosed = true; };
         ShowAsWindow(true);
     }
+    public void ShowOidEditor() {
+        hwnd = App.Container.Resolve<OidLookupEditorWindow>();
+        ShowAsDialog();
+    }
 }
