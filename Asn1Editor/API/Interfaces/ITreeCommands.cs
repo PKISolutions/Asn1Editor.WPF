@@ -1,11 +1,12 @@
 ﻿using System.Windows.Input;
 
-namespace SysadminsLV.Asn1Editor.API.Interfaces; 
+namespace SysadminsLV.Asn1Editor.API.Interfaces;
 
 public interface ITreeCommands {
     ICommand ShowNodeTextViewer { get; }
     ICommand SaveNodeCommand { get; }
     ICommand EditNodeCommand { get; }
+    ICommand RegisterOidCommand { get; }
     ICommand AddNewNodeCommand { get; }
     ICommand DeleteNodeCommand { get; }
     ICommand CutNodeCommand { get; }

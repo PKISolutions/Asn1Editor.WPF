@@ -69,7 +69,7 @@ public static class OidResolver {
     public static String ResolveOid(String oidValue) {
         oidValue ??= String.Empty;
         if (_oidLookup.TryGetValue(oidValue, out OidDto resolvedOid)) {
-            return resolvedOid.Value;
+            return resolvedOid.FriendlyName;
         }
 
         return new Oid(oidValue).FriendlyName;
@@ -125,6 +125,12 @@ public static class OidResolver {
         var oid = new OidDto(oidValue, friendlyName, userKey);
         _oidLookup[oidValue] = oid;
         _nameLookup[friendlyName] = oid;
+    }
+    public static void Remove(String oidValue) {
+        if (_oidLookup.TryGetValue(oidValue, out OidDto oid)) {
+            _oidLookup.Remove(oidValue);
+            _nameLookup.Remove(oid.FriendlyName);
+        }
     }
     public static IEnumerable<OidDto> GetOidLookup() {
         return _oidLookup.Values.ToList();

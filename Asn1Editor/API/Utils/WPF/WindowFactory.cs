@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using SysadminsLV.Asn1Editor.API.Abstractions;
 using SysadminsLV.Asn1Editor.API.Interfaces;
 using SysadminsLV.Asn1Editor.API.ModelObjects;
 using SysadminsLV.Asn1Editor.API.ViewModel;
@@ -48,8 +49,12 @@ class WindowFactory : WindowFactoryBase, IWindowFactory {
         hwnd.Closed += (o, e) => { binConverterWindowClosed = true; };
         ShowAsWindow(true);
     }
-    public void ShowOidEditor() {
+    public void ShowOidEditor(String oidValue = null) {
         hwnd = App.Container.Resolve<OidLookupEditorWindow>();
+        IOidEditorVM vm = App.Container.Resolve<IOidEditorVM>();
+        vm.ReloadCommand.Execute(null);
+        vm.OidValue = oidValue;
+        hwnd.DataContext = vm;
         ShowAsDialog();
     }
 }

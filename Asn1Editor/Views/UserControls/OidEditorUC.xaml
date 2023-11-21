@@ -128,7 +128,7 @@
                         <GridViewColumn.CellTemplate>
                             <DataTemplate>
                                 <CheckBox IsEnabled="False"
-                                          IsChecked="{Binding IsUser, Mode=OneTime}"/>
+                                          IsChecked="{Binding UserDefined, Mode=OneTime}"/>
                             </DataTemplate>
                         </GridViewColumn.CellTemplate>
                     </GridViewColumn>

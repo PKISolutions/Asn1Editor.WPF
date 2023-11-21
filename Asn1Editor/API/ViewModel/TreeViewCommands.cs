@@ -7,6 +7,8 @@ using System.Windows.Input;
 using SysadminsLV.Asn1Editor.API.Interfaces;
 using SysadminsLV.Asn1Editor.API.ModelObjects;
 using SysadminsLV.Asn1Editor.API.Utils;
+using SysadminsLV.Asn1Editor.API.Utils.ASN;
+using SysadminsLV.Asn1Parser;
 using SysadminsLV.WPF.OfficeTheme.Toolkit.Commands;
 
 namespace SysadminsLV.Asn1Editor.API.ViewModel;
@@ -26,6 +28,7 @@ class TreeViewCommands : ViewModelBase, ITreeCommands {
         SaveNodeCommand = new RelayCommand(saveBinaryNode, ensureNodeSelected);
         ShowNodeTextViewer = new RelayCommand(showNodeTextViewer, ensureNodeSelected);
         EditNodeCommand = new RelayCommand(editNodeContent, ensureNodeSelected);
+        RegisterOidCommand = new RelayCommand(registerOid, ensureNodeSelected);
         AddNewNodeCommand = new RelayCommand(addNewNode, canAddNewNode);
         DeleteNodeCommand = new RelayCommand(removeNode, ensureNodeSelected);
         CutNodeCommand = new RelayCommand(cutNode, canCutNode);
@@ -37,6 +40,7 @@ class TreeViewCommands : ViewModelBase, ITreeCommands {
 
     public ICommand ShowNodeTextViewer { get; }
     public ICommand EditNodeCommand { get; }
+    public ICommand RegisterOidCommand { get; set; }
     public ICommand SaveNodeCommand { get; }
     public ICommand AddNewNodeCommand { get; }
     public ICommand DeleteNodeCommand { get; }
@@ -72,6 +76,14 @@ class TreeViewCommands : ViewModelBase, ITreeCommands {
         isTabSelected(out IDataSource data); // granted to be non-null
         if (data.SelectedNode != null) {
             _windowFactory.ShowNodeContentEditor((NodeEditMode)o);
+        }
+    }
+    void registerOid(Object obj) {
+        isTabSelected(out IDataSource data); // granted to be non-null
+        if (data.SelectedNode != null) {
+            Asn1TreeNode node = data.SelectedNode;
+            String oidValue = AsnDecoder.GetEditValue(new Asn1Reader(data.RawData.Skip(node.Offset).Take(node.TagLength).ToArray()));
+            _windowFactory.ShowOidEditor(oidValue);
         }
     }
     void addNewNode(Object o) {

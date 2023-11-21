@@ -131,9 +131,17 @@ class OidEditorVM : ViewModelBase, IOidEditorVM {
         FriendlyName = null;
     }
     void removeOid(Object o) {
+        OidDto backupOid = SelectedItem;
         OidValue = SelectedItem.Value;
         FriendlyName = SelectedItem.FriendlyName;
         _oidList.Remove(SelectedItem);
+        OidResolver.Remove(OidValue);
+        // fall-back
+        if (!OidDbManager.SaveUserLookup()) {
+            OidValue = null;
+            FriendlyName = null;
+            OidResolver.Add(backupOid.Value, backupOid.FriendlyName, backupOid.UserDefined);
+        }
     }
     Boolean canRemoveOid(Object o) {
         return SelectedItem != null;

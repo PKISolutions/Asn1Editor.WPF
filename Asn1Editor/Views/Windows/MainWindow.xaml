@@ -378,8 +378,8 @@
                                 <uc:AsnTreeView.ContextMenu>
                                     <ContextMenu>
                                         <MenuItem Header="Edit node..."
-                                                          Command="{Binding TreeCommands.EditNodeCommand}"
-                                                          CommandParameter="{x:Static clr:NodeEditMode.Text}">
+                                                  Command="{Binding TreeCommands.EditNodeCommand}"
+                                                  CommandParameter="{x:Static clr:NodeEditMode.Text}">
                                             <MenuItem.Icon>
                                                 <Image Source="/Views/Images/Menu/edit_16x16.png" Width="16"/>
                                             </MenuItem.Icon>
@@ -388,6 +388,19 @@
                                                   Command="{Binding TreeCommands.SaveNodeCommand}"/>
                                         <MenuItem Header="View node text..."
                                                   Command="{Binding TreeCommands.ShowNodeTextViewer}"/>
+                                        <MenuItem Header="Register Object Identifier"
+                                                  Command="{Binding TreeCommands.RegisterOidCommand}">
+                                            <MenuItem.Style>
+                                                <Style TargetType="MenuItem" BasedOn="{StaticResource {x:Type MenuItem}}">
+                                                    <Setter Property="Visibility" Value="Collapsed"/>
+                                                    <Style.Triggers>
+                                                        <DataTrigger Binding="{Binding DataSource.SelectedNode.Value.Tag}" Value="6">
+                                                            <Setter Property="Visibility" Value="Visible"/>
+                                                        </DataTrigger>
+                                                    </Style.Triggers>
+                                                </Style>
+                                            </MenuItem.Style>
+                                        </MenuItem>
                                         <Separator/>
                                         <MenuItem Header="New node"
                                                   Command="{Binding TreeCommands.AddNewNodeCommand}"
