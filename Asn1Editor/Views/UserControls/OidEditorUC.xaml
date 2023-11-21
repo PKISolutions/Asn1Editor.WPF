@@ -32,6 +32,7 @@
             <TextBox Grid.Column="1"
                      Grid.Row="0"
                      MaxLength="1000"
+                     ToolTip="Dotted number OID value."
                      Text="{Binding OidValue, UpdateSourceTrigger=PropertyChanged}"/>
 
             <!-- Friendly Name -->
@@ -41,6 +42,7 @@
             <TextBox Grid.Column="1"
                      Grid.Row="1"
                      MaxLength="100"
+                     ToolTip="The friendly name of the identifier."
                      Text="{Binding FriendlyName, UpdateSourceTrigger=PropertyChanged}"/>
 
             <StackPanel Grid.Column="1"
@@ -50,6 +52,7 @@
                 <Button Content="Save"
                         MinWidth="70"
                         IsDefault="True"
+                        ToolTip="Save edits into user-defined OID store."
                         Command="{Binding SaveCommand}"/>
                 <Button Content="Reset"
                         MinWidth="70"
@@ -72,14 +75,15 @@
                 <RowDefinition Height="Auto"/>
                 <RowDefinition Height="Auto"/>
             </Grid.RowDefinitions>
-            <TextBlock Text="Search: "/>
+            <TextBlock Text="Filter: "/>
             <TextBox Grid.Column="1"
                      Grid.Row="0"
+                     ToolTip="Filter by OID value (exact, or beginning part) or by friendly name (any part)."
                      Text="{Binding SearchText, UpdateSourceTrigger=PropertyChanged}"/>
 
             <TextBlock Grid.Column="0"
                        Grid.Row="1"
-                       Text="Definition:"/>
+                       Text="Source:"/>
             <ComboBox Grid.Column="1"
                       Grid.Row="1"
                       SelectedIndex="{Binding SearchScope, Converter={StaticResource IntegerToEnum}}"
