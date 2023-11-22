@@ -32,14 +32,14 @@ class DataSource : ViewModelBase, IDataSource {
         }
     }
     public NodeViewOptions NodeViewOptions { get; }
-    public ObservableCollection<Asn1TreeNode> Tree { get; } = new ObservableCollection<Asn1TreeNode>();
+    public ObservableCollection<Asn1TreeNode> Tree { get; } = new();
     public void FinishBinaryUpdate() {
         OnCollectionChanged(new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Reset));
         if (Tree.Count > 0) {
             Tree[0].UpdateNodeView(NodeViewOptions);
         }
     }
-    public ObservableList<Byte> RawData { get; } = new ObservableList<Byte>(true, false);
+    public ObservableList<Byte> RawData { get; } = new(true, false);
 
     public event NotifyCollectionChangedEventHandler CollectionChanged;
 }
