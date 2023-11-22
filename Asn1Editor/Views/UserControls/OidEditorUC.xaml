@@ -142,8 +142,20 @@
                             </DataTemplate>
                         </GridViewColumn.CellTemplate>
                     </GridViewColumn>
-                    <GridViewColumn Header="OID" DisplayMemberBinding="{Binding Value}" Width="200"/>
-                    <GridViewColumn Header="Friendly Name" DisplayMemberBinding="{Binding FriendlyName}" Width="344"/>
+                    <GridViewColumn Header="OID" Width="200">
+                        <GridViewColumn.CellTemplate>
+                            <DataTemplate>
+                                <TextBlock Text="{Binding Value}" ToolTip="{Binding Value}"/>
+                            </DataTemplate>
+                        </GridViewColumn.CellTemplate>
+                    </GridViewColumn>
+                    <GridViewColumn Header="Friendly Name" Width="344">
+                        <GridViewColumn.CellTemplate>
+                            <DataTemplate>
+                                <TextBlock Text="{Binding FriendlyName}" ToolTip="{Binding FriendlyName}"/>
+                            </DataTemplate>
+                        </GridViewColumn.CellTemplate>
+                    </GridViewColumn>
                 </GridView>
             </ListView.View>
         </ListView>
