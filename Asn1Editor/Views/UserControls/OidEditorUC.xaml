@@ -94,8 +94,7 @@
                 <ComboBoxItem>User-Defined</ComboBoxItem>
             </ComboBox>
         </Grid>
-        <ListView x:Name="OidList"
-                  ItemsSource="{Binding OidView}"
+        <ListView ItemsSource="{Binding OidView}"
                   SelectedItem="{Binding SelectedItem}"
                   SelectionMode="Single"
                   VirtualizingStackPanel.IsVirtualizing="True"
