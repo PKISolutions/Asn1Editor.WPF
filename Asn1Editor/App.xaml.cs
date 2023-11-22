@@ -25,7 +25,7 @@ namespace SysadminsLV.Asn1Editor;
 /// Interaction logic for App.xaml
 /// </summary>
 public partial class App {
-    readonly String _basePath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), @"Sysadmins LV\Asn1Editor");
+    static readonly String _appDataPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), @"Sysadmins LV\Asn1Editor");
     static readonly Logger _logger = new();
     readonly NodeViewOptions _options;
 
@@ -35,7 +35,7 @@ public partial class App {
         _options.PropertyChanged += onOptionsChanged;
         OidDbManager.OidLookupLocations = new[]{
                                                     Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location),
-                                                    _basePath
+                                                    _appDataPath
                                                 };
     }
 
@@ -105,14 +105,14 @@ public partial class App {
         Container.RegisterInstance(_options);
     }
     void onOptionsChanged(Object s, PropertyChangedEventArgs e) {
-        using var sw = new StreamWriter(Path.Combine(_basePath, "user.config"), false);
+        using var sw = new StreamWriter(Path.Combine(_appDataPath, "user.config"), false);
         using var xw = XmlWriter.Create(sw);
         new XmlSerializer(typeof(NodeViewOptions)).Serialize(xw, s);
     }
     NodeViewOptions readSettings() {
-        if (File.Exists(Path.Combine(_basePath, "user.config"))) {
+        if (File.Exists(Path.Combine(_appDataPath, "user.config"))) {
             try {
-                using var sr = new StreamReader(Path.Combine(_basePath, "user.config"));
+                using var sr = new StreamReader(Path.Combine(_appDataPath, "user.config"));
                 return (NodeViewOptions)new XmlSerializer(typeof(NodeViewOptions)).Deserialize(sr);
             } catch {
                 return new NodeViewOptions();
