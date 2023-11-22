@@ -100,7 +100,9 @@
                   SelectionMode="Single"
                   VirtualizingStackPanel.IsVirtualizing="True"
                   VirtualizingStackPanel.VirtualizationMode="Recycling"
-                  VirtualizingStackPanel.ScrollUnit="Item"
+                  ScrollViewer.IsDeferredScrollingEnabled="True"
+                  ScrollViewer.CanContentScroll="True"
+                  MaxHeight="2000"
                   BorderThickness="0,1"
                   Margin="0,7,0,0">
             <ListView.Resources>
