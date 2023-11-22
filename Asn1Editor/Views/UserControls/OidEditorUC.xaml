@@ -109,6 +109,11 @@
                     <Setter Property="HorizontalContentAlignment" Value="Stretch" />
                 </Style>
             </ListView.Resources>
+            <ListView.ItemsPanel>
+                <ItemsPanelTemplate>
+                    <VirtualizingStackPanel/>
+                </ItemsPanelTemplate>
+            </ListView.ItemsPanel>
             <ListView.ItemContainerStyle>
                 <Style TargetType="{x:Type ListViewItem}" BasedOn="{StaticResource {x:Type ListViewItem}}" >
                     <Setter Property="Tag" Value="{Binding RelativeSource={RelativeSource AncestorType=ListView}, Path=DataContext}"/>
