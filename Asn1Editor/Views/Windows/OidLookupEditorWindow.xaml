@@ -16,7 +16,7 @@
         Title="Oid Lookup Editor"
         WindowStartupLocation="CenterOwner"
         Height="480"
-        Width="640">
+        Width="660">
     <Window.InputBindings>
         <KeyBinding Key="Escape" Command="{Binding CloseCommand}"/>
         <KeyBinding Key="F5" Command="{Binding ReloadCommand}"/>

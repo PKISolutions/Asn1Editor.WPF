@@ -142,8 +142,8 @@
                             </DataTemplate>
                         </GridViewColumn.CellTemplate>
                     </GridViewColumn>
-                    <GridViewColumn Header="OID" DisplayMemberBinding="{Binding Value}"/>
-                    <GridViewColumn Header="Friendly Name" DisplayMemberBinding="{Binding FriendlyName}"/>
+                    <GridViewColumn Header="OID" DisplayMemberBinding="{Binding Value}" Width="200"/>
+                    <GridViewColumn Header="Friendly Name" DisplayMemberBinding="{Binding FriendlyName}" Width="344"/>
                 </GridView>
             </ListView.View>
         </ListView>
