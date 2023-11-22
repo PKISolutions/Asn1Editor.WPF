@@ -91,7 +91,7 @@
                         <Image Source="/Views/Images/Menu/viewtext_16x16.png"/>
                     </MenuItem.Icon>
                 </MenuItem>
-                <MenuItem Header="Register Object Identifier"
+                <MenuItem Header="Edit Object Identifier mapping"
                           Command="{Binding TreeCommands.RegisterOidCommand}">
                     <MenuItem.Style>
                         <Style TargetType="MenuItem" BasedOn="{StaticResource {x:Type MenuItem}}">
@@ -184,7 +184,7 @@
                 <Button Command="{Binding AppCommands.ShowConverterWindow, Mode=OneTime}" ToolTip="Open data converter">
                     <Image Source="/Views/Images/Menu/converter_16x16.png"/>
                 </Button>
-                <Button Command="{Binding AppCommands.ShowOidEditor, Mode=OneTime}" ToolTip="Open OID mapping editor">
+                <Button Command="{Binding AppCommands.ShowOidEditor, Mode=OneTime}" ToolTip="Open Object Identifier mapping editor">
                     <Image Source="/Views/Images/Menu/book_16x16.png"/>
                 </Button>
             </ToolBar>
