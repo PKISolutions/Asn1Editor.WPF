@@ -12,13 +12,15 @@ namespace SysadminsLV.Asn1Editor.API.ViewModel;
 class OidEditorVM : ViewModelBase, IOidEditorVM {
     readonly Regex _regex = new(@"^[0-2]\.([0-9]|[12][0-9]|3[0-9])(\.\d+)*$", RegexOptions.Compiled);
     readonly ObservableCollection<OidDto> _oidList = new();
+    readonly IHasAsnDocumentTabs _tabs;
 
     String oidValue, friendlyName, searchText;
     Boolean? dialogResult;
     OidDto selectedItem;
     OidSearchScope searchScope;
 
-    public OidEditorVM(NodeViewOptions nodeViewOptions) {
+    public OidEditorVM(IHasAsnDocumentTabs tabs) {
+        _tabs = tabs;
         ReloadCommand = new RelayCommand(reload);
         SaveCommand = new RelayCommand(save, canSave);
         ResetCommand = new RelayCommand(reset);
@@ -30,7 +32,7 @@ class OidEditorVM : ViewModelBase, IOidEditorVM {
         OidView.Filter = filterOidList;
 
         SearchScope = OidSearchScope.UserDefined;
-        NodeViewOptions = nodeViewOptions;
+        NodeViewOptions = tabs.NodeViewOptions;
     }
     Boolean filterOidList(Object obj) {
         if (obj is not OidDto entry) {
@@ -130,6 +132,7 @@ class OidEditorVM : ViewModelBase, IOidEditorVM {
             reset(null);
         }
         OidView.Refresh();
+        _tabs.RefreshTabs();
     }
     Boolean canSave(Object o) {
         return !String.IsNullOrWhiteSpace(OidValue) && !String.IsNullOrWhiteSpace(FriendlyName) && _regex.IsMatch(OidValue);
@@ -149,6 +152,8 @@ class OidEditorVM : ViewModelBase, IOidEditorVM {
             OidValue = null;
             FriendlyName = null;
             OidResolver.Add(backupOid.Value, backupOid.FriendlyName, backupOid.UserDefined);
+        } else {
+            _tabs.RefreshTabs();
         }
     }
     Boolean canRemoveOid(Object o) {

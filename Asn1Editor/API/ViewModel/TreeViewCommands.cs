@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Windows;
 using System.Windows.Input;
+using SysadminsLV.Asn1Editor.API.Abstractions;
 using SysadminsLV.Asn1Editor.API.Interfaces;
 using SysadminsLV.Asn1Editor.API.ModelObjects;
 using SysadminsLV.Asn1Editor.API.Utils;
@@ -15,14 +16,14 @@ namespace SysadminsLV.Asn1Editor.API.ViewModel;
 
 class TreeViewCommands : ViewModelBase, ITreeCommands {
     readonly IWindowFactory _windowFactory;
-    readonly IHasSelectedTab _tabs;
+    readonly IHasAsnDocumentTabs _tabs;
     readonly List<Byte> _excludedTags = new(
         new Byte[] { 0, 1, 2, 5, 6, 9, 10, 13 }
     );
 
     Boolean hasNodeClipboardData;
 
-    public TreeViewCommands(IWindowFactory windowFactory, IHasSelectedTab appTabs) {
+    public TreeViewCommands(IWindowFactory windowFactory, IHasAsnDocumentTabs appTabs) {
         _windowFactory = windowFactory;
         _tabs = appTabs;
         SaveNodeCommand = new RelayCommand(saveBinaryNode, ensureNodeSelected);

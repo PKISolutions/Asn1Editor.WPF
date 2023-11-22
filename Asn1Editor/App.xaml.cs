@@ -98,7 +98,7 @@ public partial class App {
         // view models
         Container.RegisterSingleton<MainWindowVM>();
         Container.RegisterType<IMainWindowVM, MainWindowVM>();
-        Container.RegisterType<IHasSelectedTab, MainWindowVM>();
+        Container.RegisterType<IHasAsnDocumentTabs, MainWindowVM>();
         Container.RegisterType<ITextViewerVM, TextViewerVM>();
         Container.RegisterType<ITagDataEditorVM, TagDataEditorVM>();
         Container.RegisterType<IOidEditorVM, OidEditorVM>();

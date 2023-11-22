@@ -8,6 +8,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
+using SysadminsLV.Asn1Editor.API.Abstractions;
 using SysadminsLV.Asn1Editor.API.Interfaces;
 using SysadminsLV.Asn1Editor.API.ModelObjects;
 using SysadminsLV.Asn1Editor.API.Utils;
@@ -17,7 +18,7 @@ using SysadminsLV.WPF.OfficeTheme.Toolkit.Commands;
 
 namespace SysadminsLV.Asn1Editor.API.ViewModel;
 
-class MainWindowVM : ViewModelBase, IMainWindowVM, IHasSelectedTab {
+class MainWindowVM : ViewModelBase, IMainWindowVM, IHasAsnDocumentTabs {
     readonly IWindowFactory _windowFactory;
     Asn1DocumentVM selectedTab;
 
@@ -44,11 +45,7 @@ class MainWindowVM : ViewModelBase, IMainWindowVM, IHasSelectedTab {
     }
 
     void onNodeViewOptionsChanged(Object sender, PropertyChangedEventArgs e) {
-        foreach (Asn1DocumentVM tab in Tabs) {
-            if (tab.Tree.Any()) {
-                tab.Tree[0].UpdateNodeView(NodeViewOptions);
-            }
-        }
+        RefreshTabs();
     }
 
     public ICommand NewCommand { get; }
@@ -104,8 +101,8 @@ class MainWindowVM : ViewModelBase, IMainWindowVM, IHasSelectedTab {
             tab = Tabs[0];
         } else {
             tab = new Asn1DocumentVM(NodeViewOptions, TreeCommands) {
-                                                                        Path = file
-                                                                    };
+                Path = file
+            };
         }
         try {
             IEnumerable<Byte> bytes = await FileUtility.FileToBinary(file);
@@ -304,5 +301,13 @@ class MainWindowVM : ViewModelBase, IMainWindowVM, IHasSelectedTab {
         Tabs.Add(tab);
         SelectedTab = tab;
         return tab.Decode(rawBytes, false);
+    }
+
+    public void RefreshTabs() {
+        foreach (Asn1DocumentVM tab in Tabs) {
+            if (tab.Tree.Any()) {
+                tab.Tree[0].UpdateNodeView(NodeViewOptions);
+            }
+        }
     }
 }

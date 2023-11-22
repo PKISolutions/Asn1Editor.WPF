@@ -3,6 +3,7 @@ using System.Globalization;
 using System.IO;
 using System.Windows.Input;
 using Asn1Editor.Wpf.Controls.Helpers;
+using SysadminsLV.Asn1Editor.API.Abstractions;
 using SysadminsLV.Asn1Editor.API.Interfaces;
 using SysadminsLV.Asn1Editor.API.ModelObjects;
 using SysadminsLV.Asn1Editor.API.Utils;
@@ -25,7 +26,7 @@ class TextViewerVM : ViewModelBase, ITextViewerVM {
     String currentLengthStr = "80";
     Double width;
 
-    public TextViewerVM(IHasSelectedTab appTabs) {
+    public TextViewerVM(IHasAsnDocumentTabs appTabs) {
         rootNode = appTabs.SelectedTab.DataSource.SelectedNode;
         CurrentLength = defaultLength.ToString(CultureInfo.InvariantCulture);
         SaveCommand = new RelayCommand(saveFile);

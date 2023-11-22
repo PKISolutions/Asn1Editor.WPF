@@ -4,6 +4,7 @@ using System.Globalization;
 using System.Linq;
 using System.Windows.Input;
 using Asn1Editor.Wpf.Controls.Helpers;
+using SysadminsLV.Asn1Editor.API.Abstractions;
 using SysadminsLV.Asn1Editor.API.Interfaces;
 using SysadminsLV.Asn1Editor.API.ModelObjects;
 using SysadminsLV.Asn1Editor.API.Utils;
@@ -25,7 +26,7 @@ class TagDataEditorVM : ViewModelBase, ITagDataEditorVM {
     Byte unusedBits, tag;
     Double tagTextBoxWidth, unusedTextBoxWidth;
 
-    public TagDataEditorVM(IHasSelectedTab appTabs) {
+    public TagDataEditorVM(IHasAsnDocumentTabs appTabs) {
         _data = appTabs.SelectedTab.DataSource;
         NodeViewOptions = appTabs.NodeViewOptions;
         OkCommand = new RelayCommand(submitValues);
