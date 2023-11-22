@@ -27,6 +27,7 @@ class TagDataEditorVM : ViewModelBase, ITagDataEditorVM {
 
     public TagDataEditorVM(IHasSelectedTab appTabs) {
         _data = appTabs.SelectedTab.DataSource;
+        NodeViewOptions = appTabs.NodeViewOptions;
         OkCommand = new RelayCommand(submitValues);
         CloseCommand = new RelayCommand(close);
         initialize();
@@ -35,6 +36,7 @@ class TagDataEditorVM : ViewModelBase, ITagDataEditorVM {
     public ICommand OkCommand { get; set; }
     public ICommand CloseCommand { get; set; }
     public Asn1Lite Node { get; private set; }
+    public NodeViewOptions NodeViewOptions { get; }
 
     public String TagDetails {
         get => tagDetails;
