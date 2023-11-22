@@ -49,11 +49,12 @@ class WindowFactory : WindowFactoryBase, IWindowFactory {
         hwnd.Closed += (o, e) => { binConverterWindowClosed = true; };
         ShowAsWindow(true);
     }
-    public void ShowOidEditor(String oidValue = null) {
+    public void ShowOidEditor(OidDto oidValue = null) {
         hwnd = App.Container.Resolve<OidLookupEditorWindow>();
         IOidEditorVM vm = App.Container.Resolve<IOidEditorVM>();
         vm.ReloadCommand.Execute(null);
-        vm.OidValue = oidValue;
+        vm.FriendlyName = oidValue?.FriendlyName;
+        vm.OidValue = oidValue?.Value;
         hwnd.DataContext = vm;
         ShowAsDialog();
     }
