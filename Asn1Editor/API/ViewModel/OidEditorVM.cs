@@ -18,7 +18,7 @@ class OidEditorVM : ViewModelBase, IOidEditorVM {
     OidDto selectedItem;
     OidSearchScope searchScope;
 
-    public OidEditorVM() {
+    public OidEditorVM(NodeViewOptions nodeViewOptions) {
         ReloadCommand = new RelayCommand(reload);
         SaveCommand = new RelayCommand(save, canSave);
         ResetCommand = new RelayCommand(reset);
@@ -30,6 +30,7 @@ class OidEditorVM : ViewModelBase, IOidEditorVM {
         OidView.Filter = filterOidList;
 
         SearchScope = OidSearchScope.UserDefined;
+        NodeViewOptions = nodeViewOptions;
     }
     Boolean filterOidList(Object obj) {
         if (obj is not OidDto entry) {
@@ -60,6 +61,7 @@ class OidEditorVM : ViewModelBase, IOidEditorVM {
     public ICommand ResetCommand { get; }
     public ICommand RemoveOidCommand { get; }
     public ICommand CloseCommand { get; }
+    public NodeViewOptions NodeViewOptions { get; }
 
     public ICollectionView OidView { get; }
 
