@@ -119,11 +119,17 @@ class OidEditorVM : ViewModelBase, IOidEditorVM {
         }
     }
     void save(Object o) {
+        OidDto oidEntry = OidResolver.GetOidEntry(OidValue);
+        if (oidEntry == null) {
+            _oidList.Add(new OidDto(OidValue, FriendlyName, true));
+        } else {
+            oidEntry.SetFriendlyName(friendlyName);
+        }
         OidResolver.Add(OidValue, FriendlyName, true);
-        _oidList.Add(new OidDto(OidValue, FriendlyName, true));
         if (OidDbManager.SaveUserLookup()) {
             reset(null);
         }
+        OidView.Refresh();
     }
     Boolean canSave(Object o) {
         return !String.IsNullOrWhiteSpace(OidValue) && !String.IsNullOrWhiteSpace(FriendlyName) && _regex.IsMatch(OidValue);

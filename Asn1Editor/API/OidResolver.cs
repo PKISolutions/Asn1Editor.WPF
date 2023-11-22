@@ -1,4 +1,5 @@
-﻿using System;
+﻿#nullable enable
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -66,7 +67,7 @@ public static class OidResolver {
     /// </summary>
     /// <param name="oidValue">OID value to resolve.</param>
     /// <returns>Resolved friendly name or null if no mapping defined.</returns>
-    public static String ResolveOid(String oidValue) {
+    public static String? ResolveOid(String? oidValue) {
         oidValue ??= String.Empty;
         if (_oidLookup.TryGetValue(oidValue, out OidDto resolvedOid)) {
             return resolvedOid.FriendlyName;
@@ -79,7 +80,7 @@ public static class OidResolver {
     /// </summary>
     /// <param name="friendlyName">OID friendly name.</param>
     /// <returns>Resolved OID value or null if no mapping defined.</returns>
-    public static String ResolveFriendlyName(String friendlyName) {
+    public static String? ResolveFriendlyName(String? friendlyName) {
         friendlyName ??= String.Empty;
         if (_nameLookup.TryGetValue(friendlyName, out OidDto resolvedOid)) {
             return resolvedOid.FriendlyName;
@@ -97,7 +98,7 @@ public static class OidResolver {
     /// </summary>
     /// <param name="oidValueOrFriendlyName">OID value or friendly name.</param>
     /// <returns>Resolved value or null if no mapping defined for passed OID string.</returns>
-    public static String Resolve(String oidValueOrFriendlyName) {
+    public static String? Resolve(String oidValueOrFriendlyName) {
         String resolvedOid = ResolveOid(oidValueOrFriendlyName);
         if (resolvedOid == null) {
             return ResolveFriendlyName(oidValueOrFriendlyName);
@@ -134,6 +135,11 @@ public static class OidResolver {
     }
     public static IEnumerable<OidDto> GetOidLookup() {
         return _oidLookup.Values.ToList();
+    }
+    public static OidDto? GetOidEntry(String oidValue) {
+        _oidLookup.TryGetValue(oidValue, out OidDto? value);
+
+        return value;
     }
     public static void Reset() {
         _nameLookup.Clear();
