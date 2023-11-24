@@ -104,6 +104,9 @@
                   MaxHeight="2000"
                   BorderThickness="0,1"
                   Margin="0,7,0,0">
+            <ListView.InputBindings>
+                <KeyBinding Key="Delete" Command="{Binding RemoveOidCommand}"/>
+            </ListView.InputBindings>
             <ListView.Resources>
                 <Style TargetType="ListViewItem" BasedOn="{StaticResource {x:Type ListViewItem}}">
                     <Setter Property="HorizontalContentAlignment" Value="Stretch" />
