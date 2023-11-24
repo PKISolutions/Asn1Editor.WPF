@@ -6,6 +6,7 @@ using System.Linq;
 using System.Numerics;
 using System.Text;
 using SysadminsLV.Asn1Editor.API.Interfaces;
+using SysadminsLV.Asn1Editor.API.Utils.ASN;
 using SysadminsLV.Asn1Editor.Properties;
 using SysadminsLV.Asn1Parser;
 
@@ -56,7 +57,6 @@ public class Asn1TreeNode : INotifyPropertyChanged {
     public void InsertChildNode(Asn1TreeNode nodeToInsert, Asn1TreeNode caller, NodeAddOption option) {
         Int32 indexToInsert, newOffset;
         nodeToInsert.Parent = this;
-        //Int32 headerLength = nodeToInsert.Value.HeaderLength;
         switch (option) {
             case NodeAddOption.Before:
                 indexToInsert = Children.IndexOf(caller);
@@ -120,6 +120,9 @@ public class Asn1TreeNode : INotifyPropertyChanged {
         if (node.Value.Tag == (Byte)Asn1Type.INTEGER) {
             updateIntValue(node.Value, options.IntegerAsInteger);
         }
+        if (node.Value.Tag == (Byte)Asn1Type.OBJECT_IDENTIFIER) {
+            updateOidValue(node.Value);
+        }
         var outerList = new List<String>();
         var innerList = new List<String>();
         if (options.ShowNodePath) {
@@ -163,7 +166,10 @@ public class Asn1TreeNode : INotifyPropertyChanged {
                 EncodingFormat.NOCRLF
             );
         }
-
+    }
+    void updateOidValue(Asn1Lite node) {
+        Byte[] raw = _dataSource.RawData.Skip(node.Offset).Take(node.TagLength).ToArray();
+        node.ExplicitValue = AsnDecoder.GetViewValue(new Asn1Reader(raw));
     }
     String writeToolTip(Asn1TreeNode node) {
         var sb = new StringBuilder();

@@ -213,13 +213,11 @@ class AsnDecoder {
     }
     static String DecodeObjectIdentifier(Asn1Reader asn) {
         Oid oid = new Asn1ObjectIdentifier(asn).Value;
-        if (!String.IsNullOrWhiteSpace(oid.FriendlyName)) {
-            return $"{oid.FriendlyName} ({oid.Value})";
-        }
         String friendlyName = OidResolver.ResolveOid(oid.Value);
         if (friendlyName == null) {
             return oid.Value;
         }
+        
         return $"{friendlyName} ({oid.Value})";
     }
     static String DecodeUTF8String(Asn1Reader asn) {

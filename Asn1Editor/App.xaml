@@ -1,13 +1,15 @@
 ﻿<Application x:Class="SysadminsLV.Asn1Editor.App"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:controls="clr-namespace:SysadminsLV.WPF.OfficeTheme.Controls;assembly=Wpf.OfficeTheme">
+             xmlns:controls="clr-namespace:SysadminsLV.WPF.OfficeTheme.Controls;assembly=Wpf.OfficeTheme"
+             xmlns:converters="clr-namespace:SysadminsLV.Asn1Editor.API.Converters">
     <Application.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="pack://application:,,,/Wpf.OfficeTheme;component/UI/OfficeTheme.xaml"/>
             </ResourceDictionary.MergedDictionaries>
             <BooleanToVisibilityConverter x:Key="BooleanToVisibility"/>
+            <converters:IntegerToEnumConverter x:Key="IntegerToEnum"/>
 
             <SolidColorBrush x:Key="LightBorderBrush" Color="#f2f8ff"/>
             <Style x:Key="AboutDialogStyle" TargetType="Window">

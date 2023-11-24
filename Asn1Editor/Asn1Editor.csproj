@@ -137,13 +137,17 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="API\Abstractions\IHasAsnDocumentTabs.cs" />
+    <Compile Include="API\Converters\IntegerToEnumConverter.cs" />
     <Compile Include="API\Interfaces\IAppCommands.cs" />
     <Compile Include="API\Interfaces\IBinarySource.cs" />
-    <Compile Include="API\Interfaces\IHasSelectedTab.cs" />
+    <Compile Include="API\Abstractions\IOidEditorVM.cs" />
     <Compile Include="API\Interfaces\ITagDataEditor.cs" />
     <Compile Include="API\Interfaces\ITagDataEditorVM.cs" />
     <Compile Include="API\ModelObjects\EncodingTypeEntry.cs" />
     <Compile Include="API\ModelObjects\NodeViewOptions.cs" />
+    <Compile Include="API\ModelObjects\OidDto.cs" />
+    <Compile Include="API\ModelObjects\OidSearchScope.cs" />
     <Compile Include="API\OidResolver.cs" />
     <Compile Include="API\Utils\CertutilRenderer.cs" />
     <Compile Include="API\Utils\ITextRenderer.cs" />
@@ -175,16 +179,23 @@
     <Compile Include="API\Utils\WPF\WindowFactoryBase.cs" />
     <Compile Include="API\ViewModel\AppCommands.cs" />
     <Compile Include="API\ViewModel\BinaryConverterVM.cs" />
+    <Compile Include="API\ViewModel\OidEditorVM.cs" />
     <Compile Include="API\ViewModel\StaticCommands.cs" />
     <Compile Include="API\ViewModel\TagDataEditorVM.cs" />
     <Compile Include="API\ViewModel\TextViewerVM.cs" />
     <Compile Include="API\ViewModel\TreeViewCommands.cs" />
     <Compile Include="API\ViewModel\ViewModelBase.cs" />
+    <Compile Include="Views\UserControls\OidEditorUC.xaml.cs">
+      <DependentUpon>OidEditorUC.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\Windows\AboutBox.xaml.cs">
       <DependentUpon>AboutBox.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\Windows\LicenseWindow.xaml.cs">
       <DependentUpon>LicenseWindow.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Windows\OidLookupEditorWindow.xaml.cs">
+      <DependentUpon>OidLookupEditorWindow.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\Windows\SettingsWnd.xaml.cs">
       <DependentUpon>SettingsWnd.xaml</DependentUpon>
@@ -204,11 +215,19 @@
     <Compile Include="Views\Windows\TextViewer.xaml.cs">
       <DependentUpon>TextViewer.xaml</DependentUpon>
     </Compile>
+    <Page Include="Views\UserControls\OidEditorUC.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Views\Windows\AboutBox.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
     <Page Include="Views\Windows\LicenseWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\Windows\OidLookupEditorWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -285,39 +304,19 @@
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Views\Images\AsnEditor\CONTEXT_SPECIFIC.png" />
-  </ItemGroup>
-  <ItemGroup>
     <Resource Include="Views\Images\AsnEditor\OCTET_STRING.png" />
     <Resource Include="Views\Images\AsnEditor\SEQUENCE.png" />
-  </ItemGroup>
-  <ItemGroup>
     <Resource Include="Views\Images\AsnEditor\BOOLEAN.png" />
     <Resource Include="Views\Images\AsnEditor\External.png" />
     <Resource Include="Views\Images\AsnEditor\SET.png" />
-  </ItemGroup>
-  <ItemGroup>
     <Resource Include="Views\Images\AsnEditor\OBJECT_IDENTIFIER.png" />
-  </ItemGroup>
-  <ItemGroup>
     <Resource Include="Views\Images\AsnEditor\DateTime.png" />
-  </ItemGroup>
-  <ItemGroup>
     <Resource Include="Views\Images\AsnEditor\Root.png" />
-  </ItemGroup>
-  <ItemGroup>
     <Resource Include="Views\Images\AsnEditor\BIT_STRING.png" />
     <Resource Include="Views\Images\AsnEditor\NULL.png" />
-  </ItemGroup>
-  <ItemGroup>
     <Resource Include="Views\Images\AsnEditor\String.png" />
-  </ItemGroup>
-  <ItemGroup>
     <Resource Include="Views\Images\AsnEditor\ENUMERATED.png" />
-  </ItemGroup>
-  <ItemGroup>
     <Resource Include="Views\Images\Menu\ascii_16x16.png" />
-  </ItemGroup>
-  <ItemGroup>
     <Resource Include="Views\Images\Menu\copy_16x16.png" />
     <Resource Include="Views\Images\Menu\cut_16x16.png" />
     <Resource Include="Views\Images\Menu\help_16x16.png" />
@@ -331,9 +330,27 @@
     <Resource Include="Views\Images\Menu\save_16x16.png" />
     <Resource Include="Views\Images\Menu\settings_16x16.png" />
     <Resource Include="Views\Images\Menu\undo_16x16.png" />
-  </ItemGroup>
-  <ItemGroup>
     <Resource Include="Views\Images\Menu\eraser_16x16.png" />
+    <Resource Include="Views\Images\Menu\AddressEnabled_32x32.png" />
+    <Resource Include="Views\Images\Menu\AsciiEnabled_32x32.png" />
+    <Resource Include="Views\Images\Menu\HexFull_32x32.png" />
+    <Resource Include="Views\Images\Menu\insertafter_16x16.png" />
+    <Resource Include="Views\Images\Menu\insertbefore_16x16.png" />
+    <Resource Include="Views\Images\Menu\insertlast_16x16.png" />
+    <Resource Include="Views\Images\Menu\newnode_16x16.png" />
+    <Resource Include="Views\Images\Menu\newnode_32x32.png" />
+    <Resource Include="Views\Images\Menu\delete_16x16.png" />
+    <Resource Include="Views\Images\Menu\edit_16x16.png" />
+    <Resource Include="Views\Images\Menu\hexview_16x16.png" />
+    <Resource Include="Views\Images\Menu\converter_16x16.png" />
+    <Resource Include="Views\Images\Menu\viewtext_16x16.png" />
+    <Resource Include="Views\Images\asnlogo.ico" />
+    <Resource Include="asnlogo.ico" />
+    <Resource Include="Views\Images\AsnEditor\REAL.png" />
+    <Resource Include="Views\Images\AsnEditor\Integer.png" />
+    <Resource Include="Views\Images\pkisolutions_logo_small.png" />
+    <Resource Include="Views\Images\Menu\saveall_16x16.png" />
+    <Resource Include="Views\Images\Menu\cancel_16x16.png" />
   </ItemGroup>
   <ItemGroup>
     <BootstrapperPackage Include=".NETFramework,Version=v4.0,Profile=Client">
@@ -358,53 +375,13 @@
     </BootstrapperPackage>
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="Views\Images\Menu\AddressEnabled_32x32.png" />
-    <Resource Include="Views\Images\Menu\AsciiEnabled_32x32.png" />
-    <Resource Include="Views\Images\Menu\HexFull_32x32.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="Views\Images\Menu\insertafter_16x16.png" />
-    <Resource Include="Views\Images\Menu\insertbefore_16x16.png" />
-    <Resource Include="Views\Images\Menu\insertlast_16x16.png" />
-    <Resource Include="Views\Images\Menu\newnode_16x16.png" />
-    <Resource Include="Views\Images\Menu\newnode_32x32.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="Views\Images\Menu\delete_16x16.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="Views\Images\Menu\edit_16x16.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="Views\Images\Menu\hexview_16x16.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="Views\Images\Menu\converter_16x16.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="Views\Images\Menu\viewtext_16x16.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="Views\Images\asnlogo.ico" />
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="asnlogo.ico" />
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="Views\Images\AsnEditor\REAL.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="Views\Images\AsnEditor\Integer.png" />
-  </ItemGroup>
-  <ItemGroup>
     <None Include="OID.txt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="Views\Images\pkisolutions_logo_small.png" />
-    <Resource Include="Views\Images\Menu\saveall_16x16.png" />
-    <Resource Include="Views\Images\Menu\cancel_16x16.png" />
+    <Resource Include="Views\Images\Menu\book_16x16.png" />
+    <Resource Include="Views\Images\oid.ico" />
     <Content Include="_ExternalReferences\Wpf.OfficeTheme.dll" />
   </ItemGroup>
   <ItemGroup>

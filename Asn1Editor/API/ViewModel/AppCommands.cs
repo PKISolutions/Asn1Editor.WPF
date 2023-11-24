@@ -3,7 +3,7 @@ using System.Windows.Input;
 using SysadminsLV.Asn1Editor.API.Interfaces;
 using SysadminsLV.WPF.OfficeTheme.Toolkit.Commands;
 
-namespace SysadminsLV.Asn1Editor.API.ViewModel; 
+namespace SysadminsLV.Asn1Editor.API.ViewModel;
 
 class AppCommands : IAppCommands {
     readonly IWindowFactory _windowFactory;
@@ -13,6 +13,7 @@ class AppCommands : IAppCommands {
         ShowLicenseCommand = new RelayCommand(showLicense);
         ShowAboutCommand = new RelayCommand(showAbout);
         ShowSettingsCommand = new RelayCommand(showSettings);
+        ShowOidEditor = new RelayCommand(showOidEditor);
     }
 
     public ICommand ShowLicenseCommand { get; }
@@ -20,6 +21,7 @@ class AppCommands : IAppCommands {
     public ICommand ShowSettingsCommand { get; }
     public ICommand ShowNodeTextViewer { get; set; }
     public ICommand ShowConverterWindow { get; set; }
+    public ICommand ShowOidEditor { get; set; }
 
     void showLicense(Object o) {
         _windowFactory.ShowLicenseDialog();
@@ -29,5 +31,8 @@ class AppCommands : IAppCommands {
     }
     void showSettings(Object o) {
         _windowFactory.ShowSettingsDialog();
+    }
+    void showOidEditor(Object o) {
+        _windowFactory.ShowOidEditor();
     }
 }

@@ -3,13 +3,13 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.IO;
-using System.Linq;
 using System.Reflection;
 using System.Windows;
 using System.Windows.Threading;
 using System.Xml;
 using System.Xml.Serialization;
 using SysadminsLV.Asn1Editor.API;
+using SysadminsLV.Asn1Editor.API.Abstractions;
 using SysadminsLV.Asn1Editor.API.Interfaces;
 using SysadminsLV.Asn1Editor.API.ModelObjects;
 using SysadminsLV.Asn1Editor.API.Utils;
@@ -25,7 +25,7 @@ namespace SysadminsLV.Asn1Editor;
 /// Interaction logic for App.xaml
 /// </summary>
 public partial class App {
-    readonly String _basePath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), @"Sysadmins LV\Asn1Editor");
+    static readonly String _appDataPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), @"Sysadmins LV\Asn1Editor");
     static readonly Logger _logger = new();
     readonly NodeViewOptions _options;
 
@@ -33,6 +33,10 @@ public partial class App {
         Dispatcher.UnhandledException += OnDispatcherUnhandledException;
         _options = readSettings();
         _options.PropertyChanged += onOptionsChanged;
+        OidDbManager.OidLookupLocations = new[]{
+                                                    Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location),
+                                                    _appDataPath
+                                                };
     }
 
     public static IUnityContainer Container { get; private set; }
@@ -52,7 +56,7 @@ public partial class App {
         _logger.Write($"PID    : {Process.GetCurrentProcess().Id}");
         _logger.Write($"Version: {Assembly.GetExecutingAssembly().GetName().Version}");
         configureUnity();
-        readOids();
+        OidDbManager.ReloadLookup();
         parseArguments(e.Args);
         base.OnStartup(e);
         Container.Resolve<MainWindow>().Show();
@@ -60,28 +64,6 @@ public partial class App {
     protected override void OnExit(ExitEventArgs e) {
         _logger.Dispose();
         base.OnExit(e);
-    }
-    void readOids() {
-        const String oidFileName = "OID.txt";
-        String appPath = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
-        foreach (String oidFolderLocation in new[] { appPath, _basePath }) {
-            String filePath = Path.Combine(oidFolderLocation, oidFileName);
-            readOidMapFromFile(filePath);
-        }
-    }
-    static void readOidMapFromFile(String filePath) {
-        if (!File.Exists(filePath)) {
-            return;
-        }
-        String[] strings = File.ReadAllLines(filePath);
-        foreach (String[] tokens in strings.Select(str => str.Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries))) {
-            if (tokens.Length != 2) {
-                continue;
-            }
-            try {
-                OidResolver.Add(tokens[0], tokens[1].Trim());
-            } catch { }
-        }
     }
     async void parseArguments(IReadOnlyList<String> args) {
         for (Int32 i = 0; i < args.Count;) {
@@ -116,21 +98,22 @@ public partial class App {
         // view models
         Container.RegisterSingleton<MainWindowVM>();
         Container.RegisterType<IMainWindowVM, MainWindowVM>();
-        Container.RegisterType<IHasSelectedTab, MainWindowVM>();
+        Container.RegisterType<IHasAsnDocumentTabs, MainWindowVM>();
         Container.RegisterType<ITextViewerVM, TextViewerVM>();
         Container.RegisterType<ITagDataEditorVM, TagDataEditorVM>();
+        Container.RegisterType<IOidEditorVM, OidEditorVM>();
         Container.RegisterInstance(_options);
     }
     void onOptionsChanged(Object s, PropertyChangedEventArgs e) {
-        using var sw = new StreamWriter(Path.Combine(_basePath, "user.config"), false);
+        using var sw = new StreamWriter(Path.Combine(_appDataPath, "user.config"), false);
         using var xw = XmlWriter.Create(sw);
         new XmlSerializer(typeof(NodeViewOptions)).Serialize(xw, s);
     }
     NodeViewOptions readSettings() {
-        if (File.Exists(Path.Combine(_basePath, "user.config"))) {
+        if (File.Exists(Path.Combine(_appDataPath, "user.config"))) {
             try {
-                using var sr = new StreamReader(Path.Combine(_basePath, "user.config"));
-                return (NodeViewOptions) new XmlSerializer(typeof(NodeViewOptions)).Deserialize(sr);
+                using var sr = new StreamReader(Path.Combine(_appDataPath, "user.config"));
+                return (NodeViewOptions)new XmlSerializer(typeof(NodeViewOptions)).Deserialize(sr);
             } catch {
                 return new NodeViewOptions();
             }

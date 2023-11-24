@@ -91,6 +91,19 @@
                         <Image Source="/Views/Images/Menu/viewtext_16x16.png"/>
                     </MenuItem.Icon>
                 </MenuItem>
+                <MenuItem Header="Edit Object Identifier mapping"
+                          Command="{Binding TreeCommands.RegisterOidCommand}">
+                    <MenuItem.Style>
+                        <Style TargetType="MenuItem" BasedOn="{StaticResource {x:Type MenuItem}}">
+                            <Setter Property="Visibility" Value="Collapsed"/>
+                            <Style.Triggers>
+                                <DataTrigger Binding="{Binding SelectedTab.DataSource.SelectedNode.Value.Tag}" Value="6">
+                                    <Setter Property="Visibility" Value="Visible"/>
+                                </DataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </MenuItem.Style>
+                </MenuItem>
                 <Separator/>
                 <MenuItem Header="New node"
                           Command="{Binding TreeCommands.AddNewNodeCommand}"
@@ -170,6 +183,9 @@
                 </ToggleButton>
                 <Button Command="{Binding AppCommands.ShowConverterWindow, Mode=OneTime}" ToolTip="Open data converter">
                     <Image Source="/Views/Images/Menu/converter_16x16.png"/>
+                </Button>
+                <Button Command="{Binding AppCommands.ShowOidEditor, Mode=OneTime}" ToolTip="Open Object Identifier mapping editor">
+                    <Image Source="/Views/Images/Menu/book_16x16.png"/>
                 </Button>
             </ToolBar>
             <ToolBar>
@@ -376,8 +392,8 @@
                                 <uc:AsnTreeView.ContextMenu>
                                     <ContextMenu>
                                         <MenuItem Header="Edit node..."
-                                                          Command="{Binding TreeCommands.EditNodeCommand}"
-                                                          CommandParameter="{x:Static clr:NodeEditMode.Text}">
+                                                  Command="{Binding TreeCommands.EditNodeCommand}"
+                                                  CommandParameter="{x:Static clr:NodeEditMode.Text}">
                                             <MenuItem.Icon>
                                                 <Image Source="/Views/Images/Menu/edit_16x16.png" Width="16"/>
                                             </MenuItem.Icon>
@@ -385,7 +401,24 @@
                                         <MenuItem Header="Save selected node as..."
                                                   Command="{Binding TreeCommands.SaveNodeCommand}"/>
                                         <MenuItem Header="View node text..."
-                                                  Command="{Binding TreeCommands.ShowNodeTextViewer}"/>
+                                                  Command="{Binding TreeCommands.ShowNodeTextViewer}">
+                                            <MenuItem.Icon>
+                                                <Image Source="/Views/Images/Menu/viewtext_16x16.png"/>
+                                            </MenuItem.Icon>
+                                        </MenuItem>
+                                        <MenuItem Header="Edit Object Identifier mapping"
+                                                  Command="{Binding TreeCommands.RegisterOidCommand}">
+                                            <MenuItem.Style>
+                                                <Style TargetType="MenuItem" BasedOn="{StaticResource {x:Type MenuItem}}">
+                                                    <Setter Property="Visibility" Value="Collapsed"/>
+                                                    <Style.Triggers>
+                                                        <DataTrigger Binding="{Binding DataSource.SelectedNode.Value.Tag}" Value="6">
+                                                            <Setter Property="Visibility" Value="Visible"/>
+                                                        </DataTrigger>
+                                                    </Style.Triggers>
+                                                </Style>
+                                            </MenuItem.Style>
+                                        </MenuItem>
                                         <Separator/>
                                         <MenuItem Header="New node"
                                                   Command="{Binding TreeCommands.AddNewNodeCommand}"
