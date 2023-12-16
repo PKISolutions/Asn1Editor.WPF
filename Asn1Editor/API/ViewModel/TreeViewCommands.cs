@@ -83,7 +83,7 @@ class TreeViewCommands : ViewModelBase, ITreeCommands {
         isTabSelected(out IDataSource data); // granted to be non-null
         if (data.SelectedNode != null) {
             Asn1TreeNode node = data.SelectedNode;
-            String oidValue = AsnDecoder.GetEditValue(new Asn1Reader(data.RawData.Skip(node.Offset).Take(node.TagLength).ToArray()));
+            String oidValue = AsnDecoder.GetEditValue(new Asn1Reader(data.RawData.Skip(node.Offset).Take(node.TagLength).ToArray())).TextValue;
             String friendlyName = OidResolver.Resolve(oidValue); // TODO: replace with ResolveFriendlyName
             _windowFactory.ShowOidEditor(new OidDto(oidValue, friendlyName, false));
         }

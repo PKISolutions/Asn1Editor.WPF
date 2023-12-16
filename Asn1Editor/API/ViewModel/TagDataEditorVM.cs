@@ -21,7 +21,8 @@ class TagDataEditorVM : ViewModelBase, ITagDataEditorVM {
     const String masterUnused = "1";
     NodeEditMode mode;
     Boolean? dialogResult;
-    String tagDetails, tagValue, oldValue;
+    String tagDetails;
+    AsnViewValue tagValue, oldValue;
     Boolean rbText = true, rbHex, isReadonly, tagIsReadOnly = true;
     Byte unusedBits, tag;
     Double tagTextBoxWidth, unusedTextBoxWidth;
@@ -46,7 +47,7 @@ class TagDataEditorVM : ViewModelBase, ITagDataEditorVM {
             OnPropertyChanged(nameof(TagDetails));
         }
     }
-    public String TagValue {
+    public AsnViewValue TagValue {
         get => tagValue;
         set {
             tagValue = value;
@@ -160,7 +161,7 @@ class TagDataEditorVM : ViewModelBase, ITagDataEditorVM {
             saveNewNode();
             return;
         }
-        if (TagValue == oldValue) {
+        if (Equals(TagValue, oldValue)) {
             DialogResult = true;
             return;
         }
@@ -174,7 +175,7 @@ class TagDataEditorVM : ViewModelBase, ITagDataEditorVM {
         var asn = new Asn1Reader(new Byte[] { Tag, 0 });
         Asn1Lite node;
         // if it is constructed or value is not entered, use it as is and ignore possible entered tag value
-        if (asn.IsConstructed || String.IsNullOrWhiteSpace(TagValue?.Trim())) {
+        if (asn.IsConstructed || String.IsNullOrWhiteSpace(TagValue?.TextValue?.Trim())) {
             node = new Asn1Lite(asn);
         } else {
             // some tag value is entered, attempt to validate
@@ -213,9 +214,12 @@ class TagDataEditorVM : ViewModelBase, ITagDataEditorVM {
     Byte[] validateValue() {
         Byte[] binValue = null;
         try {
-            binValue = RbHex
-                ? AsnDecoder.EncodeHex(Tag, TagValue, UnusedBits)
-                : AsnDecoder.EncodeGeneric(Tag, TagValue, UnusedBits);
+            // if we are in hex mode, or we are in text mode, but text is hex, go to hex
+            if (rbHex || (!rbHex && (TagValue.Options & AsnViewValueOptions.SupportsPrintableText) == 0)) {
+                binValue = AsnDecoder.EncodeHex(Tag, TagValue.TextValue, UnusedBits);
+            } else {
+                binValue = AsnDecoder.EncodeGeneric(Tag, TagValue.TextValue, UnusedBits);
+            }
         } catch (Exception e) {
             Tools.MsgBox("Error", e.Message);
         }
@@ -234,7 +238,7 @@ class TagDataEditorVM : ViewModelBase, ITagDataEditorVM {
     }
     void editHex() {
         if (Node == null) { return; }
-        TagValue = HexUtility.BinaryToHex(_data.RawData
+        TagValue.TextValue = HexUtility.BinaryToHex(_data.RawData
             .Skip(Node.PayloadStartOffset)
             .Take(Node.PayloadLength)
             .ToArray());
@@ -256,10 +260,10 @@ class TagDataEditorVM : ViewModelBase, ITagDataEditorVM {
         }
         copyValues();
         if (IsReadOnly || Node.Tag == (Byte)Asn1Type.NULL) {
-            TagValue = "Containers and NULL (0x05) tags are not editable";
+            TagValue.TextValue = "Containers and NULL (0x05) tags are not editable";
         } else {
             editText();
         }
-        oldValue = TagValue;
+        oldValue = TagValue.Clone();
     }
 }

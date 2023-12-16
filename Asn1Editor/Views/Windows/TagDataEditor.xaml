@@ -106,7 +106,7 @@
                         BorderBrush="{StaticResource PanelBorderBrush}"
                         BorderThickness="0,1,0,0"
                         Visibility="{Binding IsEditable, Converter={StaticResource BooleanToVisibility}}"/>
-                <TextBox Text="{Binding TagValue}"
+                <TextBox Text="{Binding TagValue.TextValue}"
                          BorderThickness="0"
                          IsReadOnly="{Binding IsReadOnly}"
                          AcceptsReturn="True"
