@@ -14,7 +14,7 @@
         ShowInTaskbar="False"
         Title="Node Content Editor"
         Height="380"
-        Width="530">
+        Width="580">
     <Window.InputBindings>
         <KeyBinding Key="Escape" Command="{Binding CloseCommand}"/>
     </Window.InputBindings>
@@ -43,7 +43,7 @@
                    FontSize="{Binding NodeViewOptions.FontSize}">
             <StatusBarItem>
                 <StackPanel Orientation="Horizontal">
-                    <TextBlock Text="Tag:" VerticalAlignment="Center" Margin="2,0,2,0"/>
+                    <TextBlock Text="Tag:" VerticalAlignment="Center" Margin="2,0"/>
                     <TextBox Text="{Binding Tag, UpdateSourceTrigger=PropertyChanged}"
                              MaxLength="3"
                              IsReadOnly="{Binding TagIsReadOnly}"
@@ -60,7 +60,7 @@
                 <StackPanel Orientation="Horizontal"
                             Visibility="{Binding UnusedBitsVisible, Converter={StaticResource BooleanToVisibility}}">
                     <TextBlock Text="Unused bits:"
-                               VerticalAlignment="Center" Margin="2,0,2,0"/>
+                               VerticalAlignment="Center" Margin="2,0"/>
                     <TextBox Text="{Binding UnusedBits}"
                              Width="{Binding UnusedTextBoxWidth}"
                              MaxLength="1"
@@ -69,7 +69,10 @@
             </StatusBarItem>
             <Separator/>
             <StatusBarItem>
-                <TextBlock Text="{Binding TagName, Mode=OneWay}"/>
+                <TextBlock>
+                    <Run Text="Tag name:"/>
+                    <Run Text="{Binding TagName, Mode=OneWay}"/>
+                </TextBlock>
             </StatusBarItem>
             <StatusBarItem HorizontalAlignment="Right">
                 <StackPanel Orientation="Horizontal">
@@ -95,6 +98,7 @@
                     <RadioButton Content="Text"
                                  VerticalAlignment="Center"
                                  IsChecked="{Binding RbText}"
+                                 IsEnabled="{Binding IsRbTextEnabled, Mode=OneWay}"
                                  GroupName="mode"
                                  Margin="10,0"/>
                     <RadioButton Content="Hex"
