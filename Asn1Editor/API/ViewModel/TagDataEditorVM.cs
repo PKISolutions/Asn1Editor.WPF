@@ -132,6 +132,7 @@ class TagDataEditorVM : ViewModelBase, ITagDataEditorVM {
             OnPropertyChanged(nameof(RbHex));
         }
     }
+    public Boolean IsRbTextEnabled => (TagValue.Options & AsnViewValueOptions.SupportsPrintableText) != 0;
     public Boolean? DialogResult {
         get => dialogResult;
         set {
@@ -141,6 +142,7 @@ class TagDataEditorVM : ViewModelBase, ITagDataEditorVM {
     }
 
     void initialize() {
+        tagValue = new AsnViewValue();
         calculateLengths();
         Settings.Default.PropertyChanged += (Sender, Args) => {
                                                 if (Args.PropertyName == nameof(Settings.FontSize)) {
@@ -197,7 +199,7 @@ class TagDataEditorVM : ViewModelBase, ITagDataEditorVM {
         DialogResult = true;
     }
     void saveEditChanges() {
-        var binValue = validateValue();
+        Byte[] binValue = validateValue();
         if (binValue == null) {
             return;
         }
@@ -232,9 +234,20 @@ class TagDataEditorVM : ViewModelBase, ITagDataEditorVM {
         _data.RawData.RemoveRange(Node.Offset, Node.TagLength);
         _data.RawData.InsertRange(Node.Offset, newBytes);
     }
+    void setRbHexSilent() {
+        rbHex = true;
+        OnPropertyChanged(nameof(RbHex));
+    }
     void editText() {
-        if (Node == null) { return; }
+        if (Node == null) {
+            return;
+        }
+
         TagValue = AsnDecoder.GetEditValue(new Asn1Reader(_data.RawData.Skip(Node.Offset).Take(Node.TagLength).ToArray()));
+        if ((TagValue.Options & AsnViewValueOptions.SupportsPrintableText) == 0) {
+            setRbHexSilent();
+        }
+        OnPropertyChanged(nameof(IsRbTextEnabled));
     }
     void editHex() {
         if (Node == null) { return; }
