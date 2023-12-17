@@ -144,6 +144,8 @@
     <Compile Include="API\Abstractions\IOidEditorVM.cs" />
     <Compile Include="API\Interfaces\ITagDataEditor.cs" />
     <Compile Include="API\Interfaces\ITagDataEditorVM.cs" />
+    <Compile Include="API\ModelObjects\AsnViewValue.cs" />
+    <Compile Include="API\ModelObjects\AsnViewValueOptions.cs" />
     <Compile Include="API\ModelObjects\EncodingTypeEntry.cs" />
     <Compile Include="API\ModelObjects\NodeViewOptions.cs" />
     <Compile Include="API\ModelObjects\OidDto.cs" />
