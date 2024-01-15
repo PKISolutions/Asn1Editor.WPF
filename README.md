@@ -10,5 +10,19 @@ Key features:
 * Data converter
 
 Documentation and binary download links: [ASN.1 Editor](https://www.pkisolutions.com/tools/asn1editor/)
+# Screenshots
 
-![image](https://user-images.githubusercontent.com/6384119/81295846-b62bfc80-9079-11ea-879a-d9472a3f5d9b.png)
+## Main Window
+![image](https://github.com/PKISolutions/Asn1Editor.WPF/assets/6384119/7f2354b2-dc56-483e-a87a-152870a3b609)
+
+## Hex Viewer
+![image](https://github.com/PKISolutions/Asn1Editor.WPF/assets/6384119/c1bb73d5-2552-4cf6-b89e-66af94b94164)
+
+## Binary Converter
+![image](https://github.com/PKISolutions/Asn1Editor.WPF/assets/6384119/92f49ea8-c619-4978-b885-a35914b7ef74)
+
+## Custom OID dictionary editor
+![image](https://github.com/PKISolutions/Asn1Editor.WPF/assets/6384119/1ab7c3d2-cfd8-4b92-b5cd-5ec533502a18)
+
+## Tag Editor
+![image](https://github.com/PKISolutions/Asn1Editor.WPF/assets/6384119/3d69db37-fbe1-4804-8a04-38339a4ebfec)
