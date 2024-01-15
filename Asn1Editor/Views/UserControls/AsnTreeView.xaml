@@ -20,92 +20,92 @@
             </Style.Setters>
             <Style.Triggers>
                 <DataTrigger Binding="{Binding Value.TagName}" Value="BOOLEAN">
-                    <Setter Property="Source" Value="/Views/Images/AsnEditor/BOOLEAN.png"/>
+                    <Setter Property="Source" Value="{StaticResource AsnBoolImage}"/>
                 </DataTrigger>
                 <DataTrigger Binding="{Binding Value.TagName}" Value="INTEGER">
-                    <Setter Property="Source" Value="/Views/Images/AsnEditor/Integer.png"/>
+                    <Setter Property="Source" Value="{StaticResource AsnIntegerImage}"/>
                 </DataTrigger>
                 <DataTrigger Binding="{Binding Value.TagName}" Value="BIT_STRING">
-                    <Setter Property="Source" Value="/Views/Images/AsnEditor/BIT_STRING.png"/>
+                    <Setter Property="Source" Value="{StaticResource AsnBitImage}"/>
                 </DataTrigger>
                 <DataTrigger Binding="{Binding Value.TagName}" Value="OCTET_STRING">
-                    <Setter Property="Source" Value="/Views/Images/AsnEditor/OCTET_STRING.png"/>
+                    <Setter Property="Source" Value="{StaticResource AsnOctetImage}"/>
                 </DataTrigger>
                 <DataTrigger Binding="{Binding Value.TagName}" Value="NULL">
-                    <Setter Property="Source" Value="/Views/Images/AsnEditor/NULL.png"/>
+                    <Setter Property="Source" Value="{StaticResource AsnNullImage}"/>
                 </DataTrigger>
                 <DataTrigger Binding="{Binding Value.TagName}" Value="OBJECT_IDENTIFIER">
-                    <Setter Property="Source" Value="/Views/Images/AsnEditor/OBJECT_IDENTIFIER.png"/>
+                    <Setter Property="Source" Value="{StaticResource AsnOidImage}"/>
                 </DataTrigger>
                 <DataTrigger Binding="{Binding Value.TagName}" Value="ObjectDescriptor">
-                    <Setter Property="Source" Value="/Views/Images/AsnEditor/OBJECT_IDENTIFIER.png"/>
+                    <Setter Property="Source" Value="{StaticResource AsnOidImage}"/>
                 </DataTrigger>
                 <DataTrigger Binding="{Binding Value.TagName}" Value="RELATIVE_OID">
-                    <Setter Property="Source" Value="/Views/Images/AsnEditor/OBJECT_IDENTIFIER.png"/>
+                    <Setter Property="Source" Value="{StaticResource AsnOidImage}"/>
                 </DataTrigger>
                 <DataTrigger Binding="{Binding Value.TagName}" Value="EXTERNAL">
-                    <Setter Property="Source" Value="/Views/Images/AsnEditor/External.png"/>
+                    <Setter Property="Source" Value="{StaticResource AsnExternalImage}"/>
                 </DataTrigger>
                 <DataTrigger Binding="{Binding Value.TagName}" Value="REAL">
-                    <Setter Property="Source" Value="/Views/Images/AsnEditor/REAL.png"/>
+                    <Setter Property="Source" Value="{StaticResource AsnRealImage}"/>
                 </DataTrigger>
                 <DataTrigger Binding="{Binding Value.TagName}" Value="ENUMERATED">
-                    <Setter Property="Source" Value="/Views/Images/AsnEditor/ENUMERATED.png"/>
+                    <Setter Property="Source" Value="{StaticResource AsnEnumeratedImage}"/>
                 </DataTrigger>
                 <!--String types-->
                 <DataTrigger Binding="{Binding Value.TagName}" Value="UTF8String">
-                    <Setter Property="Source" Value="/Views/Images/AsnEditor/String.png"/>
+                    <Setter Property="Source" Value="{StaticResource AsnStringImage}"/>
                 </DataTrigger>
                 <DataTrigger Binding="{Binding Value.TagName}" Value="NumericString">
-                    <Setter Property="Source" Value="/Views/Images/AsnEditor/String.png"/>
+                    <Setter Property="Source" Value="{StaticResource AsnStringImage}"/>
                 </DataTrigger>
                 <DataTrigger Binding="{Binding Value.TagName}" Value="PrintableString">
-                    <Setter Property="Source" Value="/Views/Images/AsnEditor/String.png"/>
+                    <Setter Property="Source" Value="{StaticResource AsnStringImage}"/>
                 </DataTrigger>
                 <DataTrigger Binding="{Binding Value.TagName}" Value="TeletexString">
-                    <Setter Property="Source" Value="/Views/Images/AsnEditor/String.png"/>
+                    <Setter Property="Source" Value="{StaticResource AsnStringImage}"/>
                 </DataTrigger>
                 <DataTrigger Binding="{Binding Value.TagName}" Value="VideotexString">
-                    <Setter Property="Source" Value="/Views/Images/AsnEditor/String.png"/>
+                    <Setter Property="Source" Value="{StaticResource AsnStringImage}"/>
                 </DataTrigger>
                 <DataTrigger Binding="{Binding Value.TagName}" Value="IA5String">
-                    <Setter Property="Source" Value="/Views/Images/AsnEditor/String.png"/>
+                    <Setter Property="Source" Value="{StaticResource AsnStringImage}"/>
                 </DataTrigger>
                 <DataTrigger Binding="{Binding Value.TagName}" Value="GraphicString">
-                    <Setter Property="Source" Value="/Views/Images/AsnEditor/String.png"/>
+                    <Setter Property="Source" Value="{StaticResource AsnStringImage}"/>
                 </DataTrigger>
                 <DataTrigger Binding="{Binding Value.TagName}" Value="VisibleString">
-                    <Setter Property="Source" Value="/Views/Images/AsnEditor/String.png"/>
+                    <Setter Property="Source" Value="{StaticResource AsnStringImage}"/>
                 </DataTrigger>
                 <DataTrigger Binding="{Binding Value.TagName}" Value="GeneralString">
-                    <Setter Property="Source" Value="/Views/Images/AsnEditor/String.png"/>
+                    <Setter Property="Source" Value="{StaticResource AsnStringImage}"/>
                 </DataTrigger>
                 <DataTrigger Binding="{Binding Value.TagName}" Value="UniversalString">
-                    <Setter Property="Source" Value="/Views/Images/AsnEditor/String.png"/>
+                    <Setter Property="Source" Value="{StaticResource AsnStringImage}"/>
                 </DataTrigger>
                 <DataTrigger Binding="{Binding Value.TagName}" Value="BMPString">
-                    <Setter Property="Source" Value="/Views/Images/AsnEditor/String.png"/>
+                    <Setter Property="Source" Value="{StaticResource AsnStringImage}"/>
                 </DataTrigger>
                 <DataTrigger Binding="{Binding Value.TagName}" Value="CHARACTER_STRING">
-                    <Setter Property="Source" Value="/Views/Images/AsnEditor/String.png"/>
+                    <Setter Property="Source" Value="{StaticResource AsnStringImage}"/>
                 </DataTrigger>
                 <DataTrigger Binding="{Binding Value.TagName}" Value="UTCTime">
-                    <Setter Property="Source" Value="/Views/Images/AsnEditor/DateTime.png"/>
+                    <Setter Property="Source" Value="{StaticResource AsnDateTimeImage}"/>
                 </DataTrigger>
                 <DataTrigger Binding="{Binding Value.TagName}" Value="GeneralizedTime">
-                    <Setter Property="Source" Value="/Views/Images/AsnEditor/DateTime.png"/>
+                    <Setter Property="Source" Value="{StaticResource AsnDateTimeImage}"/>
                 </DataTrigger>
                 <DataTrigger Binding="{Binding Value.TagName}" Value="SEQUENCE">
-                    <Setter Property="Source" Value="/Views/Images/AsnEditor/SEQUENCE.png"/>
+                    <Setter Property="Source" Value="{StaticResource AsnSequenceImage}"/>
                 </DataTrigger>
                 <DataTrigger Binding="{Binding Value.TagName}" Value="SET">
-                    <Setter Property="Source" Value="/Views/Images/AsnEditor/SET.png"/>
+                    <Setter Property="Source" Value="{StaticResource AsnSetImage}"/>
                 </DataTrigger>
                 <DataTrigger Binding="{Binding Value.IsContextSpecific}" Value="True">
-                    <Setter Property="Source" Value="/Views/Images/AsnEditor/CONTEXT_SPECIFIC.png"/>
+                    <Setter Property="Source" Value="{StaticResource AsnContextSpecificImage}"/>
                 </DataTrigger>
                 <DataTrigger Binding="{Binding IsRoot}" Value="True">
-                    <Setter Property="Source" Value="/Views/Images/AsnEditor/Root.png"/>
+                    <Setter Property="Source" Value="{StaticResource AsnHomeImage}"/>
                 </DataTrigger>
             </Style.Triggers>
         </Style>
