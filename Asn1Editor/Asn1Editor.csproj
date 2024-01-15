@@ -217,6 +217,10 @@
     <Compile Include="Views\Windows\TextViewer.xaml.cs">
       <DependentUpon>TextViewer.xaml</DependentUpon>
     </Compile>
+    <Page Include="Views\AsnTypeSprites.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Views\UserControls\OidEditorUC.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -305,19 +309,6 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="Views\Images\AsnEditor\CONTEXT_SPECIFIC.png" />
-    <Resource Include="Views\Images\AsnEditor\OCTET_STRING.png" />
-    <Resource Include="Views\Images\AsnEditor\SEQUENCE.png" />
-    <Resource Include="Views\Images\AsnEditor\BOOLEAN.png" />
-    <Resource Include="Views\Images\AsnEditor\External.png" />
-    <Resource Include="Views\Images\AsnEditor\SET.png" />
-    <Resource Include="Views\Images\AsnEditor\OBJECT_IDENTIFIER.png" />
-    <Resource Include="Views\Images\AsnEditor\DateTime.png" />
-    <Resource Include="Views\Images\AsnEditor\Root.png" />
-    <Resource Include="Views\Images\AsnEditor\BIT_STRING.png" />
-    <Resource Include="Views\Images\AsnEditor\NULL.png" />
-    <Resource Include="Views\Images\AsnEditor\String.png" />
-    <Resource Include="Views\Images\AsnEditor\ENUMERATED.png" />
     <Resource Include="Views\Images\Menu\ascii_16x16.png" />
     <Resource Include="Views\Images\Menu\copy_16x16.png" />
     <Resource Include="Views\Images\Menu\cut_16x16.png" />
@@ -348,8 +339,6 @@
     <Resource Include="Views\Images\Menu\viewtext_16x16.png" />
     <Resource Include="Views\Images\asnlogo.ico" />
     <Resource Include="asnlogo.ico" />
-    <Resource Include="Views\Images\AsnEditor\REAL.png" />
-    <Resource Include="Views\Images\AsnEditor\Integer.png" />
     <Resource Include="Views\Images\pkisolutions_logo_small.png" />
     <Resource Include="Views\Images\Menu\saveall_16x16.png" />
     <Resource Include="Views\Images\Menu\cancel_16x16.png" />
@@ -384,6 +373,7 @@
   <ItemGroup>
     <Resource Include="Views\Images\Menu\book_16x16.png" />
     <Resource Include="Views\Images\oid.ico" />
+    <Resource Include="Views\Images\spritesheet.png" />
     <Content Include="_ExternalReferences\Wpf.OfficeTheme.dll" />
   </ItemGroup>
   <ItemGroup>
