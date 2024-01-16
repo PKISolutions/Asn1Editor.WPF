@@ -96,9 +96,9 @@ namespace SysadminsLV.Asn1Editor.Properties {
         ///Path   : {5}
         ///.
         /// </summary>
-        internal static string TagEditorHeaderTemp {
+        internal static string TagEditorHeaderTemplate {
             get {
-                return ResourceManager.GetString("TagEditorHeaderTemp", resourceCulture);
+                return ResourceManager.GetString("TagEditorHeaderTemplate", resourceCulture);
             }
         }
     }

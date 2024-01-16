@@ -222,7 +222,7 @@ public class Asn1Lite : ViewModelBase, IHexAsnNode {
     String getToolTip(IEnumerable<Byte> rawData) {
         var sb = new StringBuilder();
         sb.AppendFormat(
-            Resources.TagEditorHeaderTemp,
+            Resources.TagEditorHeaderTemplate,
             Tag,
             TagName,
             Offset,

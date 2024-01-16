@@ -261,7 +261,7 @@ class TagDataEditorVM : ViewModelBase, ITagDataEditorVM {
         Tag = Node.Tag;
         UnusedBits = Node.UnusedBits;
         IsReadOnly = Node.IsContainer || Node.Tag == (Byte)Asn1Type.NULL;
-        TagDetails = String.Format(Resources.TagEditorHeaderTemp, Tag, Node.TagName, Node.Offset, Node.PayloadLength, Node.Depth, Node.Path);
+        TagDetails = String.Format(Resources.TagEditorHeaderTemplate, Tag, Node.TagName, Node.Offset, Node.PayloadLength, Node.Depth, Node.Path);
     }
 
     public void SetBinding(NodeEditMode editMode) {

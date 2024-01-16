@@ -166,7 +166,7 @@
 &lt;/body&gt;
 &lt;/html&gt;</value>
   </data>
-  <data name="TagEditorHeaderTemp" xml:space="preserve">
+  <data name="TagEditorHeaderTemplate" xml:space="preserve">
     <value>Tag    : {0} (0x{0:X2}) : {1}
 Offset : {2} (0x{2:X2})
 Length : {3} (0x{3:X2})
