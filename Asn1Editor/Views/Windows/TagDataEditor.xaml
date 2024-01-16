@@ -32,7 +32,7 @@
                                 Header="Tag details"
                                 BorderThickness="0">
             <TextBox BorderThickness="0"
-                     Text="{Binding TagDetails}"
+                     Text="{Binding TagDetails, Mode=OneWay}"
                      FontFamily="Consolas"
                      FontWeight="Bold"
                      MinLines="5"
@@ -41,21 +41,6 @@
         </HeaderedContentControl>
         <StatusBar DockPanel.Dock="Bottom"
                    FontSize="{Binding NodeViewOptions.FontSize}">
-            <StatusBarItem>
-                <StackPanel Orientation="Horizontal">
-                    <TextBlock Text="Tag:" VerticalAlignment="Center" Margin="2,0"/>
-                    <TextBox Text="{Binding Tag, UpdateSourceTrigger=PropertyChanged, Mode=OneWay}"
-                             MaxLength="3"
-                             IsReadOnly="{Binding TagIsReadOnly}"
-                             Width="{Binding TagTextBoxWidth}"
-                             VerticalAlignment="Center"/>
-                    <TextBlock Text="Tag (hex):" VerticalAlignment="Center" Margin="5,0,2,0"/>
-                    <TextBox Text="{Binding Tag, StringFormat={}{0:X2}, Mode=OneWay}"
-                             MaxLength="2"
-                             IsReadOnly="True"/>
-                </StackPanel>
-            </StatusBarItem>
-            <Separator Visibility="{Binding UnusedBitsVisible, Converter={StaticResource BooleanToVisibility}}"/>
             <StatusBarItem>
                 <StackPanel Orientation="Horizontal"
                             Visibility="{Binding UnusedBitsVisible, Converter={StaticResource BooleanToVisibility}}">
@@ -66,13 +51,6 @@
                              MaxLength="1"
                              FontFamily="Consolas"/>
                 </StackPanel>
-            </StatusBarItem>
-            <Separator/>
-            <StatusBarItem>
-                <TextBlock>
-                    <Run Text="Tag name:"/>
-                    <Run Text="{Binding TagName, Mode=OneWay}"/>
-                </TextBlock>
             </StatusBarItem>
             <StatusBarItem HorizontalAlignment="Right">
                 <StackPanel Orientation="Horizontal">

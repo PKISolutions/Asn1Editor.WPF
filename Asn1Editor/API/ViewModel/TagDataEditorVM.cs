@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Globalization;
 using System.Linq;
 using System.Windows.Input;
 using Asn1Editor.Wpf.Controls.Helpers;
@@ -17,15 +16,15 @@ namespace SysadminsLV.Asn1Editor.API.ViewModel;
 
 class TagDataEditorVM : ViewModelBase, ITagDataEditorVM {
     readonly IDataSource _data;
-    const String masterTag = "123";
     const String masterUnused = "1";
     NodeEditMode mode;
     Boolean? dialogResult;
     String tagDetails;
     AsnViewValue tagValue, oldValue;
-    Boolean rbText = true, rbHex, isReadonly, tagIsReadOnly = true;
-    Byte unusedBits, tag;
-    Double tagTextBoxWidth, unusedTextBoxWidth;
+    Boolean rbText = true, rbHex, isReadonly;
+    Byte unusedBits;
+    Double unusedTextBoxWidth;
+
 
     public TagDataEditorVM(IHasAsnDocumentTabs appTabs) {
         _data = appTabs.SelectedTab.DataSource;
@@ -40,6 +39,9 @@ class TagDataEditorVM : ViewModelBase, ITagDataEditorVM {
     public Asn1Lite Node { get; private set; }
     public NodeViewOptions NodeViewOptions { get; }
 
+    /// <summary>
+    /// Gets or sets ASN node formatted text information.
+    /// </summary>
     public String TagDetails {
         get => tagDetails;
         set {
@@ -54,27 +56,6 @@ class TagDataEditorVM : ViewModelBase, ITagDataEditorVM {
             OnPropertyChanged(nameof(TagValue));
         }
     }
-    public Boolean TagIsReadOnly {
-        get => tagIsReadOnly;
-        set {
-            tagIsReadOnly = value;
-            OnPropertyChanged(nameof(TagIsReadOnly));
-        }
-    }
-    public Byte Tag {
-        get => tag;
-        set {
-            if (Byte.TryParse(value.ToString(CultureInfo.InvariantCulture), out Byte t)) {
-                tag = t;
-            }
-            if (t != 0) {
-                OnPropertyChanged(nameof(TagName));
-            }
-            OnPropertyChanged(nameof(UnusedBitsVisible));
-            OnPropertyChanged(nameof(Tag));
-        }
-    }
-    public String TagName => Asn1Reader.GetTagName(Tag);
     public Byte UnusedBits {
         get => unusedBits;
         set {
@@ -82,7 +63,7 @@ class TagDataEditorVM : ViewModelBase, ITagDataEditorVM {
             OnPropertyChanged(nameof(UnusedBits));
         }
     }
-    public Boolean UnusedBitsVisible => Tag == (Byte)Asn1Type.BIT_STRING;
+    public Boolean UnusedBitsVisible => Node.Tag == (Byte)Asn1Type.BIT_STRING;
     public Boolean IsReadOnly {
         get => isReadonly;
         set {
@@ -92,13 +73,6 @@ class TagDataEditorVM : ViewModelBase, ITagDataEditorVM {
         }
     }
     public Boolean IsEditable => !IsReadOnly;
-    public Double TagTextBoxWidth {
-        get => tagTextBoxWidth;
-        set {
-            tagTextBoxWidth = value;
-            OnPropertyChanged(nameof(TagTextBoxWidth));
-        }
-    }
     public Double UnusedTextBoxWidth {
         get => unusedTextBoxWidth;
         set {
@@ -145,24 +119,15 @@ class TagDataEditorVM : ViewModelBase, ITagDataEditorVM {
         tagValue = new AsnViewValue();
         calculateLengths();
         Settings.Default.PropertyChanged += (Sender, Args) => {
-                                                if (Args.PropertyName == nameof(Settings.FontSize)) {
-                                                    calculateLengths();
-                                                }
-                                            };
+            if (Args.PropertyName == nameof(Settings.FontSize)) {
+                calculateLengths();
+            }
+        };
     }
     void calculateLengths() {
-        TagTextBoxWidth = TextUtility.MeasureStringWidth(masterTag, Settings.Default.FontSize, false);
         UnusedTextBoxWidth = TextUtility.MeasureStringWidth(masterUnused, Settings.Default.FontSize, false);
     }
     void submitValues(Object obj) {
-        if (Tag == 0) {
-            Tools.MsgBox("Error", "Invalid tag number");
-            return;
-        }
-        if (mode == NodeEditMode.NewNode) {
-            saveNewNode();
-            return;
-        }
         if (Equals(TagValue, oldValue)) {
             DialogResult = true;
             return;
@@ -171,31 +136,6 @@ class TagDataEditorVM : ViewModelBase, ITagDataEditorVM {
     }
     void close(Object o) {
         Node = null;
-        DialogResult = true;
-    }
-    void saveNewNode() {
-        var asn = new Asn1Reader([Tag, 0]);
-        Asn1Lite node;
-        // if it is constructed or value is not entered, use it as is and ignore possible entered tag value
-        if (asn.IsConstructed || String.IsNullOrWhiteSpace(TagValue?.TextValue?.Trim())) {
-            node = new Asn1Lite(asn);
-        } else {
-            // some tag value is entered, attempt to validate
-            Byte[] binValue = validateValue();
-            if (binValue == null) {
-                return;
-            }
-            asn = new Asn1Reader(binValue);
-            node = new Asn1Lite(asn);
-        }
-        // if it is not root node, update offset, depth and mark it non-root
-        if (_data.SelectedNode != null) {
-            node.Offset = _data.SelectedNode.Value.Offset + _data.SelectedNode.Value.TagLength;
-            node.Depth += _data.SelectedNode.Value.Depth;
-        }
-
-        Node = node;
-        updateNewNodeBinarySource(asn.GetRawData());
         DialogResult = true;
     }
     void saveEditChanges() {
@@ -218,17 +158,14 @@ class TagDataEditorVM : ViewModelBase, ITagDataEditorVM {
         try {
             // if we are in hex mode, or we are in text mode, but text is hex, go to hex
             if (rbHex || (!rbHex && (TagValue.Options & AsnViewValueOptions.SupportsPrintableText) == 0)) {
-                binValue = AsnDecoder.EncodeHex(Tag, TagValue.TextValue, UnusedBits);
+                binValue = AsnDecoder.EncodeHex(Node.Tag, TagValue.TextValue, UnusedBits);
             } else {
-                binValue = AsnDecoder.EncodeGeneric(Tag, TagValue.TextValue, UnusedBits);
+                binValue = AsnDecoder.EncodeGeneric(Node.Tag, TagValue.TextValue, UnusedBits);
             }
         } catch (Exception e) {
             Tools.MsgBox("Error", e.Message);
         }
         return binValue;
-    }
-    void updateNewNodeBinarySource(IEnumerable<Byte> binData) {
-        _data.RawData.InsertRange(Node.Offset, binData);
     }
     void updateBinaryCopy(IEnumerable<Byte> newBytes) {
         _data.RawData.RemoveRange(Node.Offset, Node.TagLength);
@@ -258,19 +195,14 @@ class TagDataEditorVM : ViewModelBase, ITagDataEditorVM {
     }
     void copyValues() {
         Node = _data.SelectedNode.Value;
-        Tag = Node.Tag;
         UnusedBits = Node.UnusedBits;
         IsReadOnly = Node.IsContainer || Node.Tag == (Byte)Asn1Type.NULL;
-        TagDetails = String.Format(Resources.TagEditorHeaderTemplate, Tag, Node.TagName, Node.Offset, Node.PayloadLength, Node.Depth, Node.Path);
+        TagDetails = String.Format(Resources.TagEditorHeaderTemplate, Node.Tag, Node.TagName, Node.Offset, Node.PayloadLength, Node.Depth, Node.Path);
+        OnPropertyChanged(nameof(UnusedBitsVisible));
     }
 
     public void SetBinding(NodeEditMode editMode) {
         mode = editMode;
-        if (editMode == NodeEditMode.NewNode) {
-            Tag = 48;
-            TagIsReadOnly = false;
-            return;
-        }
         copyValues();
         if (IsReadOnly || Node.Tag == (Byte)Asn1Type.NULL) {
             TagValue.TextValue = "Containers and NULL (0x05) tags are not editable";
