@@ -501,187 +501,6 @@
 1.3.6.1.5.5.7.48.2,Certification Authority Issuer
 1.3.6.1.5.5.8.1.1,HMAC-MD5
 1.3.6.1.5.5.8.1.2,HMAC-SHA
-2.16.840.1.101.2.1.1.1,sdnsSignatureAlgorithm
-2.16.840.1.101.2.1.1.10,mosaicKeyManagementAlgorithm
-2.16.840.1.101.2.1.1.11,sdnsKMandSigAlgorithm
-2.16.840.1.101.2.1.1.12,mosaicKMandSigAlgorithm
-2.16.840.1.101.2.1.1.13,SuiteASignatureAlgorithm
-2.16.840.1.101.2.1.1.14,SuiteAConfidentialityAlgorithm
-2.16.840.1.101.2.1.1.15,SuiteAIntegrityAlgorithm
-2.16.840.1.101.2.1.1.16,SuiteATokenProtectionAlgorithm
-2.16.840.1.101.2.1.1.17,SuiteAKeyManagementAlgorithm
-2.16.840.1.101.2.1.1.18,SuiteAKMandSigAlgorithm
-2.16.840.1.101.2.1.1.19,mosaicUpdatedSig
-2.16.840.1.101.2.1.1.2,mosaicSignatureAlgorithm
-2.16.840.1.101.2.1.1.20,mosaicKMandUpdSig
-2.16.840.1.101.2.1.1.21,mosaicUpdatedIntegAlgorithm
-2.16.840.1.101.2.1.1.22,mosaicKeyEncryptionAlgorithm
-2.16.840.1.101.2.1.1.3,sdnsConfidentialityAlgorithm
-2.16.840.1.101.2.1.1.4,mosaicConfidentialityAlgorithm
-2.16.840.1.101.2.1.1.5,sdnsIntegrityAlgorithm
-2.16.840.1.101.2.1.1.6,mosaicIntegrityAlgorithm
-2.16.840.1.101.2.1.1.7,sdnsTokenProtectionAlgorithm
-2.16.840.1.101.2.1.1.8,mosaicTokenProtectionAlgorithm
-2.16.840.1.101.2.1.1.9,sdnsKeyManagementAlgorithm
-2.16.840.1.113730.1,cert-extension
-2.16.840.1.113730.1.1,Netscape Cert Type
-2.16.840.1.113730.1.10,EntityLogo
-2.16.840.1.113730.1.11,UserPicture
-2.16.840.1.113730.1.12,Netscape SSL ServerName
-2.16.840.1.113730.1.13,Netscape Comment
-2.16.840.1.113730.1.2,Netscape Base URL
-2.16.840.1.113730.1.3,Netscape Revocation URL
-2.16.840.1.113730.1.4,Netscape CA Revocation URL
-2.16.840.1.113730.1.7,Netscape Cert Renewal URL
-2.16.840.1.113730.1.8,Netscape CA Policy URL
-2.16.840.1.113730.1.9,HomePage-url
-2.16.840.1.113730.2,data-type
-2.16.840.1.113730.2.1,GIF
-2.16.840.1.113730.2.2,JPEG
-2.16.840.1.113730.2.3,URL
-2.16.840.1.113730.2.4,HTML
-2.16.840.1.113730.2.5,netscape-cert-sequence
-2.16.840.1.113730.2.6,netscape-cert-url
-2.16.840.1.113730.3,LDAPv3
-2.16.840.1.113730.3.4.9,LDAP_CONTROL_VLVREQUEST
-2.16.840.1.113730.3.4.10,LDAP_CONTROL_VLVRESPONSE
-2.16.840.1.113730.4.1,serverGatedCrypto
-2.16.840.1.113733.1.6.3,Unknown Verisign extension
-2.16.840.1.113733.1.6.6,Unknown Verisign extension
-2.16.840.1.113733.1.7.1.1,Verisign certificatePolicy
-2.16.840.1.113733.1.7.1.1.1,Unknown Verisign policy qualifier
-2.16.840.1.113733.1.7.1.1.2,Unknown Verisign policy qualifier
-2.16.840.1.113733.1.7.23.3,Class 3 Certificate Policy
-2.23.133,TCPA
-2.23.133.1,tcpa_specVersion
-2.23.133.2,tcpa_attribute
-2.23.133.2.1,TPMManufacturer
-2.23.133.2.10,tcpa_at_securityQualities
-2.23.133.2.11,tcpa_at_tpmProtectionProfile
-2.23.133.2.12,tcpa_at_tpmSecurityTarget
-2.23.133.2.13,tcpa_at_foundationProtectionProfile
-2.23.133.2.14,tcpa_at_foundationSecurityTarget
-2.23.133.2.15,tcpa_at_tpmIdLabel
-2.23.133.2.2,TPMModel
-2.23.133.2.3,TPMVersion
-2.23.133.2.4,tcpa_at_platformManufacturer
-2.23.133.2.5,tcpa_at_platformModel
-2.23.133.2.6,tcpa_at_platformVersion
-2.23.133.2.7,tcpa_at_componentManufacturer
-2.23.133.2.8,tcpa_at_componentModel
-2.23.133.2.9,tcpa_at_componentVersion
-2.23.133.3,tcpa_protocol
-2.23.133.3.1,tcpa_prtt_tpmIdProtocol
-2.23.42.0,contentType
-2.23.42.0.0,PANData
-2.23.42.0.1,PANToken
-2.23.42.0.2,PANOnly
-2.23.42.1,msgExt
-2.23.42.10,national
-2.23.42.10.192,Japan
-2.23.42.2,field
-2.23.42.2.0,fullName
-2.23.42.2.1,givenName
-2.23.42.2.10,amount
-2.23.42.2.2,familyName
-2.23.42.2.3,birthFamilyName
-2.23.42.2.4,placeName
-2.23.42.2.5,identificationNumber
-2.23.42.2.6,month
-2.23.42.2.7,date
-2.23.42.2.7.11,accountNumber
-2.23.42.2.7.12,passPhrase
-2.23.42.2.8,address
-2.23.42.2.9,telephone
-2.23.42.3,attribute
-2.23.42.3.0,cert
-2.23.42.3.0.0,rootKeyThumb
-2.23.42.3.0.1,additionalPolicy
-2.23.42.4,algorithm
-2.23.42.5,policy
-2.23.42.5.0,root
-2.23.42.6,module
-2.23.42.7,certExt
-2.23.42.7.0,hashedRootKey
-2.23.42.7.1,certificateType
-2.23.42.7.2,merchantData
-2.23.42.7.3,cardCertRequired
-2.23.42.7.4,tunneling
-2.23.42.7.5,setExtensions
-2.23.42.7.6,setQualifier
-2.23.42.8,brand
-2.23.42.8.1,IATA-ATA
-2.23.42.8.30,Diners
-2.23.42.8.34,AmericanExpress
-2.23.42.8.4,VISA
-2.23.42.8.5,MasterCard
-2.23.42.8.6011,Novus
-2.23.42.9,vendor
-2.23.42.9.0,GlobeSet
-2.23.42.9.1,IBM
-2.23.42.9.10,Griffin
-2.23.42.9.11,Certicom
-2.23.42.9.12,OSS
-2.23.42.9.13,TenthMountain
-2.23.42.9.14,Antares
-2.23.42.9.15,ECC
-2.23.42.9.16,Maithean
-2.23.42.9.17,Netscape
-2.23.42.9.18,Verisign
-2.23.42.9.19,BlueMoney
-2.23.42.9.2,CyberCash
-2.23.42.9.20,Lacerte
-2.23.42.9.21,Fujitsu
-2.23.42.9.22,eLab
-2.23.42.9.23,Entrust
-2.23.42.9.24,VIAnet
-2.23.42.9.25,III
-2.23.42.9.26,OpenMarket
-2.23.42.9.27,Lexem
-2.23.42.9.28,Intertrader
-2.23.42.9.29,Persimmon
-2.23.42.9.3,Terisa
-2.23.42.9.30,NABLE
-2.23.42.9.31,espace-net
-2.23.42.9.32,Hitachi
-2.23.42.9.33,Microsoft
-2.23.42.9.34,NEC
-2.23.42.9.35,Mitsubishi
-2.23.42.9.36,NCR
-2.23.42.9.37,e-COMM
-2.23.42.9.38,Gemplus
-2.23.42.9.4,RSADSI
-2.23.42.9.5,VeriFone
-2.23.42.9.6,TrinTech
-2.23.42.9.7,BankGate
-2.23.42.9.8,GTE
-2.23.42.9.9,CompuSource
-2.23.140.1.1,CABF Extended Validation
-2.23.140.1.2,CABF TLS Baseline Requirements
-2.23.140.1.2.1,CABF TLS Domain Validated
-2.23.140.1.2.2,CABF TLS Organization Validated
-2.23.140.1.2.3,CABF TLS Individual Validated
-2.23.140.1.3,CABF Code Signing Extended Validation
-2.23.140.1.4.1,CABF Code Signing Baseline Requirements
-2.23.140.1.4.2,CABF Timestamp Code Signing Requirements
-2.23.140.1.5,CABF S/MIME Requirements
-2.23.140.1.5.1.1,CABF Mailbox Validated Legacy
-2.23.140.1.5.1.2,CABF Mailbox Validated Multipurpose
-2.23.140.1.5.1.3,CABF Mailbox Validated Strict
-2.23.140.1.5.2.1,CABF Organization Validated Legacy
-2.23.140.1.5.2.2,CABF Organization Validated Multipurpose
-2.23.140.1.5.2.3,CABF Organization Validated Strict
-2.23.140.1.5.3.1,CABF Sponsor Validated Legacy
-2.23.140.1.5.3.2,CABF Sponsor Validated Multipurpose
-2.23.140.1.5.3.3,CABF Sponsor Validated Strict
-2.23.140.1.5.4.1,CABF Individual Validated Legacy
-2.23.140.1.5.4.2,CABF Individual Validated Multipurpose
-2.23.140.1.5.4.3,CABF Individual Validated Strict
-2.23.140.1.31,CABF ONION TLS Extended Validation
-2.23.140.2.1,CABF Test Certificate
-2.23.140.3.1,CABF CA/Browser Forum EV
-2.23.140.41,CABF CA Signing Nonce
-2.23.140.42,CABF Applicant Signing Nonce
 2.5.29.1,Authority Key Identifier
 2.5.29.10,Basic Constraints
 2.5.29.11,Name Constraints (Obsolete)
@@ -767,4 +586,185 @@
 2.5.4.9,STREET
 2.5.8,X.500-Algorithms
 2.5.8.1,X.500-Alg-Encryption
-2.5.8.1.1,rsa
+2.5.8.1.1,RSA
+2.16.840.1.101.2.1.1.1,sdnsSignatureAlgorithm
+2.16.840.1.101.2.1.1.10,mosaicKeyManagementAlgorithm
+2.16.840.1.101.2.1.1.11,sdnsKMandSigAlgorithm
+2.16.840.1.101.2.1.1.12,mosaicKMandSigAlgorithm
+2.16.840.1.101.2.1.1.13,SuiteASignatureAlgorithm
+2.16.840.1.101.2.1.1.14,SuiteAConfidentialityAlgorithm
+2.16.840.1.101.2.1.1.15,SuiteAIntegrityAlgorithm
+2.16.840.1.101.2.1.1.16,SuiteATokenProtectionAlgorithm
+2.16.840.1.101.2.1.1.17,SuiteAKeyManagementAlgorithm
+2.16.840.1.101.2.1.1.18,SuiteAKMandSigAlgorithm
+2.16.840.1.101.2.1.1.19,mosaicUpdatedSig
+2.16.840.1.101.2.1.1.2,mosaicSignatureAlgorithm
+2.16.840.1.101.2.1.1.20,mosaicKMandUpdSig
+2.16.840.1.101.2.1.1.21,mosaicUpdatedIntegAlgorithm
+2.16.840.1.101.2.1.1.22,mosaicKeyEncryptionAlgorithm
+2.16.840.1.101.2.1.1.3,sdnsConfidentialityAlgorithm
+2.16.840.1.101.2.1.1.4,mosaicConfidentialityAlgorithm
+2.16.840.1.101.2.1.1.5,sdnsIntegrityAlgorithm
+2.16.840.1.101.2.1.1.6,mosaicIntegrityAlgorithm
+2.16.840.1.101.2.1.1.7,sdnsTokenProtectionAlgorithm
+2.16.840.1.101.2.1.1.8,mosaicTokenProtectionAlgorithm
+2.16.840.1.101.2.1.1.9,sdnsKeyManagementAlgorithm
+2.16.840.1.113730.1,cert-extension
+2.16.840.1.113730.1.1,Netscape Cert Type
+2.16.840.1.113730.1.10,EntityLogo
+2.16.840.1.113730.1.11,UserPicture
+2.16.840.1.113730.1.12,Netscape SSL ServerName
+2.16.840.1.113730.1.13,Netscape Comment
+2.16.840.1.113730.1.2,Netscape Base URL
+2.16.840.1.113730.1.3,Netscape Revocation URL
+2.16.840.1.113730.1.4,Netscape CA Revocation URL
+2.16.840.1.113730.1.7,Netscape Cert Renewal URL
+2.16.840.1.113730.1.8,Netscape CA Policy URL
+2.16.840.1.113730.1.9,HomePage-url
+2.16.840.1.113730.2,data-type
+2.16.840.1.113730.2.1,GIF
+2.16.840.1.113730.2.2,JPEG
+2.16.840.1.113730.2.3,URL
+2.16.840.1.113730.2.4,HTML
+2.16.840.1.113730.2.5,netscape-cert-sequence
+2.16.840.1.113730.2.6,netscape-cert-url
+2.16.840.1.113730.3,LDAPv3
+2.16.840.1.113730.3.4.9,LDAP_CONTROL_VLVREQUEST
+2.16.840.1.113730.3.4.10,LDAP_CONTROL_VLVRESPONSE
+2.16.840.1.113730.4.1,serverGatedCrypto
+2.16.840.1.113733.1.6.3,Unknown Verisign extension
+2.16.840.1.113733.1.6.6,Unknown Verisign extension
+2.16.840.1.113733.1.7.1.1,Verisign certificatePolicy
+2.16.840.1.113733.1.7.1.1.1,Unknown Verisign policy qualifier
+2.16.840.1.113733.1.7.1.1.2,Unknown Verisign policy qualifier
+2.16.840.1.113733.1.7.23.3,Class 3 Certificate Policy
+2.23.42.0,contentType
+2.23.42.0.0,PANData
+2.23.42.0.1,PANToken
+2.23.42.0.2,PANOnly
+2.23.42.1,msgExt
+2.23.42.10,national
+2.23.42.10.192,Japan
+2.23.42.2,field
+2.23.42.2.0,fullName
+2.23.42.2.1,givenName
+2.23.42.2.10,amount
+2.23.42.2.2,familyName
+2.23.42.2.3,birthFamilyName
+2.23.42.2.4,placeName
+2.23.42.2.5,identificationNumber
+2.23.42.2.6,month
+2.23.42.2.7,date
+2.23.42.2.7.11,accountNumber
+2.23.42.2.7.12,passPhrase
+2.23.42.2.8,address
+2.23.42.2.9,telephone
+2.23.42.3,attribute
+2.23.42.3.0,cert
+2.23.42.3.0.0,rootKeyThumb
+2.23.42.3.0.1,additionalPolicy
+2.23.42.4,algorithm
+2.23.42.5,policy
+2.23.42.5.0,root
+2.23.42.6,module
+2.23.42.7,certExt
+2.23.42.7.0,hashedRootKey
+2.23.42.7.1,certificateType
+2.23.42.7.2,merchantData
+2.23.42.7.3,cardCertRequired
+2.23.42.7.4,tunneling
+2.23.42.7.5,setExtensions
+2.23.42.7.6,setQualifier
+2.23.42.8,brand
+2.23.42.8.1,IATA-ATA
+2.23.42.8.30,Diners
+2.23.42.8.34,AmericanExpress
+2.23.42.8.4,VISA
+2.23.42.8.5,MasterCard
+2.23.42.8.6011,Novus
+2.23.42.9,vendor
+2.23.42.9.0,GlobeSet
+2.23.42.9.1,IBM
+2.23.42.9.10,Griffin
+2.23.42.9.11,Certicom
+2.23.42.9.12,OSS
+2.23.42.9.13,TenthMountain
+2.23.42.9.14,Antares
+2.23.42.9.15,ECC
+2.23.42.9.16,Maithean
+2.23.42.9.17,Netscape
+2.23.42.9.18,Verisign
+2.23.42.9.19,BlueMoney
+2.23.42.9.2,CyberCash
+2.23.42.9.20,Lacerte
+2.23.42.9.21,Fujitsu
+2.23.42.9.22,eLab
+2.23.42.9.23,Entrust
+2.23.42.9.24,VIAnet
+2.23.42.9.25,III
+2.23.42.9.26,OpenMarket
+2.23.42.9.27,Lexem
+2.23.42.9.28,Intertrader
+2.23.42.9.29,Persimmon
+2.23.42.9.3,Terisa
+2.23.42.9.30,NABLE
+2.23.42.9.31,espace-net
+2.23.42.9.32,Hitachi
+2.23.42.9.33,Microsoft
+2.23.42.9.34,NEC
+2.23.42.9.35,Mitsubishi
+2.23.42.9.36,NCR
+2.23.42.9.37,e-COMM
+2.23.42.9.38,Gemplus
+2.23.42.9.4,RSADSI
+2.23.42.9.5,VeriFone
+2.23.42.9.6,TrinTech
+2.23.42.9.7,BankGate
+2.23.42.9.8,GTE
+2.23.42.9.9,CompuSource
+2.23.133,TCPA
+2.23.133.1,tcpa_specVersion
+2.23.133.2,tcpa_attribute
+2.23.133.2.1,TPM Manufacturer
+2.23.133.2.10,tcpa_at_securityQualities
+2.23.133.2.11,tcpa_at_tpmProtectionProfile
+2.23.133.2.12,tcpa_at_tpmSecurityTarget
+2.23.133.2.13,tcpa_at_foundationProtectionProfile
+2.23.133.2.14,tcpa_at_foundationSecurityTarget
+2.23.133.2.15,tcpa_at_tpmIdLabel
+2.23.133.2.2,TPM Model
+2.23.133.2.3,TPM Version
+2.23.133.2.4,tcpa_at_platformManufacturer
+2.23.133.2.5,tcpa_at_platformModel
+2.23.133.2.6,tcpa_at_platformVersion
+2.23.133.2.7,tcpa_at_componentManufacturer
+2.23.133.2.8,tcpa_at_componentModel
+2.23.133.2.9,tcpa_at_componentVersion
+2.23.133.3,tcpa_protocol
+2.23.133.3.1,tcpa_prtt_tpmIdProtocol
+2.23.140.1.1,CABF Extended Validation
+2.23.140.1.2,CABF TLS Baseline Requirements
+2.23.140.1.2.1,CABF TLS Domain Validated
+2.23.140.1.2.2,CABF TLS Organization Validated
+2.23.140.1.2.3,CABF TLS Individual Validated
+2.23.140.1.3,CABF Code Signing Extended Validation
+2.23.140.1.4.1,CABF Code Signing Baseline Requirements
+2.23.140.1.4.2,CABF Timestamp Code Signing Requirements
+2.23.140.1.5,CABF S/MIME Requirements
+2.23.140.1.5.1.1,CABF Mailbox Validated Legacy
+2.23.140.1.5.1.2,CABF Mailbox Validated Multipurpose
+2.23.140.1.5.1.3,CABF Mailbox Validated Strict
+2.23.140.1.5.2.1,CABF Organization Validated Legacy
+2.23.140.1.5.2.2,CABF Organization Validated Multipurpose
+2.23.140.1.5.2.3,CABF Organization Validated Strict
+2.23.140.1.5.3.1,CABF Sponsor Validated Legacy
+2.23.140.1.5.3.2,CABF Sponsor Validated Multipurpose
+2.23.140.1.5.3.3,CABF Sponsor Validated Strict
+2.23.140.1.5.4.1,CABF Individual Validated Legacy
+2.23.140.1.5.4.2,CABF Individual Validated Multipurpose
+2.23.140.1.5.4.3,CABF Individual Validated Strict
+2.23.140.1.31,CABF ONION TLS Extended Validation
+2.23.140.2.1,CABF Test Certificate
+2.23.140.3.1,CABF CA/Browser Forum EV
+2.23.140.41,CABF CA Signing Nonce
+2.23.140.42,CABF Applicant Signing Nonce
