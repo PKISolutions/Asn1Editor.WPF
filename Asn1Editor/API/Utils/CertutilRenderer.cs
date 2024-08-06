@@ -8,47 +8,38 @@ using SysadminsLV.Asn1Parser;
 
 namespace SysadminsLV.Asn1Editor.API.Utils;
 
-class CertutilRenderer : ITextRenderer {
-    readonly IDataSource _dataSource;
+class CertutilRenderer(Asn1TreeNode baseNode) : ITextRenderer {
+    readonly IDataSource _dataSource = baseNode.GetDataSource();
     readonly StringBuilder _sb = new();
     readonly StringBuilder _line = new();
     readonly String nl = Environment.NewLine;
-    readonly Asn1TreeNode _rootNode;
     readonly List<Byte> _headList = new(4);
-    readonly HashSet<Byte> _noAsciiTags = new (
-        new[] {
-                  (Byte)Asn1Type.BOOLEAN,
-                  (Byte)Asn1Type.INTEGER,
-                  (Byte)Asn1Type.OBJECT_IDENTIFIER,
-              });
-    readonly HashSet<Byte> _explicitTextTags = new (
-        new [] {
-                   (Byte)Asn1Type.OBJECT_IDENTIFIER,
-                   (Byte)Asn1Type.UTCTime,
-                   (Byte)Asn1Type.GeneralizedTime,
-                   (Byte)Asn1Type.PrintableString,
-                   (Byte)Asn1Type.IA5String,
-                   (Byte)Asn1Type.NumericString,
-                   (Byte)Asn1Type.TeletexString,
-                   (Byte)Asn1Type.VisibleString,
-                   (Byte)Asn1Type.VideotexString,
-                   (Byte)Asn1Type.UTF8String,
-                   (Byte)Asn1Type.UniversalString,
-                   (Byte)Asn1Type.BMPString,
-               }
-    );
-
-    public CertutilRenderer(Asn1TreeNode node) {
-        _rootNode = node;
-        _dataSource = node.GetDataSource();
-    }
+    readonly HashSet<Byte> _noAsciiTags = [
+        (Byte)Asn1Type.BOOLEAN,
+        (Byte)Asn1Type.INTEGER,
+        (Byte)Asn1Type.OBJECT_IDENTIFIER
+    ];
+    readonly HashSet<Byte> _explicitTextTags = [
+        (Byte)Asn1Type.OBJECT_IDENTIFIER,
+        (Byte)Asn1Type.UTCTime,
+        (Byte)Asn1Type.GeneralizedTime,
+        (Byte)Asn1Type.PrintableString,
+        (Byte)Asn1Type.IA5String,
+        (Byte)Asn1Type.NumericString,
+        (Byte)Asn1Type.TeletexString,
+        (Byte)Asn1Type.VisibleString,
+        (Byte)Asn1Type.VideotexString,
+        (Byte)Asn1Type.UTF8String,
+        (Byte)Asn1Type.UniversalString,
+        (Byte)Asn1Type.BMPString
+    ];
 
     public String RenderText(Int32 textWidth) {
         _sb.Clear();
-        if (_rootNode == null) {
+        if (baseNode == null) {
             return _sb.ToString();
         }
-        foreach (Asn1TreeNode node in _rootNode.Flatten()) {
+        foreach (Asn1TreeNode node in baseNode.Flatten()) {
             String leftPad = getLeftPad(node);
             writeTagHeader(node, leftPad);
             if (!node.Value.IsContainer && node.Value.PayloadLength > 0) {
@@ -76,21 +67,45 @@ class CertutilRenderer : ITextRenderer {
         _line.AppendFormat("; {0} ({1:x} Bytes)", value.TagName, value.PayloadLength);
         _line.Append(nl);
         _sb.Append(_line);
+        if (value.Tag == (Byte)Asn1Type.BIT_STRING && node.IsContainer) {
+            writeLeadingNumber(leftPadString, value.PayloadStartOffset, value.UnusedBits);
+        }
+    }
+    void writeLeadingNumber(String leftPadString, Int32 offset, Byte leadingByte) {
+        _line.Clear();
+        _headList.Clear();
+        _headList.Add(leadingByte);
+        // write line address
+        _line.AppendFormat("{0:x4}: ", offset);
+        // pad from
+        _line.Append(leftPadString + "   ");
+        _line.Append(AsnFormatter.BinaryToString([leadingByte], EncodingType.Hex));
+        _sb.Append(_line);
     }
     void writeContent(Asn1TreeNode node, String leftPadString) {
         Asn1Lite value = node.Value;
         _line.Clear();
 
-        List<String> lines = getHexTable(node);
+        CertutilRenderLine hexTable = getHexTable(node);
+        var lines = hexTable.Lines;
         String padLeftContent = String.Empty;
         if (node.Parent != null) {
             padLeftContent = node.MyIndex < node.Parent.Children.Count - 1 ? "|  " : "   ";
         }
 
         for (Int32 i = 0; i < lines.Count; i++) {
-            _line.AppendFormat("{0:x4}: ", value.PayloadStartOffset + i * 16);
+            Int32 address;
+            if (i == 0 && hexTable.Shift == 1) {
+                address = value.PayloadStartOffset;
+            } else if (hexTable.Shift == 1) {
+                address = value.PayloadStartOffset + hexTable.Shift + (i - 1) * 16;
+            } else {
+                address = value.PayloadStartOffset + hexTable.Shift + i * 16;
+            }
+            _line.AppendFormat("{0:x4}: ", address);
             // shift right nested content
-            _line.Append(leftPadString).Append(padLeftContent);
+            _line.Append(leftPadString)
+                .Append(padLeftContent);
             if (!_noAsciiTags.Contains(value.Tag)) {
                 Int32 index = lines[i].LastIndexOf("  ", StringComparison.InvariantCulture);
                 if (index >= 0) {
@@ -106,26 +121,31 @@ class CertutilRenderer : ITextRenderer {
         }
         _sb.Append(_line);
     }
-    List<String> getHexTable(Asn1TreeNode node) {
+    CertutilRenderLine getHexTable(Asn1TreeNode node) {
         Asn1Lite value = node.Value;
 
         Byte[] binValue = getTagBinaryValue(node.Value);
         Byte? highByte = null;
+        Byte shift = 0;
         if (node.Value.Tag == (Byte)Asn1Type.INTEGER && binValue[0] == 0) {
+            shift = 1;
             highByte = 0;
             binValue = binValue.Skip(1).ToArray();
         }
         String strValue = AsnFormatter.BinaryToString(binValue, _noAsciiTags.Contains(value.Tag)
             ? EncodingType.Hex
             : EncodingType.HexAscii).TrimEnd();
-        List<String> lines = strValue.Split(new[] { nl }, StringSplitOptions.RemoveEmptyEntries).ToList();
+        List<String> lines = strValue.Split([nl], StringSplitOptions.RemoveEmptyEntries).ToList();
         if (node.Value.Tag == (Byte)Asn1Type.BIT_STRING) {
-            lines.Insert(0, $"{node.Value.UnusedBits:x2} ; UNUSED BITS");
+            shift = 1;
+            if (!node.IsContainer) {
+                lines.Insert(0, $"{node.Value.UnusedBits:x2} ; UNUSED BITS");
+            }
         } else if (highByte.HasValue) {
             lines.Insert(0, $"{highByte.Value:x2}");
         }
 
-        return lines;
+        return new CertutilRenderLine(shift, lines);
     }
     Byte[] getTagBinaryValue(Asn1Lite node) {
         Int32 skip = node.Tag == (Byte)Asn1Type.BIT_STRING ? node.PayloadStartOffset + 1 : node.PayloadStartOffset;
@@ -138,7 +158,7 @@ class CertutilRenderer : ITextRenderer {
         }
         var sb = new StringBuilder();
         List<Int32> l = getParents(node);
-        for (Int32 i = _rootNode.Value.Depth; i < node.Value.Depth; i++) {
+        for (Int32 i = baseNode.Value.Depth; i < node.Value.Depth; i++) {
             sb.Append(l.Contains(i) ? "|  " : "   ");
         }
         return sb.ToString();
@@ -155,5 +175,9 @@ class CertutilRenderer : ITextRenderer {
             n = n.Parent;
         }
         return depths;
+    }
+    record CertutilRenderLine(Int32 Shift, IList<String> Lines) {
+        public Int32 Shift { get; } = Shift;
+        public IList<String> Lines { get; } = Lines;
     }
 }
