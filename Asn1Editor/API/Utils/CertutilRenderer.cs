@@ -87,7 +87,7 @@ class CertutilRenderer(Asn1TreeNode baseNode) : ITextRenderer {
         _line.Clear();
 
         CertutilRenderLine hexTable = getHexTable(node);
-        var lines = hexTable.Lines;
+        IList<String> lines = hexTable.Lines;
         String padLeftContent = String.Empty;
         if (node.Parent != null) {
             padLeftContent = node.MyIndex < node.Parent.Children.Count - 1 ? "|  " : "   ";
