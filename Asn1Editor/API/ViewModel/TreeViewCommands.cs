@@ -15,11 +15,9 @@ using SysadminsLV.WPF.OfficeTheme.Toolkit.Commands;
 namespace SysadminsLV.Asn1Editor.API.ViewModel;
 
 class TreeViewCommands : ViewModelBase, ITreeCommands {
+    static readonly List<Byte> _excludedTags = Asn1Reader.GetRestrictedTags();
     readonly IWindowFactory _windowFactory;
     readonly IHasAsnDocumentTabs _tabs;
-    readonly List<Byte> _excludedTags = new(
-        new Byte[] { 0, 1, 2, 5, 6, 9, 10, 13 }
-    );
 
     Boolean hasNodeClipboardData;
 
