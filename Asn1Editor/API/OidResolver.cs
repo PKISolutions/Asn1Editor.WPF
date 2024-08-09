@@ -9,15 +9,19 @@ using SysadminsLV.WPF.OfficeTheme.Toolkit;
 
 namespace SysadminsLV.Asn1Editor.API;
 
-static class OidDbManager {
+interface IOidDbManager {
+    void ReloadLookup();
+    Boolean SaveUserLookup();
+}
+class OidDbManager : IOidDbManager {
     const String oidFileName = "OID.txt";
-    public static String[] OidLookupLocations { get; set; } = Array.Empty<String>();
+    public String[] OidLookupLocations { get; set; } = [];
 
-    public static void ReloadLookup() {
+    public void ReloadLookup() {
         OidResolver.Reset();
         readOids();
     }
-    public static Boolean SaveUserLookup() {
+    public Boolean SaveUserLookup() {
         try {
             String path = Path.Combine(OidLookupLocations[1], oidFileName);
             using var stream = new StreamWriter(path);
@@ -32,7 +36,7 @@ static class OidDbManager {
 
         return true;
     }
-    static void readOids() {
+    void readOids() {
         for (Int32 i = 0; i < OidLookupLocations.Length; i++) {
             Boolean userKey = Convert.ToBoolean(i);
             String oidFolderLocation = OidLookupLocations[i];
@@ -45,7 +49,7 @@ static class OidDbManager {
             return;
         }
         String[] strings = File.ReadAllLines(filePath);
-        foreach (String[] tokens in strings.Select(str => str.Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries))) {
+        foreach (String[] tokens in strings.Select(str => str.Split([','], StringSplitOptions.RemoveEmptyEntries))) {
             if (tokens.Length != 2) {
                 continue;
             }

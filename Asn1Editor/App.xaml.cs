@@ -33,10 +33,6 @@ public partial class App {
         Dispatcher.UnhandledException += OnDispatcherUnhandledException;
         _options = readSettings();
         _options.PropertyChanged += onOptionsChanged;
-        OidDbManager.OidLookupLocations = new[]{
-                                                    Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location),
-                                                    _appDataPath
-                                                };
     }
 
     public static IUnityContainer Container { get; private set; }
@@ -56,7 +52,8 @@ public partial class App {
         _logger.Write($"PID    : {Process.GetCurrentProcess().Id}");
         _logger.Write($"Version: {Assembly.GetExecutingAssembly().GetName().Version}");
         configureUnity();
-        OidDbManager.ReloadLookup();
+        IOidDbManager oidMgr = Container.Resolve<IOidDbManager>();
+        oidMgr.ReloadLookup();
         parseArguments(e.Args);
         base.OnStartup(e);
         Container.Resolve<MainWindow>().Show();
@@ -103,6 +100,10 @@ public partial class App {
         Container.RegisterType<ITagDataEditorVM, TagDataEditorVM>();
         Container.RegisterType<IOidEditorVM, OidEditorVM>();
         Container.RegisterInstance(_options);
+        var oidMgr = new OidDbManager {
+            OidLookupLocations = [Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), _appDataPath]
+        };
+        Container.RegisterInstance<IOidDbManager>(oidMgr);
     }
     void onOptionsChanged(Object s, PropertyChangedEventArgs e) {
         using var sw = new StreamWriter(Path.Combine(_appDataPath, "user.config"), false);
