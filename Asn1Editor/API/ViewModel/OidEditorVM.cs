@@ -13,14 +13,16 @@ class OidEditorVM : ViewModelBase, IOidEditorVM {
     readonly Regex _regex = new(@"^[0-2]\.([0-9]|[12][0-9]|3[0-9])(\.\d+)*$", RegexOptions.Compiled);
     readonly ObservableCollection<OidDto> _oidList = new();
     readonly IHasAsnDocumentTabs _tabs;
+    readonly IOidDbManager _oidMgr;
 
     String oidValue, friendlyName, searchText;
     Boolean? dialogResult;
     OidDto selectedItem;
     OidSearchScope searchScope;
 
-    public OidEditorVM(IHasAsnDocumentTabs tabs) {
+    public OidEditorVM(IHasAsnDocumentTabs tabs, IOidDbManager oidMgr) {
         _tabs = tabs;
+        _oidMgr = oidMgr;
         ReloadCommand = new RelayCommand(reload);
         SaveCommand = new RelayCommand(save, canSave);
         ResetCommand = new RelayCommand(reset);
@@ -128,7 +130,7 @@ class OidEditorVM : ViewModelBase, IOidEditorVM {
             oidEntry.SetFriendlyName(friendlyName);
         }
         OidResolver.Add(OidValue, FriendlyName, true);
-        if (OidDbManager.SaveUserLookup()) {
+        if (_oidMgr.SaveUserLookup()) {
             reset(null);
         }
         OidView.Refresh();
@@ -148,7 +150,7 @@ class OidEditorVM : ViewModelBase, IOidEditorVM {
         _oidList.Remove(SelectedItem);
         OidResolver.Remove(OidValue);
         // fall-back
-        if (!OidDbManager.SaveUserLookup()) {
+        if (!_oidMgr.SaveUserLookup()) {
             OidValue = null;
             FriendlyName = null;
             OidResolver.Add(backupOid.Value, backupOid.FriendlyName, backupOid.UserDefined);
