@@ -92,7 +92,7 @@ public class Asn1DocumentVM : AsyncViewModel {
 
         try {
             decodeFile(bytes);
-            Asn1TreeNode rootNode = await AsnTreeBuilder.BuildTree(DataSource);
+            Asn1TreeNode rootNode = await AsnTreeBuilder.BuildTreeAsync(DataSource);
             Tree.Add(rootNode);
             DataSource.FinishBinaryUpdate();
         } finally {

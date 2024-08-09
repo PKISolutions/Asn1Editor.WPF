@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using SysadminsLV.Asn1Editor.API.Interfaces;
@@ -9,24 +8,44 @@ using SysadminsLV.Asn1Parser;
 namespace SysadminsLV.Asn1Editor.API.Utils.ASN;
 
 public static class AsnTreeBuilder {
-    public static Task<Asn1TreeNode> BuildTree(Byte[] rawData, IDataSource dataSource) {
-        return Task.Factory.StartNew(() => {
-                                         var asn = new Asn1Reader(rawData);
-                                         asn.BuildOffsetMap();
-                                         var root = new Asn1Lite(asn);
-                                         var parent = new Asn1TreeNode(root, dataSource);
-                                         if (asn.NextOffset == 0) {
-                                             return parent;
-                                         }
-                                         var list = new List<Asn1TreeNode> { parent };
-                                         buildTree(asn, parent);
-                                         return list[0];
-                                     });
+    /// <summary>
+    /// Builds ASN.1 tree from ASN.1-encoded byte array.
+    /// </summary>
+    /// <param name="rawData">ASN.1-encoded byte array</param>
+    /// <param name="dataSource">Data source to associate root node with.</param>
+    /// <returns>Root node with decoded children nodes.</returns>
+    /// <remarks>This method is a synchronous version of <see cref="BuildTreeAsync(Byte[], IDataSource)"/></remarks>
+    public static Asn1TreeNode BuildTree(Byte[] rawData, IDataSource dataSource) {
+        var asn = new Asn1Reader(rawData);
+        asn.BuildOffsetMap();
+        var rootValue = new Asn1Lite(asn);
+        var rootNode = new Asn1TreeNode(rootValue, dataSource);
+        if (asn.NextOffset == 0) {
+            return rootNode;
+        }
+        buildTree(asn, rootNode);
+        
+        return rootNode;
+    }
+    /// <summary>
+    /// Builds ASN.1 tree from ASN.1-encoded byte array.
+    /// </summary>
+    /// <param name="rawData">ASN.1-encoded byte array</param>
+    /// <param name="dataSource">Data source to associate root node with.</param>
+    /// <returns>Root node with decoded children nodes.</returns>
+    /// <remarks>This method is an asynchronous version of <see cref="BuildTree(Byte[], IDataSource)"/></remarks>
+    public static Task<Asn1TreeNode> BuildTreeAsync(Byte[] rawData, IDataSource dataSource) {
+        return Task.Factory.StartNew(() => BuildTree(rawData, dataSource));
+    }
+    /// <summary>
+    /// Gets a new ASN.1 tree from existing data source.
+    /// </summary>
+    /// <param name="dataSource">Data source.</param>
+    /// <returns>Root node with decoded children nodes.</returns>
+    public static Task<Asn1TreeNode> BuildTreeAsync(IDataSource dataSource) {
+        return BuildTreeAsync(dataSource.RawData.ToArray(), dataSource);
     }
 
-    public static Task<Asn1TreeNode> BuildTree(IDataSource dataSource) {
-        return BuildTree(dataSource.RawData.ToArray(), dataSource);
-    }
     static void buildTree(Asn1Reader root, Asn1TreeNode tree) {
         root.MoveNext();
         Int32 index = 0;

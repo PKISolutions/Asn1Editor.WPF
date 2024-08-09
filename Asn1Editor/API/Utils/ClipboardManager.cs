@@ -19,6 +19,7 @@ static class ClipboardManager {
     }
     public static async Task<Asn1TreeNode> GetClipboardDataAsync(IDataSource dataSource) {
         return await AsnTreeBuilder.BuildTree(_rawData.ToArray(), dataSource);
+        return AsnTreeBuilder.BuildTreeAsync(_rawData.ToArray(), dataSource);
     }
     public static IEnumerable<Byte> GetClipboardBytes() {
         return _rawData;
