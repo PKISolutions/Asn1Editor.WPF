@@ -30,14 +30,14 @@ public partial class App {
     readonly NodeViewOptions _options;
 
     public App() {
-        Dispatcher.UnhandledException += OnDispatcherUnhandledException;
+        Dispatcher.UnhandledException += onDispatcherUnhandledException;
         _options = readSettings();
         _options.PropertyChanged += onOptionsChanged;
     }
 
     public static IUnityContainer Container { get; private set; }
 
-    void OnDispatcherUnhandledException(Object s, DispatcherUnhandledExceptionEventArgs e) {
+    static void onDispatcherUnhandledException(Object s, DispatcherUnhandledExceptionEventArgs e) {
         _logger.Write(e.Exception);
     }
     public static void Write(Exception e) {
@@ -62,7 +62,7 @@ public partial class App {
         _logger.Dispose();
         base.OnExit(e);
     }
-    async void parseArguments(IReadOnlyList<String> args) {
+    static async void parseArguments(IReadOnlyList<String> args) {
         for (Int32 i = 0; i < args.Count;) {
             switch (args[i].ToLower()) {
                 case "-path":  // open from a file
@@ -105,12 +105,12 @@ public partial class App {
         };
         Container.RegisterInstance<IOidDbManager>(oidMgr);
     }
-    void onOptionsChanged(Object s, PropertyChangedEventArgs e) {
+    static void onOptionsChanged(Object s, PropertyChangedEventArgs e) {
         using var sw = new StreamWriter(Path.Combine(_appDataPath, "user.config"), false);
         using var xw = XmlWriter.Create(sw);
         new XmlSerializer(typeof(NodeViewOptions)).Serialize(xw, s);
     }
-    NodeViewOptions readSettings() {
+    static NodeViewOptions readSettings() {
         if (File.Exists(Path.Combine(_appDataPath, "user.config"))) {
             try {
                 using var sr = new StreamReader(Path.Combine(_appDataPath, "user.config"));
