@@ -7,12 +7,8 @@ using SysadminsLV.WPF.OfficeTheme.Toolkit.CLR;
 
 namespace SysadminsLV.Asn1Editor.API.ModelObjects;
 
-class DataSource : ViewModelBase, IDataSource {
+class DataSource(NodeViewOptions viewOptions) : ViewModelBase, IDataSource {
     Asn1TreeNode selectedNode;
-
-    public DataSource(NodeViewOptions viewOptions) {
-        NodeViewOptions = viewOptions;
-    }
 
     protected void OnCollectionChanged(NotifyCollectionChangedEventArgs e) {
         if (RawData.IsNotifying && CollectionChanged != null) {
@@ -31,12 +27,12 @@ class DataSource : ViewModelBase, IDataSource {
             OnPropertyChanged(nameof(SelectedNode));
         }
     }
-    public NodeViewOptions NodeViewOptions { get; }
-    public ObservableCollection<Asn1TreeNode> Tree { get; } = new();
+    public NodeViewOptions NodeViewOptions { get; } = viewOptions;
+    public ObservableCollection<Asn1TreeNode> Tree { get; } = [];
     public void FinishBinaryUpdate() {
         OnCollectionChanged(new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Reset));
         if (Tree.Count > 0) {
-            Tree[0].UpdateNodeView(NodeViewOptions);
+            Tree[0].UpdateNodeView();
         }
     }
     public ObservableList<Byte> RawData { get; } = new(true, false);

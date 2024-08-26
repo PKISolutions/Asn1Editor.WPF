@@ -3,11 +3,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Linq;
-using System.Numerics;
-using System.Text;
 using SysadminsLV.Asn1Editor.API.Interfaces;
-using SysadminsLV.Asn1Editor.API.Utils.ASN;
-using SysadminsLV.Asn1Editor.Properties;
 using SysadminsLV.Asn1Parser;
 
 namespace SysadminsLV.Asn1Editor.API.ModelObjects;
@@ -25,7 +21,7 @@ public class Asn1TreeNode : INotifyPropertyChanged {
 
         Value = value;
         Path = value.Path;
-        String[] tokens = Path.Split(new[] { '/' }, StringSplitOptions.RemoveEmptyEntries);
+        String[] tokens = Path.Split(['/'], StringSplitOptions.RemoveEmptyEntries);
         MyIndex = String.IsNullOrEmpty(Path)
             ? 0
             : Convert.ToInt32(tokens[tokens.Length - 1]);
@@ -112,102 +108,16 @@ public class Asn1TreeNode : INotifyPropertyChanged {
         return _dataSource;
     }
 
-    public void UpdateNodeView(NodeViewOptions options) {
-        updateNodeHeader(this, options);
+    public void UpdateNodeView() {
+        updateNodeHeader(this);
     }
 
-    void updateNodeHeader(Asn1TreeNode node, NodeViewOptions options) {
-        if (node.Value.Tag == (Byte)Asn1Type.INTEGER) {
-            updateIntValue(node.Value, options.IntegerAsInteger);
-        }
-        if (node.Value.Tag == (Byte)Asn1Type.OBJECT_IDENTIFIER) {
-            updateOidValue(node.Value);
-        }
-        var outerList = new List<String>();
-        var innerList = new List<String>();
-        if (options.ShowNodePath) {
-            outerList.Add($"({node.Path})");
-        }
-        if (options.ShowTagNumber) {
-            innerList.Add(options.ShowInHex ? $"T:{node.Value.Tag:x2}" : $"T:{node.Value.Tag}");
-        }
-        if (options.ShowNodeOffset) {
-            innerList.Add(options.ShowInHex ? $"O:{node.Value.Offset:x4}" : $"O:{node.Value.Offset}");
-        }
-        if (options.ShowNodeLength) {
-            innerList.Add(options.ShowInHex ? $"L:{node.Value.PayloadLength:x4}" : $"L:{node.Value.PayloadLength}");
-        }
-        if (innerList.Count > 0) {
-            outerList.Add("(" + String.Join(", ", innerList) + ")");
-        }
-        outerList.Add(node.Value.TagName);
-        if (options.ShowContent) {
-            if (!String.IsNullOrEmpty(node.Value.ExplicitValue)) {
-                outerList.Add(":");
-                outerList.Add(node.Value.ExplicitValue);
-            }
-
-        }
-        node.Value.Header = String.Join(" ", outerList);
-        node.Value.ToolTip = writeToolTip(node);
+    void updateNodeHeader(Asn1TreeNode node) {
+        node.Value.UpdateNodeHeader(_dataSource.RawData, _dataSource.NodeViewOptions);
         foreach (Asn1TreeNode child in node.Children) {
-            updateNodeHeader(child, options);
+            updateNodeHeader(child);
         }
     }
-    void updateIntValue(Asn1Lite node, Boolean forceInteger) {
-        if (forceInteger) {
-            Byte[] raw = _dataSource.RawData.Skip(node.PayloadStartOffset).Take(node.PayloadLength).ToArray();
-            node.ExplicitValue = new BigInteger(raw.Reverse().ToArray()).ToString();
-        } else {
-            Byte[] raw = _dataSource.RawData.Skip(node.PayloadStartOffset).Take(node.PayloadLength).ToArray();
-            node.ExplicitValue = AsnFormatter.BinaryToString(
-                raw,
-                EncodingType.HexRaw,
-                EncodingFormat.NOCRLF
-            );
-        }
-    }
-    void updateOidValue(Asn1Lite node) {
-        Byte[] raw = _dataSource.RawData.Skip(node.Offset).Take(node.TagLength).ToArray();
-        node.ExplicitValue = AsnDecoder.GetViewValue(new Asn1Reader(raw));
-    }
-    String writeToolTip(Asn1TreeNode node) {
-        var sb = new StringBuilder();
-        sb.AppendFormat(
-            Resources.TagEditorHeaderTemp,
-            node.Value.Tag,
-            node.Value.TagName,
-            node.Value.Offset,
-            node.Value.TagLength,
-            node.Value.Depth,
-            node.Value.Path);
-        sb.AppendLine();
-        if (!node.Value.IsContainer) {
-            sb.Append("Value:");
-            if (node.Value.PayloadLength == 0) {
-                sb.AppendLine(" NULL");
-            } else {
-                sb.AppendLine();
-                Int32 skip = node.Value.PayloadStartOffset;
-                Int32 take = node.Value.PayloadLength;
-                Boolean writeUnusedBits = false;
-                if (node.Value.Tag == (Byte)Asn1Type.BIT_STRING) {
-                    skip++;
-                    take--;
-                    writeUnusedBits = true;
-                }
-                if (writeUnusedBits) {
-                    sb.AppendLine($"Unused Bits: {node.Value.UnusedBits}");
-                }
-                Byte[] binData = _dataSource.RawData.Skip(skip).Take(take).ToArray();
-                sb.Append(binData.Length == 0
-                    ? "EMPTY"
-                    : AsnFormatter.BinaryToString(binData, EncodingType.Hex).TrimEnd());
-            }
-        }
-        return sb.ToString();
-    }
-
     void notifySizeChanged(Asn1TreeNode source, Int32 difference) {
         Asn1TreeNode t = this;
         do {
@@ -228,7 +138,7 @@ public class Asn1TreeNode : INotifyPropertyChanged {
                 // shift payload start offset to extra length bytes
                 t.Value.PayloadStartOffset += diff;
                 t.updateOffset(diff);
-                t.Value.Offset -= diff; // TODO this: updateOffset method updates current node as well which is not neccessary
+                t.Value.Offset -= diff; // TODO this: updateOffset method updates current node as well which is not necessary
             }
             source = t;
             t = t.Parent;
@@ -251,7 +161,7 @@ public class Asn1TreeNode : INotifyPropertyChanged {
     static void updatePath(Asn1TreeNode source, String path, Int32 index) {
         source.Value.Path = source.Path = path + "/" + index;
         source.MyIndex = index;
-        Int32 deepness = source.Value.Path.Split(new[] { '/' }, StringSplitOptions.RemoveEmptyEntries).Length;
+        Int32 deepness = source.Value.Path.Split(['/'], StringSplitOptions.RemoveEmptyEntries).Length;
         source.Value.Depth = deepness;
         for (Int32 i = 0; i < source.Children.Count; i++) {
             updatePath(source.Children[i], source.Path, i);

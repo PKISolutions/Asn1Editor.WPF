@@ -306,7 +306,7 @@ class MainWindowVM : ViewModelBase, IMainWindowVM, IHasAsnDocumentTabs {
     public void RefreshTabs() {
         foreach (Asn1DocumentVM tab in Tabs) {
             if (tab.Tree.Any()) {
-                tab.Tree[0].UpdateNodeView(NodeViewOptions);
+                tab.Tree[0].UpdateNodeView();
             }
         }
     }

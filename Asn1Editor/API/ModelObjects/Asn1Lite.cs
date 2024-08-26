@@ -1,11 +1,15 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Numerics;
+using System.Text;
 using Asn1Editor.Wpf.Controls;
 using SysadminsLV.Asn1Editor.API.Utils.ASN;
 using SysadminsLV.Asn1Editor.API.ViewModel;
 using SysadminsLV.Asn1Editor.Properties;
 using SysadminsLV.Asn1Parser;
 
-namespace SysadminsLV.Asn1Editor.API.ModelObjects; 
+namespace SysadminsLV.Asn1Editor.API.ModelObjects;
 
 public class Asn1Lite : ViewModelBase, IHexAsnNode {
     Byte tag, unusedBits;
@@ -155,6 +159,101 @@ public class Asn1Lite : ViewModelBase, IHexAsnNode {
                 InvalidData = true;
             }
         }
+    }
+
+
+    public void UpdateNodeHeader(IReadOnlyList<Byte> rawData, NodeViewOptions options) {
+        Header = getNodeHeader(rawData, options);
+        ToolTip = calculateToolTip(rawData);
+    }
+    String getNodeHeader(IReadOnlyList<Byte> rawData, NodeViewOptions options) {
+        if (Tag == (Byte)Asn1Type.INTEGER) {
+            updateIntValue(rawData, options.IntegerAsInteger);
+        }
+        if (Tag == (Byte)Asn1Type.OBJECT_IDENTIFIER) {
+            updateOidValue(rawData);
+        }
+        var outerList = new List<String>();
+        var innerList = new List<String>();
+        if (options.ShowNodePath) {
+            outerList.Add($"({Path})");
+        }
+        if (options.ShowTagNumber) {
+            innerList.Add(options.ShowInHex ? $"T:{Tag:x2}" : $"T:{Tag}");
+        }
+        if (options.ShowNodeOffset) {
+            innerList.Add(options.ShowInHex ? $"O:{Offset:x4}" : $"O:{Offset}");
+        }
+        if (options.ShowNodeLength) {
+            innerList.Add(options.ShowInHex ? $"L:{PayloadLength:x4}" : $"L:{PayloadLength}");
+        }
+        if (innerList.Count > 0) {
+            outerList.Add("(" + String.Join(", ", innerList) + ")");
+        }
+        outerList.Add(TagName);
+        if (options.ShowContent) {
+            if (!String.IsNullOrEmpty(ExplicitValue)) {
+                outerList.Add(":");
+                outerList.Add(ExplicitValue);
+            }
+
+        }
+
+        return String.Join(" ", outerList);
+    }
+    void updateIntValue(IEnumerable<Byte> rawData, Boolean forceInteger) {
+        if (forceInteger) {
+            Byte[] raw = rawData.Skip(PayloadStartOffset).Take(PayloadLength).ToArray();
+            ExplicitValue = new BigInteger(raw.Reverse().ToArray()).ToString();
+        } else {
+            Byte[] raw = rawData.Skip(PayloadStartOffset).Take(PayloadLength).ToArray();
+            ExplicitValue = AsnFormatter.BinaryToString(
+                raw,
+                EncodingType.HexRaw,
+                EncodingFormat.NOCRLF
+            );
+        }
+    }
+    void updateOidValue(IEnumerable<Byte> rawData) {
+        Byte[] raw = rawData.Skip(Offset).Take(TagLength).ToArray();
+        ExplicitValue = AsnDecoder.GetViewValue(new Asn1Reader(raw));
+    }
+    String calculateToolTip(IEnumerable<Byte> rawData) {
+        var sb = new StringBuilder();
+        sb.AppendFormat(
+            Resources.TagEditorHeaderTemp,
+            Tag,
+            TagName,
+            Offset,
+            TagLength,
+            Depth,
+            Path);
+        sb.AppendLine();
+        if (!IsContainer) {
+            sb.Append("Value:");
+            if (PayloadLength == 0) {
+                sb.AppendLine(" NULL");
+            } else {
+                sb.AppendLine();
+                Int32 skip = PayloadStartOffset;
+                Int32 take = PayloadLength;
+                Boolean writeUnusedBits = false;
+                if (Tag == (Byte)Asn1Type.BIT_STRING) {
+                    skip++;
+                    take--;
+                    writeUnusedBits = true;
+                }
+                if (writeUnusedBits) {
+                    sb.AppendLine($"Unused Bits: {UnusedBits}");
+                }
+                Byte[] binData = rawData.Skip(skip).Take(take).ToArray();
+                sb.Append(binData.Length == 0
+                    ? "EMPTY"
+                    : AsnFormatter.BinaryToString(binData, EncodingType.Hex).TrimEnd());
+            }
+        }
+
+        return sb.ToString();
     }
 
     #region Equals
