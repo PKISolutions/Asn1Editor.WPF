@@ -24,5 +24,5 @@ Documentation and binary download links: [ASN.1 Editor](https://www.pkisolutions
 ## Custom OID dictionary editor
 ![image](https://github.com/PKISolutions/Asn1Editor.WPF/assets/6384119/1ab7c3d2-cfd8-4b92-b5cd-5ec533502a18)
 
-## Tag Editor
+## Value Editor
 ![image](https://github.com/PKISolutions/Asn1Editor.WPF/assets/6384119/3d69db37-fbe1-4804-8a04-38339a4ebfec)
