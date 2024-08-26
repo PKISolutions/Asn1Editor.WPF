@@ -81,7 +81,7 @@ public class Asn1TreeNode : INotifyPropertyChanged {
             child.updateOffset(newOffset);
         }
     }
-    public void AddChild(Asn1Lite value, Boolean forcePathUpdate = false) {
+    public Asn1TreeNode AddChild(Asn1Lite value, Boolean forcePathUpdate = false) {
         var node = new Asn1TreeNode(value, _dataSource) { Parent = this };
         Children.Add(node);
         if (forcePathUpdate) {
@@ -89,6 +89,8 @@ public class Asn1TreeNode : INotifyPropertyChanged {
             updatePath(node, Path, Children.Count - 1);
         }
         Value.IsContainer = true;
+
+        return node;
     }
     public void RemoveChild(Asn1TreeNode node) {
         notifySizeChanged(node, -node.Value.TagLength);

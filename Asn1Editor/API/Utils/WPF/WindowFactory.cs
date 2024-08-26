@@ -58,4 +58,11 @@ class WindowFactory : WindowFactoryBase, IWindowFactory {
         hwnd.DataContext = vm;
         ShowAsDialog();
     }
+    public Asn1Lite ShowNewAsnNodeEditor(IDataSource dataSource) {
+        hwnd = App.Container.Resolve<NewTreeNodeWindow>();
+        INewAsnNodeEditorVM vm = App.Container.Resolve<INewAsnNodeEditorVM>();
+        hwnd.DataContext = vm;
+        ShowAsDialog();
+        return vm.GetAsnNode(dataSource);
+    }
 }

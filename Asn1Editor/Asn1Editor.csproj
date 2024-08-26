@@ -138,6 +138,7 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="API\Abstractions\IHasAsnDocumentTabs.cs" />
+    <Compile Include="API\Abstractions\INewAsnNodeEditorVM.cs" />
     <Compile Include="API\Converters\IntegerToEnumConverter.cs" />
     <Compile Include="API\Interfaces\IAppCommands.cs" />
     <Compile Include="API\Interfaces\IBinarySource.cs" />
@@ -157,6 +158,7 @@
     <Compile Include="API\Utils\OpenSSLRenderer.cs" />
     <Compile Include="API\ViewModel\Asn1DocumentVM.cs" />
     <Compile Include="API\ViewModel\AsyncViewModel.cs" />
+    <Compile Include="API\ViewModel\NewAsnNodeEditorVM.cs" />
     <Compile Include="API\ViewModel\ClosableWindowVM.cs" />
     <Compile Include="API\ViewModel\GlobalData.cs" />
     <Compile Include="API\Interfaces\IDataSource.cs" />
@@ -196,6 +198,9 @@
     <Compile Include="Views\Windows\LicenseWindow.xaml.cs">
       <DependentUpon>LicenseWindow.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Views\Windows\NewTreeNodeWindow.xaml.cs">
+      <DependentUpon>NewTreeNodeWindow.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\Windows\OidLookupEditorWindow.xaml.cs">
       <DependentUpon>OidLookupEditorWindow.xaml</DependentUpon>
     </Compile>
@@ -230,6 +235,10 @@
       <SubType>Designer</SubType>
     </Page>
     <Page Include="Views\Windows\LicenseWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\Windows\NewTreeNodeWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
