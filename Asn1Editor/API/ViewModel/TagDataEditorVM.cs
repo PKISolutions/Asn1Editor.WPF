@@ -174,7 +174,7 @@ class TagDataEditorVM : ViewModelBase, ITagDataEditorVM {
         DialogResult = true;
     }
     void saveNewNode() {
-        var asn = new Asn1Reader(new Byte[] { Tag, 0 });
+        var asn = new Asn1Reader([Tag, 0]);
         Asn1Lite node;
         // if it is constructed or value is not entered, use it as is and ignore possible entered tag value
         if (asn.IsConstructed || String.IsNullOrWhiteSpace(TagValue?.TextValue?.Trim())) {

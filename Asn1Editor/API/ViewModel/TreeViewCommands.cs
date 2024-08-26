@@ -87,17 +87,23 @@ class TreeViewCommands : ViewModelBase, ITreeCommands {
         }
     }
     void addNewNode(Object o) {
-        Asn1Lite nodeValue = _windowFactory.ShowNodeContentEditor(NodeEditMode.NewNode);
-        if (nodeValue == null) { return; }
         isTabSelected(out IDataSource data); // granted to be non-null
+        Asn1Lite nodeValue = _windowFactory.ShowNewAsnNodeEditor(data);
+        //Asn1Lite nodeValue = _windowFactory.ShowNodeContentEditor(NodeEditMode.NewNode);
+        if (nodeValue == null) { return; }
+        Asn1TreeNode node;
         if (data.Tree.Count == 0) {
             // add new root node
-            var node = new Asn1TreeNode(nodeValue, data);
+            node = new Asn1TreeNode(nodeValue, data);
             data.Tree.Add(node);
             data.FinishBinaryUpdate();
         } else {
-            data.SelectedNode.AddChild(nodeValue, true);
+            node = data.SelectedNode.AddChild(nodeValue, true);
             data.FinishBinaryUpdate();
+        }
+        data.SelectedNode = node;
+        if (!nodeValue.IsContainer && nodeValue.Tag is not ((Byte)Asn1Type.NULL or (Byte)Asn1Type.SEQUENCE or (Byte)Asn1Type.SET)) {
+            EditNodeCommand.Execute(NodeEditMode.Text);
         }
     }
     void removeNode(Object o) {
@@ -196,8 +202,6 @@ class TreeViewCommands : ViewModelBase, ITreeCommands {
 
         return !_excludedTags.Contains(data.SelectedNode.Value.Tag) &&
                String.IsNullOrEmpty(data.SelectedNode.Value.ExplicitValue);
-
-        return true;
     }
     Boolean isTabSelected(out IDataSource dataSource) {
         dataSource = null;

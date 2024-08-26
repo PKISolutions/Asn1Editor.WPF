@@ -87,19 +87,19 @@ public partial class App {
     }
     void configureUnity() {
         Container = new UnityContainer();
-        Container.RegisterType<MainWindow>();
-
-        Container.RegisterType<IWindowFactory, WindowFactory>();
-        Container.RegisterType<IAppCommands, AppCommands>();
-        Container.RegisterType<ITagDataEditor, TagDataEditor>();
-        // view models
-        Container.RegisterSingleton<MainWindowVM>();
-        Container.RegisterType<IMainWindowVM, MainWindowVM>();
-        Container.RegisterType<IHasAsnDocumentTabs, MainWindowVM>();
-        Container.RegisterType<ITextViewerVM, TextViewerVM>();
-        Container.RegisterType<ITagDataEditorVM, TagDataEditorVM>();
-        Container.RegisterType<IOidEditorVM, OidEditorVM>();
-        Container.RegisterInstance(_options);
+        Container.RegisterType<MainWindow>()
+            .RegisterType<IWindowFactory, WindowFactory>()
+            .RegisterType<IAppCommands, AppCommands>()
+            .RegisterType<ITagDataEditor, TagDataEditor>()
+            // view models
+            .RegisterSingleton<MainWindowVM>()
+            .RegisterType<IMainWindowVM, MainWindowVM>()
+            .RegisterType<IHasAsnDocumentTabs, MainWindowVM>()
+            .RegisterType<ITextViewerVM, TextViewerVM>()
+            .RegisterType<ITagDataEditorVM, TagDataEditorVM>()
+            .RegisterType<IOidEditorVM, OidEditorVM>()
+            .RegisterType<INewAsnNodeEditorVM, NewAsnNodeEditorVM>()
+            .RegisterInstance(_options);
         var oidMgr = new OidDbManager {
             OidLookupLocations = [Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), _appDataPath]
         };
