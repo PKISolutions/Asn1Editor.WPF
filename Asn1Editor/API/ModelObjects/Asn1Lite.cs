@@ -49,21 +49,21 @@ public class Asn1Lite : ViewModelBase, IHexAsnNode {
     }
     public String Header {
         get => header;
-        set {
+        private set {
             header = value;
             OnPropertyChanged(nameof(Header));
         }
     }
     public String ToolTip {
         get => toolTip;
-        set {
+        private set {
             toolTip = value;
             OnPropertyChanged(nameof(ToolTip));
         }
     }
     public Byte Tag {
         get => tag;
-        set {
+        private set {
             tag = value;
             if ((tag & (Byte)Asn1Class.CONTEXT_SPECIFIC) > 0) {
                 IsContextSpecific = true;
@@ -81,7 +81,7 @@ public class Asn1Lite : ViewModelBase, IHexAsnNode {
     }
     public String TagName {
         get => tagName;
-        set {
+        private set {
             tagName = value;
             OnPropertyChanged(nameof(Caption));
         }
@@ -115,10 +115,10 @@ public class Asn1Lite : ViewModelBase, IHexAsnNode {
     }
     public Int32 TagLength => HeaderLength + PayloadLength;
     public Boolean IsContainer { get; set; }
-    public Boolean IsContextSpecific { get; set; }
+    public Boolean IsContextSpecific { get; private set; }
     public Boolean InvalidData {
         get => invalidData;
-        set {
+        private set {
             invalidData = value;
             OnPropertyChanged(nameof(InvalidData));
         }
@@ -164,7 +164,7 @@ public class Asn1Lite : ViewModelBase, IHexAsnNode {
 
     public void UpdateNodeHeader(IReadOnlyList<Byte> rawData, NodeViewOptions options) {
         Header = getNodeHeader(rawData, options);
-        ToolTip = calculateToolTip(rawData);
+        ToolTip = getToolTip(rawData);
     }
     String getNodeHeader(IReadOnlyList<Byte> rawData, NodeViewOptions options) {
         if (Tag == (Byte)Asn1Type.INTEGER) {
@@ -218,7 +218,7 @@ public class Asn1Lite : ViewModelBase, IHexAsnNode {
         Byte[] raw = rawData.Skip(Offset).Take(TagLength).ToArray();
         ExplicitValue = AsnDecoder.GetViewValue(new Asn1Reader(raw));
     }
-    String calculateToolTip(IEnumerable<Byte> rawData) {
+    String getToolTip(IEnumerable<Byte> rawData) {
         var sb = new StringBuilder();
         sb.AppendFormat(
             Resources.TagEditorHeaderTemp,
