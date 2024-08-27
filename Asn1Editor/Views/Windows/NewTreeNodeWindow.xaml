@@ -16,6 +16,11 @@
         ResizeMode="NoResize"
         WindowStartupLocation="CenterOwner"
         Width="400">
+    <Window.Resources>
+        <Style TargetType="TextBlock" BasedOn="{StaticResource {x:Type TextBlock}}">
+            <Setter Property="VerticalAlignment" Value="Center"/>
+        </Style>
+    </Window.Resources>
     <DockPanel>
         <Border DockPanel.Dock="Bottom"
                 BorderThickness="0"
