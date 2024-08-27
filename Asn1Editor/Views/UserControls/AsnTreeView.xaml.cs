@@ -124,7 +124,6 @@ public partial class AsnTreeView {
         }
     }
     void OnTreeViewSelectedItemChanged(Object sender, RoutedPropertyChangedEventArgs<Object> e) {
-        if (e.NewValue == null) { return; }
         SelectedItem = e.NewValue;
     }
     void onTreeFileDrop(Object sender, DragEventArgs e) {
@@ -143,7 +142,7 @@ public partial class AsnTreeView {
     }
 
     static TreeViewItem visualUpwardSearch(DependencyObject source) {
-        while (source != null && !(source is TreeViewItem)) {
+        while (source != null && source is not TreeViewItem) {
             source = VisualTreeHelper.GetParent(source);
         }
         return (TreeViewItem)source;
