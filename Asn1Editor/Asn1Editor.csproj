@@ -189,6 +189,9 @@
     <Compile Include="API\ViewModel\TextViewerVM.cs" />
     <Compile Include="API\ViewModel\TreeViewCommands.cs" />
     <Compile Include="API\ViewModel\ViewModelBase.cs" />
+    <Compile Include="Views\UserControls\NewTreeNodeFormUC.xaml.cs">
+      <DependentUpon>NewTreeNodeFormUC.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\UserControls\OidEditorUC.xaml.cs">
       <DependentUpon>OidEditorUC.xaml</DependentUpon>
     </Compile>
@@ -223,6 +226,10 @@
       <DependentUpon>TextViewer.xaml</DependentUpon>
     </Compile>
     <Page Include="Views\AsnTypeSprites.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\UserControls\NewTreeNodeFormUC.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
