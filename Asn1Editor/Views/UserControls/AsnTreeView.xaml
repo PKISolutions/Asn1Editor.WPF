@@ -6,6 +6,8 @@
           xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
           xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
           xmlns:helpers="clr-namespace:Asn1Editor.Wpf.Controls.Helpers;assembly=Asn1Editor.Wpf.Controls"
+          xmlns:models="clr-namespace:SysadminsLV.Asn1Editor.API.ModelObjects"
+          d:DataContext="{d:DesignInstance models:Asn1TreeNode}"
           Drop="onTreeFileDrop"
           SelectedItemChanged="OnTreeViewSelectedItemChanged"
           MouseDoubleClick="OnTreeViewDoubleClick"
