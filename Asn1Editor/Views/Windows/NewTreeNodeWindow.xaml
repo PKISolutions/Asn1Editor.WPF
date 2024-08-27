@@ -17,6 +17,23 @@
         WindowStartupLocation="CenterOwner"
         Width="400">
     <DockPanel>
-        <userControls:NewTreeNodeFormUC/>
+        <Border DockPanel.Dock="Bottom"
+                BorderThickness="0"
+                Background="{StaticResource PanelBackgroundBrush}">
+            <StackPanel Orientation="Horizontal"
+                        HorizontalAlignment="Right">
+                <Button Content="OK"
+                        IsDefault="True"
+                        MinWidth="70"
+                        Margin="10"
+                        Command="{Binding OkCommand}"/>
+                <Button Content="Cancel"
+                        IsCancel="True"
+                        MinWidth="70"
+                        Margin="10"
+                        Command="{Binding CloseCommand}"/>
+            </StackPanel>
+        </Border>
+        <userControls:NewTreeNodeFormUC Margin="5"/>
     </DockPanel>
 </Window>
