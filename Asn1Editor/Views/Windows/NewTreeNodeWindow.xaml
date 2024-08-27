@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:commands="clr-namespace:SysadminsLV.WPF.OfficeTheme.Toolkit.Commands;assembly=Wpf.OfficeTheme"
         xmlns:vm="clr-namespace:SysadminsLV.Asn1Editor.API.ViewModel"
-        xmlns:userControls="clr-namespace:SysadminsLV.Asn1Editor.Views.UserControls"
+        xmlns:uc="clr-namespace:SysadminsLV.Asn1Editor.Views.UserControls"
         commands:DialogCloser.DialogResult="{Binding DialogResult}"
         mc:Ignorable="d"
         d:DataContext="{d:DesignInstance vm:NewAsnNodeEditorVM}"
@@ -39,6 +39,6 @@
                         Command="{Binding CloseCommand}"/>
             </StackPanel>
         </Border>
-        <userControls:NewTreeNodeFormUC Margin="5"/>
+        <uc:NewTreeNodeFormUC Margin="5"/>
     </DockPanel>
 </Window>
