@@ -165,6 +165,7 @@ public class Asn1Lite : ViewModelBase, IHexAsnNode {
     public void UpdateNodeHeader(IReadOnlyList<Byte> rawData, NodeViewOptions options) {
         Header = getNodeHeader(rawData, options);
         ToolTip = getToolTip(rawData);
+        DataChanged?.Invoke(this, EventArgs.Empty);
     }
     String getNodeHeader(IReadOnlyList<Byte> rawData, NodeViewOptions options) {
         if (Tag == (Byte)Asn1Type.INTEGER) {
@@ -271,4 +272,6 @@ public class Asn1Lite : ViewModelBase, IHexAsnNode {
         }
     }
     #endregion
+
+    public event EventHandler DataChanged;
 }

@@ -104,19 +104,31 @@ partial class AsnHexViewer {
         nameof(SelectedNode),
         typeof(IHexAsnNode),
         typeof(AsnHexViewer),
-        new FrameworkPropertyMetadata(OnSelectedNodePropertyChanged));
-    static void OnSelectedNodePropertyChanged(DependencyObject sender, DependencyPropertyChangedEventArgs e) {
+        new FrameworkPropertyMetadata(onSelectedNodeChanged));
+    static void onSelectedNodeChanged(DependencyObject sender, DependencyPropertyChangedEventArgs e) {
         var ctrl = (AsnHexViewer)sender;
+        if (e.OldValue is IHexAsnNode oldValue) {
+            oldValue.DataChanged -= ctrl.onNodeDataChanged;
+        }
         if (e.NewValue == null) {
             TextUtility.ResetColors(ctrl.ranges);
             return;
         }
         var treeNode = (IHexAsnNode)e.NewValue;
-        TextUtility.ResetColors(ctrl.ranges);
-        ctrl.ranges = TextUtility.GetSelectionPointers(treeNode, ctrl.HexRawPane);
-        TextUtility.Colorize(ctrl.ranges);
-        ctrl.HexRawPane.CaretPosition = ctrl.ranges[0].Start;
-        ctrl.scrollPanes(null);
+        ctrl.reColorHex(treeNode);
+        treeNode.DataChanged += ctrl.onNodeDataChanged;
+    }
+    void reColorHex(IHexAsnNode treeNode) {
+        TextUtility.ResetColors(ranges);
+        ranges = TextUtility.GetSelectionPointers(treeNode, HexRawPane);
+        TextUtility.Colorize(ranges);
+        HexRawPane.CaretPosition = ranges[0].Start;
+        scrollPanes(null);
+    }
+    void onNodeDataChanged(Object sender, EventArgs e) {
+        if (sender is IHexAsnNode node) {
+            reColorHex(node);
+        }
     }
 
 
