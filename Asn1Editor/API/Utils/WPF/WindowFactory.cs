@@ -18,10 +18,6 @@ class WindowFactory : WindowFactoryBase, IWindowFactory {
         hwnd = App.Container.Resolve<LicenseWindow>();
         ShowAsDialog();
     }
-    public void ShowSettingsDialog() {
-        hwnd = App.Container.Resolve<SettingsWnd>();
-        ShowAsDialog();
-    }
     public void ShowAboutDialog() {
         hwnd = App.Container.Resolve<AboutBox>();
         ShowAsDialog();

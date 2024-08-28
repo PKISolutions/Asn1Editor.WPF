@@ -207,9 +207,6 @@
     <Compile Include="Views\Windows\OidLookupEditorWindow.xaml.cs">
       <DependentUpon>OidLookupEditorWindow.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Views\Windows\SettingsWnd.xaml.cs">
-      <DependentUpon>SettingsWnd.xaml</DependentUpon>
-    </Compile>
     <Compile Include="Views\UserControls\AsnTreeView.xaml.cs">
       <DependentUpon>AsnTreeView.xaml</DependentUpon>
     </Compile>
@@ -247,10 +244,6 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\Windows\OidLookupEditorWindow.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Views\Windows\SettingsWnd.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

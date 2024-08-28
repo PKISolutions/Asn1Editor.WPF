@@ -8,7 +8,6 @@ namespace SysadminsLV.Asn1Editor.API.Interfaces;
 
 interface IWindowFactory {
     void ShowLicenseDialog();
-    void ShowSettingsDialog();
     void ShowAboutDialog();
     Asn1Lite ShowNodeContentEditor(NodeEditMode editMode);
     void ShowNodeTextViewer();

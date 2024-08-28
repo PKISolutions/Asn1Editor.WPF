@@ -12,13 +12,11 @@ class AppCommands : IAppCommands {
         _windowFactory = windowFactory;
         ShowLicenseCommand = new RelayCommand(showLicense);
         ShowAboutCommand = new RelayCommand(showAbout);
-        ShowSettingsCommand = new RelayCommand(showSettings);
         ShowOidEditor = new RelayCommand(showOidEditor);
     }
 
     public ICommand ShowLicenseCommand { get; }
     public ICommand ShowAboutCommand { get; }
-    public ICommand ShowSettingsCommand { get; }
     public ICommand ShowNodeTextViewer { get; set; }
     public ICommand ShowConverterWindow { get; set; }
     public ICommand ShowOidEditor { get; set; }
@@ -28,9 +26,6 @@ class AppCommands : IAppCommands {
     }
     void showAbout(Object o) {
         _windowFactory.ShowAboutDialog();
-    }
-    void showSettings(Object o) {
-        _windowFactory.ShowSettingsDialog();
     }
     void showOidEditor(Object o) {
         _windowFactory.ShowOidEditor();
