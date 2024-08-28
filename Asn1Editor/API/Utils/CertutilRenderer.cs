@@ -17,10 +17,12 @@ class CertutilRenderer(Asn1TreeNode baseNode) : ITextRenderer {
     readonly HashSet<Byte> _noAsciiTags = [
         (Byte)Asn1Type.BOOLEAN,
         (Byte)Asn1Type.INTEGER,
-        (Byte)Asn1Type.OBJECT_IDENTIFIER
+        (Byte)Asn1Type.OBJECT_IDENTIFIER,
+        (Byte)Asn1Type.RELATIVE_OID
     ];
     readonly HashSet<Byte> _explicitTextTags = [
         (Byte)Asn1Type.OBJECT_IDENTIFIER,
+        (Byte)Asn1Type.RELATIVE_OID,
         (Byte)Asn1Type.UTCTime,
         (Byte)Asn1Type.GeneralizedTime,
         (Byte)Asn1Type.PrintableString,
