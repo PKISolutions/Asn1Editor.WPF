@@ -29,6 +29,9 @@ static class AsnDecoder {
                 Oid oid = new Asn1ObjectIdentifier(asn).Value;
                 retValue.TextValue = oid.Value;
                 break;
+            case Asn1Type.RELATIVE_OID:
+                retValue.TextValue = DecodeRelativeOid(asn);
+                break;
             case Asn1Type.BOOLEAN:
             case Asn1Type.UTCTime:
             case Asn1Type.GeneralizedTime:
@@ -76,6 +79,8 @@ static class AsnDecoder {
                 return null;
             case Asn1Type.OBJECT_IDENTIFIER:
                 return DecodeObjectIdentifier(asn);
+            case Asn1Type.RELATIVE_OID:
+                return DecodeRelativeOid(asn);
             case Asn1Type.UTF8String:
             case Asn1Type.VisibleString:
                 return Encoding.UTF8.GetString(asn.GetPayload());
@@ -181,6 +186,8 @@ static class AsnDecoder {
                 return new Asn1Null().GetRawData();
             case Asn1Type.OBJECT_IDENTIFIER:
                 return new Asn1ObjectIdentifier(value).GetRawData();
+            case Asn1Type.RELATIVE_OID:
+                return new Asn1RelativeOid(value).GetRawData();
             case Asn1Type.ENUMERATED:
                 return new Asn1Enumerated(UInt64.Parse(value)).GetRawData();
             case Asn1Type.UTF8String:
@@ -251,6 +258,9 @@ static class AsnDecoder {
         }
 
         return $"{friendlyName} ({oid.Value})";
+    }
+    static String DecodeRelativeOid(Asn1Reader asn) {
+        return ((Asn1RelativeOid)asn.GetTagObject()).Value;
     }
     static String DecodeUTF8String(Asn1Reader asn) {
         return Encoding.UTF8.GetString(asn.GetRawData(), asn.PayloadStartOffset, asn.PayloadLength);
