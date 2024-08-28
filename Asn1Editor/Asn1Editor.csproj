@@ -213,9 +213,6 @@
     <Compile Include="Views\UserControls\AsnTreeView.xaml.cs">
       <DependentUpon>AsnTreeView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Views\UserControls\BusyIndicator.xaml.cs">
-      <DependentUpon>BusyIndicator.xaml</DependentUpon>
-    </Compile>
     <Compile Include="Views\Windows\BinaryConverterWindow.xaml.cs">
       <DependentUpon>BinaryConverterWindow.xaml</DependentUpon>
     </Compile>
@@ -254,10 +251,6 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\Windows\SettingsWnd.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Views\UserControls\BusyIndicator.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

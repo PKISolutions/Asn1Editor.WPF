@@ -471,7 +471,7 @@
                                     </ContextMenu>
                                 </uc:AsnTreeView.ContextMenu>
                             </uc:AsnTreeView>
-                            <uc:BusyIndicator Visibility="{Binding Converter={StaticResource BooleanToVisibility}, Path=IsBusy}"/>
+                            <controls:BusyIndicator Visibility="{Binding Converter={StaticResource BooleanToVisibility}, Path=IsBusy}"/>
                         </Grid>
                     </DockPanel>
                 </DataTemplate>

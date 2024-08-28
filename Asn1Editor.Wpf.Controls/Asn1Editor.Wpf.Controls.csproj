@@ -57,6 +57,9 @@
     <Compile Include="AsnHexViewer.xaml.cs">
       <DependentUpon>AsnHexViewer.xaml</DependentUpon>
     </Compile>
+    <Compile Include="BusyIndicator.xaml.cs">
+      <DependentUpon>BusyIndicator.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Helpers\TextBlockTrimConverter.cs" />
     <Compile Include="IHexAsnNode.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -67,6 +70,10 @@
   </ItemGroup>
   <ItemGroup>
     <Page Include="AsnHexViewer.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="BusyIndicator.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
