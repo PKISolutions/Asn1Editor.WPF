@@ -61,6 +61,7 @@
     <Compile Include="BusyIndicator.xaml.cs">
       <DependentUpon>BusyIndicator.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Helpers\RichTextBoxHelper.cs" />
     <Compile Include="Helpers\TextBlockTrimConverter.cs" />
     <Compile Include="IHexAsnNode.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

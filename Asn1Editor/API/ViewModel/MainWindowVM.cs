@@ -95,10 +95,11 @@ class MainWindowVM : ViewModelBase, IMainWindowVM, IHasAsnDocumentTabs {
             SelectedTab = tab;
         }
     }
-    async Task createTabFromFile(String file, Boolean useDefaultTab = false) {
+    async Task createTabFromFile(String file, Boolean useSelectedTab = false) 
+    {
         Asn1DocumentVM tab;
-        if (useDefaultTab && Tabs.Any()) {
-            tab = Tabs[0];
+        if (useSelectedTab && Tabs.Any()) {
+            tab = selectedTab;
             tab.Path = file;
         } else {
             tab = new Asn1DocumentVM(NodeViewOptions, TreeCommands) {
@@ -112,7 +113,7 @@ class MainWindowVM : ViewModelBase, IMainWindowVM, IHasAsnDocumentTabs {
             Tools.MsgBox("Read Error", ex.Message);
             return;
         }
-        if (!useDefaultTab)
+        if (!useSelectedTab)
         {
             addTabToList(tab);
         }
@@ -121,17 +122,20 @@ class MainWindowVM : ViewModelBase, IMainWindowVM, IHasAsnDocumentTabs {
     #region Read content to tab
     Task openFileAsync(Object obj, CancellationToken token = default) {
         String filePath;
-        Boolean useDefaultTab = false;
         if (obj == null) {
             Tools.TryGetOpenFileName(out filePath);
         } else {
             filePath = obj.ToString();
-            useDefaultTab = true;
         }
         if (String.IsNullOrWhiteSpace(filePath)) {
             return Task.CompletedTask;
         }
-        return createTabFromFile(filePath, useDefaultTab);
+        var useSelected = false;
+        if (selectedTab != null && selectedTab.DataSource != null && selectedTab.DataSource.RawData != null && selectedTab.DataSource.RawData.Count == 0)
+        {
+            useSelected = true;
+        }
+        return createTabFromFile(filePath, useSelected);
     }
     #endregion
 
@@ -282,16 +286,19 @@ class MainWindowVM : ViewModelBase, IMainWindowVM, IHasAsnDocumentTabs {
         if (!File.Exists(filePath)) {
             return Task.CompletedTask;
         }
-
-        return createTabFromFile(filePath);
-    }
-    public Task DropFileAsync(String filePath) {
-        if (!File.Exists(filePath)) {
-            return Task.CompletedTask;
+        var useSelected = false;
+        if (selectedTab != null && selectedTab.DataSource != null && selectedTab.DataSource.RawData != null && selectedTab.DataSource.RawData.Count == 0)
+        {
+            useSelected = true;
         }
 
-        return createTabFromFile(filePath);
+        return createTabFromFile(filePath, useSelected);
     }
+
+    public Task DropFileAsync(String filePath) {
+        return dropFileAsync(filePath);
+    }
+
     public Task OpenExistingAsync(String filePath) {
         return openFileAsync(filePath);
     }

@@ -29,4 +29,15 @@ public partial class MainWindow {
         var vm = (Asn1DocumentVM)((FrameworkElement)sender).DataContext;
         e.Handled = _vm.SelectedTab != vm;
     }
+
+    private void ClosableTabControl_Drop(Object sender, DragEventArgs e)
+    {
+        if (!tab.AllowDrop)
+        {
+            e.Handled = true;
+            return;
+        }
+        String[] file = (String[])e.Data.GetData(DataFormats.FileDrop, true);
+        _vm.OpenExistingAsync(file[0]);
+    }
 }
