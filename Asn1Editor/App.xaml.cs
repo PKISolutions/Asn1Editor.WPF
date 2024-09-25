@@ -80,7 +80,14 @@ public partial class App {
                     await Container.Resolve<IMainWindowVM>().OpenRawAsync(args[i]);
                     return;
                 default:
-                    Console.WriteLine($"Unknown parameter '{args[i]}'");
+                    if (File.Exists(args[i]))
+                    {
+                        await Container.Resolve<IMainWindowVM>().OpenExistingAsync(args[i]);
+                    }
+                    else
+                    {
+                        Console.WriteLine($"Unknown parameter '{args[i]}'");
+                    }
                     return;
             }
         }
