@@ -7,9 +7,10 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
 using System.Windows.Documents;
+using System.Windows.Input;
 using Asn1Editor.Wpf.Controls.Helpers;
 using SysadminsLV.Asn1Parser;
-using SysadminsLV.WPF.OfficeTheme.Controls;
+using static System.Net.Mime.MediaTypeNames;
 
 namespace Asn1Editor.Wpf.Controls;
 
@@ -25,7 +26,7 @@ partial class AsnHexViewer {
         FontSizeProperty.OverrideMetadata(typeof(AsnHexViewer), new FrameworkPropertyMetadata(OnFontSizeChanged));
     }
 
-    readonly BindableRichTextBox[] panes;
+    readonly RichTextBox[] panes;
 
     Boolean scrollLocked;
     TextRange[] ranges;
@@ -34,6 +35,11 @@ partial class AsnHexViewer {
         ranges = new TextRange[3];
         calculateWidths();
         panes = new[] { HexAddressPane, HexRawPane, HexAsciiPane };
+        for (Int32 i = 0; i < panes.Length; i++)
+        {
+            panes[i].AddHandler(RichTextBox.DragOverEvent, new DragEventHandler(onFileDragOver), true);
+            panes[i].AddHandler(RichTextBox.DropEvent, new DragEventHandler(onFileDrop), true);
+        }
     }
 
 
@@ -139,6 +145,22 @@ partial class AsnHexViewer {
 
     #endregion
 
+    #region FileDropCommand
+
+    public static readonly DependencyProperty FileDropCommandProperty = DependencyProperty.Register(
+        nameof(FileDropCommand),
+        typeof(ICommand),
+        typeof(AsnHexViewer),
+        new PropertyMetadata(default(ICommand)));
+
+    public ICommand FileDropCommand
+    {
+        get => (ICommand)GetValue(FileDropCommandProperty);
+        set => SetValue(FileDropCommandProperty, value);
+    }
+
+    #endregion
+
     void calculateWidths() {
         HexAddrHeaderRtb.Width = TextUtility.MeasureStringWidth(masterAddr, FontSize, false);
         HexRawHeaderRtb.Width = TextUtility.MeasureStringWidth(masterHex, FontSize, false);
@@ -187,7 +209,7 @@ partial class AsnHexViewer {
         scrollLocked = false;
     }
     void scrollPanes(Double? newValue) {
-        Double vOffset = newValue ?? HexRawPane.FontSize * HexRawPane.FontFamily.LineSpacing * (HexRawPane.CurrentLine - 1);
+        Double vOffset = newValue ?? HexRawPane.FontSize * HexRawPane.FontFamily.LineSpacing * ((int)HexRawPane.GetValue(RichTextBoxHelper.CurrentLineProperty) - 1);
         for (Int32 i = 0; i < panes.Length; i++) {
             if (i > 0) {
                 // do not fire re-scroll for the rest of RTBs
@@ -238,5 +260,48 @@ partial class AsnHexViewer {
         buildAddress();
         buildHex();
         buildAscii();
+    }
+
+    private void onFileDrop(Object sender, DragEventArgs e)
+    {
+        if (!AllowDrop)
+        {
+            e.Handled = true;
+            return;
+        }
+        String[] file = (String[])e.Data.GetData(DataFormats.FileDrop, true);
+        if (FileDropCommand != null && file?.Length > 0)
+        {
+            FileDropCommand.Execute(file[0]);
+            e.Handled = true;
+        }
+    }
+
+    private void HexRawHeaderRtb_SelectionChanged(Object sender, RoutedEventArgs e)
+    {
+        if (!(sender is RichTextBox richTextBox))
+            return;
+        int actualCount;
+        richTextBox.CaretPosition.GetLineStartPosition(-2147483647, out actualCount);
+        var currentLine = -actualCount + 1;
+        richTextBox.SetValue(RichTextBoxHelper.CurrentLineProperty, currentLine);
+        TextPointer lineStartPosition = richTextBox.CaretPosition.GetLineStartPosition(0);
+        if (lineStartPosition == null)
+            return;
+        var currentColumn = actualCount == 0 ? lineStartPosition.GetOffsetToPosition(richTextBox.CaretPosition) : lineStartPosition.GetOffsetToPosition(richTextBox.CaretPosition) - 1;
+        richTextBox.SetValue(RichTextBoxHelper.CurrentColumnProperty, currentColumn);
+    }
+
+    private void onFileDragOver(object sender, System.Windows.DragEventArgs e)
+    {
+        if (e.Data.GetDataPresent(DataFormats.FileDrop))
+        {
+            e.Effects = DragDropEffects.All;
+        }
+        else
+        {
+            e.Effects = DragDropEffects.None;
+        }
+        e.Handled = false;
     }
 }

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Windows;
+using System.Windows.Controls;
 using System.Windows.Documents;
 using System.Windows.Media;
 using SysadminsLV.WPF.OfficeTheme.Controls;
@@ -22,7 +23,7 @@ public static class TextUtility {
         return ranges;
     }
 
-    public static TextRange[] GetSelectionPointers(IHexAsnNode treeNode, BindableRichTextBox rtb) {
+    public static TextRange[] GetSelectionPointers(IHexAsnNode treeNode, RichTextBox rtb) {
         TextPointer[] pointers = new TextPointer[6];
         // tag
         pointers[0] = rtb.Document.ContentStart.GetPositionAtOffset(
@@ -68,9 +69,9 @@ public static class TextUtility {
             FlowDirection.LeftToRight,
             new Typeface(new FontFamily("Consolas"), FontStyles.Normal, FontWeights.Normal, FontStretches.Normal),
             size,
-            Brushes.Black);
+            Brushes.Black, VisualTreeHelper.GetDpi(Application.Current.MainWindow).PixelsPerDip);
         return includeScrollbars
-            ? formattedText.Width + SystemParameters.VerticalScrollBarWidth + 12
-            : formattedText.Width + 12;
+            ? formattedText.Width + SystemParameters.VerticalScrollBarWidth + 13
+            : formattedText.Width + 13;
     }
 }

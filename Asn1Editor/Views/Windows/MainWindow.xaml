@@ -292,12 +292,14 @@
                 </TextBlock>
             </StatusBarItem>
         </StatusBar>
-        <wpfControls:ClosableTabControl ItemsSource="{Binding Tabs}"
+        <wpfControls:ClosableTabControl Name="tab" ItemsSource="{Binding Tabs}"
                                         SelectedItem="{Binding SelectedTab}"
                                         AddTabCommand="{Binding NewCommand}"
                                         CloseTabCommand="{Binding CloseTabCommand}"
                                         ShowNewTabButton="False"
-                                        BorderThickness="0"
+                                        BorderThickness="0" 
+                                        AllowDrop="True"
+                                        Drop="ClosableTabControl_Drop"
                                         Style="{StaticResource ScrollableTabControl}">
             <wpfControls:ClosableTabControl.ItemTemplate>
                 <DataTemplate>
@@ -362,6 +364,8 @@
                             <controls:AsnHexViewer DataSource="{Binding DataSource.RawData, Mode=OneWay}"
                                                    SelectedNode="{Binding DataSource.SelectedNode.Value, Mode=OneWay}"
                                                    FontFamily="Consolas"
+                                                   AllowDrop="True"
+                                                   FileDropCommand="{Binding DataContext.DropFileCommand, RelativeSource={RelativeSource AncestorType=Window}}"
                                                    FontSize="{Binding NodeViewOptions.FontSize}"
                                                    Background="#D5E7FE"
                                                    ShowAddressPane="{Binding ElementName=HexAddressToggle, Path=IsChecked}"
