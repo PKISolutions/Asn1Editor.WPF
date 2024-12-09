@@ -27,6 +27,7 @@ namespace SysadminsLV.Asn1Editor;
 public partial class App {
     static readonly String _appDataPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), @"Sysadmins LV\Asn1Editor");
     static readonly Logger _logger = new();
+
     readonly NodeViewOptions _options;
 
     public App() {
@@ -62,7 +63,7 @@ public partial class App {
         _logger.Dispose();
         base.OnExit(e);
     }
-    static async void parseArguments(IReadOnlyList<String> args) {
+    async void parseArguments(IReadOnlyList<String> args) {
         for (Int32 i = 0; i < args.Count;) {
             switch (args[i].ToLower()) {
                 case "-path":  // open from a file
@@ -80,7 +81,12 @@ public partial class App {
                     await Container.Resolve<IMainWindowVM>().OpenRawAsync(args[i]);
                     return;
                 default:
-                    Console.WriteLine($"Unknown parameter '{args[i]}'");
+                    if (File.Exists(args[i])) {
+                        await Container.Resolve<IMainWindowVM>().OpenExistingAsync(args[i]);
+                    } else {
+                        Trace.WriteLine($"Unknown parameter '{args[i]}'");
+                        Shutdown(2);
+                    }
                     return;
             }
         }
