@@ -81,12 +81,14 @@ public partial class App {
                     await Container.Resolve<IMainWindowVM>().OpenRawAsync(args[i]);
                     return;
                 default:
-                    if (File.Exists(args[i])) {
+                    await Container.Resolve<IMainWindowVM>().OpenExistingAsync(args[i]);
+                    // use the code below when CLI interface is implemented
+                    /*if (File.Exists(args[i])) {
                         await Container.Resolve<IMainWindowVM>().OpenExistingAsync(args[i]);
                     } else {
                         Trace.WriteLine($"Unknown parameter '{args[i]}'");
                         Shutdown(2);
-                    }
+                    }*/
                     return;
             }
         }
