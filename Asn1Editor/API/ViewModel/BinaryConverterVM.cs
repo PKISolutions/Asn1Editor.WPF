@@ -4,6 +4,7 @@ using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.IO;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Data;
@@ -17,20 +18,20 @@ using SysadminsLV.WPF.OfficeTheme.Toolkit.Commands;
 namespace SysadminsLV.Asn1Editor.API.ViewModel;
 
 class BinaryConverterVM : AsyncViewModel {
-    readonly String master = new String('0', 78);
+    readonly String master = new('0', 78);
+    readonly Func<Byte[], Task>? _action;
     Double width;
     String text, path;
     EncodingTypeEntry? selectedEncoding;
     Boolean canCheck;
-    readonly Func<Byte[], Task> _action;
 
-    public BinaryConverterVM(Func<Byte[], Task> action) {
+    public BinaryConverterVM(Func<Byte[], Task>? action) {
         _action = action;
         OpenCommand = new RelayCommand(openFile);
         SaveCommand = new RelayCommand(saveFile, canPrintSave);
         PrintCommand = new RelayCommand(print, canPrintSave);
         ClearCommand = new RelayCommand(clearText);
-        ValidateCommand = new RelayCommand(validateInput);
+        ValidateCommand = new AsyncCommand(validateInput, canValidateInput);
         //TextBoxWidth = TextUtility.MeasureStringWidth(master, Settings.Default.FontSize, true);
         initialize();
         EncodingTypesView = CollectionViewSource.GetDefaultView(EncodingTypes);
@@ -40,7 +41,7 @@ class BinaryConverterVM : AsyncViewModel {
     public ICommand OpenCommand { get; }
     public ICommand SaveCommand { get; }
     public ICommand ClearCommand { get; }
-    public ICommand ValidateCommand { get; }
+    public IAsyncCommand ValidateCommand { get; }
     public ICommand PrintCommand { get; }
 
     public String Text {
@@ -166,7 +167,7 @@ class BinaryConverterVM : AsyncViewModel {
                 break;
         }
     }
-    async void validateInput(Object obj) {
+    async Task validateInput(Object obj, CancellationToken token) {
         if (String.IsNullOrEmpty(Text)) {
             Tools.MsgBox("Warning", "There is nothing to validate.", MessageBoxImage.Warning);
             return;
@@ -179,10 +180,14 @@ class BinaryConverterVM : AsyncViewModel {
             Tools.MsgBox("Error", "Input text cannot be validated.");
         }
         RawData.AddRange(HexUtility.AnyToBinary(Text));
-        if (obj != null && obj.ToString() == "Decode") {
+        if (obj is not null && _action is not null && obj.ToString() == "Decode") {
             await _action(RawData.ToArray());
         }
     }
+    Boolean canValidateInput(Object o) {
+        return _action is not null;
+    }
+
     void clearText(Object obj) {
         Text = String.Empty;
         RawData.Clear();
