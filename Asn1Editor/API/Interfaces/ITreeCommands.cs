@@ -4,6 +4,7 @@ namespace SysadminsLV.Asn1Editor.API.Interfaces;
 
 public interface ITreeCommands {
     ICommand ShowNodeTextViewer { get; }
+    ICommand ShowNodeInConverter { get; }
     ICommand SaveNodeCommand { get; }
     ICommand EditNodeCommand { get; }
     ICommand RegisterOidCommand { get; }

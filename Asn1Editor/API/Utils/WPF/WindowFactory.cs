@@ -32,7 +32,7 @@ class WindowFactory : WindowFactoryBase, IWindowFactory {
         hwnd = App.Container.Resolve<TextViewer>();
         ShowAsWindow(true);
     }
-    public void ShowConverterWindow(IEnumerable<Byte> data, Func<Byte[], Task> action) {
+    public void ShowConverterWindow(IEnumerable<Byte> data, Func<Byte[], Task>? action) {
         if (!binConverterWindowClosed) {
             binConverterWindow.Focus();
             return;
