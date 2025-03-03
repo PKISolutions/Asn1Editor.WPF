@@ -95,6 +95,8 @@ static class AsnDecoder {
                 return DecodeUtcTime(asn);
             case Asn1Type.BMPString:
                 return new Asn1BMPString(asn).Value;
+            case Asn1Type.UniversalString:
+                return new Asn1UniversalString(asn).Value;
             case Asn1Type.GeneralizedTime:
                 return DecodeGeneralizedTime(asn);
             default:
