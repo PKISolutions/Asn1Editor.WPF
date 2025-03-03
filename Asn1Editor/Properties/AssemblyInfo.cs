@@ -10,7 +10,7 @@ using System.Windows;
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("PKI Solutions LLC")]
 [assembly: AssemblyProduct("ASN.1 Editor")]
-[assembly: AssemblyCopyright("Copyright © PKI Solutions Inc.  2019 - 2024")]
+[assembly: AssemblyCopyright("Copyright © PKI Solutions Inc.  2019 - 2025")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
@@ -49,6 +49,6 @@ using System.Windows;
 // You can specify all the values or you can default the Build and Revision Numbers 
 // by using the '*' as shown below:
 // [assembly: AssemblyVersion("1.0.*")]
-[assembly: AssemblyVersion("24.08.28")]
-[assembly: AssemblyFileVersion("24.08.28")]
+[assembly: AssemblyVersion("25.03.03")]
+[assembly: AssemblyFileVersion("25.03.03")]
 [assembly: GuidAttribute("2b21970c-0f72-4a53-909e-23148c2f7540")]
