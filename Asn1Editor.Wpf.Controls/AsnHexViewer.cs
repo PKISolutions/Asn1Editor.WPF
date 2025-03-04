@@ -13,33 +13,29 @@ using SysadminsLV.WPF.OfficeTheme.Controls;
 
 namespace Asn1Editor.Wpf.Controls;
 
-/// <summary>
-/// Interaction logic for HexViewerUC.xaml
-/// </summary>
-partial class AsnHexViewer {
+public class AsnHexViewer : Control {
     const String masterAddr = "12345678";
     const String masterHex = "123456789012345678901234567890123456789012345678";
     const String masterAscii = "1234567890123456";
+    static Boolean staticInitialized;
 
     static AsnHexViewer() {
-        FontSizeProperty.OverrideMetadata(typeof(AsnHexViewer), new FrameworkPropertyMetadata(OnFontSizeChanged));
+        DefaultStyleKeyProperty.OverrideMetadata(
+            typeof(AsnHexViewer),
+            new FrameworkPropertyMetadata(typeof(AsnHexViewer)));
     }
-
-    readonly BindableRichTextBox[] panes;
-
-    Boolean scrollLocked;
-    TextRange[] ranges;
-    public AsnHexViewer() {
-        InitializeComponent();
-        ranges = new TextRange[3];
-        calculateWidths();
-        panes = new[] { HexAddressPane, HexRawPane, HexAsciiPane };
-    }
-
-
     static void OnFontSizeChanged(DependencyObject d, DependencyPropertyChangedEventArgs e) {
         ((AsnHexViewer)d).calculateWidths();
     }
+
+    BindableRichTextBox[] panes;
+
+    Boolean scrollLocked;
+    TextRange[] ranges;
+
+    ScrollBar Scroller;
+    RichTextBox HexAddrHeaderRtb, HexRawHeaderRtb, HexAsciiHeaderRtb;
+    BindableRichTextBox HexAddressPane, HexRawPane, HexAsciiPane;
 
 
     #region ShowAddressPane
@@ -84,10 +80,10 @@ partial class AsnHexViewer {
         set => SetValue(DataSourceProperty, value);
     }
     static void OnDataSourcePropertyChanged(DependencyObject source, DependencyPropertyChangedEventArgs e) {
-        if (e.OldValue != null && e.OldValue is INotifyCollectionChanged oldValue) {
+        if (e.OldValue is INotifyCollectionChanged oldValue) {
             oldValue.CollectionChanged -= ((AsnHexViewer)source).OnCollectionChanged;
         }
-        if (e.NewValue != null && e.NewValue is INotifyCollectionChanged newValue) { 
+        if (e.NewValue is INotifyCollectionChanged newValue) {
             newValue.CollectionChanged += ((AsnHexViewer)source).OnCollectionChanged;
         }
         ((AsnHexViewer)source).RefreshView();
@@ -140,9 +136,9 @@ partial class AsnHexViewer {
     #endregion
 
     void calculateWidths() {
-        HexAddrHeaderRtb.Width = TextUtility.MeasureStringWidth(masterAddr, FontSize, false);
-        HexRawHeaderRtb.Width = TextUtility.MeasureStringWidth(masterHex, FontSize, false);
-        HexAsciiHeaderRtb.Width = TextUtility.MeasureStringWidth(masterAscii, FontSize, false);
+        HexAddrHeaderRtb.MeasureStringWidth(masterAddr, FontSize, false);
+        HexRawHeaderRtb.MeasureStringWidth(masterHex, FontSize, false);
+        HexAsciiHeaderRtb.MeasureStringWidth(masterAscii, FontSize, false);
     }
     void buildAddress() {
         HexAddressPane.Document = new FlowDocument();
@@ -174,7 +170,7 @@ partial class AsnHexViewer {
         asciiParagraph.Inlines.Add(new Run(SB + Environment.NewLine));
         HexAsciiPane.Document.Blocks.Add(asciiParagraph);
     }
-    void onRtbScrollChanged(Object sender, ScrollChangedEventArgs e) {
+    public void onRtbScrollChanged(Object sender, ScrollChangedEventArgs e) {
         if (scrollLocked) {
             return;
         }
@@ -198,7 +194,7 @@ partial class AsnHexViewer {
         scrollLocked = false;
     }
     void onScrollerScroll(Object sender, ScrollEventArgs e) {
-        Double smallStep = 48;
+        const Double smallStep = 48;
         const Double bigStep = 256;
         Double finalValue = e.NewValue;
 
@@ -231,12 +227,52 @@ partial class AsnHexViewer {
     }
 
     public void RefreshView() {
-        if (DataSource == null) {
+        if (DataSource is null || HexAddressPane is null) {
             return;
         }
 
         buildAddress();
         buildHex();
         buildAscii();
+    }
+
+    public override void OnApplyTemplate() {
+        Scroller = GetTemplateChild("PART_ScrollBar") as ScrollBar;
+        if (Scroller is null) {
+            throw new ArgumentException("'PART_ScrollBar' part was not found.");
+        }
+        Scroller.Maximum = 0;
+        Scroller.Scroll += onScrollerScroll;
+
+        HexAddrHeaderRtb = GetTemplateChild("PART_AddressHeader") as RichTextBox;
+        HexRawHeaderRtb = GetTemplateChild("PART_HexHeader") as RichTextBox;
+        HexAsciiHeaderRtb = GetTemplateChild("PART_AsciiHeader") as RichTextBox;
+
+        HexAddressPane = GetTemplateChild("PART_AddressBody") as BindableRichTextBox;
+        HexAddressPane!.Loaded += (sender, _) => subscribeScrollViewerEvent((TextBoxBase)sender);
+        HexRawPane = GetTemplateChild("PART_HexBody") as BindableRichTextBox;
+        HexRawPane!.Loaded += (sender, _) => subscribeScrollViewerEvent((TextBoxBase)sender);
+        HexAsciiPane = GetTemplateChild("PART_AsciiBody") as BindableRichTextBox;
+        HexAsciiPane!.Loaded += (sender, _) => subscribeScrollViewerEvent((TextBoxBase)sender);
+
+        base.OnApplyTemplate();
+        if (!staticInitialized) {
+            FontSizeProperty.OverrideMetadata(typeof(AsnHexViewer), new FrameworkPropertyMetadata(OnFontSizeChanged));
+            staticInitialized = true;
+        }
+
+        ranges = new TextRange[3];
+        calculateWidths();
+        panes = [HexAddressPane, HexRawPane, HexAsciiPane];
+    }
+
+    void subscribeScrollViewerEvent(TextBoxBase textBoxBase) {
+        if (textBoxBase is null) {
+            throw new ArgumentNullException(nameof(textBoxBase));
+        }
+        if (textBoxBase.Template.FindName("PART_ContentHost", textBoxBase) is not ScrollViewer scroll) {
+            throw new ArgumentException("'PART_ContentHost' named element could not be found in current TextBoxBase instance.");
+        }
+        scroll.ScrollChanged += onRtbScrollChanged;
     }
 }
