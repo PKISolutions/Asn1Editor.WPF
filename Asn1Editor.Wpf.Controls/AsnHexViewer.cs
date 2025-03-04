@@ -106,7 +106,7 @@ public class AsnHexViewer : Control {
         if (e.OldValue is IHexAsnNode oldValue) {
             oldValue.DataChanged -= ctrl.onNodeDataChanged;
         }
-        if (e.NewValue == null) {
+        if (e.NewValue is null) {
             TextUtility.ResetColors(ctrl.ranges);
             return;
         }
@@ -264,6 +264,10 @@ public class AsnHexViewer : Control {
         ranges = new TextRange[3];
         calculateWidths();
         panes = [HexAddressPane, HexRawPane, HexAsciiPane];
+        RefreshView();
+        if (SelectedNode is not null) {
+            reColorHex(SelectedNode);
+        }
     }
 
     void subscribeScrollViewerEvent(TextBoxBase textBoxBase) {
