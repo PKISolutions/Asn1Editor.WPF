@@ -26,6 +26,7 @@ public class NewAsnNodeEditorVM : ClosableWindowVM, INewAsnNodeEditorVM {
         formTagChecked = true;
         OkCommand = new RelayCommand(save, canSave);
         selectedType = Asn1Type.SEQUENCE;
+        ConstructedChecked = true;
         updateResultTagInfo();
     }
 
@@ -154,9 +155,6 @@ public class NewAsnNodeEditorVM : ClosableWindowVM, INewAsnNodeEditorVM {
         }
     }
 
-    void calculateLengths() {
-
-    }
     Byte getResultingTag() {
         Byte retValue;
         if (FormTagChecked) {
