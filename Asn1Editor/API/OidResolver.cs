@@ -87,7 +87,7 @@ public static class OidResolver {
     public static String? ResolveFriendlyName(String? friendlyName) {
         friendlyName ??= String.Empty;
         if (_nameLookup.TryGetValue(friendlyName, out OidDto resolvedOid)) {
-            return resolvedOid.FriendlyName;
+            return resolvedOid.Value;
         }
 
         var oid = new Oid(friendlyName);
