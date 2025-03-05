@@ -108,7 +108,7 @@ class MainWindowVM : ViewModelBase, IMainWindowVM, IHasAsnDocumentTabs {
             };
         }
         try {
-            IEnumerable<Byte> bytes = await FileUtility.FileToBinary(file);
+            IEnumerable<Byte> bytes = await FileUtility.FileToBinaryAsync(file);
             await tab.Decode(bytes, true);
         } catch (Exception ex) {
             Tools.MsgBox("Read Error", ex.Message);

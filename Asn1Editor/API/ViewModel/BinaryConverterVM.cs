@@ -27,7 +27,7 @@ class BinaryConverterVM : AsyncViewModel {
 
     public BinaryConverterVM(Func<Byte[], Task>? action) {
         _action = action;
-        OpenCommand = new RelayCommand(openFile);
+        OpenCommand = new AsyncCommand(openFile);
         SaveCommand = new RelayCommand(saveFile, canPrintSave);
         PrintCommand = new RelayCommand(print, canPrintSave);
         ClearCommand = new RelayCommand(clearText);
@@ -38,7 +38,7 @@ class BinaryConverterVM : AsyncViewModel {
         EncodingTypesView.GroupDescriptions.Add(new PropertyGroupDescription(nameof(EncodingTypeEntry.EncodingGroup)));
     }
 
-    public ICommand OpenCommand { get; }
+    public IAsyncCommand OpenCommand { get; }
     public ICommand SaveCommand { get; }
     public ICommand ClearCommand { get; }
     public IAsyncCommand ValidateCommand { get; }
@@ -128,14 +128,14 @@ class BinaryConverterVM : AsyncViewModel {
         EncodingTypes.Add(new EncodingTypeEntry(encoding, displayName, encodingGroup));
     }
 
-    void openFile(Object obj) {
+    async Task openFile(Object obj, CancellationToken token) {
         if (!getOpenFilePath()) {
             return;
         }
         RawData.Clear();
         IsBusy = true;
         try {
-            RawData.AddRange(FileUtility.FileToBinary(path).GetAwaiter().GetResult());
+            RawData.AddRange(await FileUtility.FileToBinaryAsync(path));
             formatToSelectedEncoding();
         } catch (Exception e) {
             Tools.MsgBox("Read Error", e.Message);
