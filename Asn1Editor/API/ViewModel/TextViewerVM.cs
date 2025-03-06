@@ -13,6 +13,7 @@ using SysadminsLV.WPF.OfficeTheme.Toolkit.Commands;
 namespace SysadminsLV.Asn1Editor.API.ViewModel;
 
 class TextViewerVM : ViewModelBase, ITextViewerVM {
+    readonly IUIMessenger _uiMessenger;
     readonly Asn1TreeNode rootNode;
     const String master = "123";
     const Int32 minLength = 60;
@@ -26,7 +27,7 @@ class TextViewerVM : ViewModelBase, ITextViewerVM {
     String currentLengthStr = "80";
     Double width;
 
-    public TextViewerVM(IHasAsnDocumentTabs appTabs) {
+    public TextViewerVM(IHasAsnDocumentTabs appTabs, IUIMessenger uiMessenger) {
         rootNode = appTabs.SelectedTab.DataSource.SelectedNode;
         CurrentLength = defaultLength.ToString(CultureInfo.InvariantCulture);
         SaveCommand = new RelayCommand(saveFile);
@@ -35,6 +36,7 @@ class TextViewerVM : ViewModelBase, ITextViewerVM {
         TextBoxWidth = TextUtility.MeasureStringWidth(master, Settings.Default.FontSize, false);
         CertutilViewChecked = true;
         renderer.RenderText(currentLength);
+        _uiMessenger = uiMessenger;
     }
 
     public ICommand SaveCommand { get; set; }
@@ -108,13 +110,13 @@ class TextViewerVM : ViewModelBase, ITextViewerVM {
     }
 
     void saveFile(Object obj) {
-        if (!Tools.TryGetSaveFileName(out String filePath)) {
+        if (!_uiMessenger.TryGetSaveFileName(out String filePath)) {
             return;
         }
         try {
             File.WriteAllText(filePath, Text);
         } catch (Exception e) {
-            Tools.MsgBox("Save Error", e.Message);
+            _uiMessenger.ShowError(e.Message, "Save Error");
         }
     }
 }

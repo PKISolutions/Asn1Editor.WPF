@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Windows;
 using System.Windows.Input;
 using SysadminsLV.Asn1Editor.API.Abstractions;
 using SysadminsLV.Asn1Editor.API.Interfaces;
@@ -17,12 +16,14 @@ namespace SysadminsLV.Asn1Editor.API.ViewModel;
 class TreeViewCommands : ViewModelBase, ITreeCommands {
     static readonly List<Byte> _excludedTags = Asn1Reader.GetRestrictedTags();
     readonly IWindowFactory _windowFactory;
+    readonly IUIMessenger _uiMessenger;
     readonly IHasAsnDocumentTabs _tabs;
 
     Boolean hasNodeClipboardData;
 
     public TreeViewCommands(IWindowFactory windowFactory, IHasAsnDocumentTabs appTabs) {
         _windowFactory = windowFactory;
+        _uiMessenger = windowFactory.GetUIMessenger();
         _tabs = appTabs;
         SaveNodeCommand = new RelayCommand(saveBinaryNode, ensureNodeSelected);
         ShowNodeTextViewer = new RelayCommand(showNodeTextViewer, ensureNodeSelected);
@@ -60,14 +61,14 @@ class TreeViewCommands : ViewModelBase, ITreeCommands {
     }
 
     void saveBinaryNode(Object o) {
-        if (!Tools.TryGetSaveFileName(out String filePath)) {
+        if (!_uiMessenger.TryGetSaveFileName(out String filePath)) {
             return;
         }
         isTabSelected(out IDataSource data); // granted to be non-null
         try {
             File.WriteAllBytes(filePath, data.RawData.Skip(data.SelectedNode.Value.Offset).Take(data.SelectedNode.Value.TagLength).ToArray());
         } catch (Exception e) {
-            Tools.MsgBox("Save Error", e.Message);
+            _uiMessenger.ShowError(e.Message, "Save Error");
         }
     }
     void showNodeTextViewer(Object o) {
@@ -118,8 +119,8 @@ class TreeViewCommands : ViewModelBase, ITreeCommands {
     }
     void removeNode(Object o) {
         isTabSelected(out IDataSource data); // granted to be non-null
-        MessageBoxResult response = Tools.MsgBox("Delete", "Do you want to delete the node?\nThis action cannot be undone.", MessageBoxImage.Question, MessageBoxButton.YesNo);
-        if (response == MessageBoxResult.Yes) {
+        Boolean response = _uiMessenger.YesNo("Do you want to delete the node?\nThis action cannot be undone.", "Delete");
+        if (response) {
             if (data.SelectedNode.Parent == null) {
                 data.Tree.Clear();
                 data.RawData.Clear();

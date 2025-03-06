@@ -139,6 +139,7 @@
     </ApplicationDefinition>
     <Compile Include="API\Abstractions\IHasAsnDocumentTabs.cs" />
     <Compile Include="API\Abstractions\INewAsnNodeEditorVM.cs" />
+    <Compile Include="API\Abstractions\IUIMessenger.cs" />
     <Compile Include="API\Converters\IntegerToEnumConverter.cs" />
     <Compile Include="API\Interfaces\IAppCommands.cs" />
     <Compile Include="API\Interfaces\IBinarySource.cs" />
@@ -156,6 +157,7 @@
     <Compile Include="API\Utils\ITextRenderer.cs" />
     <Compile Include="API\Utils\NodeEditMode.cs" />
     <Compile Include="API\Utils\OpenSSLRenderer.cs" />
+    <Compile Include="API\Utils\UIMessenger.cs" />
     <Compile Include="API\ViewModel\Asn1DocumentVM.cs" />
     <Compile Include="API\ViewModel\AsyncViewModel.cs" />
     <Compile Include="API\ViewModel\NewAsnNodeEditorVM.cs" />
@@ -175,7 +177,6 @@
     <Compile Include="API\Utils\Extensions\StringExtensions.cs" />
     <Compile Include="API\Utils\FileUtility.cs" />
     <Compile Include="API\Utils\HexConverter.cs" />
-    <Compile Include="API\Utils\Tools.cs" />
     <Compile Include="API\Converters\TextBlockTrimConverter.cs" />
     <Compile Include="API\ModelObjects\Asn1Lite.cs" />
     <Compile Include="API\ModelObjects\Asn1TreeNode.cs" />

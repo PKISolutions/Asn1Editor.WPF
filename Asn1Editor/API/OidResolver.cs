@@ -4,8 +4,8 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Security.Cryptography;
+using SysadminsLV.Asn1Editor.API.Abstractions;
 using SysadminsLV.Asn1Editor.API.ModelObjects;
-using SysadminsLV.WPF.OfficeTheme.Toolkit;
 
 namespace SysadminsLV.Asn1Editor.API;
 
@@ -13,7 +13,8 @@ interface IOidDbManager {
     void ReloadLookup();
     Boolean SaveUserLookup();
 }
-class OidDbManager : IOidDbManager {
+class OidDbManager(IUIMessenger uiMessenger) : IOidDbManager {
+
     const String oidFileName = "OID.txt";
     public String[] OidLookupLocations { get; set; } = [];
 
@@ -29,7 +30,7 @@ class OidDbManager : IOidDbManager {
                 stream.WriteLine(oid.Value + "," + oid.FriendlyName);
             }
         } catch (Exception ex) {
-            MsgBox.Show("Error", $"User OID lookup save failed:\n{ex.Message}");
+            uiMessenger.ShowError($"User OID lookup save failed:\n{ex.Message}");
 
             return false;
         }

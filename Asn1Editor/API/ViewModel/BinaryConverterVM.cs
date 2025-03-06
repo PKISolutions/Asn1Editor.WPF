@@ -6,9 +6,9 @@ using System.IO;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using System.Windows;
 using System.Windows.Data;
 using System.Windows.Input;
+using SysadminsLV.Asn1Editor.API.Abstractions;
 using SysadminsLV.Asn1Editor.API.ModelObjects;
 using SysadminsLV.Asn1Editor.API.Utils;
 using SysadminsLV.Asn1Parser;
@@ -18,6 +18,7 @@ using SysadminsLV.WPF.OfficeTheme.Toolkit.Commands;
 namespace SysadminsLV.Asn1Editor.API.ViewModel;
 
 class BinaryConverterVM : AsyncViewModel {
+    readonly IUIMessenger _uiMessenger;
     readonly String master = new('0', 78);
     readonly Func<Byte[], Task>? _action;
     Double width;
@@ -25,8 +26,9 @@ class BinaryConverterVM : AsyncViewModel {
     EncodingTypeEntry? selectedEncoding;
     Boolean canCheck;
 
-    public BinaryConverterVM(Func<Byte[], Task>? action) {
+    public BinaryConverterVM(Func<Byte[], Task>? action, IUIMessenger uiMessenger) {
         _action = action;
+        _uiMessenger = uiMessenger;
         OpenCommand = new AsyncCommand(openFile);
         SaveCommand = new RelayCommand(saveFile, canPrintSave);
         PrintCommand = new RelayCommand(print, canPrintSave);
@@ -138,7 +140,7 @@ class BinaryConverterVM : AsyncViewModel {
             RawData.AddRange(await FileUtility.FileToBinaryAsync(path));
             formatToSelectedEncoding();
         } catch (Exception e) {
-            Tools.MsgBox("Read Error", e.Message);
+            _uiMessenger.ShowError(e.Message, "Read Error");
             Path = null;
         }
         IsBusy = false;
@@ -169,18 +171,18 @@ class BinaryConverterVM : AsyncViewModel {
     }
     async Task validateInput(Object obj, CancellationToken token) {
         if (String.IsNullOrEmpty(Text)) {
-            Tools.MsgBox("Warning", "There is nothing to validate.", MessageBoxImage.Warning);
+            _uiMessenger.ShowWarning("There is nothing to validate.");
             return;
         }
         EncodingType encoding = AsnFormatter.TestInputString(Text);
         RawData.Clear();
         selectedEncoding = EncodingTypes.FirstOrDefault(x => x.EncodingType == encoding);
         OnPropertyChanged(nameof(SelectedEncoding));
-        if (SelectedEncoding == null) {
-            Tools.MsgBox("Error", "Input text cannot be validated.");
+        if (SelectedEncoding is null) {
+            _uiMessenger.ShowError("Input text cannot be validated.");
         }
         RawData.AddRange(HexUtility.AnyToBinary(Text));
-        if (obj is not null && _action is not null && obj.ToString() == "Decode") {
+        if (obj?.ToString() == "Decode" && _action is not null) {
             await _action(RawData.ToArray());
         }
     }
@@ -200,7 +202,7 @@ class BinaryConverterVM : AsyncViewModel {
         return CanCheck = RawData.Count > 0;
     }
     Boolean getSaveFilePath() {
-        if (!Tools.TryGetSaveFileName(out String saveFilePath)) {
+        if (!_uiMessenger.TryGetSaveFileName(out String saveFilePath)) {
             return false;
         }
         Path = saveFilePath;
@@ -208,7 +210,7 @@ class BinaryConverterVM : AsyncViewModel {
         return true;
     }
     Boolean getOpenFilePath() {
-        if (!Tools.TryGetOpenFileName(out String filePath)) {
+        if (!_uiMessenger.TryGetOpenFileName(out String filePath)) {
             return false;
         }
         Path = filePath;
@@ -219,14 +221,14 @@ class BinaryConverterVM : AsyncViewModel {
         try {
             File.WriteAllText(Path, Text);
         } catch (Exception e) {
-            Tools.MsgBox("Save Error", e.Message);
+            _uiMessenger.ShowError(e.Message, "Save Error");
         }
     }
     void saveBinary() {
         try {
             File.WriteAllBytes(Path, RawData.ToArray());
         } catch (Exception e) {
-            Tools.MsgBox("Save Error", e.Message);
+            _uiMessenger.ShowError(e.Message, "Save Error");
         }
     }
 
