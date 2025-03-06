@@ -6,7 +6,6 @@ using System.IO;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using System.Windows;
 using System.Windows.Input;
 using SysadminsLV.Asn1Editor.API.Abstractions;
 using SysadminsLV.Asn1Editor.API.Interfaces;
@@ -20,6 +19,7 @@ namespace SysadminsLV.Asn1Editor.API.ViewModel;
 
 class MainWindowVM : ViewModelBase, IMainWindowVM, IHasAsnDocumentTabs {
     readonly IWindowFactory _windowFactory;
+    readonly IUIMessenger _uiMessenger;
     Asn1DocumentVM selectedTab;
 
     public MainWindowVM(
@@ -27,6 +27,7 @@ class MainWindowVM : ViewModelBase, IMainWindowVM, IHasAsnDocumentTabs {
         IAppCommands appCommands,
         NodeViewOptions nodeViewOptions) {
         _windowFactory = windowFactory;
+        _uiMessenger = windowFactory.GetUIMessenger();
         GlobalData = new GlobalData();
         AppCommands = appCommands;
         TreeCommands = new TreeViewCommands(windowFactory, this);
@@ -111,7 +112,7 @@ class MainWindowVM : ViewModelBase, IMainWindowVM, IHasAsnDocumentTabs {
             IEnumerable<Byte> bytes = await FileUtility.FileToBinaryAsync(file);
             await tab.Decode(bytes, true);
         } catch (Exception ex) {
-            Tools.MsgBox("Read Error", ex.Message);
+            _uiMessenger.ShowError(ex.Message, "Read Error");
             return;
         }
         if (!useDefaultTab) {
@@ -124,7 +125,7 @@ class MainWindowVM : ViewModelBase, IMainWindowVM, IHasAsnDocumentTabs {
         String filePath;
         Boolean useDefaultTab = false;
         if (obj == null) {
-            Tools.TryGetOpenFileName(out filePath);
+            _uiMessenger.TryGetOpenFileName(out filePath);
         } else {
             filePath = obj.ToString();
             useDefaultTab = true;
@@ -164,7 +165,7 @@ class MainWindowVM : ViewModelBase, IMainWindowVM, IHasAsnDocumentTabs {
     }
 
     // general method to write arbitrary tab to a file.
-    static Boolean writeFile(Asn1DocumentVM tab, String filePath = null) {
+    Boolean writeFile(Asn1DocumentVM tab, String filePath = null) {
         // use default path if no custom file path specified
         filePath ??= tab.Path;
         // if file path is still null, then it came from "untitled" tab with default file path
@@ -179,28 +180,21 @@ class MainWindowVM : ViewModelBase, IMainWindowVM, IHasAsnDocumentTabs {
 
             return true;
         } catch (Exception e) {
-            Tools.MsgBox("Save Error", e.Message);
+            _uiMessenger.ShowError(e.Message, "Save Error");
         }
         return false;
     }
-    static Boolean getSaveFilePath(out String saveFilePath) {
-        return Tools.TryGetSaveFileName(out saveFilePath);
+    Boolean getSaveFilePath(out String saveFilePath) {
+        return _uiMessenger.TryGetSaveFileName(out saveFilePath);
     }
 
     public Boolean RequestFileSave(Asn1DocumentVM tab) {
-        MessageBoxResult result = Tools.MsgBox(
-            "Unsaved Data",
-            "Current file was modified. Save changes?",
-            MessageBoxImage.Warning,
-            MessageBoxButton.YesNoCancel);
-        switch (result) {
-            case MessageBoxResult.No:
-                return true;
-            case MessageBoxResult.Yes:
-                return writeFile(tab);
-            default:
-                return false;
-        }
+        Boolean? result = _uiMessenger.YesNoCancel("Current file was modified. Save changes?", "Unsaved Data");
+        return result switch {
+            false => true,
+            true  => writeFile(tab),
+            _     => false
+        };
     }
     #endregion
 

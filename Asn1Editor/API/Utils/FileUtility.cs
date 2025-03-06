@@ -1,4 +1,5 @@
-﻿using System;
+﻿#nullable enable
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.IO;
@@ -35,10 +36,12 @@ static class FileUtility {
             throw new Win32Exception(2);
         }
         Byte[] buffer = new Byte[4];
-        using FileStream fs = new FileStream(path, FileMode.Open);
-        var readBytes = fs.Read(buffer, 0, 4);
-        if (readBytes < 2) {
-            throw new Exception("The data is invalid");
+        // must not use 'using' declaration.
+        using (FileStream fs = new FileStream(path, FileMode.Open)) {
+            Int32 readBytes = fs.Read(buffer, 0, 4);
+            if (readBytes < 2) {
+                throw new Exception("The data is invalid");
+            }
         }
         if (
             buffer[0] == 0xfe && buffer[1] == 0xff || // BigEndian unicode
@@ -47,7 +50,12 @@ static class FileUtility {
             buffer[0] == 0xef && buffer[1] == 0xbb && buffer[2] == 0xbf || // UTF8
             buffer[0] == 0x2b && buffer[1] == 0x2f && buffer[2] == 0x76 // UTF7
         ) {
-            return HexUtility.AnyToBinary(GetRawText(path));
+            IEnumerable<Byte>? rawData = HexUtility.AnyToBinary(GetRawText(path));
+            if (rawData is null) {
+                throw new Exception("The data is invalid");
+            }
+
+            return rawData;
         }
         Asn1Reader asn = new Asn1Reader(File.ReadAllBytes(path));
         if (asn.TagLength == fileInfo.Length) {
@@ -56,7 +64,7 @@ static class FileUtility {
             }
             throw new Exception("The data is invalid");
         }
-        asn = new Asn1Reader(HexUtility.AnyToBinary(GetRawText(path)).ToArray());
+        asn = new Asn1Reader(HexUtility.AnyToBinary(GetRawText(path))!.ToArray());
         if (ValidateData(asn.Tag)) {
             return asn.GetTagRawData();
         }

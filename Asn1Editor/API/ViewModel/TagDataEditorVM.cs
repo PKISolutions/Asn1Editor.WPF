@@ -15,6 +15,7 @@ using SysadminsLV.WPF.OfficeTheme.Toolkit.Commands;
 namespace SysadminsLV.Asn1Editor.API.ViewModel;
 
 class TagDataEditorVM : ViewModelBase, ITagDataEditorVM {
+    readonly IUIMessenger _uiMessenger;
     readonly IDataSource _data;
     const String masterUnused = "1";
     NodeEditMode mode;
@@ -26,8 +27,9 @@ class TagDataEditorVM : ViewModelBase, ITagDataEditorVM {
     Double unusedTextBoxWidth;
 
 
-    public TagDataEditorVM(IHasAsnDocumentTabs appTabs) {
+    public TagDataEditorVM(IHasAsnDocumentTabs appTabs, IUIMessenger uiMessenger) {
         _data = appTabs.SelectedTab.DataSource;
+        _uiMessenger = uiMessenger;
         NodeViewOptions = appTabs.NodeViewOptions;
         OkCommand = new RelayCommand(submitValues);
         CloseCommand = new RelayCommand(close);
@@ -163,7 +165,7 @@ class TagDataEditorVM : ViewModelBase, ITagDataEditorVM {
                 binValue = AsnDecoder.EncodeGeneric(Node.Tag, TagValue.TextValue, UnusedBits);
             }
         } catch (Exception e) {
-            Tools.MsgBox("Error", e.Message);
+            _uiMessenger.ShowError(e.Message);
         }
         return binValue;
     }
