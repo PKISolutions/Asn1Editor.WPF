@@ -30,7 +30,7 @@ public class AsnHexViewer : Control {
 
     BindableRichTextBox[] panes;
 
-    Boolean scrollLocked;
+    Boolean controlInitialized, scrollLocked;
     TextRange[] ranges;
 
     ScrollBar Scroller;
@@ -86,10 +86,10 @@ public class AsnHexViewer : Control {
         if (e.NewValue is INotifyCollectionChanged newValue) {
             newValue.CollectionChanged += ((AsnHexViewer)source).OnCollectionChanged;
         }
-        ((AsnHexViewer)source).RefreshView();
+        ((AsnHexViewer)source).refreshView();
     }
     void OnCollectionChanged(Object o, NotifyCollectionChangedEventArgs e) {
-        RefreshView();
+        refreshView();
     }
 
     #endregion
@@ -115,6 +115,9 @@ public class AsnHexViewer : Control {
         treeNode.DataChanged += ctrl.onNodeDataChanged;
     }
     void reColorHex(IHexAsnNode treeNode) {
+        if (!controlInitialized) {
+            return;
+        }
         TextUtility.ResetColors(ranges);
         ranges = TextUtility.GetSelectionPointers(treeNode, HexRawPane);
         TextUtility.Colorize(ranges);
@@ -226,8 +229,8 @@ public class AsnHexViewer : Control {
         e.Handled = true;
     }
 
-    public void RefreshView() {
-        if (DataSource is null || HexAddressPane is null) {
+    void refreshView() {
+        if (DataSource is null || !controlInitialized) {
             return;
         }
 
@@ -264,7 +267,8 @@ public class AsnHexViewer : Control {
         ranges = new TextRange[3];
         calculateWidths();
         panes = [HexAddressPane, HexRawPane, HexAsciiPane];
-        RefreshView();
+        refreshView();
+        controlInitialized = true;
         if (SelectedNode is not null) {
             reColorHex(SelectedNode);
         }
