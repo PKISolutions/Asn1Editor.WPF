@@ -22,6 +22,7 @@ public class NewAsnNodeEditorVM : ClosableWindowVM, INewAsnNodeEditorVM {
     Asn1Type selectedType;
 
     public NewAsnNodeEditorVM(NodeViewOptions options) {
+        NodeViewOptions = options;
         TagTextBoxWidth = TextUtility.MeasureStringWidth(masterTag, options.FontSize, false);
         formTagChecked = true;
         OkCommand = new RelayCommand(save, canSave);
@@ -31,6 +32,8 @@ public class NewAsnNodeEditorVM : ClosableWindowVM, INewAsnNodeEditorVM {
     }
 
     public ICommand OkCommand { get; }
+
+    public NodeViewOptions NodeViewOptions { get; }
 
     public Boolean FormTagChecked {
         get => formTagChecked;
