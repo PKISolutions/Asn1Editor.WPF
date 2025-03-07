@@ -6,6 +6,7 @@
         xmlns:cmd="clr-namespace:SysadminsLV.WPF.OfficeTheme.Toolkit.Commands;assembly=Wpf.OfficeTheme"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:controls="clr-namespace:Asn1Editor.Wpf.Controls;assembly=Asn1Editor.Wpf.Controls"
         mc:Ignorable="d"
         d:DataContext="{d:DesignInstance vm:TagDataEditorVM}"
         cmd:DialogCloser.DialogResult="{Binding DialogResult}"
@@ -46,8 +47,8 @@
                             Visibility="{Binding UnusedBitsVisible, Converter={StaticResource BooleanToVisibility}}">
                     <TextBlock Text="Unused bits:"
                                VerticalAlignment="Center" Margin="2,0"/>
-                    <TextBox Text="{Binding UnusedBits}"
-                             Width="{Binding UnusedTextBoxWidth}"
+                    <controls:AutoSizeTextBox Text="{Binding UnusedBits}"
+                             LineWidth="1"
                              MaxLength="1"
                              FontFamily="Consolas"/>
                 </StackPanel>
