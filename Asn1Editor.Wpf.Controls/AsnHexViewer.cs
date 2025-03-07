@@ -270,8 +270,8 @@ public class AsnHexViewer : Control {
         ranges = new TextRange[3];
         calculateWidths();
         panes = [HexAddressPane, HexRawPane, HexAsciiPane];
-        refreshView();
         controlInitialized = true;
+        refreshView();
         if (SelectedNode is not null) {
             reColorHex(SelectedNode);
         }
