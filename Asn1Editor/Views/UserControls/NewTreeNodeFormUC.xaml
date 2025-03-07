@@ -8,6 +8,7 @@
              xmlns:vm="clr-namespace:SysadminsLV.Asn1Editor.API.ViewModel"
              xmlns:behaviors="clr-namespace:SysadminsLV.WPF.OfficeTheme.Toolkit.Behaviors;assembly=Wpf.OfficeTheme"
              xmlns:c="clr-namespace:Asn1Editor.Wpf.Controls;assembly=Asn1Editor.Wpf.Controls"
+             xmlns:controls="clr-namespace:SysadminsLV.WPF.OfficeTheme.Controls;assembly=Wpf.OfficeTheme"
              d:DataContext="{d:DesignInstance vm:NewAsnNodeEditorVM}"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
@@ -75,12 +76,14 @@
 
         <GroupBox Header="Result:">
             <GroupBox.Resources>
-                <Style TargetType="TextBox" BasedOn="{x:Null}">
+                <Style TargetType="TextBox" BasedOn="{StaticResource {x:Type TextBoxBase}}">
                     <Setter Property="BorderThickness" Value="0"/>
                     <Setter Property="Background" Value="Transparent"/>
                     <Setter Property="Foreground" Value="{StaticResource TabItem.FgBrush}"/>
+                    <Setter Property="FontFamily" Value="Consolas"/>
                     <Setter Property="IsReadOnly" Value="True"/>
                     <Setter Property="TextWrapping" Value="Wrap"/>
+                    <Setter Property="VerticalAlignment" Value="Center"/>
                     <Setter Property="VerticalScrollBarVisibility" Value="Auto"/>
                 </Style>
             </GroupBox.Resources>
