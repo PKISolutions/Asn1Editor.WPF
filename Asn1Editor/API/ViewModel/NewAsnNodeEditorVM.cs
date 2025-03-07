@@ -2,7 +2,6 @@
 using System.Globalization;
 using System.Text.RegularExpressions;
 using System.Windows.Input;
-using Asn1Editor.Wpf.Controls.Helpers;
 using SysadminsLV.Asn1Editor.API.Abstractions;
 using SysadminsLV.Asn1Editor.API.Interfaces;
 using SysadminsLV.Asn1Editor.API.ModelObjects;
@@ -11,10 +10,6 @@ using SysadminsLV.WPF.OfficeTheme.Toolkit.Commands;
 
 namespace SysadminsLV.Asn1Editor.API.ViewModel;
 public class NewAsnNodeEditorVM : ClosableWindowVM, INewAsnNodeEditorVM {
-    const String masterTag = "123";
-
-    Double tagTextBoxWidth;
-
     Boolean shouldGenerateNode;
     Boolean formTagChecked, decimalTagChecked, hexTagChecked,
         clsConstructedChecked, clsSpecificChecked, clsApplicationChecked, clsPrivateChecked;
@@ -23,7 +18,6 @@ public class NewAsnNodeEditorVM : ClosableWindowVM, INewAsnNodeEditorVM {
 
     public NewAsnNodeEditorVM(NodeViewOptions options) {
         NodeViewOptions = options;
-        TagTextBoxWidth = TextUtility.MeasureStringWidth(masterTag, options.FontSize, false);
         formTagChecked = true;
         OkCommand = new RelayCommand(save, canSave);
         selectedType = Asn1Type.SEQUENCE;
@@ -147,14 +141,6 @@ public class NewAsnNodeEditorVM : ClosableWindowVM, INewAsnNodeEditorVM {
         set {
             resultTagName = value;
             OnPropertyChanged(nameof(ResultTagName));
-        }
-    }
-
-    public Double TagTextBoxWidth {
-        get => tagTextBoxWidth;
-        set {
-            tagTextBoxWidth = value;
-            OnPropertyChanged(nameof(TagTextBoxWidth));
         }
     }
 

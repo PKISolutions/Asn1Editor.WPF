@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Windows.Input;
-using Asn1Editor.Wpf.Controls.Helpers;
 using SysadminsLV.Asn1Editor.API.Abstractions;
 using SysadminsLV.Asn1Editor.API.Interfaces;
 using SysadminsLV.Asn1Editor.API.ModelObjects;
@@ -17,14 +16,12 @@ namespace SysadminsLV.Asn1Editor.API.ViewModel;
 class TagDataEditorVM : ViewModelBase, ITagDataEditorVM {
     readonly IUIMessenger _uiMessenger;
     readonly IDataSource _data;
-    const String masterUnused = "1";
     NodeEditMode mode;
     Boolean? dialogResult;
     String tagDetails;
     AsnViewValue tagValue, oldValue;
     Boolean rbText = true, rbHex, isReadonly;
     Byte unusedBits;
-    Double unusedTextBoxWidth;
 
 
     public TagDataEditorVM(IHasAsnDocumentTabs appTabs, IUIMessenger uiMessenger) {
@@ -75,13 +72,6 @@ class TagDataEditorVM : ViewModelBase, ITagDataEditorVM {
         }
     }
     public Boolean IsEditable => !IsReadOnly;
-    public Double UnusedTextBoxWidth {
-        get => unusedTextBoxWidth;
-        set {
-            unusedTextBoxWidth = value;
-            OnPropertyChanged(nameof(UnusedTextBoxWidth));
-        }
-    }
     public Boolean RbText {
         get => rbText;
         set {
@@ -119,15 +109,6 @@ class TagDataEditorVM : ViewModelBase, ITagDataEditorVM {
 
     void initialize() {
         tagValue = new AsnViewValue();
-        calculateLengths();
-        Settings.Default.PropertyChanged += (Sender, Args) => {
-            if (Args.PropertyName == nameof(Settings.FontSize)) {
-                calculateLengths();
-            }
-        };
-    }
-    void calculateLengths() {
-        UnusedTextBoxWidth = TextUtility.MeasureStringWidth(masterUnused, Settings.Default.FontSize, false);
     }
     void submitValues(Object obj) {
         if (Equals(TagValue, oldValue)) {

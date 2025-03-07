@@ -2,12 +2,10 @@
 using System.Globalization;
 using System.IO;
 using System.Windows.Input;
-using Asn1Editor.Wpf.Controls.Helpers;
 using SysadminsLV.Asn1Editor.API.Abstractions;
 using SysadminsLV.Asn1Editor.API.Interfaces;
 using SysadminsLV.Asn1Editor.API.ModelObjects;
 using SysadminsLV.Asn1Editor.API.Utils;
-using SysadminsLV.Asn1Editor.Properties;
 using SysadminsLV.WPF.OfficeTheme.Toolkit.Commands;
 
 namespace SysadminsLV.Asn1Editor.API.ViewModel;
@@ -25,15 +23,14 @@ class TextViewerVM : ViewModelBase, ITextViewerVM {
     String text;
     Int32 currentLength = 80;
     String currentLengthStr = "80";
-    Double width;
 
-    public TextViewerVM(IHasAsnDocumentTabs appTabs, IUIMessenger uiMessenger) {
+    public TextViewerVM(IHasAsnDocumentTabs appTabs, NodeViewOptions options, IUIMessenger uiMessenger) {
         rootNode = appTabs.SelectedTab.DataSource.SelectedNode;
+        NodeViewOptions = options;
         CurrentLength = defaultLength.ToString(CultureInfo.InvariantCulture);
         SaveCommand = new RelayCommand(saveFile);
         PrintCommand = new RelayCommand(print);
         ApplyCommand = new RelayCommand(applyNewLength);
-        TextBoxWidth = TextUtility.MeasureStringWidth(master, Settings.Default.FontSize, false);
         CertutilViewChecked = true;
         renderer.RenderText(currentLength);
         _uiMessenger = uiMessenger;
@@ -41,7 +38,9 @@ class TextViewerVM : ViewModelBase, ITextViewerVM {
 
     public ICommand SaveCommand { get; set; }
     public ICommand PrintCommand { get; set; }
-    public ICommand ApplyCommand { get; set; }
+    public ICommand ApplyCommand { get; }
+
+    public NodeViewOptions NodeViewOptions { get; }
 
     public String Text {
         get => text;
@@ -55,13 +54,6 @@ class TextViewerVM : ViewModelBase, ITextViewerVM {
         set {
             currentLengthStr = value;
             OnPropertyChanged(nameof(CurrentLength));
-        }
-    }
-    public Double TextBoxWidth {
-        get => width;
-        set {
-            width = value;
-            OnPropertyChanged(nameof(TextBoxWidth));
         }
     }
     public Boolean CertutilViewChecked {
