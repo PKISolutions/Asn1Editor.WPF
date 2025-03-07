@@ -7,6 +7,7 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
 using System.Windows.Documents;
+using System.Windows.Media;
 using Asn1Editor.Wpf.Controls.Helpers;
 using SysadminsLV.Asn1Parser;
 using SysadminsLV.WPF.OfficeTheme.Controls;
@@ -110,7 +111,7 @@ public class AsnHexViewer : Control {
             oldValue.DataChanged -= ctrl.onNodeDataChanged;
         }
         if (e.NewValue is null) {
-            TextUtility.ResetColors(ctrl.ranges);
+            ctrl.ResetColors();
             return;
         }
         var treeNode = (IHexAsnNode)e.NewValue;
@@ -121,9 +122,9 @@ public class AsnHexViewer : Control {
         if (!controlInitialized) {
             return;
         }
-        TextUtility.ResetColors(ranges);
-        ranges = TextUtility.GetSelectionPointers(treeNode, HexRawPane);
-        TextUtility.Colorize(ranges);
+        ResetColors();
+        ranges = GetSelectionPointers(treeNode, HexRawPane);
+        Colorize();
         HexRawPane.CaretPosition = ranges[0].Start;
         scrollPanes(null);
     }
@@ -140,6 +141,40 @@ public class AsnHexViewer : Control {
     }
 
     #endregion
+
+    public static readonly DependencyProperty TagOctetBrushProperty = DependencyProperty.Register(
+        nameof(TagOctetBrush),
+        typeof(Brush),
+        typeof(AsnHexViewer),
+        new PropertyMetadata(default));
+
+    public Brush TagOctetBrush {
+        get => (Brush)GetValue(TagOctetBrushProperty);
+        set => SetValue(TagOctetBrushProperty, value);
+    }
+
+    public static readonly DependencyProperty TagLengthOctetBrushProperty = DependencyProperty.Register(
+        nameof(TagLengthOctetBrush),
+        typeof(Brush),
+        typeof(AsnHexViewer),
+        new PropertyMetadata(default));
+
+    public Brush TagLengthOctetBrush {
+        get => (Brush)GetValue(TagLengthOctetBrushProperty);
+        set => SetValue(TagLengthOctetBrushProperty, value);
+    }
+
+    public static readonly DependencyProperty TagPayloadOctetBrushProperty = DependencyProperty.Register(
+        nameof(TagPayloadOctetBrush),
+        typeof(Brush),
+        typeof(AsnHexViewer),
+        new PropertyMetadata(default));
+
+    public Brush TagPayloadOctetBrush {
+        get => (Brush)GetValue(TagPayloadOctetBrushProperty);
+        set => SetValue(TagPayloadOctetBrushProperty, value);
+    }
+
 
     void calculateWidths() {
         HexAddrHeaderRtb.MeasureStringWidth(masterAddr);
@@ -268,9 +303,9 @@ public class AsnHexViewer : Control {
         }
 
         ranges = new TextRange[3];
-        calculateWidths();
         panes = [HexAddressPane, HexRawPane, HexAsciiPane];
         controlInitialized = true;
+        calculateWidths();
         refreshView();
         if (SelectedNode is not null) {
             reColorHex(SelectedNode);
@@ -286,4 +321,63 @@ public class AsnHexViewer : Control {
         }
         scroll.ScrollChanged += onRtbScrollChanged;
     }
+
+    #region Hex Colorizer
+
+    static Int32 getOffset(Int32 offset) {
+        Int32 line = (Int32)Math.Floor((Double)offset / 16);
+        return (offset - 16 * line) * 3 + 50 * line + 2;
+    }
+    static TextRange[] GetRanges(IList<TextPointer> pointers) {
+        TextRange[] ranges =
+        [
+            new(pointers[0], pointers[1]),
+            new(pointers[2], pointers[3]),
+            new(pointers[4], pointers[5]),
+        ];
+        return ranges;
+    }
+
+    static TextRange[] GetSelectionPointers(IHexAsnNode treeNode, BindableRichTextBox rtb) {
+        TextPointer[] pointers =
+        [
+            // tag
+            rtb.Document.ContentStart.GetPositionAtOffset(
+                getOffset(treeNode.Offset)
+            ),
+            rtb.Document.ContentStart.GetPositionAtOffset(
+                getOffset(treeNode.Offset + 1)
+            ),
+            // length bytes
+            rtb.Document.ContentStart.GetPositionAtOffset(
+                getOffset(treeNode.Offset + 1)
+            ),
+            rtb.Document.ContentStart.GetPositionAtOffset(
+                getOffset(treeNode.PayloadStartOffset)
+            ),
+            // payload
+            rtb.Document.ContentStart.GetPositionAtOffset(
+                getOffset(treeNode.PayloadStartOffset)
+            ),
+            rtb.Document.ContentStart.GetPositionAtOffset(
+                getOffset(treeNode.PayloadStartOffset + treeNode.PayloadLength)
+            )
+        ];
+        return GetRanges(pointers);
+    }
+    void Colorize() {
+        foreach (TextRange range in ranges) {
+            range.ApplyPropertyValue(TextElement.FontWeightProperty, FontWeights.Bold);
+        }
+        ranges[0].ApplyPropertyValue(TextElement.ForegroundProperty, TagOctetBrush);
+        ranges[1].ApplyPropertyValue(TextElement.ForegroundProperty, TagLengthOctetBrush);
+        ranges[2].ApplyPropertyValue(TextElement.ForegroundProperty, TagPayloadOctetBrush);
+    }
+    void ResetColors() {
+        foreach (TextRange range in ranges.Where(range => range != null)) {
+            range.ClearAllProperties();
+        }
+    }
+
+    #endregion
 }

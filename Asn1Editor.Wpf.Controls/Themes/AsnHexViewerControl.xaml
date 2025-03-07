@@ -91,6 +91,9 @@
     <Style TargetType="c:AsnHexViewer">
         <Setter Property="BorderThickness" Value="1"/>
         <Setter Property="BorderBrush" Value="#add1ff"/>
+        <Setter Property="TagOctetBrush" Value="Red"/>
+        <Setter Property="TagLengthOctetBrush" Value="Green"/>
+        <Setter Property="TagPayloadOctetBrush" Value="Black"/>
         <Setter Property="Template" Value="{StaticResource AsnHexViewerTemplate}"/>
     </Style>
 </ResourceDictionary>
