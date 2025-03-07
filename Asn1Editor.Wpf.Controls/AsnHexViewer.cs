@@ -142,9 +142,9 @@ public class AsnHexViewer : Control {
     #endregion
 
     void calculateWidths() {
-        HexAddrHeaderRtb.MeasureStringWidth(masterAddr, FontSize, false);
-        HexRawHeaderRtb.MeasureStringWidth(masterHex, FontSize, false);
-        HexAsciiHeaderRtb.MeasureStringWidth(masterAscii, FontSize, false);
+        HexAddrHeaderRtb.MeasureStringWidth(masterAddr);
+        HexRawHeaderRtb.MeasureStringWidth(masterHex);
+        HexAsciiHeaderRtb.MeasureStringWidth(masterAscii);
     }
     void buildAddress() {
         HexAddressPane.Document = new FlowDocument();
