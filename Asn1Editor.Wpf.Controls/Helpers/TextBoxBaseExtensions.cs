@@ -11,7 +11,8 @@ static class TextBoxBaseExtensions {
     /// </summary>
     /// <param name="textBoxBase">A <see cref="TextBoxBase"/> instance that defines font style.</param>
     /// <param name="str">String to fit.</param>
-    public static void MeasureStringWidth(this TextBoxBase textBoxBase, String str) {
+    /// <param name="includeScrollBar">Specifies whether to allocate extra space for vertical scrollbar. Default is <c>false</c>.</param>
+    public static void MeasureStringWidth(this TextBoxBase textBoxBase, String str, Boolean includeScrollBar = false) {
         FormattedText formattedText = new FormattedText(
             str,
             CultureInfo.CurrentUICulture,
@@ -21,7 +22,7 @@ static class TextBoxBaseExtensions {
             textBoxBase.Foreground,
             VisualTreeHelper.GetDpi(textBoxBase).PixelsPerDip);
 
-        textBoxBase.Width = textBoxBase.AcceptsReturn
+        textBoxBase.Width = includeScrollBar
             ? formattedText.Width + SystemParameters.VerticalScrollBarWidth + 12
             : formattedText.Width + 12;
     }
