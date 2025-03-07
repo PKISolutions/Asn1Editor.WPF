@@ -182,21 +182,20 @@ public class AsnHexViewer : Control {
         HexAsciiHeaderRtb.SetWidthToFitString(masterAscii);
     }
     void buildAddress() {
-        HexAddressPane.Document = new FlowDocument();
         var addressParagraph = new Paragraph();
         foreach (Int32 row in Enumerable.Range(0, (Int32)Math.Ceiling((Double)DataSource.Count / 16))) {
             addressParagraph.Inlines.Add(new Run($"{row * 16:X8}" + Environment.NewLine));
         }
+        HexAddressPane.Document.Blocks.Clear();
         HexAddressPane.Document.Blocks.Add(addressParagraph);
     }
     void buildHex() {
-        HexRawPane.Document = new FlowDocument();
         var hexParagraph = new Paragraph();
         hexParagraph.Inlines.Add(new Run(AsnFormatter.BinaryToString(DataSource.ToArray(), EncodingType.Hex).ToUpper()));
+        HexRawPane.Document.Blocks.Clear();
         HexRawPane.Document.Blocks.Add(hexParagraph);
     }
     void buildAscii() {
-        HexAsciiPane.Document = new FlowDocument();
         var asciiParagraph = new Paragraph();
         var SB = new StringBuilder();
         for (Int32 index = 0; index < DataSource.Count; index++) {
@@ -209,6 +208,7 @@ public class AsnHexViewer : Control {
             SB.Append(c);
         }
         asciiParagraph.Inlines.Add(new Run(SB + Environment.NewLine));
+        HexAsciiPane.Document.Blocks.Clear();
         HexAsciiPane.Document.Blocks.Add(asciiParagraph);
     }
     public void onRtbScrollChanged(Object sender, ScrollChangedEventArgs e) {
@@ -289,12 +289,9 @@ public class AsnHexViewer : Control {
         HexRawHeaderRtb = GetTemplateChild("PART_HexHeader") as RichTextBox;
         HexAsciiHeaderRtb = GetTemplateChild("PART_AsciiHeader") as RichTextBox;
 
-        HexAddressPane = GetTemplateChild("PART_AddressBody") as BindableRichTextBox;
-        HexAddressPane!.Loaded += (sender, _) => subscribeScrollViewerEvent((TextBoxBase)sender);
-        HexRawPane = GetTemplateChild("PART_HexBody") as BindableRichTextBox;
-        HexRawPane!.Loaded += (sender, _) => subscribeScrollViewerEvent((TextBoxBase)sender);
-        HexAsciiPane = GetTemplateChild("PART_AsciiBody") as BindableRichTextBox;
-        HexAsciiPane!.Loaded += (sender, _) => subscribeScrollViewerEvent((TextBoxBase)sender);
+        HexAddressPane = initializeBindableRtb("PART_AddressBody");
+        HexRawPane = initializeBindableRtb("PART_HexBody");
+        HexAsciiPane = initializeBindableRtb("PART_AsciiBody");
 
         base.OnApplyTemplate();
         if (!staticInitialized) {
@@ -312,6 +309,13 @@ public class AsnHexViewer : Control {
         }
     }
 
+    BindableRichTextBox initializeBindableRtb(String resourceName) {
+        var rtb = GetTemplateChild(resourceName) as BindableRichTextBox;
+        rtb!.Loaded += (sender, _) => subscribeScrollViewerEvent((TextBoxBase)sender);
+        rtb.Document = new FlowDocument();
+
+        return rtb;
+    }
     void subscribeScrollViewerEvent(TextBoxBase textBoxBase) {
         if (textBoxBase is null) {
             throw new ArgumentNullException(nameof(textBoxBase));
@@ -338,7 +342,7 @@ public class AsnHexViewer : Control {
         return ranges;
     }
 
-    static TextRange[] GetSelectionPointers(IHexAsnNode treeNode, BindableRichTextBox rtb) {
+    static TextRange[] GetSelectionPointers(IHexAsnNode treeNode, RichTextBox rtb) {
         TextPointer[] pointers =
         [
             // tag
