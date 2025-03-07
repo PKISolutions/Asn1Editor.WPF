@@ -20,9 +20,7 @@ public class NewAsnNodeEditorVM : ClosableWindowVM, INewAsnNodeEditorVM {
         NodeViewOptions = options;
         formTagChecked = true;
         OkCommand = new RelayCommand(save, canSave);
-        selectedType = Asn1Type.SEQUENCE;
-        ConstructedChecked = true;
-        updateResultTagInfo();
+        SelectedType = Asn1Type.SEQUENCE;
     }
 
     public ICommand OkCommand { get; }
@@ -102,7 +100,8 @@ public class NewAsnNodeEditorVM : ClosableWindowVM, INewAsnNodeEditorVM {
         set {
             selectedType = value;
             OnPropertyChanged(nameof(SelectedType));
-            updateResultTagInfo();
+            ConstructedChecked = SelectedType is Asn1Type.SEQUENCE or Asn1Type.SET;
+            // no need to call updateResultTagInfo(), it is already called.
         }
     }
     public String DecimalTagText {
