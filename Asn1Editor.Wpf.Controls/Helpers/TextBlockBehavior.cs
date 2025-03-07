@@ -50,13 +50,10 @@ public static class TextBlockBehavior {
     static void setTextBlockText(TextBlock textBlock) {
         Int32 trimLength = GetTrimLength(textBlock);
         String sourceText = GetSourceText(textBlock) ?? String.Empty;
-        if (trimLength == 0) {
+        if (trimLength == 0 || sourceText.Length <= trimLength) {
             textBlock.Text = GetSourceText(textBlock);
         } else {
-            if (sourceText.Length > trimLength) {
-                textBlock.Text = sourceText.Substring(0, trimLength) + "...";
-            }
-            
+            textBlock.Text = sourceText.Substring(0, trimLength) + "...";
         }
     }
 }
