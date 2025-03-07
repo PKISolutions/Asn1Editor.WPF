@@ -28,7 +28,7 @@ public class Asn1DocumentVM : AsyncViewModel {
     public IDataSource DataSource { get; }
     public ITreeCommands TreeCommands { get; }
     public NodeViewOptions NodeViewOptions => DataSource.NodeViewOptions;
-    public ObservableCollection<Asn1TreeNode> Tree => DataSource.Tree;
+    public ReadOnlyObservableCollection<Asn1TreeNode> Tree => DataSource.Tree;
 
     public String Header {
         get {
@@ -93,17 +93,14 @@ public class Asn1DocumentVM : AsyncViewModel {
         try {
             decodeFile(bytes);
             Asn1TreeNode rootNode = await AsnTreeBuilder.BuildTreeAsync(DataSource);
-            Tree.Add(rootNode);
-            DataSource.FinishBinaryUpdate();
+            DataSource.SetRootNode(rootNode);
         } finally {
             suppressModified = false;
             IsBusy = false;
         }
     }
     public void Reset() {
-        DataSource.Tree.Clear();
-        DataSource.SelectedNode = null;
-        DataSource.RawData.Clear();
+        DataSource.Reset();
         Path = String.Empty;
         IsModified = false;
     }

@@ -106,8 +106,7 @@ class TreeViewCommands : ViewModelBase, ITreeCommands {
         if (data.Tree.Count == 0) {
             // add new root node
             node = new Asn1TreeNode(nodeValue, data);
-            data.Tree.Add(node);
-            data.FinishBinaryUpdate();
+            data.SetRootNode(node);
         } else {
             node = data.SelectedNode.AddChild(nodeValue, true);
             data.FinishBinaryUpdate();
@@ -122,9 +121,7 @@ class TreeViewCommands : ViewModelBase, ITreeCommands {
         Boolean response = _uiMessenger.YesNo("Do you want to delete the node?\nThis action cannot be undone.", "Delete");
         if (response) {
             if (data.SelectedNode.Parent == null) {
-                data.Tree.Clear();
-                data.RawData.Clear();
-                data.SelectedNode = null;
+                data.Reset();
             } else {
                 data.RawData.RemoveRange(data.SelectedNode.Value.Offset, data.SelectedNode.Value.TagLength);
                 data.SelectedNode.Parent.RemoveChild(data.SelectedNode);
