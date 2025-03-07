@@ -4,17 +4,12 @@ using System.Text;
 using SysadminsLV.Asn1Editor.API.ModelObjects;
 using SysadminsLV.Asn1Editor.API.Utils.Extensions;
 
-namespace SysadminsLV.Asn1Editor.API.Utils; 
+namespace SysadminsLV.Asn1Editor.API.Utils;
 
-class OpenSSLRenderer : ITextRenderer {
+class OpenSSLRenderer(Asn1TreeNode rootNode) : ITextRenderer {
     const String delimiter = "      |      |       |";
     readonly String nl = Environment.NewLine;
-    readonly Asn1TreeNode rootNode;
     Int32 width = 80;
-
-    public OpenSSLRenderer(Asn1TreeNode node) {
-        rootNode = node;
-    }
 
     public String RenderText(Int32 textWidth) {
         width = textWidth;
@@ -23,9 +18,9 @@ class OpenSSLRenderer : ITextRenderer {
             return sb.ToString();
         }
             
-        sb.Append("======+======+=======+" + new String('=', width + 10) + nl);
+        sb.AppendLine("======+======+=======+" + new String('=', width + 10));
         foreach (Asn1Lite node in rootNode.Flatten().Select(x => x.Value)) {
-            String padding = new String(' ', (node.Depth - rootNode.Value.Depth + 1) * 3);
+            String padding = new(' ', (node.Depth - rootNode.Value.Depth + 1) * 3);
             String str = String.Format("{0,6}|{1,6}|{2,7}|{3}{4} : ",
                 node.Offset,
                 node.PayloadLength,
