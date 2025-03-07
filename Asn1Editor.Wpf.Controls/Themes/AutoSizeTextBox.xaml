@@ -1,0 +1,7 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:c="clr-namespace:Asn1Editor.Wpf.Controls">
+    <Style TargetType="c:AutoSizeTextBox" BasedOn="{StaticResource {x:Type TextBoxBase}}">
+        <Setter Property="Background" Value="White"/>
+    </Style>
+</ResourceDictionary>
