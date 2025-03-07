@@ -177,9 +177,9 @@ public class AsnHexViewer : Control {
 
 
     void calculateWidths() {
-        HexAddrHeaderRtb.MeasureStringWidth(masterAddr);
-        HexRawHeaderRtb.MeasureStringWidth(masterHex);
-        HexAsciiHeaderRtb.MeasureStringWidth(masterAscii);
+        HexAddrHeaderRtb.SetWidthToFitString(masterAddr);
+        HexRawHeaderRtb.SetWidthToFitString(masterHex);
+        HexAsciiHeaderRtb.SetWidthToFitString(masterAscii);
     }
     void buildAddress() {
         HexAddressPane.Document = new FlowDocument();

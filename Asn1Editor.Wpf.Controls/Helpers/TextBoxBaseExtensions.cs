@@ -12,7 +12,7 @@ static class TextBoxBaseExtensions {
     /// <param name="textBoxBase">A <see cref="TextBoxBase"/> instance that defines font style.</param>
     /// <param name="str">String to fit.</param>
     /// <param name="includeScrollBar">Specifies whether to allocate extra space for vertical scrollbar. Default is <c>false</c>.</param>
-    public static void MeasureStringWidth(this TextBoxBase textBoxBase, String str, Boolean includeScrollBar = false) {
+    public static void SetWidthToFitString(this TextBoxBase textBoxBase, String str, Boolean includeScrollBar = false) {
         FormattedText formattedText = new FormattedText(
             str,
             CultureInfo.CurrentUICulture,

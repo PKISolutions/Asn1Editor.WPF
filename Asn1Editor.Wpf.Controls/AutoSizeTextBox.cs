@@ -36,6 +36,6 @@ public class AutoSizeTextBox : TextBox {
     }
 
     void recalculateWidth() {
-        this.MeasureStringWidth(new String('M', LineWidth));
+        this.SetWidthToFitString(new String('M', LineWidth));
     }
 }
