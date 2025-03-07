@@ -18,15 +18,19 @@ public class AsnHexViewer : Control {
     const String masterAddr = "12345678";
     const String masterHex = "123456789012345678901234567890123456789012345678";
     const String masterAscii = "1234567890123456";
-    static Boolean staticInitialized;
 
     static AsnHexViewer() {
         DefaultStyleKeyProperty.OverrideMetadata(
             typeof(AsnHexViewer),
             new FrameworkPropertyMetadata(typeof(AsnHexViewer)));
+        FontSizeProperty.OverrideMetadata(
+            typeof(AsnHexViewer),
+            new FrameworkPropertyMetadata(OnFontSizeChanged));
     }
     static void OnFontSizeChanged(DependencyObject d, DependencyPropertyChangedEventArgs e) {
-        ((AsnHexViewer)d).calculateWidths();
+        if (d is AsnHexViewer { controlInitialized: true } control) {
+            control.calculateWidths();
+        }
     }
 
     RichTextBox[] panes;
@@ -177,9 +181,9 @@ public class AsnHexViewer : Control {
 
 
     void calculateWidths() {
-        HexAddrHeaderRtb.SetWidthToFitString(masterAddr);
-        HexRawHeaderRtb.SetWidthToFitString(masterHex);
-        HexAsciiHeaderRtb.SetWidthToFitString(masterAscii);
+        HexAddrHeaderRtb.SetWidthToFitString(masterAddr, FontSize);
+        HexRawHeaderRtb.SetWidthToFitString(masterHex, FontSize);
+        HexAsciiHeaderRtb.SetWidthToFitString(masterAscii, FontSize);
     }
     void buildAddress() {
         var addressParagraph = new Paragraph();
@@ -293,12 +297,6 @@ public class AsnHexViewer : Control {
         HexRawPane = initializeBindableRtb("PART_HexBody");
         HexAsciiPane = initializeBindableRtb("PART_AsciiBody");
 
-        base.OnApplyTemplate();
-        if (!staticInitialized) {
-            FontSizeProperty.OverrideMetadata(typeof(AsnHexViewer), new FrameworkPropertyMetadata(OnFontSizeChanged));
-            staticInitialized = true;
-        }
-
         ranges = new TextRange[3];
         panes = [HexAddressPane, HexRawPane, HexAsciiPane];
         controlInitialized = true;
@@ -307,6 +305,7 @@ public class AsnHexViewer : Control {
         if (SelectedNode is not null) {
             reColorHex(SelectedNode);
         }
+        base.OnApplyTemplate();
     }
 
     BindableRichTextBox initializeBindableRtb(String resourceName) {
