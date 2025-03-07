@@ -13,7 +13,6 @@ namespace SysadminsLV.Asn1Editor.API.ViewModel;
 class TextViewerVM : ViewModelBase, ITextViewerVM {
     readonly IUIMessenger _uiMessenger;
     readonly Asn1TreeNode rootNode;
-    const String master = "123";
     const Int32 minLength = 60;
     const Int32 defaultLength = 80;
     const Int32 maxLength = 400;
@@ -27,13 +26,12 @@ class TextViewerVM : ViewModelBase, ITextViewerVM {
     public TextViewerVM(IHasAsnDocumentTabs appTabs, NodeViewOptions options, IUIMessenger uiMessenger) {
         rootNode = appTabs.SelectedTab.DataSource.SelectedNode;
         NodeViewOptions = options;
+        _uiMessenger = uiMessenger;
         CurrentLength = defaultLength.ToString(CultureInfo.InvariantCulture);
         SaveCommand = new RelayCommand(saveFile);
         PrintCommand = new RelayCommand(print);
         ApplyCommand = new RelayCommand(applyNewLength);
         CertutilViewChecked = true;
-        renderer.RenderText(currentLength);
-        _uiMessenger = uiMessenger;
     }
 
     public ICommand SaveCommand { get; set; }
@@ -65,7 +63,7 @@ class TextViewerVM : ViewModelBase, ITextViewerVM {
             certutilChecked = value;
             if (certutilChecked) {
                 renderer = new CertutilRenderer(rootNode);
-                Text = renderer.RenderText(currentLength);
+                refreshView();
             }
             OnPropertyChanged(nameof(CertutilViewChecked));
         }
@@ -79,10 +77,14 @@ class TextViewerVM : ViewModelBase, ITextViewerVM {
             openSSLChecked = value;
             if (openSSLChecked) {
                 renderer = new OpenSSLRenderer(rootNode);
-                Text = renderer.RenderText(currentLength);
+                refreshView();
             }
             OnPropertyChanged(nameof(OpenSSLViewChecked));
         }
+    }
+
+    void refreshView() {
+        Text = renderer.RenderText(currentLength);
     }
 
     void print(Object obj) {
@@ -94,11 +96,11 @@ class TextViewerVM : ViewModelBase, ITextViewerVM {
             return;
         }
         if (value == currentLength) { return; }
-        currentLength = value < minLength || value > maxLength
+        currentLength = value is < minLength or > maxLength
             ? minLength
             : value;
         CurrentLength = currentLength.ToString(CultureInfo.InvariantCulture);
-        renderer.RenderText(currentLength);
+        refreshView();
     }
 
     void saveFile(Object obj) {
