@@ -146,6 +146,8 @@ public class AsnHexViewer : Control {
 
     #endregion
 
+    #region TagOctetBrush
+
     public static readonly DependencyProperty TagOctetBrushProperty = DependencyProperty.Register(
         nameof(TagOctetBrush),
         typeof(Brush),
@@ -156,6 +158,10 @@ public class AsnHexViewer : Control {
         get => (Brush)GetValue(TagOctetBrushProperty);
         set => SetValue(TagOctetBrushProperty, value);
     }
+
+    #endregion
+
+    #region TagLengthOctetBrush
 
     public static readonly DependencyProperty TagLengthOctetBrushProperty = DependencyProperty.Register(
         nameof(TagLengthOctetBrush),
@@ -168,6 +174,10 @@ public class AsnHexViewer : Control {
         set => SetValue(TagLengthOctetBrushProperty, value);
     }
 
+    #endregion
+
+    #region TagPayloadOctetBrush
+
     public static readonly DependencyProperty TagPayloadOctetBrushProperty = DependencyProperty.Register(
         nameof(TagPayloadOctetBrush),
         typeof(Brush),
@@ -179,6 +189,7 @@ public class AsnHexViewer : Control {
         set => SetValue(TagPayloadOctetBrushProperty, value);
     }
 
+    #endregion
 
     void calculateWidths() {
         HexAddrHeaderRtb.SetWidthToFitString(masterAddr, FontSize);
