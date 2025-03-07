@@ -29,7 +29,7 @@ public class AsnHexViewer : Control {
         ((AsnHexViewer)d).calculateWidths();
     }
 
-    BindableRichTextBox[] panes;
+    RichTextBox[] panes;
 
     Boolean controlInitialized, scrollLocked;
     TextRange[] ranges;
