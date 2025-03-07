@@ -103,6 +103,9 @@ public class AsnHexViewer : Control {
         new FrameworkPropertyMetadata(onSelectedNodeChanged));
     static void onSelectedNodeChanged(DependencyObject sender, DependencyPropertyChangedEventArgs e) {
         var ctrl = (AsnHexViewer)sender;
+        if (!ctrl.controlInitialized) {
+            return;
+        }
         if (e.OldValue is IHexAsnNode oldValue) {
             oldValue.DataChanged -= ctrl.onNodeDataChanged;
         }
