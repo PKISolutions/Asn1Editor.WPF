@@ -129,9 +129,12 @@ class TagDataEditorVM : ViewModelBase, ITagDataEditorVM {
         updateBinaryCopy(binValue);
         Node.UnusedBits = UnusedBits;
         var asn = new Asn1Reader(binValue);
+        Int32 oldHeaderLength = Node.HeaderLength;
         Node.PayloadStartOffset = Node.Offset + asn.TagLength - asn.PayloadLength;
         Node.ExplicitValue = AsnDecoder.GetViewValue(asn);
-        Node.OffsetChange = asn.PayloadLength - Node.PayloadLength;
+        Int32 offsetChange = Node.HeaderLength - oldHeaderLength
+                             + asn.PayloadLength - Node.PayloadLength;
+        Node.OffsetChange = offsetChange;
         Node.PayloadLength = asn.PayloadLength;
         _data.FinishBinaryUpdate();
         DialogResult = true;
