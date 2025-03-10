@@ -1,9 +1,9 @@
-﻿using System;
+﻿#nullable enable
+using System;
 using System.Globalization;
 using System.Text.RegularExpressions;
 using System.Windows.Input;
 using SysadminsLV.Asn1Editor.API.Abstractions;
-using SysadminsLV.Asn1Editor.API.Interfaces;
 using SysadminsLV.Asn1Editor.API.ModelObjects;
 using SysadminsLV.Asn1Parser;
 using SysadminsLV.WPF.OfficeTheme.Toolkit.Commands;
@@ -13,7 +13,7 @@ public class NewAsnNodeEditorVM : ClosableWindowVM, INewAsnNodeEditorVM {
     Boolean shouldGenerateNode;
     Boolean formTagChecked, decimalTagChecked, hexTagChecked,
         clsConstructedChecked, clsSpecificChecked, clsApplicationChecked, clsPrivateChecked;
-    String decimalTagText, hexTagText, resultTagDecimal, resultTagHex, resultTagName;
+    String? decimalTagText, hexTagText, resultTagDecimal, resultTagHex, resultTagName;
     Asn1Type selectedType;
 
     public NewAsnNodeEditorVM(NodeViewOptions options) {
@@ -45,8 +45,8 @@ public class NewAsnNodeEditorVM : ClosableWindowVM, INewAsnNodeEditorVM {
             decimalTagChecked = value;
             OnPropertyChanged(nameof(DecimalTagChecked));
             if (decimalTagChecked) {
+                DecimalTagText = "48";
                 HexTagText = null;
-                updateResultTagInfo();
             }
         }
     }
@@ -56,8 +56,8 @@ public class NewAsnNodeEditorVM : ClosableWindowVM, INewAsnNodeEditorVM {
             hexTagChecked = value;
             OnPropertyChanged(nameof(HexTagChecked));
             if (hexTagChecked) {
+                HexTagText = "30";
                 DecimalTagText = null;
-                updateResultTagInfo();
             }
         }
     }
@@ -104,7 +104,7 @@ public class NewAsnNodeEditorVM : ClosableWindowVM, INewAsnNodeEditorVM {
             // no need to call updateResultTagInfo(), it is already called.
         }
     }
-    public String DecimalTagText {
+    public String? DecimalTagText {
         get => decimalTagText;
         set {
             decimalTagText = value;
@@ -112,7 +112,7 @@ public class NewAsnNodeEditorVM : ClosableWindowVM, INewAsnNodeEditorVM {
             updateResultTagInfo();
         }
     }
-    public String HexTagText {
+    public String? HexTagText {
         get => hexTagText;
         set {
             hexTagText = value;
@@ -160,9 +160,9 @@ public class NewAsnNodeEditorVM : ClosableWindowVM, INewAsnNodeEditorVM {
                 retValue |= (Byte)Asn1Class.PRIVATE;
             }
         } else if (DecimalTagChecked) {
-            retValue = Byte.Parse(DecimalTagText);
+            retValue = Byte.Parse(DecimalTagText!);
         } else {
-            retValue = Byte.Parse(HexTagText, NumberStyles.HexNumber);
+            retValue = Byte.Parse(HexTagText!, NumberStyles.HexNumber);
         }
 
         return retValue;
