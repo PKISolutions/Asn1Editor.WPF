@@ -1,4 +1,5 @@
-﻿using System;
+﻿#nullable enable
+using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using SysadminsLV.Asn1Editor.API.Abstractions;
@@ -13,7 +14,7 @@ interface IWindowFactory {
     void ShowAboutDialog();
     Asn1Lite ShowNodeContentEditor(NodeEditMode editMode);
     void ShowNodeTextViewer();
-    void ShowConverterWindow(IEnumerable<Byte> data, Func<Byte[], Task> action);
-    void ShowOidEditor(OidDto oidValue = null);
-    Asn1Lite ShowNewAsnNodeEditor(IDataSource dataSource);
+    void ShowConverterWindow(IEnumerable<Byte> data, Func<Byte[], Task>? action);
+    void ShowOidEditor(OidDto? oidValue = null);
+    Byte[]? ShowNewAsnNodeEditor(IDataSource dataSource);
 }

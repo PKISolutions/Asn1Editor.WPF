@@ -1,9 +1,12 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Collections.Specialized;
-using SysadminsLV.WPF.OfficeTheme.Toolkit.CLR;
+using System.Threading.Tasks;
 
-namespace SysadminsLV.Asn1Editor.API.Interfaces; 
+namespace SysadminsLV.Asn1Editor.API.Interfaces;
 
 public interface IBinarySource : INotifyCollectionChanged {
-    ObservableList<Byte> RawData { get; }
+    IReadOnlyList<Byte> RawData { get; }
+
+    Task InitializeFromRawData(IEnumerable<Byte> rawData);
 }

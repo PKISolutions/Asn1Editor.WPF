@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Windows.Input;
 using SysadminsLV.Asn1Editor.API.Abstractions;
@@ -126,7 +125,7 @@ class TagDataEditorVM : ViewModelBase, ITagDataEditorVM {
         if (binValue == null) {
             return;
         }
-        updateBinaryCopy(binValue);
+        _data.UpdateNodeBinaryCopy(binValue);
         Node.UnusedBits = UnusedBits;
         var asn = new Asn1Reader(binValue);
         Int32 oldHeaderLength = Node.HeaderLength;
@@ -152,10 +151,6 @@ class TagDataEditorVM : ViewModelBase, ITagDataEditorVM {
             _uiMessenger.ShowError(e.Message);
         }
         return binValue;
-    }
-    void updateBinaryCopy(IEnumerable<Byte> newBytes) {
-        _data.RawData.RemoveRange(Node.Offset, Node.TagLength);
-        _data.RawData.InsertRange(Node.Offset, newBytes);
     }
     void setRbHexSilent() {
         rbHex = true;

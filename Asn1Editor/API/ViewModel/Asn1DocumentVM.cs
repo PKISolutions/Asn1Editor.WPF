@@ -6,7 +6,6 @@ using System.IO;
 using System.Threading.Tasks;
 using SysadminsLV.Asn1Editor.API.Interfaces;
 using SysadminsLV.Asn1Editor.API.ModelObjects;
-using SysadminsLV.Asn1Editor.API.Utils.ASN;
 
 namespace SysadminsLV.Asn1Editor.API.ViewModel;
 
@@ -77,13 +76,6 @@ public class Asn1DocumentVM : AsyncViewModel {
         }
     }
 
-    void decodeFile(IEnumerable<Byte> bytes) {
-        if (DataSource.RawData.Count > 0) {
-            return;
-        }
-        DataSource.RawData.AddRange(bytes);
-    }
-
     public async Task Decode(IEnumerable<Byte> bytes, Boolean doNotSetModifiedFlag) {
         IsBusy = true;
         if (doNotSetModifiedFlag) {
@@ -91,9 +83,10 @@ public class Asn1DocumentVM : AsyncViewModel {
         }
 
         try {
-            decodeFile(bytes);
-            Asn1TreeNode rootNode = await AsnTreeBuilder.BuildTreeAsync(DataSource);
-            DataSource.SetRootNode(rootNode);
+            if (DataSource.RawData.Count > 0) {
+                return;
+            }
+            await DataSource.InitializeFromRawData(bytes);
         } finally {
             suppressModified = false;
             IsBusy = false;

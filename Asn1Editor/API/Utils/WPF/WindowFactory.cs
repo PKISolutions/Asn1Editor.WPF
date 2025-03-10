@@ -1,4 +1,5 @@
-﻿using System;
+﻿#nullable enable
+using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using SysadminsLV.Asn1Editor.API.Abstractions;
@@ -11,7 +12,7 @@ using Unity;
 namespace SysadminsLV.Asn1Editor.API.Utils.WPF;
 
 class WindowFactory : WindowFactoryBase, IWindowFactory {
-    static BinaryConverterWindow binConverterWindow;
+    static BinaryConverterWindow? binConverterWindow;
     static Boolean binConverterWindowClosed = true;
 
     public IUIMessenger GetUIMessenger() {
@@ -37,7 +38,7 @@ class WindowFactory : WindowFactoryBase, IWindowFactory {
     }
     public void ShowConverterWindow(IEnumerable<Byte> data, Func<Byte[], Task>? action) {
         if (!binConverterWindowClosed) {
-            binConverterWindow.Focus();
+            binConverterWindow!.Focus();
             return;
         }
         binConverterWindowClosed = false;
@@ -48,7 +49,7 @@ class WindowFactory : WindowFactoryBase, IWindowFactory {
         hwnd.Closed += (o, e) => { binConverterWindowClosed = true; };
         ShowAsWindow(true);
     }
-    public void ShowOidEditor(OidDto oidValue = null) {
+    public void ShowOidEditor(OidDto? oidValue = null) {
         hwnd = App.Container.Resolve<OidLookupEditorWindow>();
         IOidEditorVM vm = App.Container.Resolve<IOidEditorVM>();
         vm.ReloadCommand.Execute(null);
@@ -57,11 +58,11 @@ class WindowFactory : WindowFactoryBase, IWindowFactory {
         hwnd.DataContext = vm;
         ShowAsDialog();
     }
-    public Asn1Lite ShowNewAsnNodeEditor(IDataSource dataSource) {
+    public Byte[]? ShowNewAsnNodeEditor(IDataSource dataSource) {
         hwnd = App.Container.Resolve<NewTreeNodeWindow>();
         INewAsnNodeEditorVM vm = App.Container.Resolve<INewAsnNodeEditorVM>();
         hwnd.DataContext = vm;
         ShowAsDialog();
-        return vm.GetAsnNode(dataSource);
+        return vm.GetAsnNode();
     }
 }

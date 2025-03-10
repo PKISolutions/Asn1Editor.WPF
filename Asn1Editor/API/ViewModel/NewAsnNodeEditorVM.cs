@@ -195,18 +195,10 @@ public class NewAsnNodeEditorVM : ClosableWindowVM, INewAsnNodeEditorVM {
 
         return false;
     }
-    public Asn1Lite GetAsnNode(IDataSource dataSource) {
+    public Byte[]? GetAsnNode() {
         if (!shouldGenerateNode) {
             return null;
         }
-        Byte[] binData = [getResultingTag(), 0];
-        var node = new Asn1Lite(new Asn1Reader(binData));
-        if (dataSource.SelectedNode != null) {
-            node.Offset = dataSource.SelectedNode.Value.Offset + dataSource.SelectedNode.Value.TagLength;
-            node.Depth += dataSource.SelectedNode.Value.Depth;
-        }
-        dataSource.RawData.InsertRange(node.Offset, binData);
-
-        return node;
+        return [getResultingTag(), 0];
     }
 }

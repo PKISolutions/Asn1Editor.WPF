@@ -1,8 +1,10 @@
-﻿using System;
+﻿#nullable enable
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using SysadminsLV.Asn1Editor.API.Interfaces;
 using SysadminsLV.Asn1Parser;
 
@@ -10,7 +12,7 @@ namespace SysadminsLV.Asn1Editor.API.ModelObjects;
 
 public class Asn1TreeNode : INotifyPropertyChanged {
     readonly IDataSource _dataSource;
-    readonly IList<Asn1Lite> _children = new ObservableCollection<Asn1Lite>();
+    readonly ObservableCollection<Asn1TreeNode> _children = [];
 
     Boolean isSelected;
     Byte tag, unusedBits;
@@ -18,6 +20,7 @@ public class Asn1TreeNode : INotifyPropertyChanged {
 
     public Asn1TreeNode(Asn1Lite value, IDataSource dataSource) {
         _dataSource = dataSource;
+        Children = new ReadOnlyObservableCollection<Asn1TreeNode>(_children);
         setNodeValues(value);
 
         Value = value;
@@ -36,7 +39,7 @@ public class Asn1TreeNode : INotifyPropertyChanged {
         get => isSelected;
         set {
             isSelected = value;
-            OnPropertyChanged(nameof(IsSelected));
+            OnPropertyChanged();
         }
     }
     public Asn1TreeNode this[Int32 index] => Children[index];
@@ -59,7 +62,7 @@ public class Asn1TreeNode : INotifyPropertyChanged {
     /// <summary>
     /// Gets a collection of child nodes.
     /// </summary>
-    public IList<Asn1TreeNode> Children { get; } = new ObservableCollection<Asn1TreeNode>();
+    public ReadOnlyObservableCollection<Asn1TreeNode> Children { get; }
 
     public void InsertChildNode(Asn1TreeNode nodeToInsert, Asn1TreeNode caller, NodeAddOption option) {
         Int32 indexToInsert, newOffset;
@@ -83,7 +86,7 @@ public class Asn1TreeNode : INotifyPropertyChanged {
         Value.IsContainer = true;
         if (indexToInsert < 0) { return; }
         nodeToInsert.Value.Offset = newOffset;
-        Children.Insert(indexToInsert, nodeToInsert);
+        _children.Insert(indexToInsert, nodeToInsert);
         notifySizeChanged(nodeToInsert, nodeToInsert.Value.TagLength);
         for (Int32 index = indexToInsert; index < Children.Count; index++) {
             updatePath(Children[index], Path, index);
@@ -94,7 +97,7 @@ public class Asn1TreeNode : INotifyPropertyChanged {
     }
     public Asn1TreeNode AddChild(Asn1Lite value, Boolean forcePathUpdate = false) {
         var node = new Asn1TreeNode(value, _dataSource) { Parent = this };
-        Children.Add(node);
+        _children.Add(node);
         if (forcePathUpdate) {
             notifySizeChanged(node, node.Value.TagLength);
             updatePath(node, Path, Children.Count - 1);
@@ -105,7 +108,7 @@ public class Asn1TreeNode : INotifyPropertyChanged {
     }
     public void RemoveChild(Asn1TreeNode node) {
         notifySizeChanged(node, -node.Value.TagLength);
-        Children.RemoveAt(node.MyIndex);
+        _children.RemoveAt(node.MyIndex);
         // update path only below removed node
         for (Int32 childIndex = node.MyIndex; childIndex < Children.Count; childIndex++) {
             updatePath(Children[childIndex], Path, childIndex);
@@ -143,8 +146,7 @@ public class Asn1TreeNode : INotifyPropertyChanged {
                 }
             }
             Byte[] newLenBytes = Asn1Utils.GetLengthBytes(t.Value.PayloadLength + difference);
-            _dataSource.RawData.RemoveRange(t.Value.Offset + 1, t.Value.HeaderLength - 1);
-            _dataSource.RawData.InsertRange(t.Value.Offset + 1, newLenBytes);
+            _dataSource.UpdateNodeLength(t, newLenBytes);
             // check if extra length byte is added. If so, add this byte to difference variable
             Int32 diff = newLenBytes.Length - (t.Value.HeaderLength - 1);
             if (diff != 0) {
@@ -204,7 +206,7 @@ public class Asn1TreeNode : INotifyPropertyChanged {
             if ((tag & (Byte)Asn1Class.CONTEXT_SPECIFIC) > 0) {
                 IsContextSpecific = true;
             }
-            OnPropertyChanged(nameof(Tag));
+            OnPropertyChanged();
         }
     }
     public String TagName { get; private set; }
@@ -218,8 +220,8 @@ public class Asn1TreeNode : INotifyPropertyChanged {
 
     // tree-specific properties
     public Int32 Depth { get; private set; }
-    public Asn1TreeNode Parent { get; private set; }
-    public Asn1TreeNode NextSibling {
+    public Asn1TreeNode? Parent { get; private set; }
+    public Asn1TreeNode? NextSibling {
         get {
             // there is no siblings for root node
             if (IsRoot) {
@@ -227,12 +229,12 @@ public class Asn1TreeNode : INotifyPropertyChanged {
             }
 
             // this node is last element in parent node. No next sibling.
-            return MyIndex + 1 > Parent.Children.Count
+            return MyIndex + 1 > Parent!.Children.Count
                 ? null
                 : Parent.Children[MyIndex + 1];
         }
     }
-    public Asn1TreeNode PreviousSibling {
+    public Asn1TreeNode? PreviousSibling {
         get {
             // there is no siblings for root node
             if (IsRoot) {
@@ -242,7 +244,7 @@ public class Asn1TreeNode : INotifyPropertyChanged {
             // this node is first element in parent node. No previous sibling.
             return MyIndex == 0
                 ? null
-                : Parent.Children[MyIndex - 1];
+                : Parent!.Children[MyIndex - 1];
         }
     }
 
@@ -291,8 +293,8 @@ public class Asn1TreeNode : INotifyPropertyChanged {
 
     #region INotifyPropertyChanged
 
-    public event PropertyChangedEventHandler PropertyChanged;
-    protected void OnPropertyChanged(String propertyName = null) {
+    public event PropertyChangedEventHandler? PropertyChanged;
+    protected void OnPropertyChanged([CallerMemberName] String? propertyName = null) {
         PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
     }
 

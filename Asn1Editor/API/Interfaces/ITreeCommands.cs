@@ -1,4 +1,5 @@
 ﻿using System.Windows.Input;
+using SysadminsLV.WPF.OfficeTheme.Toolkit.Commands;
 
 namespace SysadminsLV.Asn1Editor.API.Interfaces;
 
@@ -12,7 +13,7 @@ public interface ITreeCommands {
     ICommand DeleteNodeCommand { get; }
     ICommand CutNodeCommand { get; }
     ICommand CopyNodeCommand { get; }
-    ICommand PasteBeforeCommand { get; }
-    ICommand PasteAfterCommand { get; }
-    ICommand PasteLastCommand { get; }
+    IAsyncCommand PasteBeforeCommand { get; }
+    IAsyncCommand PasteAfterCommand { get; }
+    IAsyncCommand PasteLastCommand { get; }
 }
