@@ -11,7 +11,7 @@ namespace SysadminsLV.Asn1Editor.API.ViewModel;
 
 public class Asn1DocumentVM : AsyncViewModel {
     String path, fileName;
-    Boolean isModified, suppressModified, isSelected;
+    Boolean isModified, suppressModified;
 
     public Asn1DocumentVM(NodeViewOptions nodeViewOptions, ITreeCommands treeCommands) {
         DataSource = new DataSource(nodeViewOptions);
@@ -29,6 +29,12 @@ public class Asn1DocumentVM : AsyncViewModel {
     public NodeViewOptions NodeViewOptions => DataSource.NodeViewOptions;
     public ReadOnlyObservableCollection<Asn1TreeNode> Tree => DataSource.Tree;
 
+    /// <summary>
+    /// Determines if current ASN.1 document instance can be re-used.
+    /// Returns <c>true</c> if <see cref="Tree"/> is empty, no file path is associated with current instance
+    /// and there were no modifications. Otherwise <c>false</c>.
+    /// </summary>
+    public Boolean CanReuse => Tree.Count == 0 && String.IsNullOrWhiteSpace(Path) && !IsModified;
     public String Header {
         get {
             String template = fileName ?? "untitled";

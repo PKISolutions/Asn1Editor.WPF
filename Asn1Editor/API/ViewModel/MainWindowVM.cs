@@ -72,6 +72,10 @@ class MainWindowVM : ViewModelBase, IMainWindowVM, IHasAsnDocumentTabs {
         }
     }
 
+    /// <summary>
+    /// Shows Binary Converter dialog and renders converted ASN data if requested.
+    /// </summary>
+    /// <param name="o"></param>
     void showConverter(Object o) {
         if (SelectedTab == null) {
             _windowFactory.ShowConverterWindow(Array.Empty<Byte>(), openRawAsync);
@@ -83,32 +87,52 @@ class MainWindowVM : ViewModelBase, IMainWindowVM, IHasAsnDocumentTabs {
         var tab = new Asn1DocumentVM(NodeViewOptions, TreeCommands);
         addTabToList(tab);
     }
-    void addTabToList(Asn1DocumentVM tab, Boolean focus = true) {
+    /// <summary>
+    /// Adds tab specified by <strong>tab</strong> parameter to <see cref="Tabs"/> list and optionally makes it
+    /// active (sets to <see cref="SelectedTab"/> property).
+    /// </summary>
+    /// <param name="tab">Tab document to add.</param>
+    void addTabToList(Asn1DocumentVM tab) {
         Tabs.Add(tab);
-        if (focus) {
-            SelectedTab = tab;
-        }
+        SelectedTab = tab;
     }
-    async Task createTabFromFile(String file, Boolean useDefaultTab = false) {
-        Asn1DocumentVM tab;
-        if (useDefaultTab && Tabs.Any()) {
-            tab = Tabs[0];
-            tab.Path = file;
-            SelectedTab = tab;
-        } else {
-            // force set 'useDefaultTab' to 'false' if default tab is requested, but there are no any available tabs.
-            useDefaultTab = false;
-            tab = new Asn1DocumentVM(NodeViewOptions, TreeCommands) {
-                Path = file
-            };
-            addTabToList(tab);
+    /// <summary>
+    /// Returns a blank tab instance. Either, it is a current value of <see cref="SelectedTab"/> property
+    /// or new tab document instance.
+    /// </summary>
+    /// <param name="isNew">
+    ///     Specifies if method created new tab document instance. This parameter can be used to determine if
+    ///     created tab can be closed should decode fail.
+    /// </param>
+    /// <returns>Blank tab document instance.</returns>
+    Asn1DocumentVM getAvailableTab(out Boolean isNew) {
+        isNew = false;
+        Boolean useExistingTab = SelectedTab is not null && SelectedTab.CanReuse;
+        if (useExistingTab && Tabs.Any()) {
+            return SelectedTab;
         }
+
+        isNew = true;
+        var tab = new Asn1DocumentVM(NodeViewOptions, TreeCommands);
+        addTabToList(tab);
+
+        return tab;
+    }
+    /// <summary>
+    /// Creates tab document from file.
+    /// </summary>
+    /// <param name="file">Path to a file that contains valid ASN.1-encoded data.</param>
+    /// <returns>Awaitable task.</returns>
+    /// <remarks>If new tab was created, but file decoding fails, this temporary tab document will be closed.</remarks>
+    async Task createTabFromFile(String file) {
+        var tab = getAvailableTab(out Boolean useExistingTab);
+        tab.Path = file;
         try {
             IEnumerable<Byte> bytes = await FileUtility.FileToBinaryAsync(file);
             await tab.Decode(bytes, true);
         } catch (Exception ex) {
             _uiMessenger.ShowError(ex.Message, "Read Error");
-            if (!useDefaultTab) {
+            if (!useExistingTab) {
                 Tabs.Remove(tab);
             }
         }
@@ -116,18 +140,12 @@ class MainWindowVM : ViewModelBase, IMainWindowVM, IHasAsnDocumentTabs {
 
     #region Read content to tab
     Task openFileAsync(Object obj, CancellationToken token = default) {
-        String filePath;
-        Boolean useDefaultTab = false;
-        if (obj == null) {
-            _uiMessenger.TryGetOpenFileName(out filePath);
-        } else {
-            filePath = obj.ToString();
-            useDefaultTab = true;
-        }
+        _uiMessenger.TryGetOpenFileName(out String filePath);
         if (String.IsNullOrWhiteSpace(filePath)) {
             return Task.CompletedTask;
         }
-        return createTabFromFile(filePath, useDefaultTab);
+
+        return createTabFromFile(filePath);
     }
     #endregion
 
@@ -264,35 +282,28 @@ class MainWindowVM : ViewModelBase, IMainWindowVM, IHasAsnDocumentTabs {
     #endregion
 
     Task dropFileAsync(Object o, CancellationToken token = default) {
-        if (o is not String filePath) {
-            return Task.CompletedTask;
-        }
-
-        if (!File.Exists(filePath)) {
-            return Task.CompletedTask;
-        }
-
-        return createTabFromFile(filePath);
-    }
-    public Task DropFileAsync(String filePath) {
-        if (!File.Exists(filePath)) {
+        if (o is not String filePath || !File.Exists(filePath)) {
             return Task.CompletedTask;
         }
 
         return createTabFromFile(filePath);
     }
     public Task OpenExistingAsync(String filePath) {
-        return openFileAsync(filePath);
+        return createTabFromFile(filePath);
     }
-    public Task OpenRawAsync(String base64String) {
-        return openRawAsync(Convert.FromBase64String(base64String));
+    public async Task OpenRawAsync(String base64String) {
+        try {
+            await openRawAsync(Convert.FromBase64String(base64String));
+        } catch (Exception ex) {
+            _uiMessenger.ShowError(ex.Message, "Read Error");
+        }
     }
     Task openRawAsync(Byte[] rawBytes) {
         var asn = new Asn1Reader(rawBytes);
         asn.BuildOffsetMap();
-        var tab = new Asn1DocumentVM(NodeViewOptions, TreeCommands);
-        Tabs.Add(tab);
-        SelectedTab = tab;
+        // at this point, raw data is granted to be valid DER encoding and should not fail.
+        Asn1DocumentVM tab = getAvailableTab(out _);
+
         return tab.Decode(rawBytes, false);
     }
 
