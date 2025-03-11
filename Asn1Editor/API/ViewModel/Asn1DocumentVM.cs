@@ -68,13 +68,6 @@ public class Asn1DocumentVM : AsyncViewModel {
             OnPropertyChanged(nameof(Header));
         }
     }
-    public Boolean IsSelected {
-        get => isSelected;
-        set {
-            isSelected = value;
-            OnPropertyChanged();
-        }
-    }
 
     public async Task Decode(IEnumerable<Byte> bytes, Boolean doNotSetModifiedFlag) {
         IsBusy = true;
