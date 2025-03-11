@@ -1,9 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Threading.Tasks;
-using SysadminsLV.Asn1Editor.API.Interfaces;
-using SysadminsLV.Asn1Editor.API.ModelObjects;
-using SysadminsLV.Asn1Editor.API.Utils.ASN;
 
 namespace SysadminsLV.Asn1Editor.API.Utils;
 
@@ -26,14 +22,6 @@ static class ClipboardManager {
     /// </summary>
     public static void ClearClipboard() {
         _rawData.Clear();
-    }
-    /// <summary>
-    /// Gets ASN.1 tree node stored in clipboard.
-    /// </summary>
-    /// <param name="dataSource"></param>
-    /// <returns>ASN tree node.</returns>
-    public static Task<Asn1TreeNode> GetClipboardDataAsync(IDataSource dataSource) {
-        return AsnTreeBuilder.BuildTreeAsync(_rawData.ToArray(), dataSource);
     }
     /// <summary>
     /// Gets ASN.1 tree node bytes.
