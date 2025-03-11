@@ -2,5 +2,6 @@
     <ResourceDictionary.MergedDictionaries>
         <ResourceDictionary Source="/Asn1Editor.Wpf.Controls;component/Themes/AsnHexViewerControl.xaml"/>
         <ResourceDictionary Source="/Asn1Editor.Wpf.Controls;component/Themes/AutoSizeTextBox.xaml"/>
+        <ResourceDictionary Source="/Asn1Editor.Wpf.Controls;component/Themes/BusyIndicator.xaml"/>
     </ResourceDictionary.MergedDictionaries>
 </ResourceDictionary>
