@@ -25,7 +25,6 @@ public interface IMainWindowVM {
     ///     <para><strong>False</strong> if user opted to save file and save action failed or user opted to cancel operation.</para>
     /// </returns>
     Boolean CloseAllTabs();
-    Task DropFileAsync(String filePath);
     Task OpenExistingAsync(String filePath);
     Task OpenRawAsync(String base64String);
 }
