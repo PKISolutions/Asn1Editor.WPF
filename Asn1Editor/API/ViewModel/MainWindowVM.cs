@@ -95,22 +95,23 @@ class MainWindowVM : ViewModelBase, IMainWindowVM, IHasAsnDocumentTabs {
         if (useDefaultTab && Tabs.Any()) {
             tab = Tabs[0];
             tab.Path = file;
+            SelectedTab = tab;
         } else {
             // force set 'useDefaultTab' to 'false' if default tab is requested, but there are no any available tabs.
             useDefaultTab = false;
             tab = new Asn1DocumentVM(NodeViewOptions, TreeCommands) {
                 Path = file
             };
+            addTabToList(tab);
         }
         try {
             IEnumerable<Byte> bytes = await FileUtility.FileToBinaryAsync(file);
             await tab.Decode(bytes, true);
         } catch (Exception ex) {
             _uiMessenger.ShowError(ex.Message, "Read Error");
-            return;
-        }
-        if (!useDefaultTab) {
-            addTabToList(tab);
+            if (!useDefaultTab) {
+                Tabs.Remove(tab);
+            }
         }
     }
 
