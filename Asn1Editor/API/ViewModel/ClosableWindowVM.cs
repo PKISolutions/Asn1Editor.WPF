@@ -17,7 +17,7 @@ public abstract class ClosableWindowVM : ViewModelBase {
         get => dialogResult;
         set {
             dialogResult = value;
-            OnPropertyChanged(nameof(DialogResult));
+            OnPropertyChanged();
         }
     }
 }

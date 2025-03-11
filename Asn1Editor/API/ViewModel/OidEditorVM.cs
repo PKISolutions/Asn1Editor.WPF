@@ -11,7 +11,7 @@ using SysadminsLV.WPF.OfficeTheme.Toolkit.Commands;
 namespace SysadminsLV.Asn1Editor.API.ViewModel;
 class OidEditorVM : ViewModelBase, IOidEditorVM {
     readonly Regex _regex = new(@"^[0-2]\.([0-9]|[12][0-9]|3[0-9])(\.\d+)*$", RegexOptions.Compiled);
-    readonly ObservableCollection<OidDto> _oidList = new();
+    readonly ObservableCollection<OidDto> _oidList = [];
     readonly IHasAsnDocumentTabs _tabs;
     readonly IOidDbManager _oidMgr;
 
@@ -73,28 +73,28 @@ class OidEditorVM : ViewModelBase, IOidEditorVM {
         get => dialogResult;
         set {
             dialogResult = value;
-            OnPropertyChanged(nameof(DialogResult));
+            OnPropertyChanged();
         }
     }
     public String OidValue {
         get => oidValue;
         set {
             oidValue = value;
-            OnPropertyChanged(nameof(OidValue));
+            OnPropertyChanged();
         }
     }
     public String FriendlyName {
         get => friendlyName;
         set {
             friendlyName = value;
-            OnPropertyChanged(nameof(FriendlyName));
+            OnPropertyChanged();
         }
     }
     public String SearchText {
         get => searchText;
         set {
             searchText = value;
-            OnPropertyChanged(nameof(SearchText));
+            OnPropertyChanged();
             OidView.Refresh();
         }
     }
@@ -102,7 +102,7 @@ class OidEditorVM : ViewModelBase, IOidEditorVM {
         get => selectedItem;
         set {
             selectedItem = value;
-            OnPropertyChanged(nameof(SelectedItem));
+            OnPropertyChanged();
         }
     }
     public OidSearchScope SearchScope {
@@ -110,7 +110,7 @@ class OidEditorVM : ViewModelBase, IOidEditorVM {
         set {
             if (searchScope != value) {
                 searchScope = value;
-                OnPropertyChanged(nameof(SearchScope));
+                OnPropertyChanged();
                 OidView.Refresh();
             }
         }

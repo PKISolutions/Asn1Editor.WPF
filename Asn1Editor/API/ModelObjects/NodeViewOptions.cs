@@ -19,7 +19,7 @@ public class NodeViewOptions : ViewModelBase {
                 return;
             }
             showTagNumber = value;
-            OnPropertyChanged(nameof(ShowTagNumber));
+            OnPropertyChanged();
         }
     }
     [XmlElement("showTagOffset")]
@@ -30,7 +30,7 @@ public class NodeViewOptions : ViewModelBase {
                 return;
             }
             showNodeOffset = value;
-            OnPropertyChanged(nameof(ShowNodeOffset));
+            OnPropertyChanged();
         }
     }
     [XmlElement("showNodeLength")]
@@ -41,7 +41,7 @@ public class NodeViewOptions : ViewModelBase {
                 return;
             }
             showNodeLength = value;
-            OnPropertyChanged(nameof(ShowNodeLength));
+            OnPropertyChanged();
         }
     }
     [XmlElement("showHexHeader")]
@@ -52,7 +52,7 @@ public class NodeViewOptions : ViewModelBase {
                 return;
             }
             showInHex = value;
-            OnPropertyChanged(nameof(ShowInHex));
+            OnPropertyChanged();
         }
     }
     [XmlElement("showNodeContent")]
@@ -63,7 +63,7 @@ public class NodeViewOptions : ViewModelBase {
                 return;
             }
             showContent = value;
-            OnPropertyChanged(nameof(ShowContent));
+            OnPropertyChanged();
         }
     }
     [XmlElement("showNodePath")]
@@ -74,7 +74,7 @@ public class NodeViewOptions : ViewModelBase {
                 return;
             }
             showNodePath = value;
-            OnPropertyChanged(nameof(ShowNodePath));
+            OnPropertyChanged();
         }
     }
     [XmlElement("forceInteger")]
@@ -85,7 +85,7 @@ public class NodeViewOptions : ViewModelBase {
                 return;
             }
             intAsInt = value;
-            OnPropertyChanged(nameof(IntegerAsInteger));
+            OnPropertyChanged();
         }
     }
     [XmlElement("showHexViewer")]
@@ -96,7 +96,7 @@ public class NodeViewOptions : ViewModelBase {
                 return;
             }
             showHexViewer = value;
-            OnPropertyChanged(nameof(ShowHexViewer));
+            OnPropertyChanged();
         }
     }
     [XmlElement("showAddrPanel")]
@@ -107,7 +107,7 @@ public class NodeViewOptions : ViewModelBase {
                 return;
             }
             showHexAddrPanel = value;
-            OnPropertyChanged(nameof(ShowHexAddrPanel));
+            OnPropertyChanged();
         }
     }
     [XmlElement(ElementName = "showAsciiPanel")]
@@ -118,7 +118,7 @@ public class NodeViewOptions : ViewModelBase {
                 return;
             }
             showHexAsciiPanel = value;
-            OnPropertyChanged(nameof(ShowHexAsciiPanel));
+            OnPropertyChanged();
         }
     }
     [XmlElement("fontSize")]
@@ -129,7 +129,7 @@ public class NodeViewOptions : ViewModelBase {
                 return;
             }
             fontSize = value;
-            OnPropertyChanged(nameof(FontSize));
+            OnPropertyChanged();
         }
     }
     [XmlElement("maxTreeTextLength")]
@@ -140,7 +140,7 @@ public class NodeViewOptions : ViewModelBase {
                 return;
             }
             maxStringLength = value;
-            OnPropertyChanged(nameof(MaxTreeTextLength));
+            OnPropertyChanged();
         }
     }
 }

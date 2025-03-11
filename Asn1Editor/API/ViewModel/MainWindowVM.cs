@@ -64,7 +64,7 @@ class MainWindowVM : ViewModelBase, IMainWindowVM, IHasAsnDocumentTabs {
 
     public GlobalData GlobalData { get; }
     public NodeViewOptions NodeViewOptions { get; }
-    public ObservableCollection<Asn1DocumentVM> Tabs { get; } = new();
+    public ObservableCollection<Asn1DocumentVM> Tabs { get; } = [];
     public Asn1DocumentVM SelectedTab {
         get => selectedTab;
         set {
@@ -75,7 +75,7 @@ class MainWindowVM : ViewModelBase, IMainWindowVM, IHasAsnDocumentTabs {
             if (selectedTab != null) {
                 selectedTab.IsSelected = true;
             }
-            OnPropertyChanged(nameof(SelectedTab));
+            OnPropertyChanged();
         }
     }
 

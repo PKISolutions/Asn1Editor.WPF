@@ -59,7 +59,7 @@ class TreeViewCommands : ViewModelBase, ITreeCommands {
         get => hasNodeClipboardData;
         set {
             hasNodeClipboardData = value;
-            OnPropertyChanged(nameof(HasNodeClipboardData));
+            OnPropertyChanged();
         }
     }
 

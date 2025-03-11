@@ -8,7 +8,7 @@ public abstract class AsyncViewModel : ViewModelBase {
         get => isBusy;
         set {
             isBusy = value;
-            OnPropertyChanged(nameof(IsBusy));
+            OnPropertyChanged();
         }
     }
 }

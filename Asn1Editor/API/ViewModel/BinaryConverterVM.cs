@@ -50,28 +50,28 @@ class BinaryConverterVM : AsyncViewModel {
         get => text;
         set {
             text = value?.Trim();
-            OnPropertyChanged(nameof(Text));
+            OnPropertyChanged();
         }
     }
     public String Path {
         get => path;
         set {
             path = value;
-            OnPropertyChanged(nameof(Path));
+            OnPropertyChanged();
         }
     }
     public Double TextBoxWidth {
         get => width;
         set {
             width = value;
-            OnPropertyChanged(nameof(TextBoxWidth));
+            OnPropertyChanged();
         }
     }
     public Boolean CanCheck {
         get => canCheck;
         set {
             canCheck = value;
-            OnPropertyChanged(nameof(CanCheck));
+            OnPropertyChanged();
         }
     }
     public EncodingTypeEntry? SelectedEncoding {
@@ -84,7 +84,7 @@ class BinaryConverterVM : AsyncViewModel {
             if (selectedEncoding != null) {
                 Text = AsnFormatter.BinaryToString(RawData.ToArray(), selectedEncoding.EncodingType);
             }
-            OnPropertyChanged(nameof(SelectedEncoding));
+            OnPropertyChanged();
         }
     }
     public ObservableList<Byte> RawData { get; } = new(true, false);

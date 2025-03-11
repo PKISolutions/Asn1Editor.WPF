@@ -30,7 +30,7 @@ class DataSource(NodeViewOptions viewOptions) : ViewModelBase, IDataSource {
         get => selectedNode;
         set {
             selectedNode = value;
-            OnPropertyChanged(nameof(SelectedNode));
+            OnPropertyChanged();
         }
     }
     public NodeViewOptions NodeViewOptions { get; } = viewOptions;

@@ -44,21 +44,21 @@ class TagDataEditorVM : ViewModelBase, ITagDataEditorVM {
         get => tagDetails;
         set {
             tagDetails = value;
-            OnPropertyChanged(nameof(TagDetails));
+            OnPropertyChanged();
         }
     }
     public AsnViewValue TagValue {
         get => tagValue;
         set {
             tagValue = value;
-            OnPropertyChanged(nameof(TagValue));
+            OnPropertyChanged();
         }
     }
     public Byte UnusedBits {
         get => unusedBits;
         set {
             unusedBits = value;
-            OnPropertyChanged(nameof(UnusedBits));
+            OnPropertyChanged();
         }
     }
     public Boolean UnusedBitsVisible => Node.Tag == (Byte)Asn1Type.BIT_STRING;
@@ -66,7 +66,7 @@ class TagDataEditorVM : ViewModelBase, ITagDataEditorVM {
         get => isReadonly;
         set {
             isReadonly = value;
-            OnPropertyChanged(nameof(IsReadOnly));
+            OnPropertyChanged();
             OnPropertyChanged(nameof(IsEditable));
         }
     }
@@ -81,7 +81,7 @@ class TagDataEditorVM : ViewModelBase, ITagDataEditorVM {
             if (rbText) {
                 editText();
             }
-            OnPropertyChanged(nameof(RbText));
+            OnPropertyChanged();
         }
     }
     public Boolean RbHex {
@@ -94,7 +94,7 @@ class TagDataEditorVM : ViewModelBase, ITagDataEditorVM {
             if (rbHex) {
                 editHex();
             }
-            OnPropertyChanged(nameof(RbHex));
+            OnPropertyChanged();
         }
     }
     public Boolean IsRbTextEnabled => (TagValue.Options & AsnViewValueOptions.SupportsPrintableText) != 0;
@@ -102,7 +102,7 @@ class TagDataEditorVM : ViewModelBase, ITagDataEditorVM {
         get => dialogResult;
         set {
             dialogResult = value;
-            OnPropertyChanged(nameof(DialogResult));
+            OnPropertyChanged();
         }
     }
 

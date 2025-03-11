@@ -54,7 +54,7 @@ public static class AsnTreeBuilder {
             index++;
         } while (root.MoveNextSibling());
         root.Reset();
-        foreach (Asn1TreeNode node in tree.Children.Where(node => node.Value.IsContainer && node.Value.PayloadLength > 0)) {
+        foreach (Asn1TreeNode node in tree.Children.Where(node => node.Value is { IsContainer: true, PayloadLength: > 0 })) {
             root.Seek(node.Value.Offset);
             buildTree(root, node);
         }

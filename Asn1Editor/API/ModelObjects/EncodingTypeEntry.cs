@@ -19,7 +19,7 @@ class EncodingTypeEntry : ViewModelBase {
         get => isChecked;
         set {
             isChecked = value;
-            OnPropertyChanged(nameof(IsChecked));
+            OnPropertyChanged();
         }
     }
 }

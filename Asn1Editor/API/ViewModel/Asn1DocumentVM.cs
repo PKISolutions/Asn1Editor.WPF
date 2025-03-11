@@ -55,7 +55,7 @@ public class Asn1DocumentVM : AsyncViewModel {
             if (!String.IsNullOrWhiteSpace(path)) {
                 fileName = new FileInfo(path).Name;
             }
-            OnPropertyChanged(nameof(Path));
+            OnPropertyChanged();
             OnPropertyChanged(nameof(Header));
             OnPropertyChanged(nameof(ToolTipText));
         }
@@ -64,7 +64,7 @@ public class Asn1DocumentVM : AsyncViewModel {
         get => isModified;
         set {
             isModified = value;
-            OnPropertyChanged(nameof(IsModified));
+            OnPropertyChanged();
             OnPropertyChanged(nameof(Header));
         }
     }
@@ -72,7 +72,7 @@ public class Asn1DocumentVM : AsyncViewModel {
         get => isSelected;
         set {
             isSelected = value;
-            OnPropertyChanged(nameof(IsSelected));
+            OnPropertyChanged();
         }
     }
 

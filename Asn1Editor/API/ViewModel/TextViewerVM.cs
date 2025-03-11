@@ -44,14 +44,14 @@ class TextViewerVM : ViewModelBase, ITextViewerVM {
         get => text;
         set {
             text = value;
-            OnPropertyChanged(nameof(Text));
+            OnPropertyChanged();
         }
     }
     public String CurrentLength {
         get => currentLengthStr;
         set {
             currentLengthStr = value;
-            OnPropertyChanged(nameof(CurrentLength));
+            OnPropertyChanged();
         }
     }
     public Boolean CertutilViewChecked {
@@ -65,7 +65,7 @@ class TextViewerVM : ViewModelBase, ITextViewerVM {
                 renderer = new CertutilRenderer(rootNode);
                 refreshView();
             }
-            OnPropertyChanged(nameof(CertutilViewChecked));
+            OnPropertyChanged();
         }
     }
     public Boolean OpenSSLViewChecked {
@@ -79,7 +79,7 @@ class TextViewerVM : ViewModelBase, ITextViewerVM {
                 renderer = new OpenSSLRenderer(rootNode);
                 refreshView();
             }
-            OnPropertyChanged(nameof(OpenSSLViewChecked));
+            OnPropertyChanged();
         }
     }
 

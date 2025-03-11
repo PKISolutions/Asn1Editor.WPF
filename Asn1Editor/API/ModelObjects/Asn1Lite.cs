@@ -51,14 +51,14 @@ public class Asn1Lite : ViewModelBase, IHexAsnNode {
         get => header;
         private set {
             header = value;
-            OnPropertyChanged(nameof(Header));
+            OnPropertyChanged();
         }
     }
     public String ToolTip {
         get => toolTip;
         private set {
             toolTip = value;
-            OnPropertyChanged(nameof(ToolTip));
+            OnPropertyChanged();
         }
     }
     public Byte Tag {
@@ -68,14 +68,14 @@ public class Asn1Lite : ViewModelBase, IHexAsnNode {
             if ((tag & (Byte)Asn1Class.CONTEXT_SPECIFIC) > 0) {
                 IsContextSpecific = true;
             }
-            OnPropertyChanged(nameof(Tag));
+            OnPropertyChanged();
         }
     }
     public Byte UnusedBits {
         get => unusedBits;
         set {
             unusedBits = value;
-            OnPropertyChanged(nameof(UnusedBits));
+            OnPropertyChanged();
             OnPropertyChanged(nameof(Caption));
         }
     }
@@ -100,7 +100,7 @@ public class Asn1Lite : ViewModelBase, IHexAsnNode {
         set {
             if (offsetChange == value) { return; }
             offsetChange = value;
-            OnPropertyChanged(nameof(OffsetChange));
+            OnPropertyChanged();
         }
     }
 
@@ -120,7 +120,7 @@ public class Asn1Lite : ViewModelBase, IHexAsnNode {
         get => invalidData;
         private set {
             invalidData = value;
-            OnPropertyChanged(nameof(InvalidData));
+            OnPropertyChanged();
         }
     } //TODO
     public Int32 Depth {

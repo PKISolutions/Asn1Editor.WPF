@@ -31,7 +31,7 @@ public class NewAsnNodeEditorVM : ClosableWindowVM, INewAsnNodeEditorVM {
         get => formTagChecked;
         set {
             formTagChecked = value;
-            OnPropertyChanged(nameof(FormTagChecked));
+            OnPropertyChanged();
             if (formTagChecked) {
                 DecimalTagText = null;
                 HexTagText = null;
@@ -43,7 +43,7 @@ public class NewAsnNodeEditorVM : ClosableWindowVM, INewAsnNodeEditorVM {
         get => decimalTagChecked;
         set {
             decimalTagChecked = value;
-            OnPropertyChanged(nameof(DecimalTagChecked));
+            OnPropertyChanged();
             if (decimalTagChecked) {
                 DecimalTagText = "48";
                 HexTagText = null;
@@ -54,7 +54,7 @@ public class NewAsnNodeEditorVM : ClosableWindowVM, INewAsnNodeEditorVM {
         get => hexTagChecked;
         set {
             hexTagChecked = value;
-            OnPropertyChanged(nameof(HexTagChecked));
+            OnPropertyChanged();
             if (hexTagChecked) {
                 HexTagText = "30";
                 DecimalTagText = null;
@@ -66,7 +66,7 @@ public class NewAsnNodeEditorVM : ClosableWindowVM, INewAsnNodeEditorVM {
         get => clsConstructedChecked;
         set {
             clsConstructedChecked = value;
-            OnPropertyChanged(nameof(ConstructedChecked));
+            OnPropertyChanged();
             updateResultTagInfo();
         }
     }
@@ -74,7 +74,7 @@ public class NewAsnNodeEditorVM : ClosableWindowVM, INewAsnNodeEditorVM {
         get => clsSpecificChecked;
         set {
             clsSpecificChecked = value;
-            OnPropertyChanged(nameof(SpecificChecked));
+            OnPropertyChanged();
             updateResultTagInfo();
         }
     }
@@ -82,7 +82,7 @@ public class NewAsnNodeEditorVM : ClosableWindowVM, INewAsnNodeEditorVM {
         get => clsApplicationChecked;
         set {
             clsApplicationChecked = value;
-            OnPropertyChanged(nameof(ApplicationChecked));
+            OnPropertyChanged();
             updateResultTagInfo();
         }
     }
@@ -90,7 +90,7 @@ public class NewAsnNodeEditorVM : ClosableWindowVM, INewAsnNodeEditorVM {
         get => clsPrivateChecked;
         set {
             clsPrivateChecked = value;
-            OnPropertyChanged(nameof(PrivateChecked));
+            OnPropertyChanged();
             updateResultTagInfo();
         }
     }
@@ -99,7 +99,7 @@ public class NewAsnNodeEditorVM : ClosableWindowVM, INewAsnNodeEditorVM {
         get => selectedType;
         set {
             selectedType = value;
-            OnPropertyChanged(nameof(SelectedType));
+            OnPropertyChanged();
             ConstructedChecked = SelectedType is Asn1Type.SEQUENCE or Asn1Type.SET;
             // no need to call updateResultTagInfo(), it is already called.
         }
@@ -108,7 +108,7 @@ public class NewAsnNodeEditorVM : ClosableWindowVM, INewAsnNodeEditorVM {
         get => decimalTagText;
         set {
             decimalTagText = value;
-            OnPropertyChanged(nameof(DecimalTagText));
+            OnPropertyChanged();
             updateResultTagInfo();
         }
     }
@@ -116,7 +116,7 @@ public class NewAsnNodeEditorVM : ClosableWindowVM, INewAsnNodeEditorVM {
         get => hexTagText;
         set {
             hexTagText = value;
-            OnPropertyChanged(nameof(HexTagText));
+            OnPropertyChanged();
             updateResultTagInfo();
         }
     }
@@ -125,21 +125,21 @@ public class NewAsnNodeEditorVM : ClosableWindowVM, INewAsnNodeEditorVM {
         get => resultTagDecimal;
         set {
             resultTagDecimal = value;
-            OnPropertyChanged(nameof(ResultTagDecimal));
+            OnPropertyChanged();
         }
     }
     public String ResultTagHex {
         get => resultTagHex;
         set {
             resultTagHex = value;
-            OnPropertyChanged(nameof(ResultTagHex));
+            OnPropertyChanged();
         }
     }
     public String ResultTagName {
         get => resultTagName;
         set {
             resultTagName = value;
-            OnPropertyChanged(nameof(ResultTagName));
+            OnPropertyChanged();
         }
     }
 
