@@ -269,8 +269,8 @@
         <StatusBar DockPanel.Dock="Bottom">
             <StatusBarItem>
                 <TextBlock Text="Tag: ">
-                    <Run Text="{Binding SelectedTab.DataSource.SelectedNode.Value.Tag, Mode=OneWay}"/>
-                    <Run Text="{Binding Path=SelectedTab.DataSource.SelectedNode.Value.Tag, Mode=OneWay, StringFormat=(0x{0:X2})}"/>
+                    <Run Text="{Binding SelectedTab.DataSource.SelectedNode.Value.Tag, Mode=OneWay, StringFormat=0x{0:X2}}"/>
+                    <Run Text="{Binding SelectedTab.DataSource.SelectedNode.Value.Tag, Mode=OneWay, StringFormat=(0)}"/>
                 </TextBlock>
             </StatusBarItem>
             <Separator/>
