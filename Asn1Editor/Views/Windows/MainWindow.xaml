@@ -483,7 +483,9 @@
                                     </ContextMenu>
                                 </uc:AsnTreeView.ContextMenu>
                             </uc:AsnTreeView>
-                            <controls:BusyIndicator Visibility="{Binding Converter={StaticResource BooleanToVisibility}, Path=IsBusy}"/>
+                            <controls:BusyIndicator IsShown="{Binding SelectedTab.IsBusy}"
+                                                    HeaderText="Please wait while decoding the file..."
+                                                    Text="This may take a while"/>
                         </Grid>
                     </DockPanel>
                 </DataTemplate>
