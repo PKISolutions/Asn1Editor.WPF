@@ -41,8 +41,7 @@ class MainWindowVM : ViewModelBase, IMainWindowVM, IHasAsnDocumentTabs {
         SaveCommand = new RelayCommand(saveFile, canPrintSave);
         DropFileCommand = new AsyncCommand(dropFileAsync);
         appCommands.ShowConverterWindow = new RelayCommand(showConverter);
-        Tabs.Add(new Asn1DocumentVM(NodeViewOptions, TreeCommands));
-        SelectedTab = Tabs[0];
+        addTabToList(new Asn1DocumentVM(NodeViewOptions, TreeCommands));
     }
 
     void onNodeViewOptionsChanged(Object sender, PropertyChangedEventArgs e) {
