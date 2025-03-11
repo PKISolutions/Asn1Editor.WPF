@@ -287,6 +287,12 @@
             </StatusBarItem>
             <Separator/>
             <StatusBarItem>
+                <TextBlock Text="Child nodes: ">
+                    <Run Text="{Binding SelectedTab.DataSource.SelectedNode.Children.Count, Mode=OneWay}"/>
+                </TextBlock>
+            </StatusBarItem>
+            <Separator/>
+            <StatusBarItem>
                 <TextBlock Text="Size: ">
                     <Run Text="{Binding SelectedTab.DataSource.RawData.Count, Mode=OneWay}"/>
                     <Run Text="bytes"/>
