@@ -192,6 +192,28 @@ public class AsnHexViewer : Control {
 
     #endregion
 
+    public static readonly DependencyProperty IsColoringEnabledProperty = DependencyProperty.Register(
+        nameof(IsColoringEnabled),
+        typeof(Boolean),
+        typeof(AsnHexViewer),
+        new PropertyMetadata(onIsColoringEnabledChanged));
+
+    public Boolean IsColoringEnabled {
+        get => (Boolean)GetValue(IsColoringEnabledProperty);
+        set => SetValue(IsColoringEnabledProperty, value);
+    }
+
+    static void onIsColoringEnabledChanged(DependencyObject d, DependencyPropertyChangedEventArgs e) {
+        var ctrl = (AsnHexViewer)d;
+        Boolean newValue = (Boolean)e.NewValue;
+        if (newValue && ctrl.SelectedNode is not null) {
+            ctrl.reColorHex(ctrl.SelectedNode);
+        } else {
+            ctrl.ResetColors();
+        }
+
+    }
+
     void calculateWidths() {
         HexAddrHeaderRtb.SetWidthToFitString(masterAddr, FontSize);
         HexRawHeaderRtb.SetWidthToFitString(masterHex, FontSize);
@@ -386,6 +408,9 @@ public class AsnHexViewer : Control {
         return GetRanges(pointers);
     }
     void Colorize() {
+        if (!IsColoringEnabled) {
+            return;
+        }
         foreach (TextRange[] top in ranges) {
             foreach (TextRange range in top) {
                 range.ApplyPropertyValue(TextElement.FontWeightProperty, FontWeights.Bold);
@@ -397,9 +422,12 @@ public class AsnHexViewer : Control {
             range[1].ApplyPropertyValue(TextElement.ForegroundProperty, TagLengthOctetBrush);
             range[2].ApplyPropertyValue(TextElement.ForegroundProperty, TagPayloadOctetBrush);
         }
-        
+
     }
     void ResetColors() {
+        if (SelectedNode is null) {
+            return;
+        }
         foreach (TextRange[] top in ranges) {
             foreach (TextRange range in top.Where(range => range is not null)) {
                 range.ClearAllProperties();

@@ -72,7 +72,7 @@
                            Visibility="Visible"/>
                 <wpflib:BindableRichTextBox x:Name="PART_AddressBody"
                                             Style="{StaticResource RtbPaneStyle}"
-                                            Visibility="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type controls:AsnHexViewer}}, Path=ShowAddressPane, Converter={StaticResource BooleanToVisibility}}"
+                                            Visibility="{TemplateBinding ShowAddressPane, Converter={StaticResource BooleanToVisibility}}"
                                             Width="{Binding ElementName=PART_AddressHeader, Path=Width}"/>
                 <wpflib:BindableRichTextBox x:Name="PART_HexBody"
                                             Style="{StaticResource RtbPaneStyle}"
@@ -84,11 +84,19 @@
                                             Width="{Binding ElementName=PART_AsciiHeader, Path=Width}"/>
             </DockPanel>
         </DockPanel>
+        <ControlTemplate.Triggers>
+            <Trigger Property="IsColoringEnabled" Value="False">
+                <Setter TargetName="PART_AddressBody" Property="Foreground" Value="Gray"/>
+                <Setter TargetName="PART_HexBody" Property="Foreground" Value="Gray"/>
+                <Setter TargetName="PART_AsciiBody" Property="Foreground" Value="Gray"/>
+            </Trigger>
+        </ControlTemplate.Triggers>
     </ControlTemplate>
 
     <Style TargetType="controls:AsnHexViewer">
         <Setter Property="BorderThickness" Value="1"/>
         <Setter Property="BorderBrush" Value="#add1ff"/>
+        <Setter Property="IsColoringEnabled" Value="True"/>
         <Setter Property="TagOctetBrush" Value="Red"/>
         <Setter Property="TagLengthOctetBrush" Value="Green"/>
         <Setter Property="TagPayloadOctetBrush" Value="Black"/>
