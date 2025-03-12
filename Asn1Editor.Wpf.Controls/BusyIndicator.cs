@@ -3,7 +3,7 @@ using System;
 using System.Windows;
 using System.Windows.Controls;
 
-namespace Asn1Editor.Wpf.Controls;
+namespace SysadminsLV.Asn1Editor.Controls;
 
 public class BusyIndicator : Control {
     static BusyIndicator() {

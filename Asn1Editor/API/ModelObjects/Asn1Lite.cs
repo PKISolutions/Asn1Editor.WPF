@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Numerics;
 using System.Text;
-using Asn1Editor.Wpf.Controls;
 using SysadminsLV.Asn1Editor.API.Utils.ASN;
 using SysadminsLV.Asn1Editor.API.ViewModel;
+using SysadminsLV.Asn1Editor.Controls;
 using SysadminsLV.Asn1Editor.Properties;
 using SysadminsLV.Asn1Parser;
 

@@ -4,7 +4,7 @@
         xmlns:vm="clr-namespace:SysadminsLV.Asn1Editor.API.ViewModel"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-        xmlns:c="clr-namespace:Asn1Editor.Wpf.Controls;assembly=Asn1Editor.Wpf.Controls"
+        xmlns:controls="clr-namespace:SysadminsLV.Asn1Editor.Controls;assembly=SysadminsLV.Asn1Editor.Controls"
         mc:Ignorable="d"
         d:DataContext="{d:DesignInstance vm:TextViewerVM}"
         WindowStartupLocation="CenterOwner"
@@ -59,7 +59,7 @@
                 <TextBlock Text="Line width (characters): "/>
             </StatusBarItem>
             <StatusBarItem IsEnabled="{Binding OpenSSLViewChecked}">
-                <c:AutoSizeTextBox Text="{Binding CurrentLength, UpdateSourceTrigger=PropertyChanged}"
+                <controls:AutoSizeTextBox Text="{Binding CurrentLength, UpdateSourceTrigger=PropertyChanged}"
                                    UndoLimit="0"
                                    IsUndoEnabled="False"
                                    FontFamily="Consolas"

@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Windows;
 using System.Windows.Controls;
-using Asn1Editor.Wpf.Controls.Extensions;
+using SysadminsLV.Asn1Editor.Controls.Extensions;
 
-namespace Asn1Editor.Wpf.Controls;
+namespace SysadminsLV.Asn1Editor.Controls;
 
 /// <summary>
 /// Represents a textbox control that can set its width to fit exact number of characters.

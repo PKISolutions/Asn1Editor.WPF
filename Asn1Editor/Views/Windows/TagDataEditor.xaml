@@ -6,7 +6,7 @@
         xmlns:cmd="clr-namespace:SysadminsLV.WPF.OfficeTheme.Toolkit.Commands;assembly=Wpf.OfficeTheme"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-        xmlns:controls="clr-namespace:Asn1Editor.Wpf.Controls;assembly=Asn1Editor.Wpf.Controls"
+        xmlns:controls="clr-namespace:SysadminsLV.Asn1Editor.Controls;assembly=SysadminsLV.Asn1Editor.Controls"
         mc:Ignorable="d"
         d:DataContext="{d:DesignInstance vm:TagDataEditorVM}"
         cmd:DialogCloser.DialogResult="{Binding DialogResult}"

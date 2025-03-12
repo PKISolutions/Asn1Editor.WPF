@@ -1,7 +1,7 @@
 ﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-                    xmlns:c="clr-namespace:Asn1Editor.Wpf.Controls"
-                    xmlns:wpflib="clr-namespace:SysadminsLV.WPF.OfficeTheme.Controls;assembly=Wpf.OfficeTheme">
+                    xmlns:wpflib="clr-namespace:SysadminsLV.WPF.OfficeTheme.Controls;assembly=Wpf.OfficeTheme"
+                    xmlns:controls="clr-namespace:SysadminsLV.Asn1Editor.Controls">
     <ResourceDictionary.MergedDictionaries>
         <ResourceDictionary Source="Shared.xaml"/>
     </ResourceDictionary.MergedDictionaries>
@@ -25,7 +25,7 @@
         <Setter Property="VerticalScrollBarVisibility" Value="Hidden"/>
     </Style>
 
-    <ControlTemplate x:Key="AsnHexViewerTemplate" TargetType="c:AsnHexViewer">
+    <ControlTemplate x:Key="AsnHexViewerTemplate" TargetType="controls:AsnHexViewer">
         <DockPanel>
             <Border DockPanel.Dock="Top" BorderThickness="1" BorderBrush="#FF6F9CD8" Height="1"/>
             <Border DockPanel.Dock="Top" BorderThickness="1" BorderBrush="#F1F7FE" Height="1"/>
@@ -33,7 +33,7 @@
                 <DockPanel Background="#D5E7FE">
                     <RichTextBox x:Name="PART_AddressHeader"
                                  Style="{StaticResource RtbHeaderStyle}"
-                                 Visibility="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type c:AsnHexViewer}}, Path=ShowAddressPane, Converter={StaticResource BooleanToVisibility}}">
+                                 Visibility="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type controls:AsnHexViewer}}, Path=ShowAddressPane, Converter={StaticResource BooleanToVisibility}}">
                         <RichTextBox.Document>
                             <FlowDocument>
                                 <Paragraph>
@@ -54,7 +54,7 @@
                     </RichTextBox>
                     <RichTextBox x:Name="PART_AsciiHeader"
                                  Style="{StaticResource RtbHeaderStyle}"
-                                 Visibility="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type c:AsnHexViewer}}, Path=ShowAsciiPane, Converter={StaticResource BooleanToVisibility}}">
+                                 Visibility="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type controls:AsnHexViewer}}, Path=ShowAsciiPane, Converter={StaticResource BooleanToVisibility}}">
                         <RichTextBox.Document>
                             <FlowDocument>
                                 <Paragraph>
@@ -72,7 +72,7 @@
                 <wpflib:BindableRichTextBox  x:Name="PART_AddressBody"
                                              Style="{StaticResource RtbPaneStyle}"
                                              Foreground="Gray"
-                                             Visibility="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type c:AsnHexViewer}}, Path=ShowAddressPane, Converter={StaticResource BooleanToVisibility}}"
+                                             Visibility="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type controls:AsnHexViewer}}, Path=ShowAddressPane, Converter={StaticResource BooleanToVisibility}}"
                                              Width="{Binding ElementName=PART_AddressHeader, Path=Width}"/>
                 <wpflib:BindableRichTextBox x:Name="PART_HexBody"
                                             Style="{StaticResource RtbPaneStyle}"
@@ -82,13 +82,13 @@
                 <wpflib:BindableRichTextBox x:Name="PART_AsciiBody"
                                             Style="{StaticResource RtbPaneStyle}"
                                             Foreground="Green"
-                                            Visibility="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type c:AsnHexViewer}}, Path=ShowAsciiPane, Converter={StaticResource BooleanToVisibility}}"
+                                            Visibility="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type controls:AsnHexViewer}}, Path=ShowAsciiPane, Converter={StaticResource BooleanToVisibility}}"
                                             Width="{Binding ElementName=PART_AsciiHeader, Path=Width}"/>
             </DockPanel>
         </DockPanel>
     </ControlTemplate>
 
-    <Style TargetType="c:AsnHexViewer">
+    <Style TargetType="controls:AsnHexViewer">
         <Setter Property="BorderThickness" Value="1"/>
         <Setter Property="BorderBrush" Value="#add1ff"/>
         <Setter Property="TagOctetBrush" Value="Red"/>

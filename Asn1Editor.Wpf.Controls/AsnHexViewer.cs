@@ -8,11 +8,11 @@ using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
 using System.Windows.Documents;
 using System.Windows.Media;
-using Asn1Editor.Wpf.Controls.Extensions;
+using SysadminsLV.Asn1Editor.Controls.Extensions;
 using SysadminsLV.Asn1Parser;
 using SysadminsLV.WPF.OfficeTheme.Controls;
 
-namespace Asn1Editor.Wpf.Controls;
+namespace SysadminsLV.Asn1Editor.Controls;
 
 public class AsnHexViewer : Control {
     const String masterAddr = "12345678";

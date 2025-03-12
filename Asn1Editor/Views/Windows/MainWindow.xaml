@@ -7,8 +7,8 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:clr="clr-namespace:SysadminsLV.Asn1Editor.API.Utils"
         xmlns:system="clr-namespace:System;assembly=mscorlib"
-        xmlns:c="clr-namespace:Asn1Editor.Wpf.Controls;assembly=Asn1Editor.Wpf.Controls"
         xmlns:wpfControls="clr-namespace:SysadminsLV.WPF.OfficeTheme.Controls;assembly=Wpf.OfficeTheme"
+        xmlns:controls="clr-namespace:SysadminsLV.Asn1Editor.Controls;assembly=SysadminsLV.Asn1Editor.Controls"
         mc:Ignorable="d"
         d:DataContext="{d:DesignInstance vm:MainWindowVM}"
         Title="ASN.1 Editor"
@@ -374,7 +374,7 @@
                                     </ToggleButton>
                                 </ToolBar>
                             </ToolBarTray>
-                            <c:AsnHexViewer DataSource="{Binding DataSource.RawData, Mode=OneWay}"
+                            <controls:AsnHexViewer DataSource="{Binding DataSource.RawData, Mode=OneWay}"
                                             SelectedNode="{Binding DataSource.SelectedNode.Value, Mode=OneWay}"
                                             FontFamily="Consolas"
                                             FontSize="{Binding NodeViewOptions.FontSize}"
@@ -390,7 +390,7 @@
                                     </ResourceDictionary.MergedDictionaries>
                                 </ResourceDictionary>
                             </Grid.Resources>
-                            <c:AsnTreeView ItemsSource="{Binding Tree}"
+                            <controls:AsnTreeView ItemsSource="{Binding Tree}"
                                            SelectedItem="{Binding DataSource.SelectedNode, Mode=TwoWay}"
                                            AllowDrop="True"
                                            FontSize="{Binding NodeViewOptions.FontSize}"
@@ -400,15 +400,15 @@
                                            FileDropCommand="{Binding DataContext.DropFileCommand, RelativeSource={RelativeSource AncestorType=Window}}"
                                            ItemTemplate="{StaticResource AsnTreeViewDataTemplate}"
                                            ItemContainerStyle="{StaticResource AsnTreeViewItemStyle}">
-                                <c:AsnTreeView.InputBindings>
+                                <controls:AsnTreeView.InputBindings>
                                     <KeyBinding Modifiers="Ctrl" Key="E" Command="{Binding TreeCommands.EditNodeCommand}" CommandParameter="{x:Static clr:NodeEditMode.Text}"/>
                                     <KeyBinding Modifiers="Ctrl" Key="N" Command="{Binding TreeCommands.AddNewNodeCommand}"/>
                                     <KeyBinding Modifiers="Ctrl" Key="X" Command="{Binding TreeCommands.CutNodeCommand}"/>
                                     <KeyBinding Modifiers="Ctrl" Key="C" Command="{Binding TreeCommands.CopyNodeCommand}"/>
                                     <KeyBinding Modifiers="Ctrl" Key="V" Command="{Binding TreeCommands.PasteAfterCommand}"/>
                                     <KeyBinding Key="Delete" Command="{Binding TreeCommands.DeleteNodeCommand}"/>
-                                </c:AsnTreeView.InputBindings>
-                                <c:AsnTreeView.ContextMenu>
+                                </controls:AsnTreeView.InputBindings>
+                                <controls:AsnTreeView.ContextMenu>
                                     <ContextMenu>
                                         <MenuItem Header="Edit node..."
                                                   Command="{Binding TreeCommands.EditNodeCommand}"
@@ -497,9 +497,9 @@
                                             </MenuItem.Icon>
                                         </MenuItem>
                                     </ContextMenu>
-                                </c:AsnTreeView.ContextMenu>
-                            </c:AsnTreeView>
-                            <c:BusyIndicator IsShown="{Binding IsBusy}"
+                                </controls:AsnTreeView.ContextMenu>
+                            </controls:AsnTreeView>
+                            <controls:BusyIndicator IsShown="{Binding IsBusy}"
                                                     HeaderText="Please wait while decoding the file..."
                                                     Text="This may take a while"/>
                         </Grid>

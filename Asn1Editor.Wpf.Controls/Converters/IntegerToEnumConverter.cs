@@ -2,7 +2,7 @@
 using System.Globalization;
 using System.Windows.Data;
 
-namespace Asn1Editor.Wpf.Controls.Converters;
+namespace SysadminsLV.Asn1Editor.Controls.Converters;
 public class IntegerToEnumConverter : IValueConverter {
     public Object Convert(Object value, Type targetType, Object parameter, CultureInfo culture) {
         if (value is Enum) {

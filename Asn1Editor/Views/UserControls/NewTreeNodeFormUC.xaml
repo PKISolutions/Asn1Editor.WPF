@@ -7,8 +7,8 @@
              xmlns:asn1Parser="clr-namespace:SysadminsLV.Asn1Parser;assembly=SysadminsLV.Asn1Parser"
              xmlns:vm="clr-namespace:SysadminsLV.Asn1Editor.API.ViewModel"
              xmlns:behaviors="clr-namespace:SysadminsLV.WPF.OfficeTheme.Toolkit.Behaviors;assembly=Wpf.OfficeTheme"
-             xmlns:c="clr-namespace:Asn1Editor.Wpf.Controls;assembly=Asn1Editor.Wpf.Controls"
              xmlns:controls="clr-namespace:SysadminsLV.WPF.OfficeTheme.Controls;assembly=Wpf.OfficeTheme"
+             xmlns:controls1="clr-namespace:SysadminsLV.Asn1Editor.Controls;assembly=SysadminsLV.Asn1Editor.Controls"
              d:DataContext="{d:DesignInstance vm:NewAsnNodeEditorVM}"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
@@ -53,7 +53,7 @@
         <Grid IsEnabled="{Binding ElementName=TextDecRadio, Path=IsChecked}">
             <StackPanel Margin="20,0,0,0" Orientation="Horizontal">
                 <TextBlock Text="Tag number (1-255): "/>
-                <c:AutoSizeTextBox MaxLength="3"
+                <controls1:AutoSizeTextBox MaxLength="3"
                                    LineWidth="3"
                                    Text="{Binding DecimalTagText, UpdateSourceTrigger=PropertyChanged}"/>
             </StackPanel>
@@ -68,7 +68,7 @@
             <StackPanel Margin="20,0,0,0"
                                 Orientation="Horizontal">
                 <TextBlock Text="Tag number (1-FF): "/>
-                <c:AutoSizeTextBox MaxLength="2"
+                <controls1:AutoSizeTextBox MaxLength="2"
                                    LineWidth="2"
                                    Text="{Binding HexTagText, UpdateSourceTrigger=PropertyChanged}"/>
             </StackPanel>

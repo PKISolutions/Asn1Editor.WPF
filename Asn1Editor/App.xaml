@@ -2,13 +2,13 @@
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:wpfControls="clr-namespace:SysadminsLV.WPF.OfficeTheme.Controls;assembly=Wpf.OfficeTheme"
-             xmlns:c="clr-namespace:Asn1Editor.Wpf.Controls;assembly=Asn1Editor.Wpf.Controls"
-             xmlns:converters="clr-namespace:Asn1Editor.Wpf.Controls.Converters;assembly=Asn1Editor.Wpf.Controls">
+             xmlns:converters="clr-namespace:SysadminsLV.Asn1Editor.Controls.Converters;assembly=SysadminsLV.Asn1Editor.Controls"
+             xmlns:controls="clr-namespace:SysadminsLV.Asn1Editor.Controls;assembly=SysadminsLV.Asn1Editor.Controls">
     <Application.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="/Wpf.OfficeTheme;component/UI/OfficeTheme.xaml"/>
-                <ResourceDictionary Source="/Asn1Editor.Wpf.Controls;component/Themes/AsnTypeSprites.xaml"/>
+                <ResourceDictionary Source="/SysadminsLV.Asn1Editor.Controls;component/Themes/AsnTypeSprites.xaml"/>
             </ResourceDictionary.MergedDictionaries>
             <BooleanToVisibilityConverter x:Key="BooleanToVisibility"/>
             <converters:IntegerToEnumConverter x:Key="IntegerToEnum"/>
@@ -22,7 +22,7 @@
                 <Setter Property="WindowStyle" Value="SingleBorderWindow" />
                 <Setter Property="SizeToContent" Value="Height" />
             </Style>
-            <Style x:Key="TvStyle" TargetType="c:AsnTreeView" BasedOn="{StaticResource {x:Type c:AsnTreeView}}">
+            <Style x:Key="TvStyle" TargetType="controls:AsnTreeView" BasedOn="{StaticResource {x:Type controls:AsnTreeView}}">
                 <Style.Triggers>
                     <DataTrigger Binding="{Binding IsBusy}" Value="True">
                         <Setter Property="Opacity" Value="0.3"/>

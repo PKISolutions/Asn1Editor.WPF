@@ -6,7 +6,7 @@ using System.Windows.Input;
 using System.Windows.Media;
 using SysadminsLV.WPF.OfficeTheme.Toolkit.Commands;
 
-namespace Asn1Editor.Wpf.Controls; 
+namespace SysadminsLV.Asn1Editor.Controls; 
 
 public class AsnTreeView : TreeView {
     static AsnTreeView() {
