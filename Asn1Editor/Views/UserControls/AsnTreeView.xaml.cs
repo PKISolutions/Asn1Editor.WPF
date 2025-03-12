@@ -3,7 +3,6 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
-using SysadminsLV.Asn1Editor.API.ModelObjects;
 using SysadminsLV.WPF.OfficeTheme.Toolkit.Commands;
 
 namespace SysadminsLV.Asn1Editor.Views.UserControls;
@@ -84,12 +83,7 @@ public partial class AsnTreeView {
         nameof(SelectedItem),
         typeof(Object),
         typeof(AsnTreeView),
-        new PropertyMetadata(default, onSelectedItemChanged));
-    static void onSelectedItemChanged(DependencyObject d, DependencyPropertyChangedEventArgs e) {
-        if (e.NewValue is Asn1TreeNode node) {
-            node.IsSelected = true;
-        }
-    }
+        new PropertyMetadata(default));
 
     public new Object SelectedItem {
         get => GetValue(SelectedItemProperty);
