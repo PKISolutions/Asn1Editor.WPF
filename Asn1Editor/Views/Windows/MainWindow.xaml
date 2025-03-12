@@ -380,6 +380,13 @@
                                                    ShowAsciiPane="{Binding ElementName=AsciiToggle, Path=IsChecked}"/>
                         </DockPanel>
                         <Grid>
+                            <Grid.Resources>
+                                <ResourceDictionary>
+                                    <ResourceDictionary.MergedDictionaries>
+                                        <ResourceDictionary Source="/Views/TreeViewResources.xaml"/>
+                                    </ResourceDictionary.MergedDictionaries>
+                                </ResourceDictionary>
+                            </Grid.Resources>
                             <uc:AsnTreeView ItemsSource="{Binding Tree}"
                                             DoubleClickCommand="{Binding TreeCommands.EditNodeCommand}"
                                             DoubleClickCommandParameter="{x:Static clr:NodeEditMode.Text}"
@@ -392,7 +399,9 @@
                                             BorderThickness="1"
                                             VirtualizingStackPanel.IsVirtualizing="True"
                                             SelectedItem="{Binding DataSource.SelectedNode, Mode=TwoWay}"
-                                            Style="{StaticResource TvStyle}">
+                                            Style="{StaticResource TvStyle}"
+                                            ItemTemplate="{StaticResource AsnTreeViewDataTemplate}"
+                                            ItemContainerStyle="{StaticResource AsnTreeViewItemStyle}">
                                 <uc:AsnTreeView.InputBindings>
                                     <KeyBinding Modifiers="Ctrl" Key="E" Command="{Binding TreeCommands.EditNodeCommand}" CommandParameter="{x:Static clr:NodeEditMode.Text}"/>
                                     <KeyBinding Modifiers="Ctrl" Key="N" Command="{Binding TreeCommands.AddNewNodeCommand}"/>

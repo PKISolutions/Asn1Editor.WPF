@@ -220,6 +220,10 @@
     <Compile Include="Views\Windows\TextViewer.xaml.cs">
       <DependentUpon>TextViewer.xaml</DependentUpon>
     </Compile>
+    <Page Include="Views\TreeViewResources.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Views\UserControls\NewTreeNodeFormUC.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
