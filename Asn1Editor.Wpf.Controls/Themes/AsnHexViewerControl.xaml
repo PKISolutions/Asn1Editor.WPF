@@ -69,19 +69,19 @@
                 <ScrollBar x:Name="PART_ScrollBar"
                            DockPanel.Dock="Right"
                            Visibility="Visible"/>
-                <wpflib:BindableRichTextBox  x:Name="PART_AddressBody"
-                                             Style="{StaticResource RtbPaneStyle}"
-                                             Foreground="Gray"
-                                             Visibility="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type controls:AsnHexViewer}}, Path=ShowAddressPane, Converter={StaticResource BooleanToVisibility}}"
-                                             Width="{Binding ElementName=PART_AddressHeader, Path=Width}"/>
+                <wpflib:BindableRichTextBox x:Name="PART_AddressBody"
+                                            Style="{StaticResource RtbPaneStyle}"
+                                            Foreground="LightGray"
+                                            Visibility="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type controls:AsnHexViewer}}, Path=ShowAddressPane, Converter={StaticResource BooleanToVisibility}}"
+                                            Width="{Binding ElementName=PART_AddressHeader, Path=Width}"/>
                 <wpflib:BindableRichTextBox x:Name="PART_HexBody"
                                             Style="{StaticResource RtbPaneStyle}"
-                                            Foreground="Gray"
+                                            Foreground="#FFC0C0C0"
                                             ObserveCaret="True"
                                             Width="{Binding ElementName=PART_HexHeader, Path=Width}"/>
                 <wpflib:BindableRichTextBox x:Name="PART_AsciiBody"
                                             Style="{StaticResource RtbPaneStyle}"
-                                            Foreground="Green"
+                                            Foreground="LightGray"
                                             Visibility="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type controls:AsnHexViewer}}, Path=ShowAsciiPane, Converter={StaticResource BooleanToVisibility}}"
                                             Width="{Binding ElementName=PART_AsciiHeader, Path=Width}"/>
             </DockPanel>

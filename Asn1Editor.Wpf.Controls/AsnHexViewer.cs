@@ -36,7 +36,7 @@ public class AsnHexViewer : Control {
     RichTextBox[] panes;
 
     Boolean controlInitialized, scrollLocked;
-    TextRange[] ranges;
+    readonly TextRange[][] ranges = new TextRange[2][];
 
     ScrollBar Scroller;
     RichTextBox HexAddrHeaderRtb, HexRawHeaderRtb, HexAsciiHeaderRtb;
@@ -127,9 +127,10 @@ public class AsnHexViewer : Control {
             return;
         }
         ResetColors();
-        ranges = GetSelectionPointers(treeNode, HexRawPane);
+        ranges[0] = GetSelectionPointers(treeNode, HexRawPane, getOffset);
+        HexRawPane.CaretPosition = ranges[0][0].Start;
+        ranges[1] = GetSelectionPointers(treeNode, HexAsciiPane, getAsciiOffset);
         Colorize();
-        HexRawPane.CaretPosition = ranges[0].Start;
         scrollPanes(null);
     }
     void onNodeDataChanged(Object sender, EventArgs e) {
@@ -308,7 +309,8 @@ public class AsnHexViewer : Control {
         HexRawPane = initializeBindableRtb("PART_HexBody");
         HexAsciiPane = initializeBindableRtb("PART_AsciiBody");
 
-        ranges = new TextRange[3];
+        ranges[0] = new TextRange[3];
+        ranges[1] = new TextRange[3];
         panes = [HexAddressPane, HexRawPane, HexAsciiPane];
         controlInitialized = true;
         calculateWidths();
@@ -339,8 +341,12 @@ public class AsnHexViewer : Control {
     #region Hex Colorizer
 
     static Int32 getOffset(Int32 offset) {
-        Int32 line = (Int32)Math.Floor((Double)offset / 16);
+        Int32 line = (Int32)Math.Floor(offset / 16d);
         return (offset - 16 * line) * 3 + 50 * line + 2;
+    }
+    static Int32 getAsciiOffset(Int32 offset) {
+        Int32 line = (Int32)Math.Floor(offset / 16d);
+        return (offset - 16 * line) + 18 * line + 2;
     }
     static TextRange[] GetRanges(IList<TextPointer> pointers) {
         TextRange[] ranges =
@@ -352,44 +358,52 @@ public class AsnHexViewer : Control {
         return ranges;
     }
 
-    static TextRange[] GetSelectionPointers(IHexAsnNode treeNode, RichTextBox rtb) {
+    static TextRange[] GetSelectionPointers(IHexAsnNode treeNode, RichTextBox rtb, Func<Int32, Int32> offsetCalculator) {
         TextPointer[] pointers =
         [
             // tag
             rtb.Document.ContentStart.GetPositionAtOffset(
-                getOffset(treeNode.Offset)
+                offsetCalculator.Invoke(treeNode.Offset)
             ),
             rtb.Document.ContentStart.GetPositionAtOffset(
-                getOffset(treeNode.Offset + 1)
+                offsetCalculator.Invoke(treeNode.Offset + 1)
             ),
             // length bytes
             rtb.Document.ContentStart.GetPositionAtOffset(
-                getOffset(treeNode.Offset + 1)
+                offsetCalculator.Invoke(treeNode.Offset + 1)
             ),
             rtb.Document.ContentStart.GetPositionAtOffset(
-                getOffset(treeNode.PayloadStartOffset)
+                offsetCalculator.Invoke(treeNode.PayloadStartOffset)
             ),
             // payload
             rtb.Document.ContentStart.GetPositionAtOffset(
-                getOffset(treeNode.PayloadStartOffset)
+                offsetCalculator.Invoke(treeNode.PayloadStartOffset)
             ),
             rtb.Document.ContentStart.GetPositionAtOffset(
-                getOffset(treeNode.PayloadStartOffset + treeNode.PayloadLength)
+                offsetCalculator.Invoke(treeNode.PayloadStartOffset + treeNode.PayloadLength)
             )
         ];
         return GetRanges(pointers);
     }
     void Colorize() {
-        foreach (TextRange range in ranges) {
-            range.ApplyPropertyValue(TextElement.FontWeightProperty, FontWeights.Bold);
+        foreach (TextRange[] top in ranges) {
+            foreach (TextRange range in top) {
+                range.ApplyPropertyValue(TextElement.FontWeightProperty, FontWeights.Bold);
+            }
         }
-        ranges[0].ApplyPropertyValue(TextElement.ForegroundProperty, TagOctetBrush);
-        ranges[1].ApplyPropertyValue(TextElement.ForegroundProperty, TagLengthOctetBrush);
-        ranges[2].ApplyPropertyValue(TextElement.ForegroundProperty, TagPayloadOctetBrush);
+
+        foreach (TextRange[] range in ranges) {
+            range[0].ApplyPropertyValue(TextElement.ForegroundProperty, TagOctetBrush);
+            range[1].ApplyPropertyValue(TextElement.ForegroundProperty, TagLengthOctetBrush);
+            range[2].ApplyPropertyValue(TextElement.ForegroundProperty, TagPayloadOctetBrush);
+        }
+        
     }
     void ResetColors() {
-        foreach (TextRange range in ranges.Where(range => range != null)) {
-            range.ClearAllProperties();
+        foreach (TextRange[] top in ranges) {
+            foreach (TextRange range in top.Where(range => range is not null)) {
+                range.ClearAllProperties();
+            }
         }
     }
 
