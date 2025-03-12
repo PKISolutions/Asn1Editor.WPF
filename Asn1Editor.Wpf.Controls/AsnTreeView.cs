@@ -131,7 +131,7 @@ public class AsnTreeView : TreeView {
             e.Handled = true;
             return;
         }
-        String[] file = e.Data.GetData(DataFormats.FileDrop, true) as String[];
+        String[]? file = e.Data.GetData(DataFormats.FileDrop, true) as String[];
         if (FileDropCommand != null && file?.Length > 0) {
             FileDropCommand.Execute(file[0]);
             e.Handled = true;
