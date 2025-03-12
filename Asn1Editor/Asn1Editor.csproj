@@ -208,9 +208,6 @@
     <Compile Include="Views\Windows\OidLookupEditorWindow.xaml.cs">
       <DependentUpon>OidLookupEditorWindow.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Views\UserControls\AsnTreeView.xaml.cs">
-      <DependentUpon>AsnTreeView.xaml</DependentUpon>
-    </Compile>
     <Compile Include="Views\Windows\BinaryConverterWindow.xaml.cs">
       <DependentUpon>BinaryConverterWindow.xaml</DependentUpon>
     </Compile>
@@ -220,7 +217,7 @@
     <Compile Include="Views\Windows\TextViewer.xaml.cs">
       <DependentUpon>TextViewer.xaml</DependentUpon>
     </Compile>
-    <Page Include="Views\AsnTypeSprites.xaml">
+    <Page Include="Views\TreeViewResources.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -265,10 +262,6 @@
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Page Include="Views\UserControls\AsnTreeView.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
     <Page Include="Views\Windows\TagDataEditor.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -377,7 +370,6 @@
   <ItemGroup>
     <Resource Include="Views\Images\Menu\book_16x16.png" />
     <Resource Include="Views\Images\oid.ico" />
-    <Resource Include="Views\Images\spritesheet.png" />
     <Content Include="_ExternalReferences\Wpf.OfficeTheme.dll" />
   </ItemGroup>
   <ItemGroup>

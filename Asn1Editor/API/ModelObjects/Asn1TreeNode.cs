@@ -31,17 +31,6 @@ public class Asn1TreeNode : INotifyPropertyChanged {
             : Convert.ToInt32(tokens[tokens.Length - 1]);
         Value.PropertyChanged += valuePropertyChanged;
     }
-    /// <summary>
-    /// Gets or sets the node selection status.
-    /// </summary>
-    /// <remarks>This property is necessary for WPF purposes only. It MUST not be used anywhere else.</remarks>
-    public Boolean IsSelected {
-        get => isSelected;
-        set {
-            isSelected = value;
-            OnPropertyChanged();
-        }
-    }
     public Asn1TreeNode this[Int32 index] => Children[index];
     /// <summary>
     /// Gets or sets the indexed path to the node in form: /0/1/4/3/..., where values represent zero-based index of the node in subtree.

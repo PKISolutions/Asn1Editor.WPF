@@ -1,20 +1,25 @@
-﻿using System;
+﻿#nullable enable
+using System;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
-using SysadminsLV.Asn1Editor.API.ModelObjects;
 using SysadminsLV.WPF.OfficeTheme.Toolkit.Commands;
 
-namespace SysadminsLV.Asn1Editor.Views.UserControls;
+namespace Asn1Editor.Wpf.Controls; 
 
-/// <summary>
-/// Interaction logic for AsnTreeView.xaml
-/// </summary>
-public partial class AsnTreeView {
+public class AsnTreeView : TreeView {
+    static AsnTreeView() {
+        DefaultStyleKeyProperty.OverrideMetadata(
+            typeof(AsnTreeView),
+            new FrameworkPropertyMetadata(typeof(AsnTreeView)));
+    }
+
     public AsnTreeView() {
-        InitializeComponent();
-        Focusable = true;
+        MouseDoubleClick += OnTreeViewDoubleClick;
+        MouseRightButtonDown += OnPreviewMouseRightButtonDown;
+        SelectedItemChanged += OnTreeViewSelectedItemChanged;
+        Drop += onTreeFileDrop;
         ExpandAllCommand = new RelayCommand(expandAll);
     }
 
@@ -24,7 +29,7 @@ public partial class AsnTreeView {
         nameof(ExpandAllCommand),
         typeof(ICommand),
         typeof(AsnTreeView),
-        new PropertyMetadata(default(ICommand)));
+        new PropertyMetadata(default));
 
     public ICommand ExpandAllCommand {
         get => (ICommand)GetValue(ExpandAllCommandProperty);
@@ -39,10 +44,10 @@ public partial class AsnTreeView {
         nameof(FileDropCommand),
         typeof(ICommand),
         typeof(AsnTreeView),
-        new PropertyMetadata(default(ICommand)));
+        new PropertyMetadata(default));
 
-    public ICommand FileDropCommand {
-        get => (ICommand)GetValue(FileDropCommandProperty);
+    public ICommand? FileDropCommand {
+        get => (ICommand?)GetValue(FileDropCommandProperty);
         set => SetValue(FileDropCommandProperty, value);
     }
 
@@ -54,10 +59,10 @@ public partial class AsnTreeView {
         nameof(DoubleClickCommand),
         typeof(ICommand),
         typeof(AsnTreeView),
-        new PropertyMetadata(default(ICommand)));
+        new PropertyMetadata(default));
 
-    public ICommand DoubleClickCommand {
-        get => (ICommand)GetValue(DoubleClickCommandProperty);
+    public ICommand? DoubleClickCommand {
+        get => (ICommand?)GetValue(DoubleClickCommandProperty);
         set => SetValue(DoubleClickCommandProperty, value);
     }
 
@@ -69,9 +74,9 @@ public partial class AsnTreeView {
         nameof(DoubleClickCommandParameter),
         typeof(Object),
         typeof(AsnTreeView),
-        new PropertyMetadata(default(Object)));
+        new PropertyMetadata(default));
 
-    public Object DoubleClickCommandParameter {
+    public Object? DoubleClickCommandParameter {
         get => GetValue(DoubleClickCommandParameterProperty);
         set => SetValue(DoubleClickCommandParameterProperty, value);
     }
@@ -84,14 +89,9 @@ public partial class AsnTreeView {
         nameof(SelectedItem),
         typeof(Object),
         typeof(AsnTreeView),
-        new PropertyMetadata(default, onSelectedItemChanged));
-    static void onSelectedItemChanged(DependencyObject d, DependencyPropertyChangedEventArgs e) {
-        if (e.NewValue is Asn1TreeNode node) {
-            node.IsSelected = true;
-        }
-    }
+        new PropertyMetadata(default));
 
-    public new Object SelectedItem {
+    public new Object? SelectedItem {
         get => GetValue(SelectedItemProperty);
         set => SetValue(SelectedItemProperty, value);
     }
@@ -104,7 +104,7 @@ public partial class AsnTreeView {
         nameof(MaxTextLength),
         typeof(Int32),
         typeof(AsnTreeView),
-        new PropertyMetadata(default(Int32)));
+        new PropertyMetadata(default));
 
     public Int32 MaxTextLength {
         get => (Int32)GetValue(MaxTextLengthProperty);
@@ -114,10 +114,10 @@ public partial class AsnTreeView {
     #endregion
 
     void OnTreeViewDoubleClick(Object sender, MouseButtonEventArgs e) {
-        DoubleClickCommand.Execute(DoubleClickCommandParameter);
+        DoubleClickCommand?.Execute(DoubleClickCommandParameter);
     }
     void OnPreviewMouseRightButtonDown(Object sender, MouseButtonEventArgs e) {
-        TreeViewItem treeViewItem = visualUpwardSearch(e.OriginalSource as DependencyObject);
+        TreeViewItem? treeViewItem = visualUpwardSearch(e.OriginalSource as DependencyObject);
         if (treeViewItem != null) {
             treeViewItem.Focus();
             e.Handled = true;
@@ -131,20 +131,20 @@ public partial class AsnTreeView {
             e.Handled = true;
             return;
         }
-        String[] file = (String[])e.Data.GetData(DataFormats.FileDrop, true);
+        String[]? file = e.Data.GetData(DataFormats.FileDrop, true) as String[];
         if (FileDropCommand != null && file?.Length > 0) {
             FileDropCommand.Execute(file[0]);
             e.Handled = true;
         }
     }
     void expandAll(Object o) {
-        ((TreeViewItem)tree.Items[0]).IsExpanded = true;
+        ((TreeViewItem)Items[0]).IsExpanded = true;
     }
 
-    static TreeViewItem visualUpwardSearch(DependencyObject source) {
+    static TreeViewItem? visualUpwardSearch(DependencyObject? source) {
         while (source != null && source is not TreeViewItem) {
             source = VisualTreeHelper.GetParent(source);
         }
-        return (TreeViewItem)source;
+        return source as TreeViewItem;
     }
 }
