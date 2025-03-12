@@ -4,7 +4,7 @@ using System.Windows;
 using System.Windows.Controls.Primitives;
 using System.Windows.Media;
 
-namespace Asn1Editor.Wpf.Controls.Helpers;
+namespace Asn1Editor.Wpf.Controls.Extensions;
 static class TextBoxBaseExtensions {
     /// <summary>
     /// Sets <see cref="TextBoxBase"/> control's width to a value required to fit requested text string.

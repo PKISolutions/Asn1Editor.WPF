@@ -140,7 +140,6 @@
     <Compile Include="API\Abstractions\IHasAsnDocumentTabs.cs" />
     <Compile Include="API\Abstractions\INewAsnNodeEditorVM.cs" />
     <Compile Include="API\Abstractions\IUIMessenger.cs" />
-    <Compile Include="API\Converters\IntegerToEnumConverter.cs" />
     <Compile Include="API\Interfaces\IAppCommands.cs" />
     <Compile Include="API\Interfaces\IBinarySource.cs" />
     <Compile Include="API\Abstractions\IOidEditorVM.cs" />
@@ -177,7 +176,6 @@
     <Compile Include="API\Utils\Extensions\StringExtensions.cs" />
     <Compile Include="API\Utils\FileUtility.cs" />
     <Compile Include="API\Utils\HexConverter.cs" />
-    <Compile Include="API\Converters\TextBlockTrimConverter.cs" />
     <Compile Include="API\ModelObjects\Asn1Lite.cs" />
     <Compile Include="API\ModelObjects\Asn1TreeNode.cs" />
     <Compile Include="API\Utils\WPF\WindowFactory.cs" />

@@ -2,7 +2,7 @@
 using System.Windows;
 using System.Windows.Controls;
 
-namespace Asn1Editor.Wpf.Controls.Helpers;
+namespace Asn1Editor.Wpf.Controls.Behaviors;
 
 public static class TextBlockBehavior {
     #region TrimLength

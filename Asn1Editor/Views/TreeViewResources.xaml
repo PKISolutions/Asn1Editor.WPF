@@ -3,8 +3,8 @@
                     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
                     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
                     mc:Ignorable="d"
-                    xmlns:helpers="clr-namespace:Asn1Editor.Wpf.Controls.Helpers;assembly=Asn1Editor.Wpf.Controls"
-                    xmlns:modelObjects="clr-namespace:SysadminsLV.Asn1Editor.API.ModelObjects">
+                    xmlns:modelObjects="clr-namespace:SysadminsLV.Asn1Editor.API.ModelObjects"
+                    xmlns:behaviors="clr-namespace:Asn1Editor.Wpf.Controls.Behaviors;assembly=Asn1Editor.Wpf.Controls">
     <Style x:Key="AsnTreeIconStyle" TargetType="Image">
         <Style.Setters>
             <Setter Property="SnapsToDevicePixels" Value="True"/>
@@ -111,8 +111,8 @@
             <TextBlock Foreground="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type TreeView}}, Path=Foreground}"
                        TextWrapping="NoWrap"
                        Margin="5,0"
-                       helpers:TextBlockBehavior.TrimLength="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type TreeView}}, Path=MaxTextLength}"
-                       helpers:TextBlockBehavior.SourceText="{Binding Value.Header, Mode=OneWay}">
+                       behaviors:TextBlockBehavior.TrimLength="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type TreeView}}, Path=MaxTextLength}"
+                       behaviors:TextBlockBehavior.SourceText="{Binding Value.Header, Mode=OneWay}">
                 <TextBlock.ToolTip>
                     <TextBlock FontFamily="Consolas"
                                Text="{Binding Value.ToolTip}"/>

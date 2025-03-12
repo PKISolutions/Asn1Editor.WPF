@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Windows;
 using System.Windows.Controls;
-using Asn1Editor.Wpf.Controls.Helpers;
+using Asn1Editor.Wpf.Controls.Extensions;
 
 namespace Asn1Editor.Wpf.Controls;
 

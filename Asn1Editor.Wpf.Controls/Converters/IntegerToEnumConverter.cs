@@ -2,8 +2,8 @@
 using System.Globalization;
 using System.Windows.Data;
 
-namespace SysadminsLV.Asn1Editor.API.Converters;
-class IntegerToEnumConverter : IValueConverter {
+namespace Asn1Editor.Wpf.Controls.Converters;
+public class IntegerToEnumConverter : IValueConverter {
     public Object Convert(Object value, Type targetType, Object parameter, CultureInfo culture) {
         if (value is Enum) {
             return System.Convert.ToInt32(value);
