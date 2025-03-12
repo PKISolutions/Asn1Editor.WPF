@@ -6,8 +6,17 @@ namespace SysadminsLV.Asn1Editor.API.ModelObjects;
 
 [XmlRoot("appSettings")]
 public class NodeViewOptions : ViewModelBase {
-    Boolean showTagNumber, showNodeOffset = true, showNodeLength = true, showInHex, showContent = true, showNodePath, intAsInt,
-        showHexViewer, showHexAddrPanel = true, showHexAsciiPanel = true;
+    Boolean showTagNumber,
+        showNodeOffset = true,
+        showNodeLength = true,
+        showInHex,
+        showContent = true,
+        showNodePath,
+        intAsInt,
+        showHexViewer,
+        showHexAddrPanel = true,
+        showHexAsciiPanel = true,
+        hexViewerColoringEnabled = true;
     Int32 fontSize = 12;
     Int32 maxStringLength = 150;
 
@@ -124,6 +133,17 @@ public class NodeViewOptions : ViewModelBase {
                 return;
             }
             showHexAsciiPanel = value;
+            OnPropertyChanged();
+        }
+    }
+    [XmlElement(ElementName = "hexViewerColoringEnabled")]
+    public Boolean HexViewerColoringEnabled {
+        get => hexViewerColoringEnabled;
+        set {
+            if (value == hexViewerColoringEnabled) {
+                return;
+            }
+            hexViewerColoringEnabled = value;
             OnPropertyChanged();
         }
     }

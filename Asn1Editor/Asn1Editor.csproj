@@ -368,6 +368,7 @@
   <ItemGroup>
     <Resource Include="Views\Images\Menu\book_16x16.png" />
     <Resource Include="Views\Images\oid.ico" />
+    <Resource Include="Views\Images\Menu\textcolor_32x32.png" />
     <Content Include="_ExternalReferences\Wpf.OfficeTheme.dll" />
   </ItemGroup>
   <ItemGroup>
