@@ -99,6 +99,9 @@
                 </MenuItem>
                 <MenuItem Header="Edit Object Identifier mapping"
                           Command="{Binding TreeCommands.RegisterOidCommand}">
+                    <MenuItem.Icon>
+                        <Image Source="/Views/Images/Menu/book_16x16.png"/>
+                    </MenuItem.Icon>
                     <MenuItem.Style>
                         <Style TargetType="MenuItem" BasedOn="{StaticResource {x:Type MenuItem}}">
                             <Setter Property="Visibility" Value="Collapsed"/>
@@ -430,6 +433,9 @@
                                         </MenuItem>
                                         <MenuItem Header="Edit Object Identifier mapping"
                                                   Command="{Binding TreeCommands.RegisterOidCommand}">
+                                            <MenuItem.Icon>
+                                                <Image Source="/Views/Images/Menu/book_16x16.png"/>
+                                            </MenuItem.Icon>
                                             <MenuItem.Style>
                                                 <Style TargetType="MenuItem" BasedOn="{StaticResource {x:Type MenuItem}}">
                                                     <Setter Property="Visibility" Value="Collapsed"/>
