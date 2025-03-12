@@ -208,9 +208,6 @@
     <Compile Include="Views\Windows\OidLookupEditorWindow.xaml.cs">
       <DependentUpon>OidLookupEditorWindow.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Views\UserControls\AsnTreeView.xaml.cs">
-      <DependentUpon>AsnTreeView.xaml</DependentUpon>
-    </Compile>
     <Compile Include="Views\Windows\BinaryConverterWindow.xaml.cs">
       <DependentUpon>BinaryConverterWindow.xaml</DependentUpon>
     </Compile>
@@ -265,10 +262,6 @@
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Page Include="Views\UserControls\AsnTreeView.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
     <Page Include="Views\Windows\TagDataEditor.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
