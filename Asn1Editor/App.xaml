@@ -6,8 +6,8 @@
     <Application.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
-                <ResourceDictionary Source="pack://application:,,,/Wpf.OfficeTheme;component/UI/OfficeTheme.xaml"/>
-                <ResourceDictionary Source="/Views/AsnTypeSprites.xaml"/>
+                <ResourceDictionary Source="/Wpf.OfficeTheme;component/UI/OfficeTheme.xaml"/>
+                <ResourceDictionary Source="/Asn1Editor.Wpf.Controls;component/Themes/AsnTypeSprites.xaml"/>
             </ResourceDictionary.MergedDictionaries>
             <BooleanToVisibilityConverter x:Key="BooleanToVisibility"/>
             <converters:IntegerToEnumConverter x:Key="IntegerToEnum"/>

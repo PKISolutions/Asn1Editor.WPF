@@ -1,6 +1,6 @@
 ﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
-    <BitmapImage x:Key="AsnSpriteBitmap" UriSource="/Views/Images/spritesheet.png"/>
+    <BitmapImage x:Key="AsnSpriteBitmap" UriSource="../Assets/spritesheet.png"/>
     <CroppedBitmap x:Key="AsnBitImage"
                    Source="{StaticResource AsnSpriteBitmap}"
                    SourceRect="0,0,16,16"/>
