@@ -1,6 +1,6 @@
 ﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation">
     <ResourceDictionary.MergedDictionaries>
-        <ResourceDictionary Source="/SysadminsLV.Asn1Editor.Controls;component/Themes/AsnHexViewerControl.xaml"/>
+        <ResourceDictionary Source="/SysadminsLV.Asn1Editor.Controls;component/Themes/AsnHexViewer.xaml"/>
         <ResourceDictionary Source="/SysadminsLV.Asn1Editor.Controls;component/Themes/AsnTreeView.xaml"/>
         <ResourceDictionary Source="/SysadminsLV.Asn1Editor.Controls;component/Themes/AutoSizeTextBox.xaml"/>
         <ResourceDictionary Source="/SysadminsLV.Asn1Editor.Controls;component/Themes/BusyIndicator.xaml"/>
