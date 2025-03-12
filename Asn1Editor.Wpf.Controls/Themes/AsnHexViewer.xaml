@@ -18,6 +18,7 @@
     <Style x:Key="RtbPaneStyle" TargetType="wpflib:BindableRichTextBox" BasedOn="{StaticResource {x:Type wpflib:BindableRichTextBox}}">
         <Setter Property="BorderBrush" Value="{StaticResource Panel.Border.LightBrush}"/>
         <Setter Property="BorderThickness" Value="0,0,1,0"/>
+        <Setter Property="Foreground" Value="#FFA0A0A0"/>
         <Setter Property="IsReadOnly" Value="True"/>
         <Setter Property="IsUndoEnabled" Value="False"/>
         <Setter Property="FontFamily" Value="Consolas"/>
@@ -71,17 +72,14 @@
                            Visibility="Visible"/>
                 <wpflib:BindableRichTextBox x:Name="PART_AddressBody"
                                             Style="{StaticResource RtbPaneStyle}"
-                                            Foreground="LightGray"
                                             Visibility="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type controls:AsnHexViewer}}, Path=ShowAddressPane, Converter={StaticResource BooleanToVisibility}}"
                                             Width="{Binding ElementName=PART_AddressHeader, Path=Width}"/>
                 <wpflib:BindableRichTextBox x:Name="PART_HexBody"
                                             Style="{StaticResource RtbPaneStyle}"
-                                            Foreground="#FFC0C0C0"
                                             ObserveCaret="True"
                                             Width="{Binding ElementName=PART_HexHeader, Path=Width}"/>
                 <wpflib:BindableRichTextBox x:Name="PART_AsciiBody"
                                             Style="{StaticResource RtbPaneStyle}"
-                                            Foreground="LightGray"
                                             Visibility="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type controls:AsnHexViewer}}, Path=ShowAsciiPane, Converter={StaticResource BooleanToVisibility}}"
                                             Width="{Binding ElementName=PART_AsciiHeader, Path=Width}"/>
             </DockPanel>
