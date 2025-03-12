@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.ComponentModel;
 using System.IO;
 using System.Linq;
 using System.Threading;
@@ -32,7 +31,7 @@ class MainWindowVM : ViewModelBase, IMainWindowVM, IHasAsnDocumentTabs {
         AppCommands = appCommands;
         TreeCommands = new TreeViewCommands(windowFactory, this);
         NodeViewOptions = nodeViewOptions;
-        NodeViewOptions.PropertyChanged += onNodeViewOptionsChanged;
+        NodeViewOptions.RequireTreeRefresh += onNodeViewOptionsChanged;
         NewCommand = new RelayCommand(newTab);
         CloseTabCommand = new RelayCommand(closeTab, canCloseTab);
         CloseAllTabsCommand = new RelayCommand(closeAllTabs);
@@ -44,7 +43,7 @@ class MainWindowVM : ViewModelBase, IMainWindowVM, IHasAsnDocumentTabs {
         addTabToList(new Asn1DocumentVM(NodeViewOptions, TreeCommands));
     }
 
-    void onNodeViewOptionsChanged(Object sender, PropertyChangedEventArgs e) {
+    void onNodeViewOptionsChanged(Object sender, EventArgs args) {
         RefreshTabs();
     }
 

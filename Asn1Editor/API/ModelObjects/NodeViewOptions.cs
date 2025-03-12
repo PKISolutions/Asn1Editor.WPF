@@ -20,6 +20,7 @@ public class NodeViewOptions : ViewModelBase {
             }
             showTagNumber = value;
             OnPropertyChanged();
+            triggerRequireTreeRefresh();
         }
     }
     [XmlElement("showTagOffset")]
@@ -42,6 +43,7 @@ public class NodeViewOptions : ViewModelBase {
             }
             showNodeLength = value;
             OnPropertyChanged();
+            triggerRequireTreeRefresh();
         }
     }
     [XmlElement("showHexHeader")]
@@ -53,6 +55,7 @@ public class NodeViewOptions : ViewModelBase {
             }
             showInHex = value;
             OnPropertyChanged();
+            triggerRequireTreeRefresh();
         }
     }
     [XmlElement("showNodeContent")]
@@ -64,6 +67,7 @@ public class NodeViewOptions : ViewModelBase {
             }
             showContent = value;
             OnPropertyChanged();
+            triggerRequireTreeRefresh();
         }
     }
     [XmlElement("showNodePath")]
@@ -75,6 +79,7 @@ public class NodeViewOptions : ViewModelBase {
             }
             showNodePath = value;
             OnPropertyChanged();
+            triggerRequireTreeRefresh();
         }
     }
     [XmlElement("forceInteger")]
@@ -86,6 +91,7 @@ public class NodeViewOptions : ViewModelBase {
             }
             intAsInt = value;
             OnPropertyChanged();
+            triggerRequireTreeRefresh();
         }
     }
     [XmlElement("showHexViewer")]
@@ -141,6 +147,13 @@ public class NodeViewOptions : ViewModelBase {
             }
             maxStringLength = value;
             OnPropertyChanged();
+            triggerRequireTreeRefresh();
         }
     }
+
+    void triggerRequireTreeRefresh() {
+        RequireTreeRefresh?.Invoke(this, EventArgs.Empty);
+    }
+
+    public event EventHandler RequireTreeRefresh;
 }
