@@ -115,7 +115,9 @@ public class AsnHexViewer : Control {
             oldValue.DataChanged -= ctrl.onNodeDataChanged;
         }
         if (e.NewValue is null) {
-            ctrl.ResetColors();
+            if (ctrl.IsColoringEnabled) {
+                ctrl.ResetColors();
+            }
             return;
         }
         var treeNode = (IHexAsnNode)e.NewValue;
@@ -126,7 +128,9 @@ public class AsnHexViewer : Control {
         if (!controlInitialized) {
             return;
         }
-        ResetColors();
+        if (IsColoringEnabled) {
+            ResetColors();
+        }
         ranges[0] = GetSelectionPointers(treeNode, HexRawPane, getOffset);
         HexRawPane.CaretPosition = ranges[0][0].Start;
         ranges[1] = GetSelectionPointers(treeNode, HexAsciiPane, getAsciiOffset);
@@ -425,9 +429,6 @@ public class AsnHexViewer : Control {
 
     }
     void ResetColors() {
-        if (SelectedNode is null) {
-            return;
-        }
         foreach (TextRange[] top in ranges) {
             foreach (TextRange range in top.Where(range => range is not null)) {
                 range.ClearAllProperties();
