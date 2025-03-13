@@ -321,7 +321,6 @@
     <Resource Include="Views\Images\Menu\eraser_16x16.png" />
     <Resource Include="Views\Images\Menu\AsciiEnabled_32x32.png" />
     <Resource Include="Views\Images\Menu\AddressEnabled_32x32.png" />
-    <Resource Include="Views\Images\Menu\HexFull_32x32.png" />
     <Resource Include="Views\Images\Menu\insertafter_16x16.png" />
     <Resource Include="Views\Images\Menu\insertbefore_16x16.png" />
     <Resource Include="Views\Images\Menu\insertlast_16x16.png" />
