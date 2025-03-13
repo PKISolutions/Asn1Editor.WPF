@@ -5,6 +5,7 @@ using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Linq;
 using System.Runtime.CompilerServices;
+using System.Threading.Tasks;
 using SysadminsLV.Asn1Editor.API.Interfaces;
 using SysadminsLV.Asn1Parser;
 
@@ -115,6 +116,9 @@ public class Asn1TreeNode : INotifyPropertyChanged {
 
     public void UpdateNodeView(Func<Asn1TreeNode, Boolean>? filter) {
         updateNodeHeader(this, filter);
+    }
+    public Task UpdateNodeViewAsync(Func<Asn1TreeNode, Boolean>? filter) {
+        return Task.Run(() => UpdateNodeView(filter));
     }
 
     void updateNodeHeader(Asn1TreeNode node, Func<Asn1TreeNode, Boolean>? filter) {
