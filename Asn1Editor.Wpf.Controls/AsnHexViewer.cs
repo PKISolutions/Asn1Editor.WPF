@@ -429,6 +429,9 @@ public class AsnHexViewer : Control {
 
     }
     void ResetColors() {
+        if (ranges[0] is null) {
+            return;
+        }
         foreach (TextRange[] top in ranges) {
             foreach (TextRange range in top.Where(range => range is not null)) {
                 range.ClearAllProperties();
