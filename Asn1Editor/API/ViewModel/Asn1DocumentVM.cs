@@ -92,7 +92,7 @@ public class Asn1DocumentVM : AsyncViewModel {
         }
         ProgressText = "Refreshing view...";
         IsBusy = true;
-        await Task.Factory.StartNew(() => Tree[0].UpdateNodeView());
+        await Task.Factory.StartNew(() => Tree[0].UpdateNodeView(filter));
         IsBusy = false;
     }
     public async Task Decode(IEnumerable<Byte> bytes, Boolean doNotSetModifiedFlag) {
