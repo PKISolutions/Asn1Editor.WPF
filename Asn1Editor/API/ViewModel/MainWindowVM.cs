@@ -307,6 +307,6 @@ class MainWindowVM : ViewModelBase, IMainWindowVM, IHasAsnDocumentTabs {
     }
 
     public Task RefreshTabs(Func<Asn1TreeNode, Boolean>? filter = null) {
-        return Task.WhenAll(Tabs.Select(x => x.RefreshTree(filter)));
+        return Task.WhenAll(Tabs.Select(x => x.RefreshTreeView(filter)));
     }
 }
