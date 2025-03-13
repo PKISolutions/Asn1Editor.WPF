@@ -22,7 +22,9 @@ static class AsnDecoder {
                 retValue.TextValue = new Asn1Integer(asn.GetTagRawData()).Value.ToString();
                 break;
             case Asn1Type.BIT_STRING:
-                retValue.TextValue = HexUtility.GetHexEditString(new Asn1BitString(asn).Value);
+                var bitString = new Asn1BitString(asn);
+                retValue.TextValue = HexUtility.GetHexEditString(bitString.Value);
+                retValue.UnusedBits = bitString.UnusedBits;
                 retValue.Options = AsnViewValueOptions.None;
                 break;
             case Asn1Type.OBJECT_IDENTIFIER:

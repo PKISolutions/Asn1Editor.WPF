@@ -20,7 +20,6 @@ class TagDataEditorVM : ViewModelBase, ITagDataEditorVM {
     String tagDetails;
     AsnViewValue tagValue, oldValue;
     Boolean rbText = true, rbHex, isReadonly;
-    Byte unusedBits;
 
 
     public TagDataEditorVM(IHasAsnDocumentTabs appTabs, IUIMessenger uiMessenger) {
@@ -51,13 +50,6 @@ class TagDataEditorVM : ViewModelBase, ITagDataEditorVM {
         get => tagValue;
         set {
             tagValue = value;
-            OnPropertyChanged();
-        }
-    }
-    public Byte UnusedBits {
-        get => unusedBits;
-        set {
-            unusedBits = value;
             OnPropertyChanged();
         }
     }
@@ -126,7 +118,7 @@ class TagDataEditorVM : ViewModelBase, ITagDataEditorVM {
             return;
         }
         _data.UpdateNodeBinaryCopy(binValue);
-        Node.UnusedBits = UnusedBits;
+        Node.UnusedBits = TagValue.UnusedBits;
         var asn = new Asn1Reader(binValue);
         Int32 oldHeaderLength = Node.HeaderLength;
         Node.PayloadStartOffset = Node.Offset + asn.TagLength - asn.PayloadLength;
@@ -143,9 +135,13 @@ class TagDataEditorVM : ViewModelBase, ITagDataEditorVM {
         try {
             // if we are in hex mode, or we are in text mode, but text is hex, go to hex
             if (rbHex || (!rbHex && (TagValue.Options & AsnViewValueOptions.SupportsPrintableText) == 0)) {
-                binValue = AsnDecoder.EncodeHex(Node.Tag, TagValue.TextValue, UnusedBits);
+                String textValue = Node.Tag == (Int32)Asn1Type.BIT_STRING
+                    ? $"{TagValue.UnusedBits:X2} {TagValue.TextValue}"
+                    : TagValue.TextValue;
+
+                binValue = AsnDecoder.EncodeHex(Node.Tag, textValue, TagValue.UnusedBits);
             } else {
-                binValue = AsnDecoder.EncodeGeneric(Node.Tag, TagValue.TextValue, UnusedBits);
+                binValue = AsnDecoder.EncodeGeneric(Node.Tag, TagValue.TextValue, TagValue.UnusedBits);
             }
         } catch (Exception e) {
             _uiMessenger.ShowError(e.Message);
@@ -176,7 +172,7 @@ class TagDataEditorVM : ViewModelBase, ITagDataEditorVM {
     }
     void copyValues() {
         Node = _data.SelectedNode.Value;
-        UnusedBits = Node.UnusedBits;
+        TagValue.UnusedBits = Node.UnusedBits;
         IsReadOnly = Node.IsContainer || Node.Tag == (Byte)Asn1Type.NULL;
         TagDetails = String.Format(Resources.TagEditorHeaderTemplate, Node.Tag, Node.TagName, Node.Offset, Node.PayloadLength, Node.Depth, Node.Path);
         OnPropertyChanged(nameof(UnusedBitsVisible));
