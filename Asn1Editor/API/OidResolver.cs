@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Security.Cryptography;
+using System.Threading.Tasks;
 using SysadminsLV.Asn1Editor.API.Abstractions;
 using SysadminsLV.Asn1Editor.API.ModelObjects;
 
@@ -11,7 +12,7 @@ namespace SysadminsLV.Asn1Editor.API;
 
 interface IOidDbManager {
     void ReloadLookup();
-    Boolean SaveUserLookup();
+    Task<Boolean> SaveUserLookup();
 }
 class OidDbManager(IUIMessenger uiMessenger) : IOidDbManager {
 
@@ -22,12 +23,12 @@ class OidDbManager(IUIMessenger uiMessenger) : IOidDbManager {
         OidResolver.Reset();
         readOids();
     }
-    public Boolean SaveUserLookup() {
+    public async Task<Boolean> SaveUserLookup() {
         try {
             String path = Path.Combine(OidLookupLocations[1], oidFileName);
             using var stream = new StreamWriter(path);
             foreach (OidDto oid in OidResolver.GetOidLookup().Where(x => x.UserDefined)) {
-                stream.WriteLine(oid.Value + "," + oid.FriendlyName);
+                await stream.WriteLineAsync(oid.Value + "," + oid.FriendlyName);
             }
         } catch (Exception ex) {
             uiMessenger.ShowError($"User OID lookup save failed:\n{ex.Message}");

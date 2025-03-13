@@ -17,7 +17,7 @@ class DataSource(NodeViewOptions viewOptions) : ViewModelBase, IDataSource {
     Asn1TreeNode selectedNode;
 
     protected void OnCollectionChanged(NotifyCollectionChangedEventArgs e) {
-        if (_rawData.IsNotifying && CollectionChanged != null) {
+        if (_rawData.IsNotifying && CollectionChanged is not null) {
             try {
                 CollectionChanged(this, e);
             } catch (NotSupportedException) {
@@ -39,7 +39,7 @@ class DataSource(NodeViewOptions viewOptions) : ViewModelBase, IDataSource {
 
     Asn1Lite createNewNode(Byte[] nodeRawData) {
         var node = new Asn1Lite(new Asn1Reader(nodeRawData));
-        if (SelectedNode != null) {
+        if (SelectedNode is not null) {
             node.Offset = SelectedNode.Value.Offset + SelectedNode.Value.TagLength;
             node.Depth += SelectedNode.Value.Depth;
         }
@@ -68,7 +68,7 @@ class DataSource(NodeViewOptions viewOptions) : ViewModelBase, IDataSource {
         return SelectedNode = node;
     }
     public async Task InsertNode(Byte[] nodeRawData, NodeAddOption option) {
-        if (SelectedNode == null) {
+        if (SelectedNode is null) {
             throw new ArgumentNullException(nameof(SelectedNode));
         }
         var childNode = await AsnTreeBuilder.BuildTreeAsync(nodeRawData, this);
@@ -114,9 +114,7 @@ class DataSource(NodeViewOptions viewOptions) : ViewModelBase, IDataSource {
     }
     public void FinishBinaryUpdate() {
         OnCollectionChanged(new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Reset));
-        if (Tree.Count > 0) {
-            Tree[0].UpdateNodeView();
-        }
+        RequireTreeRefresh?.Invoke(this, EventArgs.Empty);
     }
     public IReadOnlyList<Byte> RawData => _rawData;
 
@@ -134,4 +132,5 @@ class DataSource(NodeViewOptions viewOptions) : ViewModelBase, IDataSource {
     }
 
     public event NotifyCollectionChangedEventHandler CollectionChanged;
+    public event EventHandler RequireTreeRefresh;
 }

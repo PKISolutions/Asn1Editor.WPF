@@ -10,13 +10,17 @@ using SysadminsLV.Asn1Editor.API.ModelObjects;
 namespace SysadminsLV.Asn1Editor.API.ViewModel;
 
 public class Asn1DocumentVM : AsyncViewModel {
-    String path, fileName;
+    String path, fileName, pbHeaderText;
     Boolean isModified, suppressModified;
 
     public Asn1DocumentVM(NodeViewOptions nodeViewOptions, ITreeCommands treeCommands) {
         DataSource = new DataSource(nodeViewOptions);
         DataSource.CollectionChanged += onDataSourceCollectionChanged;
+        DataSource.RequireTreeRefresh += onTreeRefreshRequired;
         TreeCommands = treeCommands;
+    }
+    async void onTreeRefreshRequired(Object sender, EventArgs e) {
+        await RefreshTree();
     }
     void onDataSourceCollectionChanged(Object sender, NotifyCollectionChangedEventArgs args) {
         if (!suppressModified) {
@@ -74,8 +78,25 @@ public class Asn1DocumentVM : AsyncViewModel {
             OnPropertyChanged(nameof(Header));
         }
     }
+    public String ProgressText {
+        get => pbHeaderText;
+        set {
+            pbHeaderText = value;
+            OnPropertyChanged();
+        }
+    }
 
+    public async Task RefreshTree(Func<Asn1TreeNode, Boolean>? filter = null) {
+        if (Tree.Count == 0) {
+            return;
+        }
+        ProgressText = "Refreshing view...";
+        IsBusy = true;
+        await Task.Factory.StartNew(() => Tree[0].UpdateNodeView());
+        IsBusy = false;
+    }
     public async Task Decode(IEnumerable<Byte> bytes, Boolean doNotSetModifiedFlag) {
+        ProgressText = "Decoding file...";
         IsBusy = true;
         if (doNotSetModifiedFlag) {
             suppressModified = true;

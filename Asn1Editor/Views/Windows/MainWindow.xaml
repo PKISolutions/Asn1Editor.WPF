@@ -507,8 +507,8 @@
                                 </c:AsnTreeView.ContextMenu>
                             </c:AsnTreeView>
                             <c:BusyIndicator IsShown="{Binding IsBusy}"
-                                                    HeaderText="Please wait while decoding the file..."
-                                                    Text="This may take a while"/>
+                                             HeaderText="{Binding ProgressText}"
+                                             Text="This may take a while"/>
                         </Grid>
                     </DockPanel>
                 </DataTemplate>

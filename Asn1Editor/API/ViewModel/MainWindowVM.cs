@@ -43,8 +43,8 @@ class MainWindowVM : ViewModelBase, IMainWindowVM, IHasAsnDocumentTabs {
         addTabToList(new Asn1DocumentVM(NodeViewOptions, TreeCommands));
     }
 
-    void onNodeViewOptionsChanged(Object sender, EventArgs args) {
-        RefreshTabs();
+    async void onNodeViewOptionsChanged(Object sender, EventArgs args) {
+        await RefreshTabs();
     }
 
     public ICommand NewCommand { get; }
@@ -306,11 +306,7 @@ class MainWindowVM : ViewModelBase, IMainWindowVM, IHasAsnDocumentTabs {
         return tab.Decode(rawBytes, false);
     }
 
-    public void RefreshTabs() {
-        foreach (Asn1DocumentVM tab in Tabs) {
-            if (tab.Tree.Any()) {
-                tab.Tree[0].UpdateNodeView();
-            }
-        }
+    public Task RefreshTabs() {
+        return Task.WhenAll(Tabs.Select(x => x.RefreshTree()));
     }
 }
