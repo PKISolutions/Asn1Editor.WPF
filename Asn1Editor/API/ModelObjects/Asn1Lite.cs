@@ -161,8 +161,24 @@ public class Asn1Lite : ViewModelBase, IHexAsnNode {
         }
     }
 
-
+    /// <summary>
+    /// Performs node header update. This method does not perform expensive display value (except for
+    /// <strong>INTEGER</strong> and <strong>OBJECT_IDENTIFIER</strong> tags) or tooltip (all tags)
+    /// re-calculation and do not raise <see cref="DataChanged"/> event.
+    /// </summary>
+    /// <param name="rawData">Node raw data.</param>
+    /// <param name="options">Node view options.</param>
+    /// <remarks></remarks>
     public void UpdateNodeHeader(IReadOnlyList<Byte> rawData, NodeViewOptions options) {
+        Header = getNodeHeader(rawData, options);
+    }
+    /// <summary>
+    /// Performs node value update, which includes update for <see cref="Header"/>, <see cref="ToolTip"/>
+    /// and raises <see cref="DataChanged"/> event.
+    /// </summary>
+    /// <param name="rawData">Node raw data.</param>
+    /// <param name="options">Node view options.</param>
+    public void UpdateNode(IReadOnlyList<Byte> rawData, NodeViewOptions options) {
         Header = getNodeHeader(rawData, options);
         ToolTip = getToolTip(rawData);
         DataChanged?.Invoke(this, EventArgs.Empty);
@@ -174,8 +190,11 @@ public class Asn1Lite : ViewModelBase, IHexAsnNode {
         if (Tag == (Byte)Asn1Type.OBJECT_IDENTIFIER) {
             updateOidValue(rawData);
         }
-        var outerList = new List<String>();
+
+        // contains only node location information, such as offset, length, path. Everything what is displayed in parentheses.
         var innerList = new List<String>();
+        // contains full node header, including inner list (see above), tag name and optional tag display value.
+        var outerList = new List<String>();
         if (options.ShowNodePath) {
             outerList.Add($"({Path})");
         }
@@ -273,5 +292,8 @@ public class Asn1Lite : ViewModelBase, IHexAsnNode {
     }
     #endregion
 
+    /// <summary>
+    /// Raised when node value changes. It is used by Hex Viewer to update node coloring boundaries.
+    /// </summary>
     public event EventHandler DataChanged;
 }
