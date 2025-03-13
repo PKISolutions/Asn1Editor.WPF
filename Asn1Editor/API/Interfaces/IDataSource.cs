@@ -44,4 +44,9 @@ public interface IDataSource : IBinarySource {
     /// Resets current data source, which clears tree, backing binary source and sets <see cref="SelectedNode"/> to <c>null</c>.
     /// </summary>
     void Reset();
+
+    /// <summary>
+    /// Raised when tree refresh required.
+    /// </summary>
+    event EventHandler RequireTreeRefresh;
 }

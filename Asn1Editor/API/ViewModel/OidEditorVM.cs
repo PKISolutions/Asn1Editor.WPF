@@ -2,6 +2,8 @@
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Text.RegularExpressions;
+using System.Threading;
+using System.Threading.Tasks;
 using System.Windows.Data;
 using System.Windows.Input;
 using SysadminsLV.Asn1Editor.API.Abstractions;
@@ -24,10 +26,10 @@ class OidEditorVM : ViewModelBase, IOidEditorVM {
         _tabs = tabs;
         _oidMgr = oidMgr;
         ReloadCommand = new RelayCommand(reload);
-        SaveCommand = new RelayCommand(save, canSave);
+        SaveCommand = new AsyncCommand(save, canSave);
         ResetCommand = new RelayCommand(reset);
         CloseCommand = new RelayCommand(_ => DialogResult = true);
-        RemoveOidCommand = new RelayCommand(removeOid, canRemoveOid);
+        RemoveOidCommand = new AsyncCommand(removeOid, canRemoveOid);
 
         OidView = CollectionViewSource.GetDefaultView(_oidList);
         OidView.SortDescriptions.Add(new SortDescription(nameof(OidDto.Value), ListSortDirection.Ascending));
@@ -61,9 +63,9 @@ class OidEditorVM : ViewModelBase, IOidEditorVM {
     }
 
     public ICommand ReloadCommand { get; }
-    public ICommand SaveCommand { get; }
+    public IAsyncCommand SaveCommand { get; }
+    public IAsyncCommand RemoveOidCommand { get; }
     public ICommand ResetCommand { get; }
-    public ICommand RemoveOidCommand { get; }
     public ICommand CloseCommand { get; }
     public NodeViewOptions NodeViewOptions { get; }
 
@@ -122,7 +124,7 @@ class OidEditorVM : ViewModelBase, IOidEditorVM {
             _oidList.Add(oid);
         }
     }
-    void save(Object o) {
+    async Task save(Object o, CancellationToken token = default) {
         OidDto oidEntry = OidResolver.GetOidEntry(OidValue);
         if (oidEntry == null) {
             _oidList.Add(new OidDto(OidValue, FriendlyName, true));
@@ -130,11 +132,11 @@ class OidEditorVM : ViewModelBase, IOidEditorVM {
             oidEntry.SetFriendlyName(friendlyName);
         }
         OidResolver.Add(OidValue, FriendlyName, true);
-        if (_oidMgr.SaveUserLookup()) {
+        if (await _oidMgr.SaveUserLookup()) {
             reset(null);
         }
         OidView.Refresh();
-        _tabs.RefreshTabs();
+        await _tabs.RefreshTabs();
     }
     Boolean canSave(Object o) {
         return !String.IsNullOrWhiteSpace(OidValue) && !String.IsNullOrWhiteSpace(FriendlyName) && _regex.IsMatch(OidValue);
@@ -143,19 +145,19 @@ class OidEditorVM : ViewModelBase, IOidEditorVM {
         OidValue = null;
         FriendlyName = null;
     }
-    void removeOid(Object o) {
+    async Task removeOid(Object o, CancellationToken token = default) {
         OidDto backupOid = SelectedItem;
         OidValue = SelectedItem.Value;
         FriendlyName = SelectedItem.FriendlyName;
         _oidList.Remove(SelectedItem);
         OidResolver.Remove(OidValue);
         // fall-back
-        if (!_oidMgr.SaveUserLookup()) {
+        if (!await _oidMgr.SaveUserLookup()) {
             OidValue = null;
             FriendlyName = null;
             OidResolver.Add(backupOid.Value, backupOid.FriendlyName, backupOid.UserDefined);
         } else {
-            _tabs.RefreshTabs();
+            await _tabs.RefreshTabs();
         }
     }
     Boolean canRemoveOid(Object o) {
