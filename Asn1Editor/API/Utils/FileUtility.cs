@@ -28,7 +28,7 @@ static class FileUtility {
         return true;
     }
     public static Task<IEnumerable<Byte>> FileToBinaryAsync(String path) {
-        return Task.Factory.StartNew(() => FileToBinary(path));
+        return Task.Run(() => FileToBinary(path));
     }
     public static IEnumerable<Byte> FileToBinary(String path) {
         FileInfo fileInfo = new FileInfo(path);
