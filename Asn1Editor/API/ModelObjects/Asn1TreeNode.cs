@@ -115,18 +115,24 @@ public class Asn1TreeNode : INotifyPropertyChanged {
     }
 
     public void UpdateNodeView(Func<Asn1TreeNode, Boolean>? filter) {
-        updateNodeHeader(this, filter);
+        updateNode(this, filter, Value.UpdateNode);
     }
     public Task UpdateNodeViewAsync(Func<Asn1TreeNode, Boolean>? filter) {
         return Task.Run(() => UpdateNodeView(filter));
     }
+    public void UpdateNodeHeader(Func<Asn1TreeNode, Boolean>? filter) {
+        updateNode(this, filter, Value.UpdateNodeHeader);
+    }
+    public Task UpdateNodeHeaderAsync(Func<Asn1TreeNode, Boolean>? filter) {
+        return Task.Run(() => UpdateNodeView(filter));
+    }
 
-    void updateNodeHeader(Asn1TreeNode node, Func<Asn1TreeNode, Boolean>? filter) {
+    void updateNode(Asn1TreeNode node, Func<Asn1TreeNode, Boolean>? filter, Action<IReadOnlyList<Byte>, NodeViewOptions> action) {
         if (filter is null || filter(node)) {
-            node.Value.UpdateNode(_dataSource.RawData, _dataSource.NodeViewOptions);
+            action.Invoke(_dataSource.RawData, _dataSource.NodeViewOptions);
         }
         foreach (Asn1TreeNode child in node.Children) {
-            updateNodeHeader(child, filter);
+            updateNode(child, filter, action);
         }
     }
     void notifySizeChanged(Asn1TreeNode source, Int32 difference) {
