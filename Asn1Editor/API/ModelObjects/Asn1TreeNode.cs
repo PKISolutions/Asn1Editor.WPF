@@ -115,24 +115,32 @@ public class Asn1TreeNode : INotifyPropertyChanged {
     }
 
     public void UpdateNodeView(Func<Asn1TreeNode, Boolean>? filter) {
-        updateNode(this, filter, Value.UpdateNode);
+        updateNodeView(this, filter);
     }
     public Task UpdateNodeViewAsync(Func<Asn1TreeNode, Boolean>? filter) {
         return Task.Run(() => UpdateNodeView(filter));
     }
     public void UpdateNodeHeader(Func<Asn1TreeNode, Boolean>? filter) {
-        updateNode(this, filter, Value.UpdateNodeHeader);
+        updateNodeHeader(this, filter);
     }
     public Task UpdateNodeHeaderAsync(Func<Asn1TreeNode, Boolean>? filter) {
         return Task.Run(() => UpdateNodeView(filter));
     }
 
-    void updateNode(Asn1TreeNode node, Func<Asn1TreeNode, Boolean>? filter, Action<IReadOnlyList<Byte>, NodeViewOptions> action) {
+    void updateNodeView(Asn1TreeNode node, Func<Asn1TreeNode, Boolean>? filter) {
         if (filter is null || filter(node)) {
-            action.Invoke(_dataSource.RawData, _dataSource.NodeViewOptions);
+            node.Value.UpdateNode(_dataSource.RawData, _dataSource.NodeViewOptions);
         }
         foreach (Asn1TreeNode child in node.Children) {
-            updateNode(child, filter, action);
+            updateNodeView(child, filter);
+        }
+    }
+    void updateNodeHeader(Asn1TreeNode node, Func<Asn1TreeNode, Boolean>? filter) {
+        if (filter is null || filter(node)) {
+            node.Value.UpdateNodeHeader(_dataSource.RawData, _dataSource.NodeViewOptions);
+        }
+        foreach (Asn1TreeNode child in node.Children) {
+            updateNodeView(child, filter);
         }
     }
     void notifySizeChanged(Asn1TreeNode source, Int32 difference) {
