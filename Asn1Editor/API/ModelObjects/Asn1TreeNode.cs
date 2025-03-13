@@ -123,7 +123,7 @@ public class Asn1TreeNode : INotifyPropertyChanged {
 
     void updateNodeHeader(Asn1TreeNode node, Func<Asn1TreeNode, Boolean>? filter) {
         if (filter is null || filter(node)) {
-            node.Value.UpdateNodeHeader(_dataSource.RawData, _dataSource.NodeViewOptions);
+            node.Value.UpdateNode(_dataSource.RawData, _dataSource.NodeViewOptions);
         }
         foreach (Asn1TreeNode child in node.Children) {
             updateNodeHeader(child, filter);
