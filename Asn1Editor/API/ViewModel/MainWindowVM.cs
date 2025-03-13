@@ -43,8 +43,8 @@ class MainWindowVM : ViewModelBase, IMainWindowVM, IHasAsnDocumentTabs {
         addTabToList(new Asn1DocumentVM(NodeViewOptions, TreeCommands));
     }
 
-    async void onNodeViewOptionsChanged(Object sender, EventArgs args) {
-        await RefreshTabs();
+    async void onNodeViewOptionsChanged(Object sender, RequireTreeRefreshEventArgs args) {
+        await RefreshTabs(args.Filter);
     }
 
     public ICommand NewCommand { get; }

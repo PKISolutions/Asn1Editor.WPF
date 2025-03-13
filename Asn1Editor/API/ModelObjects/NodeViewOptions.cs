@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Xml.Serialization;
 using SysadminsLV.Asn1Editor.API.ViewModel;
+using SysadminsLV.Asn1Parser;
 
 namespace SysadminsLV.Asn1Editor.API.ModelObjects; 
 
@@ -100,7 +101,7 @@ public class NodeViewOptions : ViewModelBase {
             }
             intAsInt = value;
             OnPropertyChanged();
-            triggerRequireTreeRefresh();
+            triggerRequireTreeRefresh(x => x.Value.Tag == (Byte)Asn1Type.INTEGER);
         }
     }
     [XmlElement("showHexViewer")]
@@ -171,9 +172,12 @@ public class NodeViewOptions : ViewModelBase {
         }
     }
 
-    void triggerRequireTreeRefresh() {
-        RequireTreeRefresh?.Invoke(this, EventArgs.Empty);
+    void triggerRequireTreeRefresh(Func<Asn1TreeNode, Boolean>? filter = null) {
+        RequireTreeRefresh?.Invoke(this, new RequireTreeRefreshEventArgs(filter));
     }
 
-    public event EventHandler RequireTreeRefresh;
+    public event EventHandler<RequireTreeRefreshEventArgs> RequireTreeRefresh;
+}
+public class RequireTreeRefreshEventArgs(Func<Asn1TreeNode, Boolean>? filter = null) : EventArgs {
+    public Func<Asn1TreeNode, Boolean>? Filter { get; } = filter;
 }
