@@ -35,7 +35,7 @@ public static class AsnTreeBuilder {
     /// <returns>Root node with decoded children nodes.</returns>
     /// <remarks>This method is an asynchronous version of <see cref="BuildTree(Byte[], IDataSource)"/></remarks>
     public static Task<Asn1TreeNode> BuildTreeAsync(Byte[] rawData, IDataSource dataSource) {
-        return Task.Factory.StartNew(() => BuildTree(rawData, dataSource));
+        return Task.Run(() => BuildTree(rawData, dataSource));
     }
     /// <summary>
     /// Gets a new ASN.1 tree from existing data source.
