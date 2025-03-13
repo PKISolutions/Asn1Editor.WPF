@@ -199,6 +199,11 @@ public class NewAsnNodeEditorVM : ClosableWindowVM, INewAsnNodeEditorVM {
         if (!shouldGenerateNode) {
             return null;
         }
+        Byte tag = getResultingTag();
+        // for BIT_STRING need to include unused bit count
+        if (tag == (Int32)Asn1Type.BIT_STRING) {
+            return [tag, 1, 0];
+        }
         return [getResultingTag(), 0];
     }
 }
