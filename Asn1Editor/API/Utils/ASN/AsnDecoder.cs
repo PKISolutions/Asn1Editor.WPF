@@ -6,7 +6,6 @@ using System.Numerics;
 using System.Security.Cryptography;
 using System.Text;
 using SysadminsLV.Asn1Editor.API.ModelObjects;
-using SysadminsLV.Asn1Editor.Properties;
 using SysadminsLV.Asn1Parser;
 using SysadminsLV.Asn1Parser.Universal;
 
@@ -226,12 +225,7 @@ static class AsnDecoder {
     #endregion
     #region Data type robust decoders
     static String DecodeInteger(Asn1Reader asn) {
-        return Settings.Default.IntAsInt
-            ? new BigInteger(asn.GetPayload().Reverse().ToArray()).ToString()
-            : AsnFormatter.BinaryToString(
-                asn.GetRawData(),
-                EncodingType.HexRaw,
-                EncodingFormat.NOCRLF, asn.PayloadStartOffset, asn.PayloadLength);
+        return new BigInteger(asn.GetPayload().Reverse().ToArray()).ToString();
     }
     static String DecodeBitString(Asn1Reader asn) {
         if (asn.PayloadLength == 1) {

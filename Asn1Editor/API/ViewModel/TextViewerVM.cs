@@ -88,7 +88,7 @@ class TextViewerVM : ViewModelBase, ITextViewerVM {
     }
 
     void print(Object obj) {
-        StaticCommands.Print(Text);
+        StaticCommands.Print(Text, NodeViewOptions.FontSize);
     }
     void applyNewLength(Object obj) {
         if (!Int32.TryParse(CurrentLength, NumberStyles.Integer, null, out Int32 value)) {

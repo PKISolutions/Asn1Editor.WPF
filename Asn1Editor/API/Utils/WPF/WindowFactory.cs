@@ -43,7 +43,8 @@ class WindowFactory : WindowFactoryBase, IWindowFactory {
         }
         binConverterWindowClosed = false;
         hwnd = binConverterWindow = new BinaryConverterWindow();
-        var binConverterVM = new BinaryConverterVM(action, GetUIMessenger());
+        var options = App.Container.Resolve<NodeViewOptions>();
+        var binConverterVM = new BinaryConverterVM(GetUIMessenger(), options, action);
         hwnd.DataContext = binConverterVM;
         binConverterVM.SetBytes(data);
         hwnd.Closed += (o, e) => { binConverterWindowClosed = true; };

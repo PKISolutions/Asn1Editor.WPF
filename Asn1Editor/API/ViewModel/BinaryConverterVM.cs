@@ -26,15 +26,15 @@ class BinaryConverterVM : AsyncViewModel {
     EncodingTypeEntry? selectedEncoding;
     Boolean canCheck;
 
-    public BinaryConverterVM(Func<Byte[], Task>? action, IUIMessenger uiMessenger) {
-        _action = action;
+    public BinaryConverterVM(IUIMessenger uiMessenger, NodeViewOptions options, Func<Byte[], Task>? action) {
         _uiMessenger = uiMessenger;
+        NodeViewOptions = options;
+        _action = action;
         OpenCommand = new AsyncCommand(openFile);
         SaveCommand = new RelayCommand(saveFile, canPrintSave);
         PrintCommand = new RelayCommand(print, canPrintSave);
         ClearCommand = new RelayCommand(clearText);
         ValidateCommand = new AsyncCommand(validateInput, canValidateInput);
-        //TextBoxWidth = TextUtility.MeasureStringWidth(master, Settings.Default.FontSize, true);
         initialize();
         EncodingTypesView = CollectionViewSource.GetDefaultView(EncodingTypes);
         EncodingTypesView.GroupDescriptions.Add(new PropertyGroupDescription(nameof(EncodingTypeEntry.EncodingGroup)));
@@ -45,6 +45,8 @@ class BinaryConverterVM : AsyncViewModel {
     public ICommand ClearCommand { get; }
     public IAsyncCommand ValidateCommand { get; }
     public ICommand PrintCommand { get; }
+
+    public NodeViewOptions NodeViewOptions { get; }
 
     public String Text {
         get => text;
@@ -196,7 +198,7 @@ class BinaryConverterVM : AsyncViewModel {
         Path = null;
     }
     void print(Object obj) {
-        StaticCommands.Print(Text);
+        StaticCommands.Print(Text, NodeViewOptions.FontSize);
     }
     Boolean canPrintSave(Object obj) {
         return CanCheck = RawData.Count > 0;
