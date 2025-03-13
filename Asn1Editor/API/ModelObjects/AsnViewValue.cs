@@ -24,11 +24,9 @@ class AsnViewValue : ViewModelBase {
             }
         }
     }
-    public Byte UnusedBits
-    {
+    public Byte UnusedBits {
         get => unusedBits;
-        set
-        {
+        set {
             if (unusedBits != value) {
                 unusedBits = value;
                 OnPropertyChanged();
