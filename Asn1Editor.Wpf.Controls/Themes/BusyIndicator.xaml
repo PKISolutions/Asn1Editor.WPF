@@ -21,18 +21,18 @@
                         <RowDefinition Height="Auto"/>
                         <RowDefinition Height="40"/>
                     </Grid.RowDefinitions>
-                    <TextBlock Text="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type controls:BusyIndicator}}, Path=HeaderText}"
+                    <TextBlock Text="{TemplateBinding HeaderText}"
                                HorizontalAlignment="Center"
                                VerticalAlignment="Center"
                                FontSize="16"
                                Margin="10,0"/>
                     <TextBlock Grid.Row="1"
-                               Text="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type controls:BusyIndicator}}, Path=Text}"
+                               Text="{TemplateBinding Text}"
                                Margin="10,0,0,0"/>
                     <ProgressBar Grid.Row="2"
                                  Margin="10"
-                                 IsIndeterminate="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type controls:BusyIndicator}}, Path=IsIndeterminate}"
-                                 Value="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type controls:BusyIndicator}}, Path=ProgressValue}"/>
+                                 IsIndeterminate="{TemplateBinding IsIndeterminate}"
+                                 Value="{TemplateBinding ProgressValue}"/>
                 </Grid>
             </Border>
         </Grid>
