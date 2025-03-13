@@ -12,11 +12,10 @@ using SysadminsLV.Asn1Parser;
 namespace SysadminsLV.Asn1Editor.API.ModelObjects;
 
 public class Asn1Lite : ViewModelBase, IHexAsnNode {
-    Byte tag, unusedBits;
+    Byte tag;
     Boolean invalidData;
     Int32 offset, offsetChange;
-    Int32 payloadLength, depth;
-    String header, toolTip, tagName, explicitValue, treePath;
+    String header, toolTip;
 
     public Asn1Lite(Asn1Reader asn) {
         initialize(asn);
@@ -34,19 +33,6 @@ public class Asn1Lite : ViewModelBase, IHexAsnNode {
         }
     }
 
-    public String Caption {
-        get {
-            String value = String.IsNullOrEmpty(explicitValue) || !Settings.Default.DecodePayload
-                ? String.Empty
-                : " : " + explicitValue;
-            String value2 = IsContainer && Tag == (Byte)Asn1Type.BIT_STRING
-                ? " Unused bits: " + UnusedBits
-                : String.Empty;
-            return IsContainer
-                ? $"({Offset}, {PayloadLength}) {TagName}{value2.TrimEnd()}"
-                : $"({Offset}, {PayloadLength}) {TagName}{value.TrimEnd()}";
-        }
-    }
     public String Header {
         get => header;
         private set {
@@ -71,28 +57,14 @@ public class Asn1Lite : ViewModelBase, IHexAsnNode {
             OnPropertyChanged();
         }
     }
-    public Byte UnusedBits {
-        get => unusedBits;
-        set {
-            unusedBits = value;
-            OnPropertyChanged();
-            OnPropertyChanged(nameof(Caption));
-        }
-    }
-    public String TagName {
-        get => tagName;
-        private set {
-            tagName = value;
-            OnPropertyChanged(nameof(Caption));
-        }
-    }
+    public Byte UnusedBits { get; set; }
+    public String TagName { get;  private set; }
     public Int32 Offset {
         get => offset;
         set {
             Int32 diff = value - offset;
             offset = value;
             PayloadStartOffset += diff;
-            OnPropertyChanged(nameof(Caption));
         }
     }
     public Int32 OffsetChange {
@@ -106,13 +78,7 @@ public class Asn1Lite : ViewModelBase, IHexAsnNode {
 
     public Int32 PayloadStartOffset { get; set; }
     public Int32 HeaderLength => PayloadStartOffset - Offset;
-    public Int32 PayloadLength {
-        get => payloadLength;
-        set {
-            payloadLength = value;
-            OnPropertyChanged(nameof(Caption));
-        }
-    }
+    public Int32 PayloadLength { get; set; }
     public Int32 TagLength => HeaderLength + PayloadLength;
     public Boolean IsContainer { get; set; }
     public Boolean IsContextSpecific { get; private set; }
@@ -123,27 +89,9 @@ public class Asn1Lite : ViewModelBase, IHexAsnNode {
             OnPropertyChanged();
         }
     } //TODO
-    public Int32 Depth {
-        get => depth;
-        set {
-            depth = value;
-            OnPropertyChanged(nameof(Caption));
-        }
-    }
-    public String Path {
-        get => treePath;
-        set {
-            treePath = value;
-            OnPropertyChanged(nameof(Caption));
-        }
-    }
-    public String ExplicitValue {
-        get => explicitValue;
-        set {
-            explicitValue = value;
-            OnPropertyChanged(nameof(Caption));
-        }
-    }
+    public Int32 Depth { get; set; }
+    public String Path { get; set; }
+    public String ExplicitValue { get; set; }
 
     void initialize(Asn1Reader asn) {
         Offset = asn.Offset;
