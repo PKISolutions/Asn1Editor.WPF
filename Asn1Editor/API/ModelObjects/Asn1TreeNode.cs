@@ -113,14 +113,16 @@ public class Asn1TreeNode : INotifyPropertyChanged {
         return _dataSource;
     }
 
-    public void UpdateNodeView() {
-        updateNodeHeader(this);
+    public void UpdateNodeView(Func<Asn1TreeNode, Boolean>? filter) {
+        updateNodeHeader(this, filter);
     }
 
-    void updateNodeHeader(Asn1TreeNode node) {
-        node.Value.UpdateNodeHeader(_dataSource.RawData, _dataSource.NodeViewOptions);
+    void updateNodeHeader(Asn1TreeNode node, Func<Asn1TreeNode, Boolean>? filter) {
+        if (filter is null || filter(node)) {
+            node.Value.UpdateNodeHeader(_dataSource.RawData, _dataSource.NodeViewOptions);
+        }
         foreach (Asn1TreeNode child in node.Children) {
-            updateNodeHeader(child);
+            updateNodeHeader(child, filter);
         }
     }
     void notifySizeChanged(Asn1TreeNode source, Int32 difference) {

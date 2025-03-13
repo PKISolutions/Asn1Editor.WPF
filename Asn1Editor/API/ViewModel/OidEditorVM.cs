@@ -8,6 +8,7 @@ using System.Windows.Data;
 using System.Windows.Input;
 using SysadminsLV.Asn1Editor.API.Abstractions;
 using SysadminsLV.Asn1Editor.API.ModelObjects;
+using SysadminsLV.Asn1Parser;
 using SysadminsLV.WPF.OfficeTheme.Toolkit.Commands;
 
 namespace SysadminsLV.Asn1Editor.API.ViewModel;
@@ -136,7 +137,7 @@ class OidEditorVM : ViewModelBase, IOidEditorVM {
             reset(null);
         }
         OidView.Refresh();
-        await _tabs.RefreshTabs();
+        await _tabs.RefreshTabs(x => x.Value.Tag == (Byte)Asn1Type.OBJECT_IDENTIFIER);
     }
     Boolean canSave(Object o) {
         return !String.IsNullOrWhiteSpace(OidValue) && !String.IsNullOrWhiteSpace(FriendlyName) && _regex.IsMatch(OidValue);
@@ -157,7 +158,7 @@ class OidEditorVM : ViewModelBase, IOidEditorVM {
             FriendlyName = null;
             OidResolver.Add(backupOid.Value, backupOid.FriendlyName, backupOid.UserDefined);
         } else {
-            await _tabs.RefreshTabs();
+            await _tabs.RefreshTabs(x => x.Value.Tag == (Byte)Asn1Type.OBJECT_IDENTIFIER);
         }
     }
     Boolean canRemoveOid(Object o) {
