@@ -20,7 +20,7 @@ public class Asn1DocumentVM : AsyncViewModel {
         TreeCommands = treeCommands;
     }
     async void onTreeRefreshRequired(Object sender, EventArgs e) {
-        await RefreshTree();
+        await RefreshTreeView();
     }
     void onDataSourceCollectionChanged(Object sender, NotifyCollectionChangedEventArgs args) {
         if (!suppressModified) {
@@ -86,13 +86,20 @@ public class Asn1DocumentVM : AsyncViewModel {
         }
     }
 
-    public async Task RefreshTree(Func<Asn1TreeNode, Boolean>? filter = null) {
+    public Task RefreshTreeView(Func<Asn1TreeNode, Boolean>? filter = null) {
+        return refreshTree(Tree[0].UpdateNodeViewAsync, filter);
+    }
+    public Task RefreshTreeHeaders(Func<Asn1TreeNode, Boolean>? filter = null) {
+        return refreshTree(Tree[0].UpdateNodeHeaderAsync, filter);
+    }
+
+    async Task refreshTree(Func<Func<Asn1TreeNode, Boolean>?, Task> action, Func<Asn1TreeNode, Boolean>? filter = null) {
         if (Tree.Count == 0) {
             return;
         }
         ProgressText = "Refreshing view...";
         IsBusy = true;
-        await Tree[0].UpdateNodeViewAsync(filter);
+        await action.Invoke(filter);
         IsBusy = false;
     }
     public async Task Decode(IEnumerable<Byte> bytes, Boolean doNotSetModifiedFlag) {
