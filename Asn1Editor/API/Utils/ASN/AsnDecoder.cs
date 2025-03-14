@@ -13,7 +13,7 @@ namespace SysadminsLV.Asn1Editor.API.Utils.ASN;
 
 static class AsnDecoder {
     public static AsnViewValue GetEditValue(Asn1Reader asn) {
-        var retValue = new AsnViewValue() {
+        var retValue = new AsnViewValue {
             Options = AsnViewValueOptions.SupportsPrintableText
         };
         switch ((Asn1Type)asn.Tag) {
@@ -93,13 +93,12 @@ static class AsnDecoder {
             case Asn1Type.IA5String:
                 return Encoding.ASCII.GetString(asn.GetPayload());
             case Asn1Type.UTCTime:
-                return DecodeUtcTime(asn);
+            case Asn1Type.GeneralizedTime:
+                return DecodeDateTime(asn);
             case Asn1Type.BMPString:
                 return new Asn1BMPString(asn).Value;
             case Asn1Type.UniversalString:
                 return new Asn1UniversalString(asn).Value;
-            case Asn1Type.GeneralizedTime:
-                return DecodeGeneralizedTime(asn);
             default:
                 if (tryGetUtfString(asn.GetPayload(), out String value)) {
                     return value;
@@ -263,13 +262,9 @@ static class AsnDecoder {
     static String DecodeUTF8String(Asn1Reader asn) {
         return Encoding.UTF8.GetString(asn.GetRawData(), asn.PayloadStartOffset, asn.PayloadLength);
     }
-    static String DecodeUtcTime(Asn1Reader asn) {
-        DateTime dt = new Asn1UtcTime(asn).Value;
-        return dt.ToString("dd.MM.yyyy hh:mm:ss");
-    }
-    static String DecodeGeneralizedTime(Asn1Reader asn) {
-        DateTime dt = new Asn1GeneralizedTime(asn).Value;
-        return dt.ToString("dd.MM.yyyy hh:mm:ss");
+    static String DecodeDateTime(Asn1Reader asn) {
+        DateTime dt = Asn1DateTime.DecodeAnyDateTime(asn).Value;
+        return dt.ToString("MM/dd/yyyy HH:mm:ss", CultureInfo.InvariantCulture);
     }
     #endregion
 }
