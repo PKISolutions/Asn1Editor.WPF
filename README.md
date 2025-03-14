@@ -9,7 +9,7 @@ Key features:
 * Export nodes as text, or pure binary copy
 * Data converter
 
-Documentation and binary download links: [ASN.1 Editor](https://www.pkisolutions.com/tools/asn1editor/)
+Release notes and binary download links: [ASN.1 Editor](https://github.com/PKISolutions/Asn1Editor.WPF/releases)
 # Screenshots
 
 ## Main Window
