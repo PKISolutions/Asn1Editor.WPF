@@ -205,6 +205,8 @@ public class AsnHexViewer : Control {
 
     #endregion
 
+    #region IsColoringEnabled
+
     public static readonly DependencyProperty IsColoringEnabledProperty = DependencyProperty.Register(
         nameof(IsColoringEnabled),
         typeof(Boolean),
@@ -226,6 +228,8 @@ public class AsnHexViewer : Control {
         }
 
     }
+
+    #endregion
 
     void calculateWidths() {
         HexAddrHeaderRtb.SetWidthToFitString(masterAddr, FontSize);
@@ -262,7 +266,7 @@ public class AsnHexViewer : Control {
         HexAsciiPane.Document.Blocks.Clear();
         HexAsciiPane.Document.Blocks.Add(asciiParagraph);
     }
-    public void onRtbScrollChanged(Object sender, ScrollChangedEventArgs e) {
+    void onRtbScrollChanged(Object sender, ScrollChangedEventArgs e) {
         if (scrollLocked) {
             return;
         }
