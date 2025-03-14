@@ -31,8 +31,8 @@ class TagDataEditorVM : ViewModelBase, ITagDataEditorVM {
         initialize();
     }
 
-    public ICommand OkCommand { get; set; }
-    public ICommand CloseCommand { get; set; }
+    public ICommand OkCommand { get; }
+    public ICommand CloseCommand { get; }
     public Asn1Lite Node { get; private set; }
     public NodeViewOptions NodeViewOptions { get; }
 
