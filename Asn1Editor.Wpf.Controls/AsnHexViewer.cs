@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
@@ -137,9 +138,17 @@ public class AsnHexViewer : Control {
         Colorize();
         scrollPanes(null);
     }
-    void onNodeDataChanged(Object sender, EventArgs e) {
-        if (sender is IHexAsnNode node) {
-            reColorHex(node);
+    void onNodeDataChanged(Object sender, EventArgs args) {
+        // this event handler is potentially triggered from a different thread than UI thread which
+        // owns current instance. In this case, we cannot access any dependency property, because
+        // different thread owns it. So, check if event fired in UI thread. If so, continue as expected,
+        // otherwise invoke this handler in UI thread.
+        if (Thread.CurrentThread == Dispatcher.Thread) {
+            if (sender is IHexAsnNode node) {
+                reColorHex(node);
+            }
+        } else {
+            Dispatcher.Invoke(new Action<Object, EventArgs>(onNodeDataChanged), sender, args);
         }
     }
 
