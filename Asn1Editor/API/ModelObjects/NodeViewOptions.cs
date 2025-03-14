@@ -42,6 +42,7 @@ public class NodeViewOptions : ViewModelBase {
             }
             showNodeOffset = value;
             OnPropertyChanged();
+            triggerRequireTreeRefresh();
         }
     }
     [XmlElement("showNodeLength")]
