@@ -111,7 +111,7 @@ class CertutilRenderer(Asn1TreeNode baseNode) : ITextRenderer {
             if (!_noAsciiTags.Contains(value.Tag)) {
                 Int32 index = lines[i].LastIndexOf("  ", StringComparison.InvariantCulture);
                 if (index >= 0) {
-                    lines[i] = lines[i].Insert(index + 1, ";");
+                    lines[i] = lines[i].Insert(50, ";");
                 }
             }
             _line.AppendLine(lines[i]);
