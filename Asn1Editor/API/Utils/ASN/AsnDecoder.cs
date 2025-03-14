@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Globalization;
-using System.IO;
 using System.Linq;
 using System.Numerics;
 using System.Security.Cryptography;
@@ -121,7 +120,7 @@ static class AsnDecoder {
     }
 
     #region Data type encoders
-    public static Byte[] EncodeUTCTime(DateTime time) {
+    static Byte[] EncodeUTCTime(DateTime time) {
         Char[] chars = (time.ToUniversalTime().ToString("yyMMddHHmmss") + "Z").ToCharArray();
         Byte[] rawData = new Byte[chars.Length];
         Int32 index = 0;
@@ -131,7 +130,7 @@ static class AsnDecoder {
         }
         return Asn1Utils.Encode(rawData, (Byte)Asn1Type.UTCTime);
     }
-    public static Byte[] EncodeGeneralizedTime(DateTime time) {
+    static Byte[] EncodeGeneralizedTime(DateTime time) {
         Char[] chars = (time.ToUniversalTime().ToString("yyyyMMddHHmmss") + "Z").ToCharArray();
         Byte[] rawData = new Byte[chars.Length];
         Int32 index = 0;
@@ -140,34 +139,6 @@ static class AsnDecoder {
             index++;
         }
         return Asn1Utils.Encode(rawData, (Byte)Asn1Type.GeneralizedTime);
-    }
-    public static String DecodeUTF8String(Byte[] rawData) {
-        if (rawData == null) { throw new ArgumentNullException(); }
-        Asn1Reader asn = new Asn1Reader(rawData);
-        if (asn.Tag != (Byte)Asn1Type.UTF8String) { throw new InvalidDataException(); }
-        return Encoding.UTF8.GetString(asn.GetPayload());
-    }
-    public static String DecodeIA5String(Byte[] rawData) {
-        if (rawData == null) { throw new ArgumentNullException(); }
-        Asn1Reader asn = new Asn1Reader(rawData);
-        if (asn.GetPayload().Any(x => x > 127)) {
-            throw new ArgumentException("The data is invalid.");
-        }
-        if (asn.Tag == (Byte)Asn1Type.IA5String) {
-            return Encoding.ASCII.GetString(asn.GetPayload());
-        }
-        throw new InvalidDataException();
-    }
-    public static String DecodeVisibleString(Byte[] rawData) {
-        if (rawData == null) { throw new ArgumentNullException(); }
-        Asn1Reader asn = new Asn1Reader(rawData);
-        if (asn.GetPayload().Any(x => x < 32 || x > 126)) {
-            throw new InvalidDataException();
-        }
-        if (asn.Tag == (Byte)Asn1Type.VisibleString) {
-            return Encoding.ASCII.GetString(asn.GetPayload());
-        }
-        throw new InvalidDataException();
     }
 
     public static Byte[] EncodeHex(Byte tag, String hexString, Byte unusedBits) {
