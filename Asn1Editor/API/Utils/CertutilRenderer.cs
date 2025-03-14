@@ -44,7 +44,7 @@ class CertutilRenderer(Asn1TreeNode baseNode) : ITextRenderer {
         foreach (Asn1TreeNode node in baseNode.Flatten()) {
             String leftPad = getLeftPad(node);
             writeTagHeader(node, leftPad);
-            if (!node.Value.IsContainer && node.Value.PayloadLength > 0) {
+            if (node.Value is { IsContainer: false, PayloadLength: > 0 }) {
                 writeContent(node, leftPad);
             }
         }
