@@ -299,11 +299,20 @@ class MainWindowVM : ViewModelBase, IMainWindowVM, IHasAsnDocumentTabs {
     }
     Task openRawAsync(Byte[] rawBytes) {
         var asn = new Asn1Reader(rawBytes);
-        asn.BuildOffsetMap();
-        // at this point, raw data is granted to be valid DER encoding and should not fail.
-        Asn1DocumentVM tab = getAvailableTab(out _);
+        try
+        {
+            asn.BuildOffsetMap();
+            // at this point, raw data is granted to be valid DER encoding and should not fail.
+            Asn1DocumentVM tab = getAvailableTab(out _);
 
-        return tab.Decode(rawBytes, false);
+            return tab.Decode(rawBytes, false);
+        }
+        catch (Exception ex)
+        {
+            _uiMessenger.ShowError(ex.Message, "Read Error");
+
+            return Task.CompletedTask;
+        }
     }
 
     public Task RefreshTabs(Func<Asn1TreeNode, Boolean>? filter = null) {
