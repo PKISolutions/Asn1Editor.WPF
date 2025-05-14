@@ -182,6 +182,8 @@ class BinaryConverterVM : AsyncViewModel {
         OnPropertyChanged(nameof(SelectedEncoding));
         if (SelectedEncoding is null) {
             _uiMessenger.ShowError("Input text cannot be validated.");
+            
+            return;
         }
         RawData.AddRange(HexUtility.AnyToBinary(Text));
         if (obj?.ToString() == "Decode" && _action is not null) {
